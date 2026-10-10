@@ -20,6 +20,20 @@
         "name": "keywords",
         "multi": true,
         "label": "Keywords"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "nav",
+        "label": "Navigation fragment",
+        "description": "Site path of the navigation fragment, e.g. /fragments/nav. Leave empty to use /nav."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "footer",
+        "label": "Footer fragment",
+        "description": "Site path of the footer fragment, e.g. /fragments/footer. Leave empty to use /footer."
       }
     ]
   },
@@ -614,7 +628,7 @@
       {
         "component": "text",
         "valueType": "string",
-        "name": "name",
+        "name": "author",
         "label": "Customer name",
         "value": ""
       },

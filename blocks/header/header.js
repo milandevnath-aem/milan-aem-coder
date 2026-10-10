@@ -152,6 +152,15 @@ export default async function decorate(block) {
     brandLink.className = '';
     brandLink.closest('.button-container').className = '';
   }
+  // an authored logo image without a link points to the home page
+  const brandPicture = navBrand.querySelector('picture');
+  if (brandPicture && !brandPicture.closest('a')) {
+    const home = document.createElement('a');
+    home.href = '/';
+    home.setAttribute('aria-label', 'Home');
+    brandPicture.replaceWith(home);
+    home.append(brandPicture);
+  }
 
   const navSections = nav.querySelector('.nav-sections');
   if (navSections) {

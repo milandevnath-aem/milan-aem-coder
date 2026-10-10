@@ -59,7 +59,7 @@
         {
           "component": "text",
           "valueType": "string",
-          "name": "name",
+          "name": "author",
           "label": "Customer name",
           "value": ""
         },
