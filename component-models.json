@@ -142,6 +142,51 @@
     ]
   },
   {
+    "id": "article-card",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Image",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Alt text",
+        "value": ""
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "category",
+        "label": "Category",
+        "value": ""
+      },
+      {
+        "component": "aem-content",
+        "name": "link",
+        "label": "Article link"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "linkText",
+        "label": "Title",
+        "value": ""
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "readTime",
+        "label": "Reading time",
+        "value": ""
+      }
+    ]
+  },
+  {
     "id": "card",
     "fields": [
       {
@@ -180,12 +225,179 @@
     ]
   },
   {
+    "id": "emi-calculator",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Heading",
+        "description": "Short eyebrow line followed by the heading.",
+        "valueType": "string"
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Image",
+        "description": "Decorative image shown beside the calculator on desktop.",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Alt text",
+        "value": ""
+      },
+      {
+        "component": "aem-content",
+        "name": "link",
+        "label": "Apply link"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "linkText",
+        "label": "Apply link text",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "emi-loan-type",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "title",
+        "label": "Loan type",
+        "value": ""
+      },
+      {
+        "component": "number",
+        "valueType": "number",
+        "name": "amount_min",
+        "label": "Minimum loan amount (₹)"
+      },
+      {
+        "component": "number",
+        "valueType": "number",
+        "name": "amount_max",
+        "label": "Maximum loan amount (₹)"
+      },
+      {
+        "component": "number",
+        "valueType": "number",
+        "name": "amount_default",
+        "label": "Default loan amount (₹)"
+      },
+      {
+        "component": "number",
+        "valueType": "number",
+        "name": "rate_min",
+        "label": "Minimum interest rate (%)"
+      },
+      {
+        "component": "number",
+        "valueType": "number",
+        "name": "rate_max",
+        "label": "Maximum interest rate (%)"
+      },
+      {
+        "component": "number",
+        "valueType": "number",
+        "name": "rate_default",
+        "label": "Default interest rate (%)"
+      },
+      {
+        "component": "number",
+        "valueType": "number",
+        "name": "tenure_min",
+        "label": "Minimum tenure (years)"
+      },
+      {
+        "component": "number",
+        "valueType": "number",
+        "name": "tenure_max",
+        "label": "Maximum tenure (years)"
+      },
+      {
+        "component": "number",
+        "valueType": "number",
+        "name": "tenure_default",
+        "label": "Default tenure (years)"
+      }
+    ]
+  },
+  {
     "id": "fragment",
     "fields": [
       {
         "component": "aem-content",
         "name": "reference",
         "label": "Reference"
+      }
+    ]
+  },
+  {
+    "id": "hero-loan",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "formHeading",
+        "value": "",
+        "label": "Form heading",
+        "description": "Heading and short description shown above the lead form.",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "formCategories",
+        "label": "Loan categories",
+        "description": "Comma-separated list. The first five are shown, the rest appear under \"More\".",
+        "value": ""
+      },
+      {
+        "component": "aem-content",
+        "name": "formAction",
+        "label": "Form submit URL",
+        "description": "Endpoint that receives the lead (name, mobile, category). Leave empty to show a confirmation message only."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "formActionText",
+        "label": "Submit button label",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "hero-loan-slide",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Background image",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Alt text",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Text",
+        "description": "Heading, short description and a bold link for the call to action.",
+        "valueType": "string"
       }
     ]
   },
@@ -212,6 +424,206 @@
         "value": "",
         "label": "Text",
         "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "offer",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Background image",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Alt text",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Text",
+        "description": "Eyebrow line, heading and a bold link for the call to action.",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "disclaimer",
+        "label": "Disclaimer",
+        "value": ""
+      },
+      {
+        "component": "select",
+        "name": "style_layout",
+        "label": "Width",
+        "valueType": "string",
+        "value": "full",
+        "options": [
+          {
+            "name": "Full width",
+            "value": "full"
+          },
+          {
+            "name": "Half width (desktop)",
+            "value": "half"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "style_theme",
+        "label": "Text colour",
+        "valueType": "string",
+        "value": "light",
+        "options": [
+          {
+            "name": "Light text (for dark images)",
+            "value": "light"
+          },
+          {
+            "name": "Dark text (for light images)",
+            "value": "dark"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "product-tab",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "title",
+        "label": "Tab label",
+        "value": ""
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Image",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Alt text",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "products",
+        "value": "",
+        "label": "Products",
+        "description": "Bulleted list. Each item: product name as a link, followed by a short description.",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "service-link",
+    "fields": [
+      {
+        "component": "aem-content",
+        "name": "link",
+        "label": "Link"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "linkText",
+        "label": "Title",
+        "value": ""
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Background image",
+        "description": "Optional. Fills the tile behind the title.",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Alt text",
+        "value": ""
+      },
+      {
+        "component": "select",
+        "name": "variant",
+        "label": "Tile style",
+        "valueType": "string",
+        "value": "default",
+        "description": "On desktop, highlighted and tall tiles sit in the right-hand column.",
+        "options": [
+          {
+            "name": "Default",
+            "value": "default"
+          },
+          {
+            "name": "Image",
+            "value": "image"
+          },
+          {
+            "name": "Highlighted (brand red)",
+            "value": "highlight"
+          },
+          {
+            "name": "Tall",
+            "value": "tall"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "testimonial",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "quote",
+        "value": "",
+        "label": "Quote",
+        "valueType": "string"
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Avatar",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Avatar alt text",
+        "value": ""
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "name",
+        "label": "Customer name",
+        "value": ""
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "role",
+        "label": "Location or product",
+        "value": ""
       }
     ]
   }

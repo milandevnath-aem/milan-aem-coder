@@ -50,7 +50,14 @@
         "hero",
         "cards",
         "columns",
-        "fragment"
+        "fragment",
+        "hero-loan",
+        "product-tabs",
+        "emi-calculator",
+        "offers",
+        "testimonials",
+        "service-links",
+        "article-cards"
       ]
     }
   ]

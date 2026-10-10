@@ -12,61 +12,70 @@
 
 :root {
   /* colors */
-  --background-color: white;
-  --light-color: #f8f8f8;
-  --dark-color: #505050;
-  --text-color: #131313;
-  --link-color: #3b63fb;
-  --link-hover-color: #1d3ecf;
+  --background-color: #fcfcfc;
+  --light-color: #f5f5f5;
+  --surface-color: #eee;
+  --dark-color: #666;
+  --text-color: #121212;
+  --heading-color: #1a1a1a;
+  --muted-color: #666;
+  --border-color: #8c8c8c;
+  --border-light-color: #d6d6d6;
+  --brand-color: #db0d28;
+  --accent-color: #3857ff;
+  --inverse-color: #f5f5f5;
+  --link-color: #121212;
+  --link-hover-color: #3857ff;
 
   /* fonts */
-  --body-font-family: roboto, roboto-fallback, sans-serif;
-  --heading-font-family: roboto-condensed, roboto-condensed-fallback, sans-serif;
+  --body-font-family: manrope, manrope-fallback, sans-serif;
+  --heading-font-family: manrope, manrope-fallback, sans-serif;
 
   /* body sizes */
-  --body-font-size-m: 22px;
-  --body-font-size-s: 19px;
-  --body-font-size-xs: 17px;
+  --body-font-size-m: 16px;
+  --body-font-size-s: 14px;
+  --body-font-size-xs: 12px;
 
   /* heading sizes */
-  --heading-font-size-xxl: 55px;
-  --heading-font-size-xl: 44px;
-  --heading-font-size-l: 34px;
-  --heading-font-size-m: 27px;
-  --heading-font-size-s: 24px;
-  --heading-font-size-xs: 22px;
+  --heading-font-size-xxl: 32px;
+  --heading-font-size-xl: 28px;
+  --heading-font-size-l: 24px;
+  --heading-font-size-m: 20px;
+  --heading-font-size-s: 18px;
+  --heading-font-size-xs: 16px;
+
+  /* layout */
+  --content-max-width: 1366px;
+  --content-padding: 24px;
+  --section-spacing: 64px;
 
   /* nav height */
-  --nav-height: 64px;
+  --nav-height: 92px;
 }
 
 /* fallback fonts */
 @font-face {
-  font-family: roboto-condensed-fallback;
-  size-adjust: 88.82%;
-  src: local('Arial');
-}
-
-@font-face {
-  font-family: roboto-fallback;
-  size-adjust: 99.529%;
+  font-family: manrope-fallback;
+  size-adjust: 103.5%;
   src: local('Arial');
 }
 
 @media (width >= 900px) {
   :root {
-    /* body sizes */
-    --body-font-size-m: 18px;
-    --body-font-size-s: 16px;
-    --body-font-size-xs: 14px;
-
     /* heading sizes */
-    --heading-font-size-xxl: 45px;
-    --heading-font-size-xl: 36px;
-    --heading-font-size-l: 28px;
-    --heading-font-size-m: 22px;
-    --heading-font-size-s: 20px;
-    --heading-font-size-xs: 18px;
+    --heading-font-size-xxl: 40px;
+    --heading-font-size-xl: 32px;
+    --heading-font-size-l: 24px;
+    --heading-font-size-m: 20px;
+    --heading-font-size-s: 18px;
+    --heading-font-size-xs: 16px;
+
+    /* layout */
+    --content-padding: 92px;
+    --section-spacing: 124px;
+
+    /* nav height */
+    --nav-height: 112px;
   }
 }
 
@@ -77,7 +86,7 @@ body {
   color: var(--text-color);
   font-family: var(--body-font-family);
   font-size: var(--body-font-size-m);
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 body.appear {
@@ -106,9 +115,11 @@ h5,
 h6 {
   margin-top: 0.8em;
   margin-bottom: 0.25em;
+  color: var(--heading-color);
   font-family: var(--heading-font-family);
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.25;
+  letter-spacing: -0.025em;
   scroll-margin: 40px;
 }
 
@@ -178,12 +189,13 @@ button.button {
   justify-content: center;
   max-width: 100%;
   margin: 0;
-  border: 2px solid transparent;
-  border-radius: 2.4em;
-  padding: 0.5em 1.2em;
+  border: 1px solid transparent;
+  border-radius: 100px;
+  padding: 13px 32px;
   font: inherit;
-  font-weight: 500;
-  line-height: 1.25;
+  font-size: var(--body-font-size-m);
+  font-weight: 600;
+  line-height: 24px;
   text-decoration: none;
   cursor: pointer;
   overflow: hidden;
@@ -208,9 +220,9 @@ a.button.primary:hover,
 a.button.primary:focus-visible,
 button.button.primary:hover,
 button.button.primary:focus-visible {
-  border-color: var(--dark-color);
-  background-color: var(--dark-color);
-  color: var(--light-color);
+  border-color: #333;
+  background-color: #333;
+  color: var(--background-color);
 }
 
 a.button.primary[aria-disabled="true"],
@@ -297,29 +309,66 @@ main img {
 
 /* sections */
 main > .section {
-  margin: 40px 0;
+  margin: var(--section-spacing) 0;
 }
 
 main > .section > div {
-  max-width: 1200px;
+  box-sizing: border-box;
+  max-width: var(--content-max-width);
   margin: auto;
-  padding: 0 24px;
+  padding: 0 var(--content-padding);
 }
 
 main > .section:first-of-type {
   margin-top: 0;
 }
 
+/* full-bleed blocks keep a 12px gutter on every viewport */
+main > .section > .hero-loan-wrapper,
+main > .section > .offers-wrapper {
+  padding: 0 12px;
+}
+
+main > .section > .testimonials-wrapper {
+  max-width: none;
+  padding-right: 12px;
+}
+
+@media (width >= 1367px) {
+  main > .section > .testimonials-wrapper {
+    padding-left: calc((100vw - var(--content-max-width)) / 2 + var(--content-padding));
+  }
+}
+
+/* offers continue straight on from the highlighted EMI section */
+main > .section.highlight + .section.offers-container {
+  margin-top: 12px;
+}
+
+/* eyebrow paragraph directly above a section heading */
+main .default-content-wrapper > p:has(+ h2) {
+  margin: 0 0 8px;
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  line-height: 20px;
+}
+
+main .default-content-wrapper > p + h2,
+main .default-content-wrapper > h2:first-child {
+  margin: 0 0 32px;
+  line-height: 40px;
+}
+
 @media (width >= 900px) {
-  main > .section > div {
-    padding: 0 32px;
+  main .default-content-wrapper > h2:only-child {
+    margin-bottom: 40px;
   }
 }
 
 /* section metadata */
 main .section.light,
 main .section.highlight {
-  background-color: var(--light-color);
+  background-color: var(--surface-color);
   margin: 0;
-  padding: 40px 0;
+  padding: var(--section-spacing) 0;
 }
