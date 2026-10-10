@@ -1,0 +1,161 @@
+{
+  "definitions": [
+    {
+      "title": "EMI Calculator",
+      "id": "emi-calculator",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "EMI Calculator",
+              "model": "emi-calculator",
+              "filter": "emi-calculator",
+              "linkText": "Apply now"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Loan Type",
+      "id": "emi-loan-type",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "name": "Loan Type",
+              "model": "emi-loan-type",
+              "amount_min": 100000,
+              "amount_max": 10000000,
+              "amount_default": 5000000,
+              "rate_min": 8,
+              "rate_max": 24,
+              "rate_default": 8,
+              "tenure_min": 1,
+              "tenure_max": 7,
+              "tenure_default": 5
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "emi-calculator",
+      "fields": [
+        {
+          "component": "richtext",
+          "name": "text",
+          "value": "",
+          "label": "Heading",
+          "description": "Short eyebrow line followed by the heading.",
+          "valueType": "string"
+        },
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "image",
+          "label": "Image",
+          "description": "Decorative image shown beside the calculator on desktop.",
+          "multi": false
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "imageAlt",
+          "label": "Alt text",
+          "value": ""
+        },
+        {
+          "component": "aem-content",
+          "name": "link",
+          "label": "Apply link"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "linkText",
+          "label": "Apply link text",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "emi-loan-type",
+      "fields": [
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "title",
+          "label": "Loan type",
+          "value": ""
+        },
+        {
+          "component": "number",
+          "valueType": "number",
+          "name": "amount_min",
+          "label": "Minimum loan amount (₹)"
+        },
+        {
+          "component": "number",
+          "valueType": "number",
+          "name": "amount_max",
+          "label": "Maximum loan amount (₹)"
+        },
+        {
+          "component": "number",
+          "valueType": "number",
+          "name": "amount_default",
+          "label": "Default loan amount (₹)"
+        },
+        {
+          "component": "number",
+          "valueType": "number",
+          "name": "rate_min",
+          "label": "Minimum interest rate (%)"
+        },
+        {
+          "component": "number",
+          "valueType": "number",
+          "name": "rate_max",
+          "label": "Maximum interest rate (%)"
+        },
+        {
+          "component": "number",
+          "valueType": "number",
+          "name": "rate_default",
+          "label": "Default interest rate (%)"
+        },
+        {
+          "component": "number",
+          "valueType": "number",
+          "name": "tenure_min",
+          "label": "Minimum tenure (years)"
+        },
+        {
+          "component": "number",
+          "valueType": "number",
+          "name": "tenure_max",
+          "label": "Maximum tenure (years)"
+        },
+        {
+          "component": "number",
+          "valueType": "number",
+          "name": "tenure_default",
+          "label": "Default tenure (years)"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "emi-calculator",
+      "components": [
+        "emi-loan-type"
+      ]
+    }
+  ]
+}

@@ -15,7 +15,20 @@
       "hero",
       "cards",
       "columns",
-      "fragment"
+      "fragment",
+      "hero-loan",
+      "product-tabs",
+      "emi-calculator",
+      "offers",
+      "testimonials",
+      "service-links",
+      "article-cards"
+    ]
+  },
+  {
+    "id": "article-cards",
+    "components": [
+      "article-card"
     ]
   },
   {
@@ -37,6 +50,42 @@
       "image",
       "button",
       "title"
+    ]
+  },
+  {
+    "id": "emi-calculator",
+    "components": [
+      "emi-loan-type"
+    ]
+  },
+  {
+    "id": "hero-loan",
+    "components": [
+      "hero-loan-slide"
+    ]
+  },
+  {
+    "id": "offers",
+    "components": [
+      "offer"
+    ]
+  },
+  {
+    "id": "product-tabs",
+    "components": [
+      "product-tab"
+    ]
+  },
+  {
+    "id": "service-links",
+    "components": [
+      "service-link"
+    ]
+  },
+  {
+    "id": "testimonials",
+    "components": [
+      "testimonial"
     ]
   }
 ]

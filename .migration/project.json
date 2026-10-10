@@ -1,0 +1,13 @@
+{
+  "sites": {
+    "milan-aem-coder": {
+      "previewOrg": "milandevnath-aem",
+      "previewSite": "milan-aem-coder",
+      "contentHostUrl": "author-p48457-e1275402.adobeaemcloud.com",
+      "aemSitePath": "/content/milan-aem-coder",
+      "aemAssetsFolderPath": "/content/dam/milan-aem-coder",
+      "aemSiteName": "milan-aem-coder",
+      "aemSiteTitle": "milan-aem-coder"
+    }
+  }
+}

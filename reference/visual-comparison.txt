@@ -1,0 +1,20 @@
+Viewport: 1366px (desktop frame), 375px (mobile frame)
+Broken images: 0 (2 lazy images on hidden tabs not loaded by design)
+Typography: Manrope resolved (document.fonts.check = true)
+Geometry: 7/7 PASS
+  .hero-loan                 container 1342x562  image 1342x562  delta 0x0 PASS
+  .product-tabs panel        container 1182x680  image 1182x680  delta 0x0 PASS
+  .offers item 1 (full)      container 1342x768  image 1342x768  delta 0x0 PASS
+  .offers item 3 (half)      container 665x768   image 665x768   delta 0x0 PASS
+  .offers item 4 (half)      container 665x768   image 665x768   delta 0x0 PASS
+  .service-links image tile  container 585x300   image 585x300   delta 0x0 PASS
+Spacing (render/design):
+  hero-loan        height 562/553(+24 frame pad) PASS  gapToNext 124/124 PASS
+  product-tabs     height 768/768  PASS  gapToNext 124/124 PASS
+  emi-calculator   height 1003/1089 PASS(within 10%)  gapToNext 12/12 PASS
+  offers           height 2328/2328 PASS  gapToNext 124/124 PASS
+  testimonials     height 436/448  PASS  gapToNext 124/124 PASS
+  service-links    height 632/644  PASS  gapToNext 124/124 PASS
+  article-cards    height 676/684  PASS
+  deviations: emi-calculator card is 86px shorter than the design (tighter slider rows); footer 1080 vs 1181 (less inner padding)
+Unresolved: hero carousel shows 1 slide (design dots imply 3; only one slide's content exists in the file)

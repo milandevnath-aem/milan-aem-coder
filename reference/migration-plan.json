@@ -1,0 +1,21 @@
+{
+  "pageName": "home",
+  "fileKey": "ZQGlS9KmxOkyimBNouvOhZ",
+  "pageNodeId": "2064:5689",
+  "mobileNodeId": "2064:5315",
+  "projectType": "xwalk",
+  "designWidth": 1366,
+  "mobileWidth": 375,
+  "totalBlocks": 9,
+  "blocks": [
+    { "order": 0, "nodeId": "2511:6993", "mobileNodeId": "2064:5316", "figmaName": "Hero FB (top nav)", "suggestedBlockType": "header", "suggestedVariantName": "header (nav fragment)", "width": 1366, "height": 64, "y": 1447, "status": "pending", "hasImages": true, "imageValidation": "pending" },
+    { "order": 1, "nodeId": "2064:5690", "mobileNodeId": "2064:5316", "figmaName": "Hero FB", "suggestedBlockType": "hero", "suggestedVariantName": "hero-loan", "width": 1366, "height": 689, "y": 1447, "status": "pending", "hasImages": true, "imageValidation": "pending" },
+    { "order": 2, "nodeId": "2064:5762", "mobileNodeId": "2064:5358", "figmaName": "Section 2 GB", "suggestedBlockType": "tabs", "suggestedVariantName": "product-tabs", "width": 1366, "height": 768, "y": 2260, "status": "pending", "hasImages": true, "imageValidation": "pending" },
+    { "order": 3, "nodeId": "2064:5799", "mobileNodeId": "2064:5394", "figmaName": "EMI calculator FB", "suggestedBlockType": "emi-calculator", "suggestedVariantName": "emi-calculator", "width": 1366, "height": 1089, "y": 3152, "status": "pending", "hasImages": true, "imageValidation": "pending" },
+    { "order": 4, "nodeId": "2064:5860", "mobileNodeId": "2064:5394", "figmaName": "Offers FB", "suggestedBlockType": "cards", "suggestedVariantName": "offers", "rowCount": 4, "width": 1366, "height": 2352, "y": 4241, "status": "pending", "hasImages": true, "imageValidation": "pending" },
+    { "order": 5, "nodeId": "2064:5895", "mobileNodeId": "2064:5526", "figmaName": "Testimonials GB", "suggestedBlockType": "carousel", "suggestedVariantName": "testimonials", "width": 1366, "height": 448, "y": 6717, "status": "pending", "hasImages": true, "imageValidation": "pending" },
+    { "order": 6, "nodeId": "2064:5933", "mobileNodeId": "2064:5565", "figmaName": "CS AB", "suggestedBlockType": "cards", "suggestedVariantName": "service-links", "width": 1366, "height": 644, "y": 7289, "status": "pending", "hasImages": true, "imageValidation": "pending" },
+    { "order": 7, "nodeId": "2064:5964", "mobileNodeId": "2064:5585", "figmaName": "Regulatory Updates GB", "suggestedBlockType": "cards", "suggestedVariantName": "article-cards", "width": 1366, "height": 684, "y": 8057, "status": "pending", "hasImages": true, "imageValidation": "pending" },
+    { "order": 8, "nodeId": "2064:5992", "mobileNodeId": "2064:5616", "figmaName": "Footer - Laptop", "suggestedBlockType": "footer", "suggestedVariantName": "footer (fragment)", "width": 1366, "height": 1181, "y": 8865, "status": "pending", "hasImages": true, "imageValidation": "pending" }
+  ]
+}
