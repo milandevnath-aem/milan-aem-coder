@@ -124,11 +124,27 @@ export default async function decorate(block) {
   nav.id = 'nav';
   while (fragment.firstElementChild) nav.append(fragment.firstElementChild);
 
-  const classes = ['brand', 'sections', 'tools'];
+  // an optional fourth section on top of brand/sections/tools holds the utility bar
+  const hasTopbar = nav.children.length > 3;
+  const classes = hasTopbar ? ['topbar', 'brand', 'sections', 'tools'] : ['brand', 'sections', 'tools'];
   classes.forEach((c, i) => {
     const section = nav.children[i];
     if (section) section.classList.add(`nav-${c}`);
   });
+
+  const navTopbar = nav.querySelector('.nav-topbar');
+  if (navTopbar) {
+    navTopbar.remove();
+    const announcement = navTopbar.querySelector('p');
+    if (announcement) {
+      announcement.classList.add('nav-announcement');
+      const track = document.createElement('span');
+      track.className = 'nav-announcement-track';
+      while (announcement.firstChild) track.append(announcement.firstChild);
+      announcement.append(track);
+    }
+    navTopbar.querySelector('ul')?.classList.add('nav-utility');
+  }
 
   const navBrand = nav.querySelector('.nav-brand');
   const brandLink = navBrand.querySelector('.button');
@@ -166,6 +182,7 @@ export default async function decorate(block) {
 
   const navWrapper = document.createElement('div');
   navWrapper.className = 'nav-wrapper';
+  if (navTopbar) navWrapper.append(navTopbar);
   navWrapper.append(nav);
   block.append(navWrapper);
 }

@@ -1,0 +1,109 @@
+{
+  "definitions": [
+    {
+      "title": "Hero Loan",
+      "id": "hero-loan",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Hero Loan",
+              "model": "hero-loan",
+              "filter": "hero-loan",
+              "formHeading": "<h2>Start Your Loan Journey Today</h2><p>Get a call back from our loan expert.</p>",
+              "formCategories": "New car, Used car & Re-finance, Two-Wheeler, Car Lease, Dealer finance",
+              "formActionText": "Apply now"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Hero Loan Slide",
+      "id": "hero-loan-slide",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "name": "Hero Loan Slide",
+              "model": "hero-loan-slide"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "hero-loan",
+      "fields": [
+        {
+          "component": "richtext",
+          "name": "formHeading",
+          "value": "",
+          "label": "Form heading",
+          "description": "Heading and short description shown above the lead form.",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "formCategories",
+          "label": "Loan categories",
+          "description": "Comma-separated list. The first five are shown, the rest appear under \"More\".",
+          "value": ""
+        },
+        {
+          "component": "aem-content",
+          "name": "formAction",
+          "label": "Form submit URL",
+          "description": "Endpoint that receives the lead (name, mobile, category). Leave empty to show a confirmation message only."
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "formActionText",
+          "label": "Submit button label",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "hero-loan-slide",
+      "fields": [
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "image",
+          "label": "Background image",
+          "multi": false
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "imageAlt",
+          "label": "Alt text",
+          "value": ""
+        },
+        {
+          "component": "richtext",
+          "name": "text",
+          "value": "",
+          "label": "Text",
+          "description": "Heading, short description and a bold link for the call to action.",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "hero-loan",
+      "components": [
+        "hero-loan-slide"
+      ]
+    }
+  ]
+}

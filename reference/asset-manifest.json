@@ -1,0 +1,10 @@
+{
+  "pageName": "home",
+  "imageDirectory": "content/images/home",
+  "assets": [],
+  "summary": {
+    "totalDiscovered": 0,
+    "totalDownloaded": 0,
+    "totalMissing": 0
+  }
+}
