@@ -34,6 +34,13 @@
         "name": "footer",
         "label": "Footer fragment",
         "description": "Site path of the footer fragment, e.g. /fragments/footer. Leave empty to use /footer."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "breadcrumb",
+        "label": "Breadcrumb title",
+        "description": "Shown in the footer breadcrumb (Home > title). Defaults to the page heading."
       }
     ]
   },
@@ -150,6 +157,10 @@
           {
             "name": "Highlight",
             "value": "highlight"
+          },
+          {
+            "name": "Brand (red, centered text)",
+            "value": "brand"
           }
         ]
       }
@@ -196,6 +207,60 @@
         "valueType": "string",
         "name": "readTime",
         "label": "Reading time",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "branch-locator",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Intro",
+        "description": "Heading and short description.",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "branch",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "city",
+        "label": "City",
+        "value": ""
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "details_address",
+        "label": "Address",
+        "value": ""
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "details_phone",
+        "label": "Phone",
+        "description": "Numbers separated by \" / \". Prefix a toll-free number with \"Toll-Free:\".",
+        "value": ""
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "details_timing",
+        "label": "Branch timing",
+        "value": ""
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "details_email",
+        "label": "Email",
         "value": ""
       }
     ]
@@ -345,6 +410,205 @@
     ]
   },
   {
+    "id": "faq",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Heading",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "faq-item",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "question",
+        "label": "Question",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "answer",
+        "value": "",
+        "label": "Answer",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "feature-banner-item",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Image",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Alt text",
+        "value": ""
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "mobileImage",
+        "label": "Mobile image",
+        "description": "Optional portrait crop used below 900px.",
+        "multi": false
+      },
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Text",
+        "description": "Heading (bold words are emphasised), description and an optional bold link for the button.",
+        "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "style_align",
+        "label": "Text position",
+        "valueType": "string",
+        "value": "left",
+        "options": [
+          {
+            "name": "Left",
+            "value": "left"
+          },
+          {
+            "name": "Right",
+            "value": "right"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "style_theme",
+        "label": "Text colour",
+        "valueType": "string",
+        "value": "dark",
+        "options": [
+          {
+            "name": "Dark text (light images)",
+            "value": "dark"
+          },
+          {
+            "name": "Light text (dark images)",
+            "value": "light"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "style_media",
+        "label": "Image mode",
+        "valueType": "string",
+        "value": "background",
+        "options": [
+          {
+            "name": "Full-width background",
+            "value": "background"
+          },
+          {
+            "name": "Beside the text",
+            "value": "side"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "feature-cards",
+    "fields": [
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Variant",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Feature grid (image and icon cards)",
+            "value": ""
+          },
+          {
+            "name": "Numbered cards",
+            "value": "numbered"
+          },
+          {
+            "name": "Split (heading and image left, cards right)",
+            "value": "split"
+          },
+          {
+            "name": "Info cards (label / value pairs)",
+            "value": "info"
+          }
+        ]
+      },
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Intro",
+        "description": "Optional. Heading; for the split variant also a bold link (button) and a short note.",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "feature-card",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Image or icon",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Alt text",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Text",
+        "description": "Title (heading 3) and description. For info cards: a label paragraph followed by a bold value paragraph, repeated.",
+        "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "layout",
+        "label": "Card type",
+        "valueType": "string",
+        "value": "icon",
+        "options": [
+          {
+            "name": "Icon card",
+            "value": "icon"
+          },
+          {
+            "name": "Large image card",
+            "value": "image"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "fragment",
     "fields": [
       {
@@ -358,6 +622,28 @@
     "id": "hero-loan",
     "fields": [
       {
+        "component": "select",
+        "name": "classes",
+        "label": "Variant",
+        "valueType": "string",
+        "value": "",
+        "description": "Home shows loan categories as chips; Product shows a category dropdown and hides the slide button on desktop; Plain hides the lead form.",
+        "options": [
+          {
+            "name": "Home (category chips)",
+            "value": ""
+          },
+          {
+            "name": "Product page (category dropdown)",
+            "value": "product"
+          },
+          {
+            "name": "Plain (no form, optional stat badges)",
+            "value": "plain"
+          }
+        ]
+      },
+      {
         "component": "richtext",
         "name": "formHeading",
         "value": "",
@@ -368,9 +654,17 @@
       {
         "component": "text",
         "valueType": "string",
-        "name": "formCategories",
+        "name": "formOptions_categories",
         "label": "Loan categories",
         "description": "Comma-separated list. The first five are shown, the rest appear under \"More\".",
+        "value": ""
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "formOptions_fields",
+        "label": "Form fields",
+        "description": "Comma-separated field labels, e.g. \"Your name, Mobile number\" or \"First name, Last name\". A label containing \"mobile\" or \"phone\" gets a +91 phone input. Leave the form heading and categories empty to hide the form.",
         "value": ""
       },
       {
@@ -406,11 +700,19 @@
         "value": ""
       },
       {
+        "component": "reference",
+        "valueType": "string",
+        "name": "mobileImage",
+        "label": "Mobile image",
+        "description": "Optional portrait crop used below 900px.",
+        "multi": false
+      },
+      {
         "component": "richtext",
         "name": "text",
         "value": "",
         "label": "Text",
-        "description": "Heading, short description and a bold link for the call to action.",
+        "description": "Heading, short description and a bold link for the call to action. A bulleted list of \"Label: value\" items becomes stat badges.",
         "valueType": "string"
       }
     ]
@@ -487,6 +789,10 @@
           {
             "name": "Half width (desktop)",
             "value": "half"
+          },
+          {
+            "name": "Full width, compact height",
+            "value": "short"
           }
         ]
       },
@@ -539,6 +845,73 @@
         "value": "",
         "label": "Products",
         "description": "Bulleted list. Each item: product name as a link, followed by a short description.",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "requirements",
+    "fields": [
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Variant",
+        "valueType": "string",
+        "value": "eligibility",
+        "options": [
+          {
+            "name": "Eligibility (icon, label, value)",
+            "value": "eligibility"
+          },
+          {
+            "name": "Documents (title and checklist)",
+            "value": "documents"
+          }
+        ]
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Decorative image",
+        "description": "Optional artwork shown behind the top-right corner.",
+        "multi": false
+      }
+    ]
+  },
+  {
+    "id": "requirement",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "tab",
+        "label": "Tab",
+        "description": "Cards with the same tab label are shown together. Leave empty on all cards for no tabs.",
+        "value": ""
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Icon",
+        "description": "Eligibility cards only.",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "title",
+        "label": "Label / title",
+        "description": "Eligibility: the label (e.g. Minimum age of applicant). Documents: the card title. Leave empty to add an intro line above the tab's cards.",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Value / checklist",
+        "description": "Eligibility: the value (e.g. 21 years). Documents: a bulleted checklist.",
         "valueType": "string"
       }
     ]
@@ -598,6 +971,33 @@
             "value": "tall"
           }
         ]
+      }
+    ]
+  },
+  {
+    "id": "team-member",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Photo",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Alt text",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Details",
+        "description": "Small line (e.g. DIN No), the name as heading 3, then the role.",
+        "valueType": "string"
       }
     ]
   },

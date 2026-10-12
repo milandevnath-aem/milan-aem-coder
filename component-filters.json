@@ -22,13 +22,25 @@
       "offers",
       "testimonials",
       "service-links",
-      "article-cards"
+      "article-cards",
+      "feature-banner",
+      "feature-cards",
+      "requirements",
+      "faq",
+      "team",
+      "branch-locator"
     ]
   },
   {
     "id": "article-cards",
     "components": [
       "article-card"
+    ]
+  },
+  {
+    "id": "branch-locator",
+    "components": [
+      "branch"
     ]
   },
   {
@@ -59,6 +71,24 @@
     ]
   },
   {
+    "id": "faq",
+    "components": [
+      "faq-item"
+    ]
+  },
+  {
+    "id": "feature-banner",
+    "components": [
+      "feature-banner-item"
+    ]
+  },
+  {
+    "id": "feature-cards",
+    "components": [
+      "feature-card"
+    ]
+  },
+  {
     "id": "hero-loan",
     "components": [
       "hero-loan-slide"
@@ -77,9 +107,21 @@
     ]
   },
   {
+    "id": "requirements",
+    "components": [
+      "requirement"
+    ]
+  },
+  {
     "id": "service-links",
     "components": [
       "service-link"
+    ]
+  },
+  {
+    "id": "team",
+    "components": [
+      "team-member"
     ]
   },
   {

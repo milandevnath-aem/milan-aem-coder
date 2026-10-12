@@ -1,0 +1,71 @@
+{
+  "definitions": [
+    {
+      "title": "Team",
+      "id": "team",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Team",
+              "filter": "team"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Team Member",
+      "id": "team-member",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "name": "Team Member",
+              "model": "team-member"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "team-member",
+      "fields": [
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "image",
+          "label": "Photo",
+          "multi": false
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "imageAlt",
+          "label": "Alt text",
+          "value": ""
+        },
+        {
+          "component": "richtext",
+          "name": "text",
+          "value": "",
+          "label": "Details",
+          "description": "Small line (e.g. DIN No), the name as heading 3, then the role.",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "team",
+      "components": [
+        "team-member"
+      ]
+    }
+  ]
+}

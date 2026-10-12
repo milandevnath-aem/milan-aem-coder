@@ -325,8 +325,29 @@ main > .section:first-of-type {
 
 /* full-bleed blocks keep a 12px gutter on every viewport */
 main > .section > .hero-loan-wrapper,
-main > .section > .offers-wrapper {
+main > .section > .offers-wrapper,
+main > .section > .branch-locator-wrapper {
   padding: 0 12px;
+}
+
+/* edge-to-edge bands */
+main > .section > .feature-banner-wrapper {
+  max-width: none;
+  padding: 0;
+}
+
+main > .section.feature-banner-container {
+  margin-top: 24px;
+  margin-bottom: 0;
+}
+
+main > .section.hero-loan-container:has(+ .feature-banner-container),
+main > .section.hero-loan-container:has(+ .brand) {
+  margin-bottom: 24px;
+}
+
+main > .section.feature-banner-container + .section {
+  margin-top: var(--section-spacing);
 }
 
 main > .section > .testimonials-wrapper {
@@ -365,10 +386,66 @@ main .default-content-wrapper > h2:first-child {
   }
 }
 
+/* heading with a subheading line below it (product pages) */
+main .section .default-content-wrapper > h2:has(+ p) {
+  margin: 0 0 8px;
+}
+
+main .default-content-wrapper > h2 + p {
+  margin: 0 0 24px;
+  color: var(--muted-color);
+  font-size: var(--body-font-size-m);
+  font-weight: 500;
+  line-height: 24px;
+}
+
+@media (width >= 900px) {
+  main .section .default-content-wrapper > h2:has(+ p) {
+    font-size: var(--heading-font-size-xxl);
+    line-height: 48px;
+    letter-spacing: -1px;
+  }
+
+  main .default-content-wrapper > h2 + p {
+    margin-bottom: 32px;
+    font-size: var(--heading-font-size-m);
+    line-height: 28px;
+  }
+}
+
 /* section metadata */
 main .section.light,
 main .section.highlight {
   background-color: var(--surface-color);
   margin: 0;
   padding: var(--section-spacing) 0;
+}
+
+main .section.brand {
+  margin: 0;
+  padding: 80px 0;
+  background-color: var(--brand-color);
+  color: #fff;
+  text-align: center;
+}
+
+main .section.brand .default-content-wrapper {
+  max-width: calc(680px + 2 * var(--content-padding));
+}
+
+main .section.brand p {
+  margin: 0;
+  font-size: var(--body-font-size-m);
+  font-weight: 600;
+  line-height: 24px;
+}
+
+@media (width >= 900px) {
+  main .section.brand {
+    padding: var(--section-spacing) 0;
+  }
+}
+
+main > .section.branch-locator-container:last-of-type {
+  margin-bottom: 24px;
 }

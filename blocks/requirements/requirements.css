@@ -1,0 +1,294 @@
+.requirements {
+  --requirements-card-bg: var(--surface-color);
+
+  position: relative;
+}
+
+.requirements .requirements-decoration {
+  position: absolute;
+  top: -200px;
+  right: calc(-1 * var(--content-padding));
+  z-index: -1;
+  width: min(560px, 70vw);
+  pointer-events: none;
+}
+
+.requirements .requirements-decoration img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* tabs */
+.requirements .requirements-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.requirements .requirements-tabs button {
+  margin: 0;
+  padding: 7px 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 100px;
+  background: transparent;
+  color: var(--text-color);
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  line-height: 20px;
+  cursor: pointer;
+}
+
+.requirements.eligibility .requirements-tabs button {
+  border-color: transparent;
+  background-color: var(--light-color);
+  color: var(--muted-color);
+}
+
+.requirements .requirements-tabs button[aria-selected='true'] {
+  border-color: var(--text-color);
+  background-color: var(--text-color);
+  color: var(--inverse-color);
+}
+
+.requirements .requirements-tabs button:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.requirements .requirements-panel[hidden] {
+  display: none;
+}
+
+.requirements .requirements-panel-intro {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.requirements .requirements-panel-intro h3 {
+  margin: 0;
+  font-size: var(--heading-font-size-m);
+  font-weight: 600;
+  line-height: 28px;
+}
+
+.requirements .requirements-panel-intro p {
+  margin: 4px 0 0;
+  color: var(--muted-color);
+  font-size: var(--body-font-size-s);
+  line-height: 20px;
+}
+
+.requirements .requirements-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* eligibility cards */
+.requirements .requirements-card {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 24px;
+  border-radius: 24px;
+  background-color: var(--requirements-card-bg);
+}
+
+.requirements .requirements-icon img {
+  display: block;
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+}
+
+.requirements .requirements-title {
+  margin: 48px 0 0;
+  color: var(--muted-color);
+  font-size: var(--body-font-size-m);
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.requirements .requirements-text p {
+  margin: 4px 0 0;
+  font-size: var(--heading-font-size-l);
+  font-weight: 600;
+  line-height: 32px;
+}
+
+/* documents cards */
+.requirements.documents .requirements-card {
+  border: 1px solid var(--border-light-color);
+  background-color: var(--background-color);
+}
+
+.requirements.documents .requirements-title {
+  margin: 0;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--surface-color);
+  color: var(--text-color);
+  font-size: var(--body-font-size-m);
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: 0;
+}
+
+.requirements.documents .requirements-text ul {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.requirements.documents .requirements-text li {
+  position: relative;
+  padding-left: 28px;
+  color: var(--muted-color);
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.requirements.documents .requirements-text li::before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--surface-color) url('../../icons/check.svg') center / 12px no-repeat;
+}
+
+.requirements.documents .requirements-text p {
+  margin: 16px 0 0;
+  color: var(--muted-color);
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  line-height: 20px;
+}
+
+/* carousel arrows */
+.requirements .requirements-nav {
+  display: none;
+}
+
+.requirements .requirements-panel .requirements-nav button {
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--text-color);
+  border-radius: 50%;
+  background: center / 20px no-repeat transparent;
+  cursor: pointer;
+}
+
+.requirements .requirements-panel .requirements-nav .requirements-prev {
+  background-image: url('../../icons/chevron-left.svg');
+}
+
+.requirements .requirements-panel .requirements-nav .requirements-next {
+  background-image: url('../../icons/chevron-right.svg');
+}
+
+.requirements .requirements-panel .requirements-nav button:disabled {
+  border-color: var(--border-color);
+  opacity: 0.5;
+  cursor: default;
+}
+
+@media (width >= 900px) {
+  .requirements .requirements-tabs {
+    margin-bottom: 32px;
+  }
+
+  .requirements .requirements-tabs button {
+    padding: 9px 19px;
+    font-size: var(--body-font-size-m);
+    line-height: 24px;
+  }
+
+  .requirements.eligibility .requirements-cards {
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .requirements.eligibility .requirements-cards::-webkit-scrollbar {
+    display: none;
+  }
+
+  .requirements.eligibility .requirements-card {
+    flex: 0 0 calc((100% - 24px) / 3);
+    min-height: 272px;
+    padding: 32px;
+    border-radius: 32px;
+    scroll-snap-align: start;
+  }
+
+  .requirements .requirements-icon img {
+    width: 72px;
+    height: 72px;
+  }
+
+  .requirements .requirements-title {
+    margin-top: auto;
+    font-size: var(--heading-font-size-m);
+    line-height: 28px;
+  }
+
+  .requirements .requirements-text p {
+    font-size: var(--heading-font-size-xxl);
+    line-height: 40px;
+  }
+
+  .requirements .requirements-nav {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 32px;
+  }
+
+  .requirements .requirements-nav[hidden] {
+    display: none;
+  }
+
+  .requirements.documents .requirements-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: start;
+  }
+
+  .requirements.documents .requirements-card {
+    padding: 24px;
+  }
+
+  .requirements.documents .requirements-title {
+    font-size: var(--heading-font-size-m);
+    line-height: 28px;
+  }
+
+  .requirements.documents .requirements-text li,
+  .requirements.documents .requirements-text p {
+    font-size: var(--body-font-size-m);
+    line-height: 24px;
+  }
+
+  .requirements.documents .requirements-text li::before {
+    top: 3px;
+  }
+
+  .requirements .requirements-decoration {
+    top: -180px;
+    width: 560px;
+  }
+}

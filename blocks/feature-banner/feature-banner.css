@@ -1,0 +1,181 @@
+.feature-banner {
+  --feature-banner-height: 600px;
+  --feature-banner-text: var(--text-color);
+  --feature-banner-muted: var(--muted-color);
+}
+
+.feature-banner > ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.feature-banner .feature-banner-item {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-height: var(--feature-banner-height);
+  overflow: hidden;
+  background-color: var(--background-color);
+  color: var(--feature-banner-text);
+}
+
+.feature-banner .feature-banner-item.light-text {
+  --feature-banner-text: var(--inverse-color);
+  --feature-banner-muted: #d6d6d6;
+
+  background-color: #1a1a1a;
+}
+
+.feature-banner .feature-banner-image,
+.feature-banner .feature-banner-image img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.feature-banner .feature-banner-image img {
+  object-fit: cover;
+}
+
+/* without a dedicated mobile crop keep the subject (opposite the text) in view */
+.feature-banner .text-left:not(.has-mobile-image) .feature-banner-image img {
+  object-position: 75% bottom;
+}
+
+.feature-banner .text-right:not(.has-mobile-image) .feature-banner-image img {
+  object-position: 25% bottom;
+}
+
+.feature-banner .feature-banner-content {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 80px 24px 40px;
+}
+
+.feature-banner .feature-banner-content h2,
+.feature-banner .feature-banner-content h3 {
+  margin: 0;
+  color: inherit;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 36px;
+  letter-spacing: -0.7px;
+}
+
+.feature-banner .feature-banner-content h2 strong,
+.feature-banner .feature-banner-content h3 strong {
+  font-weight: 700;
+}
+
+.feature-banner .feature-banner-content p {
+  margin: 12px 0 0;
+  color: var(--feature-banner-muted);
+  font-size: var(--body-font-size-m);
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.feature-banner .feature-banner-content p strong {
+  color: var(--feature-banner-text);
+}
+
+.feature-banner .feature-banner-content .button-wrapper {
+  margin-top: 24px;
+}
+
+.feature-banner .feature-banner-content a.button {
+  padding: 10px 28px;
+  border-color: var(--text-color);
+  background-color: var(--text-color);
+  color: var(--background-color);
+  font-size: var(--body-font-size-m);
+}
+
+.feature-banner .light-text .feature-banner-content a.button {
+  border-color: #fff;
+  background-color: #fff;
+  color: var(--text-color);
+}
+
+/* side image: the picture sits in its own half instead of filling the band */
+.feature-banner .side-image {
+  background-color: var(--background-color);
+}
+
+.feature-banner .side-image .feature-banner-image {
+  position: relative;
+  order: 2;
+  height: auto;
+}
+
+.feature-banner .feature-banner-item.side-image .feature-banner-image img {
+  position: static;
+  height: auto;
+}
+
+@media (width >= 900px) {
+  .feature-banner {
+    --feature-banner-height: 672px;
+  }
+
+  .feature-banner .feature-banner-item {
+    flex-direction: row;
+    align-items: center;
+    padding: 92px var(--content-padding);
+  }
+
+  .feature-banner .text-right {
+    justify-content: flex-end;
+  }
+
+  .feature-banner .text-left:not(.has-mobile-image) .feature-banner-image img,
+  .feature-banner .text-right:not(.has-mobile-image) .feature-banner-image img {
+    object-position: center;
+  }
+
+  .feature-banner .feature-banner-content {
+    max-width: 500px;
+    padding: 0;
+  }
+
+  .feature-banner .feature-banner-content h2,
+  .feature-banner .feature-banner-content h3 {
+    font-size: var(--heading-font-size-xxl);
+    line-height: 40px;
+    letter-spacing: -0.8px;
+  }
+
+  .feature-banner .feature-banner-content p {
+    font-size: var(--heading-font-size-m);
+    line-height: 28px;
+  }
+
+  .feature-banner .feature-banner-content .button-wrapper {
+    margin-top: 44px;
+  }
+
+  .feature-banner .feature-banner-content a.button {
+    padding: 14px 32px;
+  }
+
+  .feature-banner .side-image .feature-banner-image {
+    position: absolute;
+    inset: 0 auto 0 0;
+    order: 0;
+    display: flex;
+    align-items: center;
+    width: 51.3%;
+  }
+
+  .feature-banner .side-image.text-left .feature-banner-image {
+    inset: 0 0 0 auto;
+  }
+
+  .feature-banner .feature-banner-item.side-image .feature-banner-image img {
+    width: 100%;
+  }
+}
