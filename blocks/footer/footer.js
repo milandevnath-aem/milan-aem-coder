@@ -54,6 +54,19 @@ export default async function decorate(block) {
 
   footer.querySelectorAll('.footer-bottom li:has(> ul)').forEach(buildDropdown);
 
+  // breadcrumb (Home > current page) above the copyright line on inner pages
+  const isHome = /^\/(home|index|content\/home)?\/?$/.test(window.location.pathname);
+  const crumb = getMetadata('breadcrumb') || (!isHome && document.querySelector('main h1')?.textContent.trim());
+  const bottom = footer.querySelector('.footer-bottom .default-content-wrapper');
+  if (crumb && bottom) {
+    const nav = document.createElement('nav');
+    nav.className = 'footer-breadcrumb';
+    nav.setAttribute('aria-label', 'Breadcrumb');
+    nav.innerHTML = '<ol><li><a href="/">Home</a></li><li aria-current="page"></li></ol>';
+    nav.querySelector('[aria-current]').textContent = crumb;
+    bottom.querySelector(':scope > p')?.before(nav);
+  }
+
   // the brand and link areas share a white card below the red banner
   const card = document.createElement('div');
   card.className = 'footer-card';

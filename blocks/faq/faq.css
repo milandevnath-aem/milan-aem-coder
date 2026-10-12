@@ -1,0 +1,92 @@
+.faq {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.faq .faq-intro h2 {
+  margin: 0;
+  font-size: var(--heading-font-size-xxl);
+  line-height: 40px;
+}
+
+.faq .faq-item {
+  border-bottom: 1px solid var(--surface-color);
+}
+
+.faq .faq-item summary {
+  position: relative;
+  padding: 20px 32px 20px 0;
+  font-size: var(--body-font-size-m);
+  font-weight: 500;
+  line-height: 24px;
+  list-style: none;
+  cursor: pointer;
+}
+
+.faq .faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq .faq-item summary::after {
+  content: '';
+  position: absolute;
+  top: 22px;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  background: url('../../icons/chevron-down.svg') center / contain no-repeat;
+  transition: transform 0.2s;
+}
+
+.faq .faq-item[open] summary::after {
+  transform: rotate(180deg);
+}
+
+.faq .faq-item summary:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.faq .faq-answer {
+  padding: 0 40px 20px 0;
+  color: var(--muted-color);
+  font-size: var(--body-font-size-m);
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.faq .faq-answer p {
+  margin: 0 0 8px;
+}
+
+@media (width >= 900px) {
+  .faq {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 80px;
+  }
+
+  .faq .faq-intro {
+    flex: 0 1 442px;
+  }
+
+  .faq .faq-intro h2 {
+    font-size: var(--heading-font-size-xxl);
+    line-height: 48px;
+  }
+
+  .faq .faq-list {
+    flex: 0 1 660px;
+  }
+
+  .faq .faq-item summary,
+  .faq .faq-answer {
+    font-size: var(--heading-font-size-m);
+    line-height: 28px;
+  }
+
+  .faq .faq-item summary::after {
+    top: 24px;
+  }
+}

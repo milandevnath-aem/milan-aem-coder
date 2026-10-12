@@ -1,0 +1,204 @@
+.branch-locator {
+  box-sizing: border-box;
+  padding: 44px 24px 24px;
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at 85% 0%, rgb(238 156 147 / 80%) 0, transparent 45%),
+    linear-gradient(180deg, #c33d33 0%, #f6e6cf 100%);
+  color: var(--inverse-color);
+}
+
+.branch-locator .branch-locator-intro h1,
+.branch-locator .branch-locator-intro h2 {
+  margin: 0;
+  color: inherit;
+  font-size: var(--heading-font-size-xxl);
+  font-weight: 500;
+  line-height: 40px;
+  letter-spacing: -0.8px;
+}
+
+.branch-locator .branch-locator-intro p {
+  margin: 12px 0 0;
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.branch-locator .branch-locator-main {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 32px;
+  color: var(--text-color);
+}
+
+.branch-locator .branch-locator-left {
+  display: contents;
+}
+
+.branch-locator .branch-locator-select {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  order: 1;
+  padding: 12px 52px 12px 20px;
+  border-radius: 16px;
+  background-color: var(--background-color);
+  cursor: pointer;
+}
+
+.branch-locator .branch-locator-select::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  width: 20px;
+  height: 20px;
+  transform: translateY(-50%);
+  background: url('../../icons/chevron-down.svg') center / contain no-repeat;
+  pointer-events: none;
+}
+
+.branch-locator .branch-locator-select:focus-within {
+  outline: 2px solid var(--text-color);
+}
+
+.branch-locator .branch-locator-select span {
+  color: var(--muted-color);
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  line-height: 18px;
+}
+
+.branch-locator .branch-locator-select select {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-color);
+  font-size: var(--heading-font-size-m);
+  font-weight: 500;
+  line-height: 28px;
+  appearance: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.branch-locator .branch-locator-map {
+  order: 3;
+  height: 240px;
+  border: 4px solid rgb(252 252 252 / 60%);
+  border-radius: 16px;
+  background-color: var(--surface-color);
+  overflow: hidden;
+}
+
+.branch-locator .branch-locator-map iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.branch-locator .branch-locator-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  order: 2;
+  margin: 0;
+  padding: 24px;
+  border-radius: 20px;
+  background-color: var(--background-color);
+}
+
+.branch-locator .branch-locator-row {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 2px 24px;
+  align-items: start;
+}
+
+.branch-locator .branch-locator-icon {
+  grid-row: span 2;
+  box-sizing: border-box;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #dedede;
+  border-radius: 8px;
+  background: var(--surface-color) center / 20px no-repeat;
+}
+
+.branch-locator .icon-location { background-image: url('../../icons/location.svg'); }
+.branch-locator .icon-call { background-image: url('../../icons/call.svg'); }
+.branch-locator .icon-clock { background-image: url('../../icons/clock.svg'); }
+.branch-locator .icon-mail { background-image: url('../../icons/mail.svg'); }
+
+.branch-locator .branch-locator-row dt {
+  color: var(--muted-color);
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  line-height: 18px;
+}
+
+.branch-locator .branch-locator-row dd {
+  margin: 0;
+  font-size: var(--body-font-size-m);
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.branch-locator .branch-locator-row dd a {
+  color: inherit;
+}
+
+.branch-locator .branch-locator-tollfree {
+  color: #0b7d42;
+}
+
+.branch-locator .branch-locator-row dd .branch-locator-tollfree a {
+  color: #0b7d42;
+  text-decoration: underline;
+}
+
+@media (width >= 900px) {
+  .branch-locator {
+    padding: 48px 80px;
+    border-radius: 44px;
+  }
+
+  .branch-locator .branch-locator-intro {
+    max-width: 540px;
+  }
+
+  .branch-locator .branch-locator-intro h1,
+  .branch-locator .branch-locator-intro h2 {
+    font-size: var(--heading-font-size-xxl);
+    line-height: 48px;
+  }
+
+  .branch-locator .branch-locator-intro p {
+    margin-top: 24px;
+    font-size: var(--body-font-size-m);
+    line-height: 24px;
+  }
+
+  .branch-locator .branch-locator-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: 12px;
+  }
+
+  .branch-locator .branch-locator-left {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .branch-locator .branch-locator-map {
+    height: 268px;
+  }
+}

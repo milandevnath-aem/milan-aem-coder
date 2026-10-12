@@ -1,0 +1,115 @@
+{
+  "definitions": [
+    {
+      "title": "Feature Banner",
+      "id": "feature-banner",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Feature Banner",
+              "filter": "feature-banner"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Feature Banner Item",
+      "id": "feature-banner-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "name": "Feature Banner Item",
+              "model": "feature-banner-item",
+              "style_align": "left",
+              "style_theme": "dark",
+              "style_media": "background"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "feature-banner-item",
+      "fields": [
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "image",
+          "label": "Image",
+          "multi": false
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "imageAlt",
+          "label": "Alt text",
+          "value": ""
+        },
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "mobileImage",
+          "label": "Mobile image",
+          "description": "Optional portrait crop used below 900px.",
+          "multi": false
+        },
+        {
+          "component": "richtext",
+          "name": "text",
+          "value": "",
+          "label": "Text",
+          "description": "Heading (bold words are emphasised), description and an optional bold link for the button.",
+          "valueType": "string"
+        },
+        {
+          "component": "select",
+          "name": "style_align",
+          "label": "Text position",
+          "valueType": "string",
+          "value": "left",
+          "options": [
+            { "name": "Left", "value": "left" },
+            { "name": "Right", "value": "right" }
+          ]
+        },
+        {
+          "component": "select",
+          "name": "style_theme",
+          "label": "Text colour",
+          "valueType": "string",
+          "value": "dark",
+          "options": [
+            { "name": "Dark text (light images)", "value": "dark" },
+            { "name": "Light text (dark images)", "value": "light" }
+          ]
+        },
+        {
+          "component": "select",
+          "name": "style_media",
+          "label": "Image mode",
+          "valueType": "string",
+          "value": "background",
+          "options": [
+            { "name": "Full-width background", "value": "background" },
+            { "name": "Beside the text", "value": "side" }
+          ]
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "feature-banner",
+      "components": [
+        "feature-banner-item"
+      ]
+    }
+  ]
+}

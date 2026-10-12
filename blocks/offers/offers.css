@@ -138,3 +138,44 @@
     line-height: 20px;
   }
 }
+
+/* compact band (e.g. "Need help?") */
+.offers .offers-short {
+  --offers-height: 672px;
+  --offers-padding: 80px 24px 24px;
+}
+
+.offers .offers-content > p:not(.offers-eyebrow, .button-wrapper) {
+  margin-top: 16px;
+  font-size: var(--body-font-size-m);
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.offers .offers-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.offers .offers-buttons .button-wrapper {
+  margin: 0;
+}
+
+.offers .offers-content .offers-buttons a.button {
+  min-width: 0;
+}
+
+@media (width >= 900px) {
+  .offers .offers-short {
+    --offers-height: 672px;
+    --offers-padding: 124px 12px 44px;
+  }
+
+  .offers .offers-short .offers-content h2 {
+    font-size: var(--heading-font-size-xxl);
+    line-height: 48px;
+  }
+}

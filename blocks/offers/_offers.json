@@ -80,6 +80,10 @@
             {
               "name": "Half width (desktop)",
               "value": "half"
+            },
+            {
+              "name": "Full width, compact height",
+              "value": "short"
             }
           ]
         },

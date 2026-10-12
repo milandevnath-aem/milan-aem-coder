@@ -278,3 +278,36 @@ footer .footer-bottom .icon {
     justify-content: flex-end;
   }
 }
+
+/* breadcrumb */
+footer .footer-breadcrumb {
+  grid-column: 1 / -1;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--surface-color);
+}
+
+footer .footer-breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--body-font-size-m);
+  line-height: 24px;
+}
+
+footer .footer-breadcrumb li + li::before {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 12px;
+  vertical-align: -2px;
+  background: url('../../icons/chevron-right.svg') center / contain no-repeat;
+}
+
+footer .footer-card .footer-breadcrumb li a:any-link {
+  color: var(--muted-color);
+}

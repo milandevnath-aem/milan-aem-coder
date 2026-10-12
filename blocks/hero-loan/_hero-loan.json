@@ -11,8 +11,6 @@
               "name": "Hero Loan",
               "model": "hero-loan",
               "filter": "hero-loan",
-              "formHeading": "<h2>Start Your Loan Journey Today</h2><p>Get a call back from our loan expert.</p>",
-              "formCategories": "New car, Used car & Re-finance, Two-Wheeler, Car Lease, Dealer finance",
               "formActionText": "Apply now"
             }
           }
@@ -40,6 +38,28 @@
       "id": "hero-loan",
       "fields": [
         {
+          "component": "select",
+          "name": "classes",
+          "label": "Variant",
+          "valueType": "string",
+          "value": "",
+          "description": "Home shows loan categories as chips; Product shows a category dropdown and hides the slide button on desktop; Plain hides the lead form.",
+          "options": [
+            {
+              "name": "Home (category chips)",
+              "value": ""
+            },
+            {
+              "name": "Product page (category dropdown)",
+              "value": "product"
+            },
+            {
+              "name": "Plain (no form, optional stat badges)",
+              "value": "plain"
+            }
+          ]
+        },
+        {
           "component": "richtext",
           "name": "formHeading",
           "value": "",
@@ -50,9 +70,17 @@
         {
           "component": "text",
           "valueType": "string",
-          "name": "formCategories",
+          "name": "formOptions_categories",
           "label": "Loan categories",
           "description": "Comma-separated list. The first five are shown, the rest appear under \"More\".",
+          "value": ""
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "formOptions_fields",
+          "label": "Form fields",
+          "description": "Comma-separated field labels, e.g. \"Your name, Mobile number\" or \"First name, Last name\". A label containing \"mobile\" or \"phone\" gets a +91 phone input. Leave the form heading and categories empty to hide the form.",
           "value": ""
         },
         {
@@ -88,11 +116,19 @@
           "value": ""
         },
         {
+          "component": "reference",
+          "valueType": "string",
+          "name": "mobileImage",
+          "label": "Mobile image",
+          "description": "Optional portrait crop used below 900px.",
+          "multi": false
+        },
+        {
           "component": "richtext",
           "name": "text",
           "value": "",
           "label": "Text",
-          "description": "Heading, short description and a bold link for the call to action.",
+          "description": "Heading, short description and a bold link for the call to action. A bulleted list of \"Label: value\" items becomes stat badges.",
           "valueType": "string"
         }
       ]

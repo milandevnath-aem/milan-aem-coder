@@ -18,6 +18,7 @@ export default function decorate(block) {
       : '';
     const layout = /\bhalf\b/i.test(style) ? 'half' : 'full';
     item.classList.add(`offers-${layout}`);
+    if (/\bshort\b/i.test(style)) item.classList.add('offers-short');
     if (/\bdark\b/i.test(style)) item.classList.add('offers-dark-text');
 
     const img = imageCell?.querySelector('img');
@@ -35,6 +36,14 @@ export default function decorate(block) {
       textCell.className = 'offers-content';
       const eyebrow = textCell.querySelector('p:first-child:not(.button-wrapper)');
       if (eyebrow && eyebrow.nextElementSibling?.matches('h1, h2, h3, h4')) eyebrow.classList.add('offers-eyebrow');
+      // several call-to-action paragraphs sit side by side
+      const buttons = [...textCell.querySelectorAll(':scope > .button-wrapper')];
+      if (buttons.length > 1) {
+        const group = document.createElement('div');
+        group.className = 'offers-buttons';
+        buttons[0].before(group);
+        group.append(...buttons);
+      }
       item.append(textCell);
     }
 

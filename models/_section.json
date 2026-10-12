@@ -33,6 +33,10 @@
             {
               "name": "Highlight",
               "value": "highlight"
+            },
+            {
+              "name": "Brand (red, centered text)",
+              "value": "brand"
             }
           ]
         }
@@ -57,7 +61,13 @@
         "offers",
         "testimonials",
         "service-links",
-        "article-cards"
+        "article-cards",
+        "feature-banner",
+        "feature-cards",
+        "requirements",
+        "faq",
+        "team",
+        "branch-locator"
       ]
     }
   ]
