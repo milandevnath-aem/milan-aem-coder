@@ -1,0 +1,69 @@
+{
+  "slug": "contact-us",
+  "title": "Contact Us",
+  "desktopNode": "5082:46351",
+  "mobileNode": "5108:47312",
+  "sections": [
+    {
+      "order": 1,
+      "type": "branch-locator",
+      "figmaName": "Hero FB",
+      "desktop": {
+        "nodeId": "5082:46397",
+        "x": 0,
+        "y": 0,
+        "w": 1342,
+        "h": 553,
+        "image": "raw/hero-fb-background-desktop.png",
+        "imagePx": [2684, 1106],
+        "textBoxes": [
+          [80, 48, 524, 48],
+          [80, 116, 524, 48],
+          [80, 196, 587, 64],
+          [80, 268, 587, 257],
+          [679, 196, 583, 282]
+        ]
+      },
+      "mobile": {
+        "nodeId": "5108:47349",
+        "w": 367,
+        "h": 1050,
+        "image": "raw/hero-fb-background-mobile.png",
+        "imagePx": [734, 2100],
+        "textBoxes": [
+          [24, 44, 319, 40],
+          [24, 92, 319, 60],
+          [24, 184, 319, 64],
+          [24, 260, 319, 358],
+          [24, 630, 319, 396]
+        ]
+      },
+      "content": {
+        "heading": "Contact Us",
+        "text": "Find our nearest branch details below. Select your city to instantly load address, contact numbers, timings, and email coordinates.",
+        "selectLabel": "Select City",
+        "city": "Agra",
+        "mapImage": "raw/map-image.png",
+        "mapImageMobile": "raw/map-image-mobile.png",
+        "address": "B-9, Ground Floor Raghunath Nagar, M G Road, Shriram Hospital, Agra 282002",
+        "phone": "18003095732 / 0562 4022401",
+        "tollFree": "1800-209-5732",
+        "timing": "We operate between Monday and Friday I 9:30 am to 6:30 pm",
+        "email": "kprime.service@kotak.com",
+        "cardLabels": {
+          "address": "Address",
+          "phone": "Phone",
+          "timing": "Branch Timing",
+          "email": "Write to us on"
+        },
+        "icons": {
+          "address": "location pin, outlined, inside 40x40 rounded-8 box (bg #eeeeee, border 1px #dedede)",
+          "phone": "phone handset, outlined, same icon-box style",
+          "timing": "clock, outlined, same icon-box style",
+          "email": "envelope, outlined, same icon-box style"
+        }
+      },
+      "notes": "Section frame ('Hero FB' / 'hero Fb', 1366x553 incl. 12px side padding) has an image-fill background: get_design_context on it (and on the mobile 'Hero' node) returns ONE flattened PNG with all text/UI baked in, even though the underlying Figma layers (title, description, select input, map, detail card) are real separate nodes with real colours/text obtainable via get_design_context on each sub-node directly. Both desktop and mobile images were downloaded as raw/hero-fb-background-{desktop,mobile}.png. Gradient (sampled with ImageMagick from the exported PNGs, not a flat colour): primarily top-to-bottom, roughly linear-gradient(180deg, #c33d33 0%, #f6e6cf 100%), warmer/pinker at top-right (~#ee9c93) than top-left on desktop; same red->cream direction on mobile (~#d53a3c top to ~#f6e6cf bottom). Corner radius: 20px desktop, 52px mobile. Card: bg #ffffff, radius 16px, 24px padding, 16px gap between the 4 detail rows, 1px #ececec dividers between rows (visible in rendered image). Detail row icon box: 40x40, radius 8px, bg #eeeeee, border 1px #dedede, icon 20x20 centered. Label text (Address/Phone/Branch Timing/Write to us on) is #808080 12px/18px Manrope semibold; value text is #121212 12px/18px Manrope semibold, except the 'Toll-Free:' label+number which is #0a8452 (green) with the number underlined. Select City control is the shared '🌐 Breakpoint_Input field' component (label 'Select City', value 'Agra', chevron-down icon) — checked includeHidden:true on the instance (desktop node 5082:46404) and found only generic hidden component-state children (icon variants, keyboard-type variants, helper text) that belong to the shared component, not additional city options or hidden city panels; also re-checked includeHidden on the parent 'hero Fb' tree (5082:46396) and found no hidden siblings for other cities. So this page only has Agra authored; other cities are presumably populated at runtime, not present in Figma. Desktop layout: title+description full width at top, then a row with select+map stacked on the left (587px) and the address/phone/timing/email card on the right (583px). Mobile layout differs in stacking order: title, description, select input, THEN the detail card, THEN the map image at the very bottom (card is above the map on mobile, left-of/beside it on desktop)."
+    }
+  ]
+}

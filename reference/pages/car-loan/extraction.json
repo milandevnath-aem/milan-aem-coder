@@ -1,0 +1,399 @@
+{
+  "slug": "car-loan",
+  "title": "New Car Finance",
+  "desktopNode": "2064:6373",
+  "mobileNode": "2064:6124",
+  "sections": [
+    {
+      "order": 1,
+      "type": "hero",
+      "figmaName": "Hero FB",
+      "desktop": {
+        "nodeId": "2064:6375",
+        "imageNodeId": "2064:6419",
+        "x": 0, "y": 0, "w": 1342, "h": 553,
+        "image": "raw/hero-desktop.png",
+        "imagePx": [2684, 1106],
+        "textBoxes": [
+          [80, 48, 407, 48],
+          [80, 116, 407, 48],
+          [716, 48, 546, 457]
+        ]
+      },
+      "mobile": {
+        "nodeId": "2064:6126",
+        "imageNodeId": "2064:6158",
+        "x": 0, "y": 0, "w": 367, "h": 611,
+        "image": "raw/hero-mobile.png",
+        "imagePx": [734, 1222],
+        "textBoxes": [
+          [24, 44, 319, 88],
+          [24, 535, 319, 52]
+        ]
+      },
+      "content": {
+        "title": "New Car Finance",
+        "subtitle": "Finance Your New Car with Flexible Repayment Options",
+        "form": {
+          "heading": "Start Your Loan Journey Today",
+          "description": "Get a call back from our loan expert.",
+          "selectLabel": "Select loan category",
+          "selectedCategory": "New Car Finance",
+          "fields": ["Your name", "Mobile number"],
+          "button": "Apply now"
+        },
+        "mobileButton": "Apply now"
+      },
+      "notes": "Figma 'Hero FB' (2064:6375) also contains the 44px Header Sleeve + 68px Nav container above the hero image; per instructions those are skipped (shared/already built). desktop/mobile x,y,w,h and textBoxes above are relative to the actual hero image frame only (2064:6419 desktop / 2064:6158 mobile), NOT the full 689px/705px 'Hero FB' node. Image is a flattened PNG with the title/subtitle text baked in (dark photo background, white text) on desktop; the lead-form card (white rounded card, right side) is a separate real DOM component overlaid on the image — box included as the 3rd textBox entry (desktop only, no visible form card on mobile hero). Mobile hero: title + subtitle text baked into image (centered, light background placeholder color in Figma vars but renders white on photo), one 'Apply now' button below (white pill, dark text) — no lead-form card shown on mobile hero crop."
+    },
+    {
+      "order": 2,
+      "type": "banner",
+      "figmaName": "Section 3 - FB (intro)",
+      "desktop": {
+        "nodeId": "2064:6435",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/intro-car-gif.png",
+        "imagePx": [1402, 546],
+        "separateImage": true,
+        "imageBox": [0, 199.5, 701, 273],
+        "textBoxes": [
+          [774, 208, 500, 160],
+          [774, 380, 500, 84]
+        ]
+      },
+      "mobile": {
+        "nodeId": "2064:6164",
+        "x": 0, "y": 0, "w": 375, "h": 672,
+        "image": null,
+        "textBoxes": [
+          [24, 80, 327, 180],
+          [24, 272, 327, 72]
+        ]
+      },
+      "content": {
+        "heading": "Your next car is closer than you think. Get the new car loan you need, with quick approvals and flexible repayment.",
+        "text": "We offer loans up to 100% of the on-road price and flexible repayment tenor options ranging from 12-84 months*",
+        "align": "right (text), image left",
+        "textColor": "dark"
+      },
+      "notes": "Desktop: plain white (#fcfcfc) background section, image ('Car GIF' 4037:22635 — a red-cloth-covered car silhouette, reveal/teaser style, downloaded separately per separateImage rule since it's a real child node not a flattened background fill) sits on the left half; heading (32px semibold, no bold-run differences detected in design context) + supporting text (20px medium, grey #666) sit on the right half (500px column, x=774). Mobile: 'Car GIF' child is NOT present in the mobile frame's metadata — mobile shows text only, stacked, no image. Button/CTA: none in this section."
+    },
+    {
+      "order": 3,
+      "type": "banner",
+      "figmaName": "Section 3 - FB",
+      "desktop": {
+        "nodeId": "2064:6440",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/banner-1-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [
+          [92, 92, 500, 488],
+          [92, 234, 500, 40],
+          [92, 286, 500, 56],
+          [92, 386, 134, 52]
+        ]
+      },
+      "mobile": {
+        "nodeId": "2064:6168",
+        "x": 0, "y": 0, "w": 375, "h": 600,
+        "image": "raw/banner-1-mobile.png",
+        "imagePx": [750, 1200],
+        "textBoxes": [
+          [24, 80, 327, 180],
+          [24, 80, 327, 36],
+          [24, 124, 327, 72],
+          [24, 216, 124, 44]
+        ]
+      },
+      "content": {
+        "heading": "Margin Money Scheme",
+        "text": "We offer a car loan covering up to 100% of the invoice value for new cars for select models.",
+        "cta": "Read more",
+        "align": "left",
+        "textColor": "dark"
+      },
+      "notes": "Flattened background photo (light grey studio shot of a red car door open with a model leaning out) with heading/text/CTA on the left half, image bleeds right. Black pill button, white text, 'Read more'."
+    },
+    {
+      "order": 4,
+      "type": "banner",
+      "figmaName": "Section 3 - FB",
+      "desktop": {
+        "nodeId": "2064:6446",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/banner-2-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [
+          [774, 92, 500, 488],
+          [774, 234, 500, 40],
+          [774, 286, 500, 56],
+          [774, 386, 134, 52]
+        ]
+      },
+      "mobile": {
+        "nodeId": "2064:6174",
+        "x": 0, "y": 0, "w": 375, "h": 600,
+        "image": "raw/banner-2-mobile.png",
+        "imagePx": [750, 1200],
+        "textBoxes": [
+          [24, 80, 327, 180],
+          [24, 80, 327, 36],
+          [24, 124, 327, 72],
+          [24, 216, 124, 44]
+        ]
+      },
+      "content": {
+        "heading": "Step Up Scheme",
+        "text": "Step up your car loan EMI every year, six months, or quarter, whatever suits your repayment needs.",
+        "cta": "Read more",
+        "align": "right",
+        "textColor": "dark"
+      },
+      "notes": "Flattened background photo (grey Audi SUV on a mossy rock) with heading/text/CTA on the right half, image on the left. Black pill button, white text, 'Read more'."
+    },
+    {
+      "order": 5,
+      "type": "banner",
+      "figmaName": "Section 3 - FB",
+      "desktop": {
+        "nodeId": "2064:6452",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/banner-3-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [
+          [92, 92, 500, 488],
+          [92, 248, 500, 40],
+          [92, 300, 500, 28],
+          [92, 372, 134, 52]
+        ]
+      },
+      "mobile": {
+        "nodeId": "2064:6180",
+        "x": 0, "y": 0, "w": 375, "h": 600,
+        "image": "raw/banner-3-mobile.png",
+        "imagePx": [750, 1200],
+        "textBoxes": [
+          [24, 80, 327, 156],
+          [24, 80, 327, 36],
+          [24, 124, 327, 48],
+          [24, 192, 124, 44]
+        ]
+      },
+      "content": {
+        "heading": "Low EMI, Balloon Scheme",
+        "text": "10%-25% of the cost of the car to be paid as last EMI.",
+        "cta": "Read more",
+        "align": "left",
+        "textColor": "dark"
+      },
+      "notes": "Flattened background photo (close-up of a red sports car's rear diffuser/wheel against a blue-white gradient sky) with heading/text/CTA on the left half, image bleeds right. This card has a shorter 2-line text block than the other 3 banners (no 2nd line wrap for subtitle). Black pill button, white text, 'Read more'."
+    },
+    {
+      "order": 6,
+      "type": "banner",
+      "figmaName": "Section 3 - FB",
+      "desktop": {
+        "nodeId": "2064:6458",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/banner-4-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [
+          [774, 92, 500, 488],
+          [774, 234, 500, 40],
+          [774, 286, 500, 56],
+          [774, 386, 134, 52]
+        ]
+      },
+      "mobile": {
+        "nodeId": "2064:6186",
+        "x": 0, "y": 0, "w": 375, "h": 600,
+        "image": "raw/banner-4-mobile.png",
+        "imagePx": [750, 1200],
+        "textBoxes": [
+          [24, 80, 327, 156],
+          [24, 80, 327, 36],
+          [24, 124, 327, 48],
+          [24, 192, 124, 44]
+        ]
+      },
+      "content": {
+        "heading": "Advance EMI Scheme",
+        "text": "Make the payments of a few monthly instalments upfront",
+        "cta": "Read more",
+        "align": "right",
+        "textColor": "dark"
+      },
+      "notes": "Flattened background photo (headphones + rupee coins + a car key fob on an orange/red rounded tray) with heading/text/CTA on the right half, image on the left. Black pill button, white text, 'Read more'."
+    },
+    {
+      "order": 7,
+      "type": "requirements",
+      "figmaName": "Frame 2147231066 (What You'll Need to Get Started)",
+      "desktop": {
+        "nodeId": "2064:6464",
+        "x": 0, "y": 0, "w": 1366, "h": 476,
+        "image": null
+      },
+      "mobile": {
+        "nodeId": "2064:6192",
+        "x": 0, "y": 0, "w": 375, "h": 966,
+        "image": null
+      },
+      "content": {
+        "heading": "What You'll Need to Get Started",
+        "subheading": "Check candidate parameters for quick application processing.",
+        "variant": "eligibility",
+        "tabs": ["Salaried", "Self employed"],
+        "panels": {
+          "Salaried": [
+            {
+              "icon": "raw/req-icon-1.png",
+              "iconDesc": "abstract decorative gradient shape (orange-to-pink, two overlapping circles/petals), no literal meaning",
+              "label": "Minimum age of applicant",
+              "value": "21 years"
+            },
+            {
+              "icon": "raw/req-icon-2.png",
+              "iconDesc": "abstract decorative gradient shape (orange-to-pink, 4-petal flower), no literal meaning",
+              "label": "Maximum age at maturity",
+              "value": "60 years"
+            },
+            {
+              "icon": "raw/req-icon-3.png",
+              "iconDesc": "abstract decorative gradient shape (orange-to-pink, overlapping ellipses), no literal meaning",
+              "label": "Minimum income requirement",
+              "value": "₹15,000 p.m."
+            }
+          ],
+          "Self employed": null
+        }
+      },
+      "notes": "No hidden panel content exists for the 'Self employed' tab (checked with includeHidden:true) — only the 'Salaried' panel has cards, so 'Self employed' content is null. Cards: light grey (#eeeeee) rounded-32 cards, 72x72 decorative icon, grey label (20px medium) + black bold value (32px semibold). Mobile stacks the 3 cards vertically full-width; mobile card 2's label text reads 'Minimum age at maturity' (vs desktop 'Maximum age at maturity') and value 'Maximum age at maturity'/'60 Years' casing differs slightly — likely a content inconsistency in the Figma source; recorded desktop text as authoritative, mobile variant noted here verbatim: 'Minimum age at maturity' / '60 Years'. Mobile tab labels were generic placeholder text nodes in metadata ('Tab text') — assumed identical to desktop ('Salaried'/'Self employed') based on matching chip style/position, not independently re-verified via design context."
+    },
+    {
+      "order": 8,
+      "type": "requirements",
+      "figmaName": "Documents section FB",
+      "desktop": {
+        "nodeId": "2064:6490",
+        "x": 0, "y": 0, "w": 1366, "h": 866,
+        "image": "raw/documents-desktop-full.png",
+        "imagePx": [2732, 1732]
+      },
+      "mobile": {
+        "nodeId": "2064:6218",
+        "x": 0, "y": 0, "w": 375, "h": 1152,
+        "image": "raw/documents-mobile-full.png",
+        "imagePx": [750, 2304]
+      },
+      "content": {
+        "heading": "Documents Required",
+        "subheading": "Select employment type to update requirements",
+        "variant": "documents",
+        "tabs": ["Salaried", "Self-Employed", "Proprietor", "Partner", "Company"],
+        "panels": {
+          "Salaried": [
+            {
+              "title": "Identity & Address",
+              "items": [
+                "Proof of Residence (copy of electricity/ telephone bill/ Passport /Voter's ID/ Lease deed/ Rent agreement copy/Property Registration Document in the name of the Customer)",
+                "Signature / Verification from your Banker / Voters ID / IT PAN card / IT Return / Driving License/ Passport",
+                "2 Passport-size photos (1 signed by customer)"
+              ]
+            },
+            {
+              "title": "Income Proof",
+              "items": [
+                "Latest Form 16 / ITR documents",
+                "Latest Salary Slip showing statutory deductions"
+              ]
+            },
+            {
+              "title": "Other Documents",
+              "items": [
+                "KMPL App. Form duly filled by you"
+              ]
+            }
+          ],
+          "Self-Employed": null,
+          "Proprietor": null,
+          "Partner": null,
+          "Company": null
+        },
+        "decorativeImage": "background fill of the section, not a separate node — red/orange diagonal glossy gradient stripes bleeding in from the right edge (subtler/lighter on mobile, cut off at the right edge)"
+      },
+      "notes": "Only 'Salaried' panel content is visible/exists in the metadata tree (no hidden panels found for the other 4 chips). The 3 columns are real DOM cards (white #fcfcfc, 1px #d6d6d6 border, 24px radius) each with a title, divider, and a checklist (small checkmark icon, identical across all items, + grey #666 16px text). Because this whole section's background is an image fill (decorative gradient), get_design_context returned ONE flattened PNG for the entire section (desktop 2732x1732, mobile 750x2304) rather than exposing a discrete asset node for the decorative graphic — downloaded as full-section screenshots instead since no clean single-asset URL exists for it; the actual text/cards content above was captured via get_metadata + get_design_context on the Doc-Columns-Grid subtree (which is NOT flattened, since it has no image fill of its own)."
+    },
+    {
+      "order": 9,
+      "type": "need-help",
+      "figmaName": "Need Help FB",
+      "desktop": {
+        "nodeId": "2064:6539",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/need-help-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [
+          [497, 124, 372, 192],
+          [582, 124, 202, 48],
+          [497, 184, 372, 48],
+          [548.5, 264, 269, 52],
+          [548.5, 264, 126, 52],
+          [686.5, 264, 131, 52]
+        ]
+      },
+      "mobile": {
+        "nodeId": "2064:6260",
+        "x": 0, "y": 0, "w": 375, "h": 672,
+        "image": "raw/need-help-mobile.png",
+        "imagePx": [750, 1344],
+        "textBoxes": [
+          [24, 80, 327, 168],
+          [107, 80, 161, 40],
+          [24, 132, 327, 40],
+          [62.5, 204, 250, 44],
+          [62.5, 204, 117, 44],
+          [191.5, 204, 121, 44]
+        ]
+      },
+      "content": {
+        "heading": "Need help?",
+        "text": "Connect with our dedicated automotive finance team for immediate assistance.",
+        "buttons": ["Locate us", "Apply now"],
+        "image": "decorative glossy red/orange/purple 'flower petal' 3D graphic emerging from the bottom edge, centered"
+      },
+      "notes": "Flattened black (#000) background PNG with white centered heading (40px) + text (16px) and two white pill buttons (dark text) baked in as one image, same as the banner/hero sections. Decorative petal graphic sits bottom-center, symmetric on both breakpoints."
+    },
+    {
+      "order": 10,
+      "type": "faq",
+      "figmaName": "Content - Section",
+      "desktop": {
+        "nodeId": "2064:6547",
+        "x": 0, "y": 0, "w": 1366, "h": 668,
+        "image": null
+      },
+      "mobile": {
+        "nodeId": "2064:6268",
+        "x": 0, "y": 0, "w": 375, "h": 800,
+        "image": null
+      },
+      "content": {
+        "heading": "Frequently asked questions",
+        "items": [
+          { "q": "Who can avail of KMPL new car loans?", "a": "Salaried individuals in the age group of 21 to 58 years (at the end of the tenure) - Self-employed individuals in the age group of 21 to 65 years (at the end of the tenure) - Partnership Firms and LLPs. - Public and Private Ltd. companies - HUFs and Trusts" },
+          { "q": "Which cars can be financed?", "a": null },
+          { "q": "How much finance can I avail of?", "a": null },
+          { "q": "What are the tenure options?", "a": null },
+          { "q": "How long will it take to process the loan?", "a": null },
+          { "q": "Do I have the option of pre-paying the entire loan amount?", "a": null },
+          { "q": "Do I need a guarantor?", "a": null },
+          { "q": "So how do I get a KMPL Car Loan?", "a": null }
+        ]
+      },
+      "notes": "Heading sits on the left (442px column), accordion list on the right (660px column) on desktop; stacked on mobile. The 8 accordion items were re-verified via get_design_context on 2064:6551 (the earlier extraction had wrongly pulled stale Figma layer-name placeholder text — 'What is Kotak811 Dream Different Credit Card against FD?' — from get_metadata for all 8 items; corrected to the real rendered car-loan FAQ questions above). Only item 1 ('Who can avail of KMPL new car loans?') is expanded (chevron-up, visible answer); items 2-8 are collapsed (chevron-down) with no answer content rendered in the file. Divider lines (#eeeeee) between items; chevron icon flips up/down per open/closed state."
+    }
+  ]
+}

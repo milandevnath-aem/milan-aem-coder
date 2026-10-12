@@ -1,0 +1,266 @@
+{
+  "slug": "dealer-finance",
+  "title": "Dealer Finance",
+  "desktopNode": "2064:2629",
+  "mobileNode": "2064:2012",
+  "sections": [
+    {
+      "order": 1,
+      "type": "hero",
+      "figmaName": "Hero FB",
+      "desktop": {
+        "nodeId": "2064:2674",
+        "x": 0,
+        "y": 0,
+        "w": 1366,
+        "h": 553,
+        "image": "raw/hero-desktop.png",
+        "imagePx": [2684, 1106],
+        "textBoxes": [[92, 48, 407, 48], [92, 116, 407, 24], [728, 48, 546, 457]]
+      },
+      "mobile": {
+        "nodeId": "2064:2046",
+        "w": 367,
+        "h": 611,
+        "image": "raw/hero-mobile.png",
+        "imagePx": [734, 1222],
+        "textBoxes": [[28, 44, 319, 40], [28, 92, 319, 20], [28, 535, 319, 52]]
+      },
+      "content": {
+        "title": "Dealer Finance",
+        "subtitle": "Fast, Flexible Funding for Your Dealership",
+        "form": {
+          "heading": "Start Your Loan Journey Today",
+          "description": "Receive a call from our loan expert and get the best offer for you.",
+          "selectLabel": "Select loan category",
+          "selectedCategory": "Dealer Finance",
+          "fields": ["Dealership name", "Promoter Name"],
+          "button": "Apply now"
+        },
+        "mobileButton": "Apply now"
+      },
+      "notes": "Background is a flattened photo (dark showroom with red accent lighting, black car facing camera) with title+subtitle baked in on the left, white rounded (32px) 'Contact Form' card on the right (bg #fcfcfc, padding 32px): heading 'Start Your Loan Journey Today' (24px/32px semibold #121212), description 16px/24px #666666, a disabled-looking select field pre-filled 'Dealer Finance' (label 14px/18px #666666, value 20px/28px semibold #121212, chevron-down icon), two plain text-only input rows 'Dealership name' / 'Promoter Name' (20px/28px medium #666666, no visible box styling besides shared #f5f5f5 rounded-16 background), and a full-width black (#121212) pill 'Apply now' button with white text. Title text style: 40px/48px medium, tracking -1px, color #f5f5f5 (desktop) baked into image. Mobile: same car photo in a rounded-52px card; heading centered 32px/40px, subtitle centered 14px/20px (both #f5f5f5, baked into image), with a separate white pill 'Apply now' button overlaid near the bottom of the image — the lead-form card fields are NOT present on mobile."
+    },
+    {
+      "order": 2,
+      "type": "intro-text",
+      "figmaName": "Introduction Container",
+      "desktop": { "nodeId": "2064:2691", "x": 0, "y": 0, "w": 1366, "h": 392 },
+      "mobile": { "nodeId": "2064:2052", "w": 375, "h": 400 },
+      "content": {
+        "text": "Kotak Mahindra Prime Limited offers comprehensive financing solutions designed for automobile dealers across various manufacturers. With extensive experience in dealer financing across multiple automotive brands, KMPL supports dealers through customized funding solutions, quick turnaround times, and a single-window approach for their diverse financing needs. Our solutions are designed to help dealers manage inventory efficiently, expand operations, strengthen working capital, and drive business growth."
+      },
+      "notes": "Solid red band background (brand red, no photo). Centered white (#ffffff) text, font-semibold 16px/24px, max-width 680px, section padding px-92 py-124 on desktop (px-24 py-80 on mobile, same copy, band height 400px on mobile vs 392px desktop). No image asset needed — text-only band."
+    },
+    {
+      "order": 3,
+      "type": "feature-cards",
+      "figmaName": "Frame 2147231483 (01 Financial Options Available)",
+      "desktop": { "nodeId": "2064:2694", "x": 0, "y": 0, "w": 1366, "h": 672 },
+      "mobile": { "nodeId": "2064:2054", "w": 375, "h": 1124 },
+      "content": {
+        "heading": "Financial Options Available",
+        "subheading": "Customized funding structures mapped to your dealership lifecycle.",
+        "variant": "numbered",
+        "columns": 3,
+        "cards": [
+          { "number": "01", "title": "Inventory Funding", "text": "Available to automobile dealers to finance the working capital requirement for stocking and sale of vehicles." },
+          { "number": "02", "title": "Project Financing", "text": "Term Loan for setting up, renovation, expansion of dealership." },
+          { "number": "03", "title": "Other Term Loans Against Property", "text": "Other Term Loans Against Property for Business Expansion and Working Capital." },
+          { "number": "04", "title": "Setting up CC/BG/OD/LC", "text": "Setting up of CC/BG/OD/LC limits through Kotak Mahindra Bank Limited" }
+        ]
+      },
+      "notes": "Heading 40px/48px medium tracking -1px #121212; subheading 20px/28px medium #666666 (shared style across all 5 numbered-card groups and the requirements/documents section headings). Cards: bg #eeeeee, radius 32px, padding 32px, number 20px/28px semibold #666666, card title 20px/28px semibold #121212, card text 16px/24px medium #666666. Desktop lays out as a 3-column grid; this group has 4 cards so card 04 wraps alone onto a second row in column 1. Mobile stacks all cards in a single column (same copy as desktop, verified against heading text)."
+    },
+    {
+      "order": 4,
+      "type": "feature-cards",
+      "figmaName": "Frame 2147231484 (02 Retail Linked Trade Advance)",
+      "desktop": { "nodeId": "2064:2720", "x": 0, "y": 0, "w": 1366, "h": 388 },
+      "mobile": { "nodeId": "2064:2079", "w": 375, "h": 882 },
+      "content": {
+        "heading": "Retail Linked Trade Advance",
+        "subheading": "Unlocking higher capital efficiency mapped directly to customer sales.",
+        "variant": "numbered",
+        "columns": 3,
+        "cards": [
+          { "number": "01", "title": "Dealer Retail Finance", "text": "Dealer finance facility is linked to retail business sourced through dealership." },
+          { "number": "02", "title": "Unsecured / Semi-Secured Finance", "text": "Available as unsecured / semi-secured finance." },
+          { "number": "03", "title": "Customized Credit Assessment", "text": "Eligibility based on retail business, dealership business requirements and credit assessment." }
+        ]
+      },
+      "notes": "Same numbered-card styling as section 3. Single row of 3 cards on desktop; mobile stacks vertically."
+    },
+    {
+      "order": 5,
+      "type": "feature-cards",
+      "figmaName": "Frame 2147231485 (03 Wholesale finance facility)",
+      "desktop": { "nodeId": "2064:2740", "x": 0, "y": 0, "w": 1366, "h": 388 },
+      "mobile": { "nodeId": "2064:2099", "w": 375, "h": 914 },
+      "content": {
+        "heading": "Wholesale finance facility",
+        "subheading": "Streamline lending operations and accelerate dealer financing with flexible, scalable credit solutions.",
+        "variant": "numbered",
+        "columns": 3,
+        "cards": [
+          { "number": "01", "title": "Vehicle inventory requirements", "text": "Secured funding facility designed to support vehicle inventory requirements." },
+          { "number": "02", "title": "Credit Limits", "text": "Credit limits are determined based on business needs, existing banking arrangements and credit evaluation." },
+          { "number": "03", "title": "Push Model", "text": "Push model (dealer initiated) for disbursement initiation." }
+        ]
+      },
+      "notes": "Same numbered-card styling as section 3. Single row of 3 cards on desktop; mobile stacks vertically."
+    },
+    {
+      "order": 6,
+      "type": "feature-cards",
+      "figmaName": "Frame 2147231486 (04 Floor Finance Facility)",
+      "desktop": { "nodeId": "2064:2760", "x": 0, "y": 0, "w": 1366, "h": 388 },
+      "mobile": { "nodeId": "2064:2119", "w": 375, "h": 866 },
+      "content": {
+        "heading": "Floor Finance Facility",
+        "subheading": "Streamline inventory funding with flexible credit lines that accelerate dealer partnerships and drive revenue growth.",
+        "variant": "numbered",
+        "columns": 3,
+        "cards": [
+          { "number": "01", "title": "Inventory Funding Solutions", "text": "Comprehensive inventory funding solution where KMPL acts as the primary financer for the dealership location." },
+          { "number": "02", "title": "Credit Limits", "text": "Credit limits are determined based on business needs, existing banking arrangements and credit evaluation." },
+          { "number": "03", "title": "Pull Model", "text": "Pull model (manufacturer initiated) for disbursement initiation" }
+        ]
+      },
+      "notes": "Same numbered-card styling as section 3. Single row of 3 cards on desktop; mobile stacks vertically."
+    },
+    {
+      "order": 7,
+      "type": "feature-cards",
+      "figmaName": "Frame 2147231487 (05 Term Loan)",
+      "desktop": { "nodeId": "2064:2780", "x": 0, "y": 0, "w": 1366, "h": 388 },
+      "mobile": { "nodeId": "2064:2139", "w": 375, "h": 624 },
+      "content": {
+        "heading": "Term Loan",
+        "subheading": "Flexible financing solutions with fixed repayment schedules tailored to your business growth.",
+        "variant": "numbered",
+        "columns": 3,
+        "cards": [
+          { "number": "01", "title": "Dealership Onboarding", "text": "Setting up new dealerships" },
+          { "number": "02", "title": "Business Expansion", "text": "Showroom or workshop expansion" }
+        ]
+      },
+      "notes": "Only 2 cards in this group (unlike the other 4 groups, which have 3-4) — confirmed via metadata, no third card exists. Same numbered-card styling as section 3."
+    },
+    {
+      "order": 8,
+      "type": "requirements",
+      "figmaName": "Frame 2147231645 (What You'll Need to Get Started)",
+      "desktop": { "nodeId": "2064:2795", "x": 0, "y": 0, "w": 1366, "h": 388 },
+      "mobile": { "nodeId": "2064:2154", "w": 375, "h": 390 },
+      "content": {
+        "heading": "What You'll Need to Get Started",
+        "subheading": "Check candidate parameters for quick application processing.",
+        "mobileHeading": "Check eligibility in seconds",
+        "mobileSubheading": "A quick overview of the requirements for your loan application.",
+        "variant": "eligibility",
+        "tabs": [],
+        "cards": [
+          {
+            "icon": "raw/requirements-icon-manufacturer-authorised.png",
+            "label": "Manufacturer Authorised",
+            "value": "Passenger Car / Two-wheeler dealership"
+          }
+        ]
+      },
+      "notes": "No tabs present in this instance despite the type's usual tabs+cards pattern — only a single eligibility card. Icon is an abstract pink/orange/red gradient ring graphic (72x72 desktop, 52x52 mobile), not a literal pictogram. Heading/subheading copy differs between desktop and mobile breakpoints (recorded separately as mobileHeading/mobileSubheading). Card label 2064:2804-equivalent styling matches other section headings' body text."
+    },
+    {
+      "order": 9,
+      "type": "requirements",
+      "figmaName": "Documents section FB",
+      "desktop": { "nodeId": "2064:2807", "x": 0, "y": 0, "w": 1366, "h": 792 },
+      "mobile": { "nodeId": "2064:2165", "w": 375, "h": 1360 },
+      "content": {
+        "heading": "Documents Required",
+        "subheading": "Select employment type to update requirements",
+        "variant": "documents",
+        "tabs": ["Type 1", "Type 2", "Type 3"],
+        "panels": {
+          "Type 1": {
+            "title": "Type 1",
+            "items": [
+              "Application Form",
+              "Brief background of promoters and details on existing business entities",
+              "Last 3 years audited financial statements of dealership and group companies."
+            ]
+          },
+          "Type 2": {
+            "title": "Type 2",
+            "items": [
+              "Provisional Financials as may be required.",
+              "Financial Projections for next 5 years as may be required.",
+              "Project Report, details (in case of term loans",
+              "C.A certified net worth statements and ITRs of promoters"
+            ]
+          },
+          "Type 3": {
+            "title": "Type 3",
+            "items": [
+              "Dealership infrastructure details",
+              "Current limits with banks / financiers with a copy of the sanction letter",
+              "KYC (Know Your customer) documents",
+              "Memorandum and Articles of association / Partnership deed",
+              "Any other information, declarations as may be required."
+            ]
+          }
+        },
+        "decorativeImage": null
+      },
+      "notes": "Despite being labelled 'Type 1/2/3' like tabs, all three columns are rendered simultaneously side-by-side on both desktop (3 columns) and mobile (stacked, same content, no toggle) — not an interactive tabbed panel in this instance. Each column: label text + 0px divider + checklist items (checkmark/search icon + text). No decorative image found in this section (unlike the generic 'decorative red image on the right' noted in the type description). 'Type 2' item 3 text ('Project Report, details (in case of term loans') appears truncated/missing a closing parenthesis in the source Figma file — recorded verbatim."
+    },
+    {
+      "order": 10,
+      "type": "need-help",
+      "figmaName": "Need Help FB",
+      "desktop": {
+        "nodeId": "2064:2872",
+        "x": 0,
+        "y": 0,
+        "w": 1366,
+        "h": 672,
+        "image": "raw/need-help-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[582, 124, 202, 48], [497, 184, 372, 48], [548.5, 264, 269, 52]]
+      },
+      "mobile": {
+        "nodeId": "2354:18527",
+        "w": 375,
+        "h": 672,
+        "image": "raw/need-help-mobile.png",
+        "imagePx": [750, 1344],
+        "textBoxes": [[107, 80, 161, 40], [24, 132, 327, 40], [62.5, 204, 250, 44]]
+      },
+      "content": {
+        "heading": "Need help?",
+        "text": "Connect with our dedicated automotive finance team for immediate assistance.",
+        "buttons": ["Locate us", "Apply now"],
+        "image": "raw/need-help-desktop.png"
+      },
+      "notes": "Black background with a decorative glossy red/orange/purple abstract 'petal/fan' graphic filling the bottom half of the section (same graphic desktop and mobile, cropped differently). Heading + text + two white pill buttons (black text) are centered near the top, baked into the flattened image/also recorded as separate text/button layers. Both buttons share the black-bg/white-pill style used elsewhere ('Breakpoint_Pills Black_Buttons')."
+    },
+    {
+      "order": 11,
+      "type": "faq",
+      "figmaName": "Content - Section",
+      "desktop": { "nodeId": "2064:2880", "x": 0, "y": 0, "w": 1366, "h": 408 },
+      "mobile": { "nodeId": "2064:2226", "w": 375, "h": 536 },
+      "content": {
+        "heading": "Frequently asked questions",
+        "items": [
+          { "q": "Which automobile dealers can avail of the dealer finance options?", "a": "Only passenger cars and two-wheeler dealers can avail of KMPL's dealer finance options." },
+          { "q": "How much finance can I avail of?", "a": null },
+          { "q": "For what purpose, can I avail Term loan?", "a": null },
+          { "q": "What are the tenure options?", "a": null },
+          { "q": "How long will it take to process the loan?", "a": null }
+        ]
+      },
+      "notes": "Verified against Figma design context (node 2064:2884): 5 distinct dealer-finance FAQ items, not placeholder credit-card copy. Only the first accordion item is expanded and shows an answer; the rest are collapsed with no visible answer (recorded as null per spec). Heading sits in a left column (desktop: 442px wide), accordion list in a right column (660px wide); on mobile the heading stacks above the full-width accordion list."
+    }
+  ]
+}

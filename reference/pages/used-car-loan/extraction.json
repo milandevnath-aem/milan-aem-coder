@@ -1,0 +1,382 @@
+{
+  "slug": "used-car-loan",
+  "title": "Used Car Finance",
+  "desktopNode": "2067:11552",
+  "mobileNode": "2064:4558",
+  "sections": [
+    {
+      "order": 1,
+      "type": "hero",
+      "figmaName": "Hero FB",
+      "desktop": {
+        "nodeId": "2067:11598",
+        "x": 0, "y": 0, "w": 1342, "h": 553,
+        "image": "raw/hero-desktop.png",
+        "imagePx": [2684, 1106],
+        "textBoxes": [[80, 48, 407, 92], [80, 48, 407, 48], [80, 116, 407, 24], [716, 48, 546, 457]]
+      },
+      "mobile": {
+        "nodeId": "2064:4592",
+        "x": 0, "y": 0, "w": 367, "h": 611,
+        "image": "raw/hero-mobile.png",
+        "imagePx": [734, 1222],
+        "textBoxes": [[24, 44, 319, 68], [0, 535, 319, 52]]
+      },
+      "content": {
+        "title": "Used Car Finance",
+        "subtitle": "Plans that take you closer to your goal",
+        "form": {
+          "heading": "Start Your Loan Journey Today",
+          "description": "Receive a call from our loan expert and get the best offer for you.",
+          "selectLabel": "Select loan category",
+          "selectedCategory": "Used car & Re-finance",
+          "fields": ["Your name", "Mobile number"],
+          "button": "Apply now"
+        },
+        "mobileButton": "Apply now"
+      },
+      "notes": "Desktop: rounded-20 image hero (fcfcfc bg) with title+subtitle on the left (407px col) and a white lead-form card (rounded-32, bg #fcfcfc) on the right with 2 text inputs (select loan category / your name), a phone input (+91 prefix) and a black pill 'Apply now' button. Mobile: single rounded-52 image hero with title/subtitle centered and a white pill 'Apply now' button near the bottom (no visible form fields on mobile - presumably opens the form elsewhere/modal)."
+    },
+    {
+      "order": 2,
+      "type": "banner",
+      "figmaName": "Section 3 - FB (intro)",
+      "desktop": {
+        "nodeId": "2067:11614",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/banner-1-intro-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[774, 266, 500, 140], [774, 266, 500, 80], [774, 358, 500, 48]]
+      },
+      "mobile": {
+        "nodeId": "2064:4598",
+        "x": 0, "y": 0, "w": 375, "h": 672,
+        "image": "raw/banner-1-intro-mobile.png",
+        "imagePx": [750, 1344],
+        "textBoxes": [[24, 80, 327, 108], [24, 200, 327, 40]]
+      },
+      "content": {
+        "heading": "**Owning a used car** can be a **simple, easy and reliable** experience",
+        "text": "KMPL Used Car Finance can **fund up to 90%** with maximum tenure up to 84 months*",
+        "cta": null,
+        "align": "right",
+        "textColor": "dark"
+      },
+      "notes": "Intro row: decorative image on the left (hand with maroon sleeve holding a car key fob, white background), heading+text on the right. No CTA button. White (#fcfcfc) background, 92px section padding."
+    },
+    {
+      "order": 3,
+      "type": "banner",
+      "figmaName": "Section 3 - FB",
+      "desktop": {
+        "nodeId": "2067:11619",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/banner-2-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[92, 92, 500, 488], [92, 248, 500, 80], [92, 248, 500, 40], [92, 300, 500, 28], [92, 372, 134, 52]]
+      },
+      "mobile": {
+        "nodeId": "2064:4602",
+        "x": 0, "y": 0, "w": 375, "h": 600,
+        "image": "raw/banner-2-mobile.png",
+        "imagePx": [750, 1200],
+        "textBoxes": [[24, 80, 327, 132], [24, 80, 327, 36], [24, 124, 327, 24], [24, 168, 124, 44]]
+      },
+      "content": {
+        "heading": "Pre-approved loan*",
+        "text": "Low ticket size loans",
+        "cta": "Read more",
+        "align": "left",
+        "textColor": "dark"
+      },
+      "notes": "Light grey background (gradient), decorative photo of a car roof with stacked silver/red coins on the right. Content left, black pill CTA 'Read more'. No bold runs."
+    },
+    {
+      "order": 4,
+      "type": "banner",
+      "figmaName": "Section 3 - FB",
+      "desktop": {
+        "nodeId": "2067:11625",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/banner-3-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[774, 92, 500, 488], [774, 248, 500, 80], [774, 248, 500, 40], [774, 300, 500, 28], [774, 372, 134, 52]]
+      },
+      "mobile": {
+        "nodeId": "2064:4608",
+        "x": 0, "y": 0, "w": 375, "h": 600,
+        "image": "raw/banner-3-mobile.png",
+        "imagePx": [750, 1200],
+        "textBoxes": [[24, 80, 327, 132], [24, 80, 327, 36], [24, 124, 327, 24], [24, 168, 124, 44]]
+      },
+      "content": {
+        "heading": "Preferred segment loan",
+        "text": "Loan amount between Rs. 1.5 – Rs. 15 Lacs.*",
+        "cta": "Read more",
+        "align": "right",
+        "textColor": "dark"
+      },
+      "notes": "Red Volkswagen hatchback drifting on a desert road at sunset, gradient sky background. Content right-aligned, black pill CTA 'Read more'. No bold runs."
+    },
+    {
+      "order": 5,
+      "type": "banner",
+      "figmaName": "Section 3 - FB",
+      "desktop": {
+        "nodeId": "2067:11631",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/banner-4-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[92, 92, 500, 488], [92, 248, 500, 80], [92, 248, 500, 40], [92, 300, 500, 28], [92, 372, 134, 52]]
+      },
+      "mobile": {
+        "nodeId": "2064:4614",
+        "x": 0, "y": 0, "w": 375, "h": 600,
+        "image": "raw/banner-4-mobile.png",
+        "imagePx": [750, 1200],
+        "textBoxes": [[24, 80, 327, 156], [24, 80, 327, 36], [24, 124, 327, 48], [24, 192, 124, 44]]
+      },
+      "content": {
+        "heading": "Approve you own loan*",
+        "text": "Monthly Installments Upto 40% of net salary*",
+        "cta": "Read more",
+        "align": "left",
+        "textColor": "dark"
+      },
+      "notes": "Woman in a red coat looking at her phone, modern white building and blue sky background, dark car visible bottom right. Content left, black pill CTA 'Read more'. Mobile variant has a white gradient overlay fading in from the bottom (linear-gradient transparent to #ffffff)."
+    },
+    {
+      "order": 6,
+      "type": "banner",
+      "figmaName": "Section 3 - FB",
+      "desktop": {
+        "nodeId": "2067:11637",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/banner-5-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[774, 0, 500, 672], [774, 254, 500, 164], [774, 254, 500, 80], [774, 346, 500, 72]]
+      },
+      "mobile": {
+        "nodeId": "2064:4620",
+        "x": 0, "y": 0, "w": 375, "h": 672,
+        "image": "raw/banner-5-mobile.png",
+        "imagePx": [750, 1344],
+        "textBoxes": [[0, 80, 375, 220], [24, 80, 327, 108], [24, 200, 327, 100]]
+      },
+      "content": {
+        "heading": "**Take over** of your existing car loan and generate **cash***",
+        "text": "It's a loan take over from the bank where the foreclosure amount is lesser than what KMPL actually funds on the asset. That's how you generate cash and you can get **more than 100% finance.***",
+        "cta": null,
+        "align": "right",
+        "textColor": "dark"
+      },
+      "notes": "White background (#fcfcfc). Decorative image: a silver rupee-symbol coin on a curved grey pedestal with a small red SUV driving down the curved ramp. No CTA."
+    },
+    {
+      "order": 7,
+      "type": "banner",
+      "figmaName": "Section 3 - FB",
+      "desktop": {
+        "nodeId": "2067:11642",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/banner-6-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[92, 92, 500, 488], [92, 296, 500, 80], [92, 296, 500, 40], [92, 348, 500, 28]]
+      },
+      "mobile": {
+        "nodeId": "2064:4624",
+        "x": 0, "y": 0, "w": 375, "h": 600,
+        "image": "raw/banner-6-mobile.png",
+        "imagePx": [750, 1200],
+        "textBoxes": [[24, 80, 327, 68], [24, 80, 327, 36], [24, 124, 327, 24]]
+      },
+      "content": {
+        "heading": "Refinance",
+        "text": "Avail a loan against your existing car.",
+        "cta": null,
+        "align": "left",
+        "textColor": "dark"
+      },
+      "notes": "White sedan driving fast toward camera, motion-blurred blue/red/orange streaked background. Content left, no CTA, no bold runs."
+    },
+    {
+      "order": 8,
+      "type": "banner",
+      "figmaName": "Section 3 - FB",
+      "desktop": {
+        "nodeId": "2067:11647",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/banner-7-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[774, 92, 500, 488], [774, 282, 500, 108], [774, 282, 500, 40], [774, 334, 500, 56]]
+      },
+      "mobile": {
+        "nodeId": "2064:4629",
+        "x": 0, "y": 0, "w": 375, "h": 600,
+        "image": "raw/banner-7-mobile.png",
+        "imagePx": [750, 1200],
+        "textBoxes": [[24, 80, 327, 92], [24, 80, 327, 36], [24, 124, 327, 48]]
+      },
+      "content": {
+        "heading": "Cash against your car",
+        "text": "Avail this loan by pledging your existing car which is free from any loan / hypothecation.",
+        "cta": null,
+        "align": "right",
+        "textColor": "dark"
+      },
+      "notes": "Red car's side mirror reflecting pink sandals and bare feet resting out the window, sea/sky background. Content right, no CTA, no bold runs. Mobile variant has a white gradient overlay fading in from the bottom."
+    },
+    {
+      "order": 9,
+      "type": "requirements",
+      "figmaName": "Frame 2147231676 (What You'll Need to Get Started)",
+      "desktop": {
+        "nodeId": "2067:11652",
+        "x": 0, "y": 0, "w": 1366, "h": 548,
+        "textBoxes": [[92, 0, 1182, 84], [92, 0, 1182, 48], [92, 56, 1182, 28], [92, 116, 272, 56]]
+      },
+      "mobile": {
+        "nodeId": "2064:4634",
+        "x": 0, "y": 0, "w": 375, "h": 1216,
+        "textBoxes": [[24, 0, 327, 136], [24, 0, 327, 80], [24, 88, 327, 48], [24, 168, 237, 52]]
+      },
+      "content": {
+        "heading": "What You'll Need to Get Started",
+        "subheading": "Check candidate parameters for quick application processing.",
+        "variant": "eligibility",
+        "tabs": ["Salaried", "Self employed"],
+        "panels": {
+          "Salaried": [
+            { "icon": "raw/req-icon-1.png", "label": "Resident", "value": "Indian" },
+            { "icon": "raw/req-icon-2.png", "label": "Minimum age of applicant", "value": "21 years" },
+            { "icon": "raw/req-icon-3.png", "label": "Minimum age at maturity", "value": "60 Years" },
+            { "icon": "raw/req-icon-4.png", "label": "Minimum income", "value": "₹15,000 p.m." }
+          ],
+          "Self employed": null
+        },
+        "carouselArrows": {
+          "left": "raw/req-arrow-left.png",
+          "right": "raw/req-arrow-right.png",
+          "note": "left arrow shown disabled/grey border, right arrow active/black border"
+        }
+      },
+      "notes": "Desktop: 2-tab pill switcher ('Salaried' active black pill, 'Self employed' grey outline), 4 cards in a row (386x272, rounded-32, bg #eeeeee) each with a 72x72 abstract red/orange/pink gradient icon (decorative, non-literal) + label (grey) + value (large black). Carousel left/right chevron arrows bottom-right (for scrolling cards beyond viewport, only 4 cards fit at this width so arrows may be mostly decorative/for responsive overflow). Mobile: cards stacked vertically in the same order, no carousel arrows visible (chip tabs stacked 237px row)."
+    },
+    {
+      "order": 10,
+      "type": "requirements",
+      "figmaName": "Documents section FB",
+      "desktop": {
+        "nodeId": "2067:11694",
+        "x": 0, "y": 0, "w": 1366, "h": 828,
+        "image": "raw/documents-desktop.png",
+        "imagePx": [2732, 1656],
+        "textBoxes": [[92, 124, 1182, 84], [92, 124, 1182, 48], [92, 180, 1182, 28], [92, 240, 1182, 76], [92, 348, 386, 356], [490, 348, 386, 236], [888, 348, 386, 332]]
+      },
+      "mobile": {
+        "nodeId": "2064:4672",
+        "x": 0, "y": 0, "w": 375, "h": 1296,
+        "image": "raw/documents-mobile.png",
+        "imagePx": [750, 2592],
+        "textBoxes": [[24, 80, 327, 96], [24, 208, 327, 120], [24, 312, 327, 16], [24, 360, 327, 312], [24, 684, 327, 212], [24, 908, 327, 308]]
+      },
+      "content": {
+        "heading": "Documents required",
+        "subheading": "Keep these documents ready for a seamless loan application process",
+        "variant": "documents",
+        "tabs": ["Salaried", "Self-Employed", "Proprietor", "Partner", "Company"],
+        "helperText": "Select employment type to update requirements",
+        "panels": {
+          "Salaried": {
+            "columns": [
+              {
+                "title": "Identity & Address",
+                "items": [
+                  "Proof of Residence (copy of electricity/ telephone bill)",
+                  "Signature / Verification from your Banker / Voters ID / IT PAN card / IT Return / Driving License/ Passport",
+                  "2 Passport-size photos (1 signed by customer)"
+                ]
+              },
+              {
+                "title": "Income Proof",
+                "items": [
+                  "Latest Form 16 / ITR documents",
+                  "Latest Salary Slip showing statutory deductions"
+                ]
+              },
+              {
+                "title": "Other Documents",
+                "items": [
+                  "KMPL App. Form duly filled by you",
+                  "RC copy",
+                  "Insurance Copy",
+                  "Valuation form from our authorized valuation agency"
+                ]
+              }
+            ]
+          },
+          "Self-Employed": null,
+          "Proprietor": null,
+          "Partner": null,
+          "Company": null
+        },
+        "checklistIcon": "raw/doc-check-icon.png",
+        "decorativeImage": "see raw/documents-desktop.png and raw/documents-mobile.png (full-section screenshots)"
+      },
+      "notes": "5-chip tab switcher ('Salaried' active black pill, others grey outline), search-icon hint text below, then 3 white rounded cards (rounded-32, light border) each listing checked items with a circular check-mark bullet icon. Decorative diagonal red/orange gradient streaks appear as a background fill behind the right side of the section (not a separate layer — captured only via full-section screenshot, not an isolated asset). Mobile stacks the 3 cards vertically; same decorative gradient bleeds in from the top-right, fading down the page."
+    },
+    {
+      "order": 11,
+      "type": "need-help",
+      "figmaName": "Need Help FB",
+      "desktop": {
+        "nodeId": "2067:11758",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/need-help-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[497, 124, 372, 192], [582, 124, 202, 48], [497, 184, 372, 48], [548, 264, 269, 52]]
+      },
+      "mobile": {
+        "nodeId": "2089:5828",
+        "x": 0, "y": 0, "w": 375, "h": 672,
+        "image": "raw/need-help-mobile.png",
+        "imagePx": [750, 1344],
+        "textBoxes": [[24, 80, 327, 168], [107, 80, 161, 40], [24, 132, 327, 40], [62, 204, 250, 44]]
+      },
+      "content": {
+        "heading": "Need help?",
+        "text": "Connect with our dedicated automotive finance team for immediate assistance.",
+        "buttons": ["Locate us", "Apply now"],
+        "image": "baked into raw/need-help-desktop.png / raw/need-help-mobile.png background"
+      },
+      "notes": "Black full-bleed banner, centered content, two white pill buttons side by side ('Locate us', 'Apply now') with dark text. Decorative image baked into the background PNG (not a separate layer)."
+    },
+    {
+      "order": 12,
+      "type": "faq",
+      "figmaName": "Faq GB",
+      "desktop": {
+        "nodeId": "2067:11766",
+        "x": 0, "y": 0, "w": 1366, "h": 448,
+        "textBoxes": [[92, 0, 442, 96], [626, 0, 648, 448]]
+      },
+      "mobile": {
+        "nodeId": "2064:4745",
+        "x": 0, "y": 0, "w": 375, "h": 520,
+        "textBoxes": [[24, 0, 327, 80], [24, 112, 327, 408]]
+      },
+      "content": {
+        "heading": "Frequently asked questions",
+        "items": [
+          { "q": "Which cars can be financed?", "a": "KMPL finances all existing passenger cars" },
+          { "q": "Up to what amount does KMPL finance?", "a": null },
+          { "q": "What is the tenure of financing options?", "a": null },
+          { "q": "What are the tenure options?", "a": null },
+          { "q": "What is the time taken to process my loan?", "a": null },
+          { "q": "Can I generate cash against my existing car?", "a": null }
+        ]
+      },
+      "notes": "Heading on the left (442px col), accordion on the right (648px col desktop / full width mobile) with thin dividers between items; first item open with its answer visible, others closed. Caution: the mobile accordion's raw Figma text-node names show stale placeholder copy from an unrelated 'Dream Different Credit Card' component — get_design_context on the rendered node confirmed the actual visible text matches the desktop FAQ content exactly, so that was used instead of the node names."
+    }
+  ]
+}
