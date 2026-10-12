@@ -1,0 +1,189 @@
+{
+  "slug": "about-us",
+  "title": "About us",
+  "desktopNode": "2068:12291",
+  "mobileNode": "2068:12564",
+  "sections": [
+    {
+      "order": 1,
+      "type": "hero",
+      "figmaName": "hero Fb",
+      "desktop": {
+        "nodeId": "2068:12335",
+        "x": 0,
+        "y": 0,
+        "w": 1366,
+        "h": 553,
+        "image": "raw/hero-desktop.png",
+        "imagePx": [2684, 1106],
+        "textBoxes": [
+          [92, 48, 407, 48],
+          [92, 116, 407, 72],
+          [332, 443, 345, 62],
+          [689, 443, 345, 62]
+        ]
+      },
+      "mobile": {
+        "nodeId": "2068:12596",
+        "x": 0,
+        "y": 0,
+        "w": 375,
+        "h": 611,
+        "image": "raw/hero-mobile.png",
+        "imagePx": [750, 1222],
+        "textBoxes": [
+          [28, 44, 319, 40],
+          [28, 92, 319, 60],
+          [28, 467, 319, 56],
+          [28, 531, 319, 56]
+        ]
+      },
+      "content": {
+        "title": "Kotak Mahindra Prime",
+        "subtitle": "One of India's leading car finance companies,  dedicated to putting you in the driver's seat since 1996.",
+        "stats": [
+          { "label": "Network", "value": "166 Branches", "icon": "Outlined-Send Money Abroad (two overlapping circular arrows icon)" },
+          { "label": "Presence", "value": "24 States & 3 Union Territories", "icon": "Location (map pin icon)" }
+        ],
+        "form": null
+      },
+      "notes": "Background photo (car on road) with text baked into the flattened PNG; title/subtitle text color is near-white (#f5f5f5), font Manrope medium, 32/40 desktop/mobile for title, 14-16px for subtitle. Title column is narrow (407px desktop) and left-aligned against the full 1182px content width, i.e. not centered on desktop; mobile version centers the same text block. No lead-form card on this hero, only the two stat badges below the title/subtitle. Stat badges are white/translucent chips with an icon, small grey label (14px) and bold value (20/28 semibold)."
+    },
+    {
+      "order": 2,
+      "type": "columns-text",
+      "figmaName": "Frame 2147231511 (KMPL Profile)",
+      "desktop": { "nodeId": "2068:12354", "x": 0, "y": 0, "w": 1182, "h": 616 },
+      "mobile": { "nodeId": "2068:12604", "x": 0, "y": 0, "w": 327, "h": 792 },
+      "content": {
+        "heading": "KMPL Profile",
+        "html": "<p>Kotak Mahindra Prime Limited (KMPL) is a subsidiary of Kotak Mahindra Bank Limited and has been one of India's leading car finance company since 1996. In 2018, KMPL successfully kick-started its two-wheeler loan business and has also begun offering Loan Against Property since 2021.</p><p>In the automobile space, KMPL finances new, pre-owned passenger cars and two wheelers for retail consumers as well as provides wholesale financing to automobile dealerships. The company has preferred financier relationships and tie-ups with various automobile manufacturers in India.</p><p>KMPL provides Loans Against Property against both commercial and residential real estate, ensuring ready finance for business or personal needs.</p><p>KMPL's retail distribution network comprises of 166 branches across 24 states and 3 Union Territories in India that is further supported by a wide network of direct marketing associates and agencies across the country.</p>"
+      },
+      "notes": "Standard columns-text layout: heading left (narrower column, ~222px of the 1182px width on desktop), long-form paragraph text right (660px column). On mobile the heading stacks above the paragraph, full width. Paragraph breaks inferred from double-space runs in the Figma text node."
+    },
+    {
+      "order": 3,
+      "type": "feature-cards",
+      "figmaName": "Frame 2147231322 (info cards)",
+      "desktop": { "nodeId": "2068:12357", "x": 0, "y": 0, "w": 1182, "h": 704 },
+      "mobile": { "nodeId": "2068:12607", "x": 0, "y": 0, "w": 327, "h": 1064 },
+      "content": {
+        "heading": null,
+        "subheading": null,
+        "variant": "info",
+        "cards": [
+          {
+            "icon": "raw/icon-company.png",
+            "size": "half",
+            "fields": [
+              { "label": "Company Name", "value": "Kotak Mahindra Prime Limited" },
+              { "label": "Corporate Identification Number (CIN)", "value": "U67200MH1996PLC097730" }
+            ]
+          },
+          {
+            "icon": "raw/icon-telephone.png",
+            "size": "half",
+            "fields": [
+              { "label": "Telephone Number", "value": "(022) 66056825" },
+              { "label": "Fax Number", "value": "(022) 67259086" }
+            ]
+          },
+          {
+            "icon": "raw/icon-address.png",
+            "size": "full",
+            "fields": [
+              { "label": "Registered Office Address", "value": "27BKC, C 27, G Block, Bandra Kurla Complex, Bandra (E), Mumbai - 400 051" },
+              { "label": "Corporate Office Address", "value": "Kotak Infiniti, 6th Floor, Bldg no 21, Infinity Park, Off Western Express Highway, General A K Vaidya Marg, Malad (E), Mumbai - 400097." }
+            ]
+          }
+        ],
+        "cta": null
+      },
+      "notes": "3 info cards on a light grey (#eeeeee) background, 32px corner radius, 32px padding. First two cards sit side-by-side (2-up grid, 'half' size) on desktop and stack full-width on mobile; the address card always spans the full row ('full' size) because it holds two longer values. Each card has: a 72x72 (62x72 for the address icon) icon, then stacked label/value pairs separated by a 1px #dedede divider line. Label text is 14/18 Manrope medium, #666666. Value text is 20/28 Manrope semibold, #121212, tracking -0.4px."
+    },
+    {
+      "order": 4,
+      "type": "columns-text",
+      "figmaName": "Key features- AB (About Kotak Mahindra Group)",
+      "desktop": { "nodeId": "2068:12393", "x": 0, "y": 0, "w": 1366, "h": 880 },
+      "mobile": { "nodeId": "2068:12642", "x": 0, "y": 0, "w": 375, "h": 1064 },
+      "content": {
+        "heading": "About Kotak Mahindra Group",
+        "html": "<p>Established in 1985, Kotak Mahindra Group (Group) is one of India's leading financial services conglomerate. In February 2003, Kotak Mahindra Finance Ltd. (KMFL), the Group's flagship company, received banking license from the Reserve Bank of India (RBI), becoming the first nonbanking finance company in India to convert into a bank - Kotak Mahindra Bank Ltd.</p><p>The Group offers a wide range of financial services that encompass every sphere of life. From commercial banking, to stock broking, mutual funds, insurance and investment banking, the Group caters to the diverse financial needs of individuals and the corporate sector. Kotak Mahindra Group has a global presence through its subsidiaries in UK, USA, Gulf Region, Singapore and Mauritius with offices in London, New York, Dubai, Abu Dhabi, Singapore and Mauritius respectively.</p><p>As on 30th September, 2021, Kotak Mahindra Bank Ltd has a national footprint of 1,622 branches and 2,601 ATMs, and branches in GIFT City and DIFC (Dubai).</p><p>For more information, please visit the company's website</p>",
+        "link": { "text": "http://www.kotak.com/", "href": "http://www.kotak.com/" }
+      },
+      "notes": "Same columns-text pattern as KMPL Profile (heading left, text right, 1182px inner content width inside the 1366px section). A link row (globe/link icon + URL text 'http://www.kotak.com/') sits directly below the paragraph text, left-aligned with it. Mobile stacks heading above paragraph above the link row, full width."
+    },
+    {
+      "order": 5,
+      "type": "banner",
+      "figmaName": "Section 4-FB (Our Corporate Identity)",
+      "desktop": {
+        "nodeId": "2068:12404",
+        "x": 0,
+        "y": 0,
+        "w": 1366,
+        "h": 700,
+        "image": "raw/corporate-identity-desktop.png",
+        "imagePx": [2732, 1400],
+        "textBoxes": [
+          [92, 246, 616, 48],
+          [92, 314, 616, 140]
+        ]
+      },
+      "mobile": {
+        "nodeId": "2068:12652",
+        "x": 0,
+        "y": 0,
+        "w": 375,
+        "h": 662,
+        "image": "raw/corporate-identity-mobile.png",
+        "imagePx": [750, 1324],
+        "textBoxes": [
+          [26, 80, 325, 40],
+          [26, 140, 325, 140]
+        ]
+      },
+      "content": {
+        "heading": "Our Corporate Identity",
+        "text": "The symbol of the infinite Ka reflects our global Indian personality. The Ka is uniquely Indian while its curve forms the infinity sign, which is universal. One of the basic tenets of economists is that man's needs are unlimited. The infinite Ka symbolises that we have infinite number of ways to meet those needs.",
+        "cta": null,
+        "align": "left",
+        "textColor": "unknown - baked into flattened image, not sampled"
+      },
+      "notes": "Full-bleed 700px (desktop) / 662px (mobile) banner. Heading + paragraph occupy the left half of the frame; the right half shows the Kotak 'infinite Ka' logo graphic, both baked into the flattened PNG (no separate editable logo layer was found in metadata, only the heading/paragraph text layers, which were used purely to compute textBoxes for reference)."
+    },
+    {
+      "order": 6,
+      "type": "columns-text",
+      "figmaName": "Key features- AB (Promoters intro)",
+      "desktop": { "nodeId": "3703:22334", "x": 0, "y": 0, "w": 1182, "h": 2697.08 },
+      "mobile": { "nodeId": "2068:12659", "x": 0, "y": 0, "w": 327, "h": 528 },
+      "content": {
+        "heading": "Promoters",
+        "html": "<p>Kotak Mahindra Prime Limited (KMPL) (earlier Kotak Mahindra Primus Limited) was incorporated on February 28, 1996. It was formed as a Joint Venture with Kotak Mahindra Bank Limited (then Kotak Mahindra Finance Limited) holding 60% and the balance being held by Ford Credit International Inc., U.S.A.</p><p>On October 4, 2005, the Joint Venture was realigned and the entire 40% shareholdings of Ford Credit International Inc., in the company was purchased by Kotak Group. The Registrar of Companies, Mumbai approved the change in name of the company from Kotak Mahindra Primus Limited to Kotak Mahindra Prime Limited with effect from December 1, 2005.</p>"
+      },
+      "notes": "Same heading-left/text-right columns-text pattern. The desktop node (3703:22334) bounding box of 2697px height also contains the team card grid (order 7 below) stacked directly beneath this intro paragraph inside the same Figma frame - the two are extracted as separate section entries here (columns-text intro + team) because they map to two different reusable blocks, but they are not visually separated by any background/color change in Figma."
+    },
+    {
+      "order": 7,
+      "type": "team",
+      "figmaName": "Frame 2147231514 (Promoters list)",
+      "desktop": { "nodeId": "3703:22338", "x": 0, "y": 0, "w": 660, "h": 2253.08 },
+      "mobile": { "nodeId": "2068:12662", "x": 0, "y": 0, "w": 327, "h": 3642.6 },
+      "content": {
+        "people": [
+          { "photo": "raw/promoter-1-uday-kotak.png", "din": "DIN No: 00007467", "name": "Uday Kotak", "role": "Chairman, KMPL \nFounder and Director, Kotak Mahindra Bank Limited (Holding Company)" },
+          { "photo": "raw/promoter-2-suraj-rajappan.png", "din": "DIN No: 11004605", "name": "Suraj Rajappan", "role": "Managing Director and CEO, KMPL" },
+          { "photo": "raw/promoter-3-prakash-apte.png", "din": "DIN No: 00196106", "name": "Prakash Apte", "role": "Independent Director, KMPL" },
+          { "photo": "raw/promoter-4-akila-urankar.png", "din": "DIN No: 00228541", "name": "Akila Urankar", "role": "Independent Director, KMPL" },
+          { "photo": "raw/promoter-5-ravi-venkatraman.png", "din": "DIN No: 00307328", "name": "Ravi Venkatraman", "role": "Independent Director, KMPL" },
+          { "photo": "raw/promoter-6-amit-mohan.png", "din": "DIN No: 07721724", "name": "Amit Mohan", "role": "Non-Executive Director, KMPL. (Joint President, Kotak Mahindra Bank Limited (Holding Company))" },
+          { "photo": "raw/promoter-7-tekumalla-nihar-ramana-rao.png", "din": "DIN No: 07721724", "name": "Tekumalla Nihar Ramana Rao", "role": "Independent Director, KMPL" },
+          { "photo": "raw/promoter-8-ramesh-iyer.png", "din": "DIN No: 00220759", "name": "Ramesh Iyer", "role": "Independent Director, KMPL" }
+        ]
+      },
+      "notes": "8 cards stacked vertically on both desktop and mobile (desktop card = photo left (304px) + text right; mobile likely stacks photo above text, not independently verified). Card radius 24px, photo radius 32px. Name text 32/40 Manrope semibold #121212; role text 16/24 Manrope semibold #666666; DIN rendered as a small badge/text row above the name. NOTE: in the Figma mock, promoters #1 (Uday Kotak), #2 (Suraj Rajappan), #4 (Akila Urankar), #5 (Ravi Venkatraman) and #8 (Ramesh Iyer) all use the exact same placeholder photo (verified by matching MD5 checksum) - only #3 (Prakash Apte), #6 (Amit Mohan) and #7 (Tekumalla Nihar Ramana Rao) have distinct photos. Flag this for the author/content owner to supply real headshots. Also NOTE: card #6 (Amit Mohan) and card #7 (Tekumalla Nihar Ramana Rao) have the identical DIN number 'DIN No: 07721724' in the source Figma file - this looks like a copy/paste error upstream; flag for verification rather than assuming it's correct."
+    }
+  ]
+}

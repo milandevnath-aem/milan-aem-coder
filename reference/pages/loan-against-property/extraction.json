@@ -1,0 +1,318 @@
+{
+  "slug": "loan-against-property",
+  "title": "Loan Against Property",
+  "desktopNode": "2064:2325",
+  "mobileNode": "2064:1732",
+  "sections": [
+    {
+      "order": 1,
+      "type": "hero",
+      "figmaName": "Hero FB",
+      "desktop": {
+        "nodeId": "2064:2370",
+        "x": 0,
+        "y": 0,
+        "w": 1366,
+        "h": 553,
+        "image": "raw/hero-desktop.png",
+        "imagePx": [2684, 1106],
+        "textBoxes": [[92, 48, 407, 140], [728, 48, 546, 457]]
+      },
+      "mobile": {
+        "nodeId": "2064:1766",
+        "x": 0,
+        "y": 0,
+        "w": 367,
+        "h": 611,
+        "image": "raw/hero-mobile.png",
+        "imagePx": [734, 1222],
+        "textBoxes": [[24, 44, 319, 108], [24, 535, 319, 52]]
+      },
+      "content": {
+        "title": "Unlock the Value of Your Property",
+        "subtitle": "with Loan Against Property",
+        "form": {
+          "heading": "Start Your Loan Journey Today",
+          "description": "Receive a call from our loan expert and get the best offer for you.",
+          "selectLabel": "Select loan category",
+          "selectedCategory": "Loan Against Property",
+          "fields": ["First name", "Last name"],
+          "button": "Apply now"
+        },
+        "mobileButton": "Apply now"
+      },
+      "notes": "User-provided section id 2064:2327 ('Hero FB') includes the shared 44px 'Header Sleeve' legal-notice band and 68px 'Nav container' above the hero, both excluded per spec. Extraction uses the hero-only sub-frame instead: desktop 'hero Fb' (2064:2370, card rounded-20, bg #fcfcfc with px-12 padding) and mobile 'Hero' (2064:1766, rounded-52). Desktop shows title+subtitle left and a white rounded-32 'Contact Form' lead-gen card on the right (bg #fcfcfc) with a 'Select loan category' dropdown pre-set to 'Loan Against Property', 'First name' and 'Last name' text inputs, and a black pill 'Apply now' button. Mobile hero has no form card — only the title/subtitle (text baked into the background image) and a single white pill 'Apply now' button overlaid near the bottom of the hero image."
+    },
+    {
+      "order": 2,
+      "type": "banner",
+      "figmaName": "Section 3 - FB",
+      "desktop": {
+        "nodeId": "2064:2387",
+        "x": 0,
+        "y": 0,
+        "w": 1366,
+        "h": 672,
+        "image": "raw/banner-intro-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[774, 262, 500, 148]]
+      },
+      "mobile": {
+        "nodeId": "2064:1772",
+        "x": 0,
+        "y": 0,
+        "w": 375,
+        "h": 672,
+        "image": "raw/banner-intro-mobile.png",
+        "imagePx": [750, 1344],
+        "textBoxes": [[0, 80, 375, 204]]
+      },
+      "content": {
+        "heading": "Avail loan against property for all your business and personal needs",
+        "text": "Get up to 80% funding with flexible loan tenure and competitive interest rates.",
+        "cta": null,
+        "align": "right",
+        "textColor": "dark"
+      },
+      "notes": "Full-width photo band (background image fill, text baked into the flattened PNG from get_design_context). Desktop text block is right-aligned (flex items-end, px-92 inset) occupying the right half; no 'Read more' button present. Mobile stacks the same heading/text centered, image shows py-80 top inset."
+    },
+    {
+      "order": 3,
+      "type": "feature-cards",
+      "figmaName": "Key features- AB",
+      "desktop": {
+        "nodeId": "2064:2392",
+        "x": 0,
+        "y": 0,
+        "w": 1366,
+        "h": 850
+      },
+      "mobile": {
+        "nodeId": "2064:1776",
+        "x": 0,
+        "y": 0,
+        "w": 375,
+        "h": 1320
+      },
+      "content": {
+        "heading": "Key features",
+        "subheading": null,
+        "variant": "mixed-image-icon",
+        "cards": [
+          {
+            "title": "EMI Savings & Top-Up",
+            "text": "Option to Save on EMI and avail top-up on existing loan.",
+            "image": "raw/feature-card-emi.png",
+            "imagePx": [1170, 700],
+            "size": "large-image"
+          },
+          {
+            "title": "High LTV Ratio",
+            "text": "Loan to value of property up to 80%.",
+            "image": "raw/feature-card-ltv.png",
+            "imagePx": [1170, 700],
+            "size": "large-image"
+          },
+          {
+            "title": "Rental Income Financing",
+            "text": "Lease rental discounting facility; eligibility based on rental income.",
+            "icon": "raw/icon-rental-income.png",
+            "iconPx": [80, 80],
+            "iconDesc": "house with a coin/rupee motif (home finance icon)",
+            "size": "medium-icon"
+          },
+          {
+            "title": "Comprehensive Loan Options",
+            "text": "In addition to Loan Against Property, we also provide loans for purchase of Commercial property.",
+            "icon": "raw/icon-loan-options.png",
+            "iconPx": [80, 80],
+            "iconDesc": "loan/handshake-style icon",
+            "size": "medium-icon"
+          },
+          {
+            "title": "Statement Based Eligibility",
+            "text": "Loan eligibility based on bank statements or GST returns.",
+            "icon": "raw/icon-statement-eligibility.png",
+            "iconPx": [80, 80],
+            "iconDesc": "document with checkmark icon",
+            "size": "medium-icon"
+          },
+          {
+            "title": "Competitive Rates",
+            "text": "Competitive Interest rates.",
+            "icon": "raw/icon-competitive-rates.png",
+            "iconPx": [80, 80],
+            "iconDesc": "interest-rate/percentage icon",
+            "size": "small-icon-horizontal"
+          },
+          {
+            "title": "Flexible Tenure",
+            "text": "Convenient and flexible loan tenure up to 15 years.",
+            "icon": "raw/icon-flexible-tenure.png",
+            "iconPx": [80, 80],
+            "iconDesc": "clock icon",
+            "size": "small-icon-horizontal"
+          }
+        ],
+        "cta": null
+      },
+      "notes": "Heading 'Key features' (40px/48 medium, tracking -1px). Grid: row 1 = 2 large image cards side by side (585x350 each, rounded-32); row 2 = 3 medium icon cards (386x272, bg #eeeeee, rounded-32, 40x40 icon top + text bottom, justify-between); row 3 = 2 small cards (585px wide, bg #eeeeee rounded-32, icon+text side-by-side horizontally, p-32 gap-24). All 5 icon assets for the icon-based cards (Rental Income Financing, Comprehensive Loan Options, Statement Based Eligibility, Competitive Rates, Flexible Tenure) resolved to distinct downloadable images and were saved. Mobile stacks all 7 cards vertically in the same order, same text, icon size reduced to 32x32."
+    },
+    {
+      "order": 4,
+      "type": "requirements",
+      "figmaName": "Frame 2147231066 (What You'll Need to Get Started + carousel arrows 2064:2475)",
+      "desktop": {
+        "nodeId": "2064:2438",
+        "x": 0,
+        "y": 0,
+        "w": 1366,
+        "h": 548
+      },
+      "mobile": {
+        "nodeId": "2064:1822",
+        "x": 0,
+        "y": 0,
+        "w": 375,
+        "h": 1442
+      },
+      "content": {
+        "heading": "What You'll Need to Get Started",
+        "subheading": "Check candidate parameters for quick application processing.",
+        "variant": "eligibility",
+        "tabs": ["Salaried", "Self employed"],
+        "panels": {
+          "Salaried": [
+            { "icon": "raw/requirement-card-icon.png", "label": "Minimum age of applicant", "value": "18 years" },
+            { "icon": null, "label": "Minimum age at maturity", "value": "60 Years" },
+            { "icon": null, "label": "Minimum income requirement", "value": "₹30,000 p.m." },
+            { "icon": null, "label": "Past work experience", "value": "Min. 3 Years" },
+            { "icon": null, "label": "Past work experience", "value": "Min. 3 Years" }
+          ],
+          "Self employed": null
+        },
+        "hasCarousel": true
+      },
+      "notes": "Tabs are pill buttons ('Salaried' active black pill, 'Self employed' inactive) — includeHidden:true metadata scan on the parent found no hidden panel content for 'Self employed', so its panel is recorded null. 5 eligibility stat-cards (386x272, bg #eeeeee rounded-32, 72x72 icon top + label/value text bottom) laid out in a single row that overflows the 1182px content width (cards span to x=12827 vs container right edge ~12031) — this is the horizontally-scrolling carousel; nav arrows live in sibling frame 2064:2475 (two circular secondary-pill buttons, 44x44 each). Only the 1st card's icon resolved to a real asset (requirement-card-icon.png, generic AI-placeholder artwork, same icon reused — 'ChatGPT Image Sep 4, 2026...' naming suggests throwaway placeholder art not yet replaced by real icons); cards 2-5 icons did not export (empty divs), recorded as null. Last two cards are literal duplicates ('Past work experience' / 'Min. 3 Years' appears twice) in the source Figma — copied verbatim per spec, not de-duplicated. Mobile stacks all 5 cards vertically, same content, no carousel needed (icon size 52x52 then scaled further in nested breakpoint)."
+    },
+    {
+      "order": 5,
+      "type": "requirements",
+      "figmaName": "Documents section FB",
+      "desktop": {
+        "nodeId": "2064:2480",
+        "x": 0,
+        "y": 0,
+        "w": 1366,
+        "h": 746,
+        "image": "raw/documents-desktop-full.png",
+        "imagePx": [2732, 1492]
+      },
+      "mobile": {
+        "nodeId": "2064:1860",
+        "x": 0,
+        "y": 0,
+        "w": 375,
+        "h": 1050
+      },
+      "content": {
+        "heading": "Documents Required",
+        "subheading": "Select employment type to update requirements",
+        "variant": "documents",
+        "tabs": ["Salaried", "Self employed"],
+        "panels": {
+          "Salaried": [
+            {
+              "title": "Identity & Address",
+              "items": [
+                "Photo Identity Proof and Address Proof: As per RBI KYC guidelines.",
+                "Employee ID card copy."
+              ]
+            },
+            {
+              "title": "Income Proof",
+              "items": [
+                "Latest 3 years' ITR / Form 16, Last 6 months' bank statement reflecting salary credit, latest 6 months' salary slips.",
+                "Sanction letters or Statement of Account."
+              ]
+            },
+            {
+              "title": "Property Documents",
+              "items": [
+                "Complete chain of property title deeds, approved layout / plan and any other document applicable for creation of valid mortgage."
+              ]
+            }
+          ],
+          "Self employed": null
+        },
+        "decorativeImage": null
+      },
+      "notes": "'Salaried' chip is filled/active (bg #121212), 'Self employed' is outline-only; includeHidden scan found no second panel, so 'Self employed' is null. 3 cards in a row (386px each, bg #fcfcfc, border #d6d6d6, rounded-24): title + 1px divider (#eeeeee) + checklist items (each item has a small check-icon bullet, exported icon asset not meaningfully distinct — decorative, not downloaded individually). No decorative red image child found in this instance (unlike the generic 'Documents Required' pattern description, this page's section has no separate decorative image node). get_design_context on the whole section (2064:2480) returned ONE flattened PNG (documents-desktop-full.png) because the section itself resolves as an image-fit container in Figma's eyes even though it is literally text+cards — downloaded for visual reference but all text content above was extracted structurally from the narrower 'Doc-Columns-Grid' node (2064:2489) which did return real DOM/text. Mobile stacks the same 3 columns vertically, identical text content, same chip pair, same divider pattern."
+    },
+    {
+      "order": 6,
+      "type": "need-help",
+      "figmaName": "Need Help FB",
+      "desktop": {
+        "nodeId": "2064:2521",
+        "x": 0,
+        "y": 0,
+        "w": 1366,
+        "h": 672,
+        "image": "raw/need-help-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[497, 124, 372, 192]]
+      },
+      "mobile": {
+        "nodeId": "2089:5777",
+        "x": 0,
+        "y": 0,
+        "w": 375,
+        "h": 672,
+        "image": "raw/need-help-mobile.png",
+        "imagePx": [750, 1344],
+        "textBoxes": [[0, 80, 327, 168]]
+      },
+      "content": {
+        "heading": "Need help?",
+        "text": "Connect with our dedicated automotive finance team for immediate assistance.",
+        "buttons": ["Locate us", "Apply now"],
+        "image": null
+      },
+      "notes": "Black full-width banner, text centered (px-200 desktop / px-24 mobile inset), text baked into the flattened background image returned by get_design_context — no separate decorative image child found (the dark background itself is the 'image'). Two white pill buttons: 'Locate us' and 'Apply now'. NOTE: the body copy literally says 'automotive finance team' — this is unchanged template placeholder copy carried over from a car-loan-style page and was not customized for Loan Against Property; copied verbatim per spec (copy every visible string exactly) rather than corrected."
+    },
+    {
+      "order": 7,
+      "type": "faq",
+      "figmaName": "Content - Section",
+      "desktop": {
+        "nodeId": "2064:2529",
+        "x": 0,
+        "y": 0,
+        "w": 1366,
+        "h": 668
+      },
+      "mobile": {
+        "nodeId": "2064:1905",
+        "x": 0,
+        "y": 0,
+        "w": 375,
+        "h": 780
+      },
+      "content": {
+        "heading": "Frequently asked questions",
+        "items": [
+          { "q": "What is the minimum and maximum property loan tenure?", "a": "We offer our customers a loan tenure from a minimum of 12 months up to a maximum of 180 months." },
+          { "q": "Can I avail property loan for a property which is owned by parents?", "a": null },
+          { "q": "What criteria does a property need to fulfill for availing LAP?", "a": null },
+          { "q": "What kind of properties are eligible as collateral for this mortgage loan?", "a": null },
+          { "q": "What is repayment schedule?", "a": null },
+          { "q": "Can LAP be availed for Financing Education?", "a": null },
+          { "q": "How is my eligibility calculated for LAP?", "a": null },
+          { "q": "Are there any Foreclosure charges, if the loan is foreclosed pre-maturely?", "a": null }
+        ]
+      },
+      "notes": "Heading left ('Frequently asked questions', 442px column), accordion right (660px column, node 2064:2533), 8 items total, divided by 1px #eeeeee dividers; only the first (open, chevron-up) has visible answer text, remaining 7 are collapsed (chevron-down, no visible answer). The Figma layer/instance names for all 8 accordion rows read 'What is Kotak811 Dream Different Credit Card against FD?' — this is stale placeholder metadata (get_metadata layer naming) carried over from an unrelated credit-card component and does NOT match the actual rendered text; the real question/answer strings were read from the <p> text nodes via get_design_context (forceCode) on 2064:2533 and are recorded above (property-loan-tenure, parental-property ownership, LAP eligibility criteria, collateral property types, repayment schedule, education financing, eligibility calculation, foreclosure charges). Mobile shows the same 8 items stacked, same real question text, first item open with the same answer."
+    }
+  ]
+}

@@ -1,0 +1,315 @@
+{
+  "slug": "top-up-loan",
+  "title": "Top-Up Against Car and Two-Wheeler Loan",
+  "desktopNode": "2064:3281",
+  "mobileNode": "2064:2982",
+  "sections": [
+    {
+      "order": 1,
+      "type": "hero",
+      "figmaName": "Hero FB",
+      "desktop": {
+        "nodeId": "2064:3327",
+        "x": 0, "y": 0, "w": 1342, "h": 553,
+        "image": "raw/hero-desktop.png",
+        "imagePx": [2684, 1106],
+        "textBoxes": [[80, 48, 407, 144], [80, 212, 407, 24], [716, 48, 546, 457]]
+      },
+      "mobile": {
+        "nodeId": "2064:3016",
+        "x": 0, "y": 0, "w": 367, "h": 611,
+        "image": "raw/hero-mobile.png",
+        "imagePx": [734, 1222],
+        "textBoxes": [[24, 44, 319, 108], [24, 535, 319, 52]]
+      },
+      "content": {
+        "title": "Top-Up Against Car and Two-Wheeler Loan",
+        "titleMobile": "Top-up against Car and Two-Wheeler loan",
+        "subtitle": "Easy & Flexible Plans",
+        "form": {
+          "heading": "Start Your Loan Journey Today",
+          "description": "Receive a call from our loan expert and get the best offer for you.",
+          "selectLabel": "Select loan category",
+          "selectedCategory": "Top-Up Loan",
+          "fields": ["Your name", "Mobile number (+91 prefix)"],
+          "button": "Apply now"
+        },
+        "mobileButton": "Apply now"
+      },
+      "notes": "Section node 2064:3283 includes the shared Header Sleeve (44px) + Nav container (68px), both skipped per spec. Desktop image/textBoxes are from the inner rounded hero card node 2064:3327 ('Hero - FB', 1342x553, rounded 20px). Mobile image/textBoxes are from node 2064:3016 ('Hero', 367x611, rounded 52px) inside the mobile banner-animation strip (also skipped). Lead-form card: white/#fcfcfc bg, rounded 32px, select field + 2 text inputs (name, mobile w/ +91 code) + black pill CTA 'Apply now'. Mobile hero has no form card, only title/subtitle + white pill CTA button at bottom of image."
+    },
+    {
+      "order": 2,
+      "type": "banner",
+      "figmaName": "Section 3 - FB",
+      "desktop": {
+        "nodeId": "2064:3343",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/banner-intro-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[774, 228, 500, 120], [774, 360, 500, 84]]
+      },
+      "mobile": {
+        "nodeId": "2064:3022",
+        "x": 0, "y": 0, "w": 375, "h": 672,
+        "image": "raw/banner-intro-mobile.png",
+        "imagePx": [750, 1344],
+        "textBoxes": [[24, 80, 327, 144], [24, 236, 327, 72]]
+      },
+      "content": {
+        "heading": "KMPL Provides Top-Up Loans to Our Car and Two-Wheeler Loan Customers.",
+        "text": "As a constant effort in reaching to our privileged customers new products are designed seeing the past repayment track.",
+        "align": "right",
+        "textColor": "dark"
+      },
+      "notes": "Intro row: white/#fcfcfc background, photo occupies left half, text block (heading no bold-run + paragraph) vertically centered on the right half. Heading is a single font-semibold 32px run (no mixed bold/regular emphasis). No CTA button on this one."
+    },
+    {
+      "order": 3,
+      "type": "banner",
+      "figmaName": "Section 3 - FB",
+      "desktop": {
+        "nodeId": "2064:3348",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/banner-2-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[92, 268, 500, 40], [92, 320, 500, 84]]
+      },
+      "mobile": {
+        "nodeId": "2064:3026",
+        "x": 0, "y": 0, "w": 375, "h": 600,
+        "image": "raw/banner-2-mobile.png",
+        "imagePx": [750, 1200],
+        "textBoxes": [[24, 80, 327, 72], [24, 160, 327, 96]]
+      },
+      "content": {
+        "heading": "KPTR (Kotak Prime Track Record)",
+        "text": "This is an exclusive offer for our loyal customers who have maintained a good repayment track with Kotak Mahindra Prime.",
+        "align": "left",
+        "textColor": "dark"
+      },
+      "notes": "Full-width 672px (600px mobile) photo band, text block on left half, no CTA button."
+    },
+    {
+      "order": 4,
+      "type": "banner",
+      "figmaName": "Frame 2147231615 (Section 3 - FB)",
+      "desktop": {
+        "nodeId": "2064:3353",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/banner-3-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[774, 254, 500, 40], [774, 306, 500, 112]]
+      },
+      "mobile": {
+        "nodeId": "2064:3031",
+        "x": 0, "y": 0, "w": 375, "h": 600,
+        "image": "raw/banner-3-mobile.png",
+        "imagePx": [750, 1200],
+        "textBoxes": [[24, 80, 327, 36], [24, 124, 327, 120]]
+      },
+      "content": {
+        "heading": "RePlus",
+        "text": "This loan is a 2-in-1 Offer for our valued customers, which offers benefits of Personal Loan and Re-Finance at the same time. It's an easy pre-approved top up loan on your car finance.",
+        "align": "right",
+        "textColor": "dark"
+      },
+      "notes": "Text block on right half, photo left half, no CTA button."
+    },
+    {
+      "order": 5,
+      "type": "banner",
+      "figmaName": "Section 3 - FB",
+      "desktop": {
+        "nodeId": "2064:3359",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/banner-4-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[92, 282, 500, 40], [92, 334, 500, 56]]
+      },
+      "mobile": {
+        "nodeId": "2064:3036",
+        "x": 0, "y": 0, "w": 375, "h": 600,
+        "image": "raw/banner-4-mobile.png",
+        "imagePx": [750, 1200],
+        "textBoxes": [[24, 80, 327, 36], [24, 124, 327, 72]]
+      },
+      "content": {
+        "heading": "Instant Top-Up Loan",
+        "text": "Eligible customers can now avail instant funds through our quick and easy 5 click - digital journey!",
+        "align": "left",
+        "textColor": "dark"
+      },
+      "notes": "Text block on left half, photo right half, no CTA button."
+    },
+    {
+      "order": 6,
+      "type": "feature-cards",
+      "figmaName": "Frame 2147231616",
+      "desktop": {
+        "nodeId": "2064:3364",
+        "x": 0, "y": 0, "w": 1366, "h": 670
+      },
+      "mobile": {
+        "nodeId": "2064:3041",
+        "x": 0, "y": 0, "w": 375, "h": 1438
+      },
+      "content": {
+        "heading": "Why Choose Instant Top-Up Loan?",
+        "variant": "split",
+        "bigImageCard": {
+          "desktopImage": "raw/feature-big-image-desktop.png",
+          "desktopImagePx": [1102, 988],
+          "mobileImage": "raw/feature-big-image-mobile.png",
+          "mobileImagePx": [654, 572],
+          "bgColor": "#e46400",
+          "radius": "24px"
+        },
+        "cards": [
+          { "icon": "raw/feature-icon-1.png", "title": "Instant Funds in your account", "text": "Apply digitally - no branch visit required" },
+          { "icon": "raw/feature-icon-2.png", "title": "Paperless Journey", "text": "Enjoy a seamless document-free experience" },
+          { "icon": "raw/feature-icon-3.png", "title": "Quick Disbursal", "text": "Funds are credited to your account within 5 working hours" },
+          { "icon": "raw/feature-icon-4.png", "title": "Apply Anytime, Anywhere", "text": "Access the portal 24x7 from any device" }
+        ],
+        "cta": "Click here to check your eligibility",
+        "disclaimer": "*TandC Apply. Disbursal subject to verification."
+      },
+      "notes": "Desktop: left column (551px) = heading 'Why Choose Instant Top-Up Loan?' (text-32/semibold, no bold run) stacked above the big orange (#e46400) image card (rounded 24px, 551x494). Right column (551px) = 2x2 grid of icon cards (269.5x272 each, bg #eeeeee, radius 32px, 40x40 icon chip top + text-group title(16/semibold)+text(14/medium #666) bottom) then full-width black pill CTA button + centered disclaimer text below. Mobile: same content stacked vertically (big image card first (327x286), then the 4 icon cards full-width (327x200 each), then CTA+disclaimer). Icon chips are plain icon images on #eeeeee bg with border, no icon background 'rounded-8' chip wrapper is just a container, not a colored chip."
+    },
+    {
+      "order": 7,
+      "type": "requirements",
+      "figmaName": "Frame 2147231066",
+      "desktop": {
+        "nodeId": "2064:3397",
+        "x": 0, "y": 0, "w": 1366, "h": 552
+      },
+      "mobile": {
+        "nodeId": "2064:3074",
+        "x": 0, "y": 0, "w": 375, "h": 1582
+      },
+      "content": {
+        "heading": "What You'll Need to Get Started",
+        "subheading": "Check candidate parameters for quick application processing.",
+        "variant": "eligibility",
+        "tabs": ["Car loan", "Two Wheeler Loan"],
+        "panels": {
+          "Car loan": [
+            { "icon": "raw/req-icon-1.png", "label": "Minimum age of applicant", "value": "21 to 60 years" },
+            { "icon": "raw/req-icon-2.png", "label": "Eligible entities", "value": "Partnership Firms" },
+            { "icon": "raw/req-icon-3.png", "label": "Eligible entities", "value": "Public & Private Ltd." },
+            { "icon": "raw/req-icon-3.png", "label": "Eligible entities", "value": "HUFs and Trusts" },
+            { "icon": "raw/req-icon-3.png", "label": "Past work experience", "value": "Min. 3 Years" }
+          ],
+          "Two Wheeler Loan": null
+        }
+      },
+      "notes": "'Car loan' tab is active/selected (black pill); 'Two Wheeler Loan' tab inactive (grey text, no hidden panel content found via includeHidden). Cards: #eeeeee bg, radius 32px, 386x272 (desktop) / full-width 327x230 (mobile stacked, no carousel). 5 cards overflow the 1182px desktop container (5*386=1930px) so a horizontal carousel is used, with two secondary pill arrow buttons bottom-right (node 2064:3434/3435, 44x44 each) to scroll. Icon chips 72x72 rounded squares; icons for cards 3,4,5 reuse the same asset (req-icon-3.png), card 2 has its own icon (req-icon-2.png), card 1 its own (req-icon-1.png). Value text ('21 to 60 years' etc.) renders as large 32px/semibold #121212 text."
+    },
+    {
+      "order": 8,
+      "type": "requirements",
+      "figmaName": "Documents section FB",
+      "desktop": {
+        "nodeId": "2064:3439",
+        "x": 0, "y": 0, "w": 1366, "h": 858,
+        "image": "raw/documents-section-desktop.png",
+        "imagePx": [2732, 1716]
+      },
+      "mobile": {
+        "nodeId": "2064:3112",
+        "x": 0, "y": 0, "w": 375, "h": 1074,
+        "image": "raw/documents-section-mobile.png",
+        "imagePx": [750, 2148]
+      },
+      "content": {
+        "heading": "Documents Required",
+        "subheading": "Select employment type to update requirements",
+        "variant": "documents",
+        "tabs": ["Two Wheeler Loan", "Car Loan"],
+        "subHeading": "Individual",
+        "subText": "Required documents for single applicants",
+        "panels": {
+          "Two Wheeler Loan": {
+            "columns": [
+              {
+                "title": "Identity & Address",
+                "items": [
+                  "Proof of Residence (copy of electricity/ telephone bill/ Passport /Voter's ID/ Lease deed/ Rent agreement copy/Property Registration Document in the name of the Customer )",
+                  "Signature / Verification from your Banker / Voters ID / IT PAN card / IT Return / Driving License/ Passport",
+                  "Voters ID / IT PAN card / Driving License/ Passport"
+                ]
+              },
+              {
+                "title": "Income Proof",
+                "items": [
+                  "Registration copy of vehicle",
+                  "Invoice copy of vehicle",
+                  "Insurance copy of vehicle"
+                ]
+              }
+            ]
+          },
+          "Car Loan": null
+        },
+        "decorativeImage": "raw/documents-section-desktop.png"
+      },
+      "notes": "'Two Wheeler Loan' tab is active/selected (black pill) in this section (note: opposite default to the eligibility section above where 'Car loan' was active); 'Car Loan' tab inactive, no hidden panel content found. 'Individual' is a centered sub-heading above the two document columns, with 'Required documents for single applicants' beneath it. Each column is a #fcfcfc card, 1px #d6d6d6 border, radius 32px, title (20/semibold) + divider + checklist items (checkmark icon + 16/medium #666 text). get_design_context flattened the whole section into one background image (documentsSectionFb) when queried at the section root, which likely bakes in the decorative graphic described in the spec as a 'red image on the right' (not resolvable as a separate asset); see raw/documents-section-desktop.png / -mobile.png for the actual look. Checkmark icon downloaded once as raw/doc-checkmark.png and reused for all list items."
+    },
+    {
+      "order": 9,
+      "type": "need-help",
+      "figmaName": "Need Help FB",
+      "desktop": {
+        "nodeId": "2064:3484",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/need-help-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[497, 124, 372, 192], [582, 124, 202, 48], [497, 184, 372, 48], [548.5, 264, 269, 52]]
+      },
+      "mobile": {
+        "nodeId": "2089:5794",
+        "x": 0, "y": 0, "w": 375, "h": 672,
+        "image": "raw/need-help-mobile.png",
+        "imagePx": [750, 1344],
+        "textBoxes": [[24, 80, 327, 168], [107, 80, 161, 40], [24, 132, 327, 40], [62.5, 204, 250, 44]]
+      },
+      "content": {
+        "heading": "Need help?",
+        "text": "Connect with our dedicated automotive finance team for immediate assistance.",
+        "buttons": ["Locate us", "Apply now"],
+        "image": "raw/need-help-desktop.png"
+      },
+      "notes": "Black background band, white centered heading+text, two white pill buttons with black text ('Locate us', 'Apply now') side by side. get_design_context flattens the whole section (bg + text + buttons) into a single image both for desktop and mobile."
+    },
+    {
+      "order": 10,
+      "type": "faq",
+      "figmaName": "Content - Section",
+      "desktop": {
+        "nodeId": "2064:3492",
+        "x": 0, "y": 0, "w": 1366, "h": 680,
+        "textBoxes": [[92, 0, 442, 96], [614, 0, 660, 680]]
+      },
+      "mobile": {
+        "nodeId": "2064:3159",
+        "x": 0, "y": 0, "w": 375, "h": 760
+      },
+      "content": {
+        "heading": "Frequently asked questions",
+        "items": [
+          { "q": "What is KPTR?", "a": "KMPL Car and Two-Wheeler loan track based personal loan" },
+          { "q": "Who can avail of KMPL KPTR Loan?", "a": null },
+          { "q": "How much finance can I avail of?", "a": null },
+          { "q": "What are the tenure options?", "a": null },
+          { "q": "How long will it take to process the loan?", "a": null },
+          { "q": "Does my Car or Two-Wheeler loan account get linked?", "a": null },
+          { "q": "Do I need a guarantor?", "a": null },
+          { "q": "So how do I get a KMPL Car/Two-Wheeler Loan?", "a": null },
+          { "q": "Do I have to close my KPTR loan along with my Car/Two-Wheeler loan.", "a": null }
+        ]
+      },
+      "notes": "Desktop: heading left (442px column), accordion right (660px column), first item open. Mobile: heading above, accordion below (327px), first item open, plus a hidden/unused 'Tabs' filter row (node 2064:3161, hidden=true) that is not part of the visible design - ignore it. An initial get_metadata call on the desktop accordion returned stale/placeholder text ('What is Kotak811 Dream Different Credit Card against FD?') for all 8 items; a follow-up get_design_context (forceCode) on the same node returned the real, topic-relevant Q&A used above, matching the mobile content exactly - always prefer get_design_context text over get_metadata node names when they disagree. No background image for this section (plain white, no banner photo)."
+    }
+  ]
+}

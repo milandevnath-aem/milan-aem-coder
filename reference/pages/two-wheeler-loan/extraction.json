@@ -1,0 +1,267 @@
+{
+  "slug": "two-wheeler-loan",
+  "title": "Two-Wheeler Loans",
+  "desktopNode": "2064:4863",
+  "mobileNode": "2064:5101",
+  "sections": [
+    {
+      "order": 1,
+      "type": "hero",
+      "figmaName": "hero Fb",
+      "desktop": {
+        "nodeId": "2064:4910",
+        "x": 7013,
+        "y": 1407,
+        "w": 1342,
+        "h": 553,
+        "image": "raw/hero-desktop.png",
+        "imagePx": [2684, 1106],
+        "textBoxes": [[80, 48, 407, 92], [716, 48, 546, 457]]
+      },
+      "mobile": {
+        "nodeId": "2064:5135",
+        "w": 367,
+        "h": 611,
+        "image": "raw/hero-mobile.png",
+        "imagePx": [734, 1222],
+        "textBoxes": [[24, 44, 319, 68], [24, 535, 319, 52]]
+      },
+      "content": {
+        "title": "Two-Wheeler Loans",
+        "subtitle": "Get your next ride on the road sooner.",
+        "form": {
+          "heading": "Find the right loan",
+          "description": "Receive a call from our loan expert and get the best offer.",
+          "selectLabel": "Select loan category",
+          "selectedCategory": "Two-Wheeler Loans",
+          "fields": ["Your name", "Mobile number (+91 prefix)"],
+          "button": "Apply now"
+        },
+        "mobileCta": "Apply now"
+      },
+      "notes": "Desktop hero outer frame 2064:4909 is 1366px wide with 12px horizontal padding bg #fcfcfc; the flattened rounded-corner image (2064:4910, used above as the desktop reference box) is 1342px wide, inset 12px from each side (so add +12 to x of each textBox to position within the full 1366px section). Image is a motorcyclist/helmet photo with dark-to-red gradient overlay; text is NOT baked into the desktop image (title/subtitle and the lead-form card are separate overlaid elements per metadata). Lead-form card ('Contact Form') sits on the right, rounded 32px, bg #fcfcfc, with 'Select loan category' dropdown (chevron-down icon), 'Your name' input, 'Mobile number' input (+91 prefix with vertical divider), and a black pill 'Apply now' button. On mobile, there is no lead-form card -- instead the hero image has ALL text (title, subtitle) and a single white pill 'Apply now' button baked directly into the flattened PNG (verified visually)."
+    },
+    {
+      "order": 2,
+      "type": "banner",
+      "figmaName": "Section 3 - FB",
+      "desktop": {
+        "nodeId": "2064:4926",
+        "x": 7001,
+        "y": 1984,
+        "w": 1366,
+        "h": 672,
+        "image": "raw/banner-1-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[774, 248, 500, 176]]
+      },
+      "mobile": {
+        "nodeId": "2064:5141",
+        "w": 375,
+        "h": 672,
+        "image": "raw/banner-1-mobile.png",
+        "imagePx": [750, 1344],
+        "textBoxes": [[0, 80, 375, 192]]
+      },
+      "content": {
+        "heading": "Two-Wheeler Finance through Loan Origination System",
+        "text": "Streamline your two-wheeler loan journey from application to disbursal with an integrated origination system.",
+        "cta": null,
+        "align": "right",
+        "textColor": "dark"
+      },
+      "notes": "Full-bleed background photo with text content block right-aligned on desktop (justify-content: flex-end), centered column on mobile. No CTA button. Text appears to be baked into the flattened PNG on both breakpoints (section renders as a single <img>)."
+    },
+    {
+      "order": 3,
+      "type": "banner",
+      "figmaName": "Section 3 - FB",
+      "desktop": {
+        "nodeId": "2064:4931",
+        "x": 7001,
+        "y": 2656,
+        "w": 1366,
+        "h": 672,
+        "image": "raw/banner-2-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[92, 268, 500, 136]]
+      },
+      "mobile": {
+        "nodeId": "2064:5145",
+        "w": 375,
+        "h": 600,
+        "image": "raw/banner-2-mobile.png",
+        "imagePx": [750, 1200],
+        "textBoxes": [[24, 80, 327, 144]]
+      },
+      "content": {
+        "heading": "Two-Wheeler Loan",
+        "text": "KMPL offers Two-Wheeler Finance for a range of vehicles for a period from 12 months to 60 months, with funding up to 100% of the on-road price.",
+        "cta": null,
+        "align": "left",
+        "textColor": "dark"
+      },
+      "notes": "Background photo with text content block left-aligned on desktop (default justify-content/items-start), no CTA. Mobile section height (600) differs slightly from desktop (672)."
+    },
+    {
+      "order": 4,
+      "type": "banner",
+      "figmaName": "Section 3 - FB / Frame 2147231615",
+      "desktop": {
+        "nodeId": "2064:4937",
+        "x": 7001,
+        "y": 3328,
+        "w": 1366,
+        "h": 672,
+        "image": "raw/banner-3-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[774, 202, 500, 268]]
+      },
+      "mobile": {
+        "nodeId": "2064:5150",
+        "w": 375,
+        "h": 600,
+        "image": "raw/banner-3-mobile.png",
+        "imagePx": [750, 1200],
+        "textBoxes": [[24, 80, 327, 276], [24, 376, 134, 52]]
+      },
+      "content": {
+        "heading": null,
+        "text": "Activities such as Application Login, Credit approval, e-agreement, Repayment mandate set-up, online disbursement, etc are carried out online.",
+        "text2": "Increase in EMI after every year, six months or quarter (depending upon your needs).",
+        "cta": "Read more",
+        "align": "right",
+        "textColor": "dark"
+      },
+      "notes": "No heading text node on this section -- two paragraphs stacked, right-aligned on desktop, vertically centered within the content box. IMPORTANT DIFFERENCE: desktop has NO cta button (verified via metadata, no sibling button node), but the mobile version adds a black pill 'Read more' button below the two paragraphs. Desktop wrapped in an extra passthrough frame 'Frame 2147231615' (2064:4936) with identical bounds."
+    },
+    {
+      "order": 5,
+      "type": "requirements",
+      "figmaName": "Frame 2147231610 (desktop) / Frame 2147230800 (mobile)",
+      "desktop": {
+        "nodeId": "2064:4943",
+        "x": 7001,
+        "y": 4124,
+        "w": 1366,
+        "h": 476
+      },
+      "mobile": {
+        "nodeId": "2064:5156",
+        "w": 375,
+        "h": 724
+      },
+      "content": {
+        "heading": "What You'll Need to Get Started",
+        "subheading": "A quick overview of the requirements for your loan application.",
+        "variant": "eligibility",
+        "tabs": ["Salaried", "Self employed"],
+        "panels": {
+          "Salaried": [
+            { "icon": "raw/icon-min-age-applicant.png", "label": "Minimum age of applicant", "value": "21 years" },
+            { "icon": "raw/icon-min-age-maturity.png", "label": "Minimum age at maturity", "value": "60 Years" }
+          ],
+          "Self employed": null
+        }
+      },
+      "notes": "Tab pills: 'Salaried' active (black bg #121212, white text), 'Self employed' inactive (bg #f5f5f5, dark text). Only the Salaried panel content is present in Figma (no hidden second panel found even with includeHidden:true), so 'Self employed' panel is null -- authors would need to supply it. Two stat cards (bg #eeeeee, radius 32px) each with a 72x72 decorative icon (abstract pink/orange gradient pinwheel/ribbon shape -- not a literal age icon, same icon family used for both cards but Figma exports a slightly different crop per instance) + label (grey, 20px medium) + big value (black, 32px semibold). Grid holds exactly 2 cards; container width (1182px) has room for a 3rd card-width slot but none exists. Mobile layout: identical heading/subtitle/tabs/cards, stacked single column, smaller icon frame (52x52) and condensed paddings."
+    },
+    {
+      "order": 6,
+      "type": "requirements",
+      "figmaName": "Documents section FB",
+      "desktop": {
+        "nodeId": "2064:4969",
+        "x": 7001,
+        "y": 4724,
+        "w": 1366,
+        "h": 602
+      },
+      "mobile": {
+        "nodeId": "2064:5182",
+        "w": 375,
+        "h": 708
+      },
+      "content": {
+        "heading": "Documents Required",
+        "subheading": "Select employment type to update requirements",
+        "variant": "documents",
+        "tabs": ["Salaried", "Self-Employed", "Proprietor", "Partner", "Company"],
+        "panels": {
+          "Salaried": {
+            "columns": [
+              { "title": "Identity & Address", "items": ["Proof of Residence (copy of electricity/ telephone bill)"] },
+              { "title": "Other Documents", "items": ["RC copy"] }
+            ]
+          },
+          "Self-Employed": null,
+          "Proprietor": null,
+          "Partner": null,
+          "Company": null
+        },
+        "decorativeImage": null
+      },
+      "notes": "Employment-type chips (feature-chip component): 'Salaried' active (black pill, white text), remaining four are outlined/inactive. Only the 'Salaried' panel is present in Figma -- no hidden alternate panels found for the other four chip values even with includeHidden:true, so they are null. Two-column grid (bg #fcfcfc, 1px border #d6d6d6, radius 24px), each column: bold title, 1px divider, then a single checklist row with a grey circular checkmark icon (raw/icon-doc-identity.png and raw/icon-doc-other.png -- visually identical grey circle+checkmark glyph) + label text. Unlike the general spec description for this section type, NO decorative red image was found on the right of this particular 'Documents Required' instance -- the section is heading+chips+two-column grid only. Mobile layout matches 1:1 content-wise, chips wrap across two rows, columns stack vertically."
+    },
+    {
+      "order": 7,
+      "type": "need-help",
+      "figmaName": "Need Help FB",
+      "desktop": {
+        "nodeId": "2064:4998",
+        "x": 7001,
+        "y": 5326,
+        "w": 1366,
+        "h": 672,
+        "image": "raw/need-help-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[497, 124, 372, 192]]
+      },
+      "mobile": {
+        "nodeId": "2089:5760",
+        "w": 375,
+        "h": 672,
+        "image": "raw/need-help-mobile.png",
+        "imagePx": [750, 1344],
+        "textBoxes": [[24, 80, 327, 168]]
+      },
+      "content": {
+        "heading": "Need help?",
+        "text": "Connect with our dedicated automotive finance team for immediate assistance.",
+        "buttons": ["Locate us", "Apply now"],
+        "image": null
+      },
+      "notes": "Black full-bleed section; the decorative abstract red/orange ribbon graphic and all text/buttons are baked into the single flattened PNG on both breakpoints (verified visually on the mobile export: 'Need help?' heading, paragraph, two white pill buttons 'Locate us' and 'Apply now', with the ribbon graphic beneath). Centered layout on desktop, left-aligned content with ribbon graphic below on mobile."
+    },
+    {
+      "order": 8,
+      "type": "faq",
+      "figmaName": "Content - Section",
+      "desktop": {
+        "nodeId": "2064:5006",
+        "x": 7001,
+        "y": 6122,
+        "w": 1366,
+        "h": 396
+      },
+      "mobile": {
+        "nodeId": "2064:5217",
+        "w": 375,
+        "h": 520
+      },
+      "content": {
+        "heading": "Frequently asked questions",
+        "items": [
+          {
+            "q": "Which Two- Wheelers can be financed by KMPL?",
+            "a": "KMPL finances almost all two-wheelers manufactured by leading automobile companies in India. We also finance imported bikes subject to fulfilment of certain terms and conditions and basis the credit discretion of KMPL."
+          },
+          { "q": "Up to what amount does KMPL finance a two-wheeler?", "a": null },
+          { "q": "What is the tenure of financing options?", "a": null },
+          { "q": "What is the time taken to process my loan?", "a": null }
+        ]
+      },
+      "notes": "Heading left ('Frequently asked questions'), accordion right, 4 items, first one open (chevron up) with answer visible, remaining 3 closed (chevron down) with answer not rendered (recorded as null). Verified via get_design_context (forceCode) on node 2064:5006: the four real two-wheeler-loan questions are 'Which Two- Wheelers can be financed by KMPL?' (open, with answer), 'Up to what amount does KMPL finance a two-wheeler?', 'What is the tenure of financing options?', and 'What is the time taken to process my loan?' (all three closed, answers not rendered). An earlier extraction pass had mistakenly copied unrelated 'Kotak811 Dream Different Credit Card against FD' placeholder text from a stale Figma layer name (get_metadata); that has been corrected here using the actual rendered <p> text. Mobile layout is heading-stacked-above-accordion with the same corrected content and open/closed state."
+    }
+  ]
+}
