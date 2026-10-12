@@ -1,0 +1,292 @@
+import { moveInstrumentation } from '../../scripts/scripts.js';
+import { createDropdown } from '../../scripts/dropdown.js';
+
+const CAPTCHA_CHARS = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
+function slug(text) {
+  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+function iconButton(name, label) {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = `lead-form-icon-button lead-form-${name}`;
+  button.setAttribute('aria-label', label);
+  button.innerHTML = `<img src="${window.hlx.codeBasePath}/icons/${name}.svg" alt="" width="24" height="24">`;
+  return button;
+}
+
+/**
+ * "A, B: description, *C" -> options; a leading * marks the default.
+ */
+function parseOptions(text) {
+  let value = '';
+  const options = text.split(',').map((part) => part.trim()).filter(Boolean).map((part) => {
+    const isDefault = part.startsWith('*');
+    const [label, ...rest] = part.replace(/^\*\s*/, '').split(':');
+    const option = { value: label.trim(), label: label.trim(), description: rest.join(':').trim() };
+    if (isDefault) value = option.value;
+    return option;
+  });
+  return { options, value };
+}
+
+function textField(label, kind, required) {
+  const field = document.createElement('label');
+  field.className = `lead-form-input lead-form-${kind}`;
+  const input = document.createElement('input');
+  input.name = slug(label);
+  input.placeholder = ' ';
+  input.required = required;
+  const span = document.createElement('span');
+  span.className = 'lead-form-label';
+  span.textContent = label;
+  if (kind === 'tel') {
+    const prefix = document.createElement('span');
+    prefix.className = 'lead-form-prefix';
+    prefix.textContent = '+91';
+    field.append(prefix);
+    Object.assign(input, {
+      type: 'tel', inputMode: 'numeric', pattern: '[6-9][0-9]{9}', maxLength: 10, autocomplete: 'tel-national',
+    });
+  } else if (kind === 'email') {
+    Object.assign(input, { type: 'email', autocomplete: 'email' });
+  } else if (kind === 'zip') {
+    Object.assign(input, {
+      type: 'text', inputMode: 'numeric', pattern: '[1-9][0-9]{5}', maxLength: 6, autocomplete: 'postal-code',
+    });
+  } else {
+    input.type = 'text';
+    if (/name/i.test(label)) input.autocomplete = 'name';
+  }
+  const control = document.createElement('span');
+  control.className = 'lead-form-control';
+  control.append(input, span);
+  field.append(control);
+  return field;
+}
+
+function drawCaptcha(canvas, code) {
+  const ctx = canvas.getContext('2d');
+  const { width, height } = canvas;
+  ctx.fillStyle = '#002c62';
+  ctx.fillRect(0, 0, width, height);
+  ctx.strokeStyle = 'rgb(255 255 255 / 25%)';
+  for (let i = 0; i < 4; i += 1) {
+    ctx.beginPath();
+    ctx.moveTo(Math.random() * width, Math.random() * height);
+    ctx.bezierCurveTo(
+      Math.random() * width,
+      Math.random() * height,
+      Math.random() * width,
+      Math.random() * height,
+      Math.random() * width,
+      Math.random() * height,
+    );
+    ctx.stroke();
+  }
+  ctx.fillStyle = '#fff';
+  ctx.textBaseline = 'middle';
+  [...code].forEach((char, i) => {
+    ctx.save();
+    ctx.translate(22 + i * 30, height / 2 + (Math.random() * 16 - 8));
+    ctx.rotate((Math.random() - 0.5) * 0.7);
+    ctx.font = `700 ${26 + Math.round(Math.random() * 10)}px Manrope, Arial, sans-serif`;
+    ctx.fillText(char, -8, 0);
+    ctx.restore();
+  });
+}
+
+function captchaField(label) {
+  const field = document.createElement('div');
+  field.className = 'lead-form-captcha';
+  const canvas = document.createElement('canvas');
+  canvas.width = 168;
+  canvas.height = 68;
+  canvas.setAttribute('role', 'img');
+  const tools = document.createElement('div');
+  tools.className = 'lead-form-captcha-tools';
+  const refresh = iconButton('refresh', 'Show a new code');
+  const listen = iconButton('volume', 'Listen to the code');
+  tools.append(refresh, listen);
+  const input = textField(label || 'Enter the code', 'text', true);
+  input.querySelector('input').name = 'captcha';
+  input.querySelector('input').autocomplete = 'off';
+  field.append(canvas, tools, input);
+
+  const generate = () => {
+    field.code = [...Array(5)].map(() => CAPTCHA_CHARS[Math.floor(Math.random() * CAPTCHA_CHARS.length)]).join('');
+    canvas.setAttribute('aria-label', 'Security code image. Use the listen button to hear it.');
+    drawCaptcha(canvas, field.code);
+    input.querySelector('input').value = '';
+    input.querySelector('input').dispatchEvent(new Event('input', { bubbles: true }));
+  };
+  refresh.addEventListener('click', generate);
+  listen.addEventListener('click', () => {
+    if (!window.speechSynthesis) return;
+    const utterance = new SpeechSynthesisUtterance([...field.code].join(' '));
+    utterance.rate = 0.7;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+  });
+  generate();
+  field.isValid = () => input.querySelector('input').value.trim().toLowerCase() === field.code.toLowerCase();
+  return field;
+}
+
+function buildDisclaimer(cell) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'lead-form-disclaimer';
+  while (cell.firstChild) wrapper.append(cell.firstChild);
+  const label = wrapper.querySelector('p:first-child > strong:only-child');
+  if (label) label.parentElement.classList.add('lead-form-disclaimer-label');
+  const list = wrapper.querySelector('ol, ul');
+  if (list && list.children.length > 1) {
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'lead-form-more';
+    toggle.textContent = 'Read More';
+    toggle.setAttribute('aria-expanded', 'false');
+    wrapper.classList.add('is-collapsed');
+    toggle.addEventListener('click', () => {
+      const collapsed = wrapper.classList.toggle('is-collapsed');
+      toggle.textContent = collapsed ? 'Read More' : 'Read Less';
+      toggle.setAttribute('aria-expanded', !collapsed);
+    });
+    wrapper.append(toggle);
+  }
+  return wrapper;
+}
+
+/**
+ * Lead form ("Start Your Loan Journey Today"). Block properties: heading, disclaimer,
+ * note and button label; each item is a field (label, type, options, required).
+ * @param {Element} block The block element
+ */
+export default function decorate(block) {
+  const rows = [...block.children];
+  const config = rows.filter((row) => row.children.length <= 1);
+  const fieldRows = rows.filter((row) => row.children.length > 1);
+  const [textRow, disclaimerRow, noteRow, submitRow] = config;
+
+  const intro = document.createElement('div');
+  intro.className = 'lead-form-intro';
+  const textCell = textRow?.firstElementChild;
+  if (textCell?.textContent.trim()) {
+    moveInstrumentation(textRow, intro);
+    while (textCell.firstChild) intro.append(textCell.firstChild);
+  }
+
+  const form = document.createElement('form');
+  form.noValidate = true;
+  form.className = 'lead-form-form';
+  const fields = document.createElement('div');
+  fields.className = 'lead-form-fields';
+  const dropdowns = [];
+  let captcha;
+
+  fieldRows.forEach((row) => {
+    const [labelCell, kindCell, optionsCell, requiredCell] = row.children;
+    const label = labelCell?.textContent.trim() || 'Field';
+    const kind = kindCell?.textContent.trim() || 'text';
+    const required = requiredCell?.textContent.trim() !== 'false';
+    let field;
+    if (kind === 'select' || kind === 'search') {
+      const { options, value } = parseOptions(optionsCell?.textContent || '');
+      field = createDropdown({
+        label,
+        name: slug(label),
+        options,
+        value,
+        required,
+        search: kind === 'search',
+        searchPlaceholder: `Search ${label.toLowerCase()}`,
+        pinSelected: true,
+      });
+      dropdowns.push(field);
+    } else if (kind === 'captcha') {
+      field = captchaField(label);
+      captcha = field;
+    } else {
+      field = textField(label, kind, required);
+    }
+    moveInstrumentation(row, field);
+    fields.append(field);
+  });
+  form.append(fields);
+
+  const legal = document.createElement('div');
+  legal.className = 'lead-form-legal';
+  const disclaimerCell = disclaimerRow?.firstElementChild;
+  if (disclaimerCell?.textContent.trim()) {
+    const disclaimer = buildDisclaimer(disclaimerCell);
+    moveInstrumentation(disclaimerRow, disclaimer);
+    legal.append(disclaimer);
+  }
+  const noteText = noteRow?.textContent.trim();
+  if (noteText) {
+    const note = document.createElement('p');
+    note.className = 'lead-form-note';
+    note.textContent = noteText;
+    moveInstrumentation(noteRow, note);
+    legal.append(note);
+  }
+  const submit = document.createElement('button');
+  submit.type = 'submit';
+  submit.className = 'button primary lead-form-submit';
+  submit.textContent = submitRow?.textContent.trim() || 'Apply now';
+  if (submitRow) moveInstrumentation(submitRow, submit);
+  legal.append(submit);
+  form.append(legal);
+
+  const isValid = () => form.checkValidity()
+    && dropdowns.every((d) => !d.dataset.required || d.value)
+    && (!captcha || captcha.isValid());
+  const refresh = () => {
+    submit.disabled = !isValid();
+  };
+  form.addEventListener('input', refresh);
+  form.addEventListener('change', refresh);
+  refresh();
+
+  // mark fields the user left with an invalid value
+  form.addEventListener('focusout', (e) => {
+    const input = e.target.closest('input');
+    if (!input?.value) return;
+    input.closest('.lead-form-input')?.classList.toggle('is-invalid', !input.checkValidity());
+  });
+  form.addEventListener('input', (e) => {
+    e.target.closest('.lead-form-input')?.classList.remove('is-invalid');
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!isValid()) return;
+    const thanks = document.createElement('div');
+    thanks.className = 'lead-form-thanks';
+    thanks.setAttribute('role', 'status');
+    thanks.innerHTML = '<h3>Thank you!</h3><p>Our loan expert will call you back shortly.</p>';
+    form.replaceWith(thanks);
+    thanks.tabIndex = -1;
+    thanks.focus();
+  });
+
+  // values carried over from another form (e.g. the hero call-back form)
+  form.prefill = (data) => {
+    Object.entries(data).forEach(([key, value]) => {
+      if (!value) return;
+      const name = key.replace(/^your-/, '');
+      const input = [...form.querySelectorAll('input[name]')]
+        .find((i) => i.type !== 'hidden' && (i.name === name || i.name.endsWith(`-${name}`) || name.endsWith(`-${i.name}`)));
+      if (input) input.value = value;
+      const dropdown = dropdowns.find((d) => {
+        const n = d.querySelector('input[type="hidden"]').name;
+        return n === name || n.endsWith(`-${name}`) || name.endsWith(`-${n}`);
+      });
+      dropdown?.setValue(value);
+    });
+    refresh();
+  };
+
+  block.replaceChildren(intro, form);
+}

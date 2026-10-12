@@ -237,6 +237,14 @@
       {
         "component": "text",
         "valueType": "string",
+        "name": "region",
+        "label": "State / region",
+        "description": "Shown below the city name in the list.",
+        "value": ""
+      },
+      {
+        "component": "text",
+        "valueType": "string",
         "name": "details_address",
         "label": "Address",
         "value": ""
@@ -261,6 +269,14 @@
         "valueType": "string",
         "name": "details_email",
         "label": "Email",
+        "value": ""
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "location",
+        "label": "Coordinates",
+        "description": "Latitude, longitude (e.g. 27.1767, 78.0081). Used to suggest the nearest branch.",
         "value": ""
       }
     ]
@@ -740,6 +756,105 @@
         "value": "",
         "label": "Text",
         "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "lead-form",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Heading",
+        "description": "Title and a short line below it.",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "disclaimer",
+        "value": "",
+        "label": "Disclaimer",
+        "description": "A bold label, an intro line and a numbered list. Only the first point shows until Read More is selected.",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "note",
+        "label": "Note above the button",
+        "value": ""
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "submitLabel",
+        "label": "Button label",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "lead-form-field",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "label",
+        "label": "Label",
+        "value": ""
+      },
+      {
+        "component": "select",
+        "name": "kind",
+        "label": "Field type",
+        "valueType": "string",
+        "value": "text",
+        "options": [
+          {
+            "name": "Text",
+            "value": "text"
+          },
+          {
+            "name": "Mobile number (+91)",
+            "value": "tel"
+          },
+          {
+            "name": "Email",
+            "value": "email"
+          },
+          {
+            "name": "Postal code",
+            "value": "zip"
+          },
+          {
+            "name": "Dropdown",
+            "value": "select"
+          },
+          {
+            "name": "Dropdown with search",
+            "value": "search"
+          },
+          {
+            "name": "Captcha",
+            "value": "captcha"
+          }
+        ]
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "options",
+        "label": "Options",
+        "description": "Dropdowns only: comma separated. Add a second line with a colon, e.g. Mumbai: Maharashtra.",
+        "value": ""
+      },
+      {
+        "component": "boolean",
+        "valueType": "boolean",
+        "name": "required",
+        "label": "Required",
+        "value": true
       }
     ]
   },

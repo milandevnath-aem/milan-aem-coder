@@ -49,8 +49,9 @@
   --content-padding: 24px;
   --section-spacing: 64px;
 
-  /* nav height */
-  --nav-height: 92px;
+  /* nav height: announcement bar + nav bar */
+  --topbar-height: 32px;
+  --nav-height: 100px;
 }
 
 /* fallback fonts */
@@ -74,7 +75,8 @@
     --content-padding: 92px;
     --section-spacing: 124px;
 
-    /* nav height */
+    /* nav height: announcement bar + nav bar */
+    --topbar-height: 44px;
     --nav-height: 112px;
   }
 }
@@ -93,7 +95,11 @@ body.appear {
   display: block;
 }
 
+/* the nav bar stays pinned while the announcement bar scrolls away */
 header {
+  position: sticky;
+  top: calc(-1 * var(--topbar-height));
+  z-index: 20;
   height: var(--nav-height);
 }
 

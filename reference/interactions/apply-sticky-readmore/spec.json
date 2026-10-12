@@ -1,0 +1,244 @@
+{
+  "group": "apply-sticky-readmore",
+  "figmaFileKey": "ZQGlS9KmxOkyimBNouvOhZ",
+  "components": {
+    "leadForm": {
+      "description": "\"Start Your Loan Journey Today\" callback form, triggered from an \"Apply now\" button.",
+      "states": {
+        "mobileTrigger": {
+          "nodeId": "2565:9344",
+          "trigger": "tap 'Apply now' pill on homepage hero",
+          "layout": "full page navigation, not an overlay",
+          "styles": {
+            "button": {
+              "background": "#ffffff",
+              "textColor": "#121212",
+              "fontSize": 16,
+              "lineHeight": 24,
+              "fontWeight": "semibold",
+              "borderRadius": 100,
+              "padding": "14px 12px"
+            }
+          },
+          "content": ["Easy Car & Two-Wheeler Loans", "Finance your next vehicle with quick approvals, competitive interest rates, and flexible EMI options.", "Apply now"],
+          "assets": ["raw/hero-car.png"],
+          "closesVia": "browser back navigation (URL changes to /en/newcarfinance.html)"
+        },
+        "mobileFormPage": {
+          "nodeId": "2565:10040",
+          "trigger": "n/a (destination page)",
+          "layout": "inline page content, scroll body",
+          "content": {
+            "title": "Start Your Loan Journey Today",
+            "subtitle": "Get a call back from our loan expert.",
+            "fields": [
+              {"label": "Loan Category", "type": "dropdown", "defaultValue": "New Car"},
+              {"label": "Name", "type": "text", "placeholder": "Name"},
+              {"label": "Mobile number", "type": "tel", "prefix": "+91", "placeholder": "Mobile number"},
+              {"label": "Email", "type": "email", "placeholder": "Email"},
+              {"label": "City", "type": "dropdown", "placeholder": "City"},
+              {"label": "Zip / Postal code", "type": "text", "placeholder": "Zip / Postal code"},
+              {"label": "Captcha image", "type": "captcha-image", "sample": "teeDH"},
+              {"label": "Enter the code", "type": "text", "placeholder": "Enter the code"}
+            ],
+            "buttonStates": {
+              "disabled": {"background": "#b2b2b2", "textColor": "#666666", "label": "Apply now"},
+              "enabled": {"background": "#121212", "textColor": "#ffffff", "label": "Apply now"}
+            }
+          },
+          "styles": {
+            "inputBox": {"background": "#f5f5f5", "borderRadius": 16, "padding": 20},
+            "labelColor": "#666666",
+            "valueColor": "#121212"
+          }
+        },
+        "mobileFormFilled": {
+          "nodeId": "2565:9989",
+          "trigger": "n/a (sample filled-in state + consent 'Read More' clicked)",
+          "sampleValues": {
+            "Name": "John Doe",
+            "Mobile number": "7756024754",
+            "Email": "Johndoe7@gmail.com",
+            "City": "Mumbai",
+            "Zip / Postal code": "4000055",
+            "Enter the code": "teeDH"
+          }
+        },
+        "desktopHeroInline": {
+          "nodeId": "2565:10247",
+          "trigger": "n/a (always visible on desktop homepage hero)",
+          "layout": "inline card docked right of hero image, plus a separate standalone 'Apply now' pill next to hero headline",
+          "dimensions": {"width": 546, "height": 457},
+          "styles": {"background": "#fcfcfc", "borderRadius": 32, "padding": 32},
+          "content": {
+            "title": "Start Your Loan Journey Today",
+            "subtitle": "Get a call back from our loan expert.",
+            "fields": [
+              {"label": "Your name", "type": "text"},
+              {"label": "Mobile number", "type": "tel", "prefix": "+91"}
+            ],
+            "categoryChips": ["New car (selected)", "Used car & Re-finance", "Two-Wheeler", "Car Lease", "More ⌄"],
+            "button": {"label": "Apply now", "background": "#121212", "textColor": "#ffffff"}
+          }
+        },
+        "desktopModal": {
+          "nodeId": "2565:9719",
+          "trigger": "click 'Apply now' pill or inline hero card button on desktop homepage",
+          "layout": "centered modal over scrim",
+          "styles": {
+            "scrim": {"background": "#000000cc"},
+            "card": {"width": 580, "background": "#ffffff", "border": "1px solid #d6d6d6", "borderRadius": 32, "padding": "40px 20px 20px 20px"},
+            "closeControl": {"size": 40, "borderRadius": 8, "position": "top-right, just above the card"}
+          },
+          "content": "same field set as mobileFormPage",
+          "closesVia": "X close control top-right"
+        },
+        "desktopModalFilledReadMore": {
+          "nodeId": "2565:9854",
+          "trigger": "sample filled-in state + consent 'Read More' clicked (now 'Read Less')",
+          "sampleValues": {
+            "Name": "John Doe",
+            "Mobile Number": "7756024754",
+            "Email": "Johndoe7@gmail.com",
+            "City": "Mumbai",
+            "Zip / Postal code": "400055",
+            "Enter the code": "teeDH"
+          }
+        }
+      },
+      "consentDisclaimer": {
+        "label": "Disclaimer",
+        "labelColor": "#3857ff",
+        "collapsedText": "I/ we hereby acknowledge and agree to the following terms and conditions. \n1. Loan offer is from Kotak Mahindra Prime Limited (KMPL), a subsidiary of Kotak Mahindra Bank limited. Loan sanction and disbursement will be subject to complete documentation and credit approval at sole discretion of KMPL and subject to guidelines issued by RBI from time to time",
+        "collapsedToggleLabel": "Read More",
+        "expandedExtraItems": [
+          "By filling up this form and sharing your mobile number with KMPL, you are hereby giving your consent to KMPL to extract your information from the Credit Bureau.",
+          "KMPL may engage the services of marketing agents for the purpose of sourcing loan assets. Available at select locations.",
+          "By sending an SMS/ calling us / clicking on the links mentioned, you are hereby giving your consent to receive call/communication from Kotak Mahindra Prime Ltd and other Kotak Group Companies for marketing purposes through telephone/Mobile/SMS/Email for the selected financial product (Car Finance / Two-Wheeler Loan / Loan Against Property) and that such consent shall prevail over any current or subsequent registration of your number in the National Do Not Call Registry.",
+          "Schemes like Balloon EMI/ Step-Up EMI / Bullet EMI / Subvention scheme (if applicable) are for a limited period only and KMPL may withdraw/suspend/revoke these schemes anytime without any advance notice.",
+          "Subvention scheme (if applicable) is a limited period offer based on subventions offered by select car dealerships or OEMs and KMPL is not responsible or liable for products and services offered by the dealer or OEM . Only available for select vehicle models."
+        ],
+        "expandedToggleLabel": "Read Less",
+        "helperTextAlwaysVisible": "By clicking on Apply now, I agree to the above terms",
+        "textColor": "#808080"
+      }
+    },
+    "leadFormScrollMechanism": {
+      "nodeId": "2565:10091",
+      "name": "Scroll mechanics",
+      "trigger": "scroll (within the desktop lead-form modal's own content, not the page)",
+      "description": "Two snapshots of the same desktop modal: before = top of modal (title + fields down to Zip, clipped); after = scrolled down, header/fields gone, expanded disclaimer (items 2-6, 'Read Less') and 'Apply now' button visible at the foot of the card. The hero itself does not become a sticky/minimised bar as a result of this interaction; that behaviour belongs to the separate sticky bottom CTA (see stickyBottomCta)."
+    },
+    "stickyBottomCta": {
+      "description": "Mobile product-page sticky 'Apply now' bar that appears once the user scrolls past the first hero section.",
+      "states": {
+        "firstFold": {
+          "nodeId": "2301:12713",
+          "trigger": "n/a (initial scroll position)",
+          "appearsWhen": "page load / within first hero section",
+          "content": "white 'Apply now' pill floating over the hero photo, not yet a fixed bar"
+        },
+        "scrolledPastFirstSection": {
+          "nodeId": "2301:12964",
+          "trigger": "scroll past the first hero section",
+          "appearsWhen": "any scroll position after the first section",
+          "layout": "fixed/sticky to bottom of viewport",
+          "dimensions": {"width": 375, "height": 88, "padding": "16px 20px 20px 20px"},
+          "background": "linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.80) 100%)",
+          "content": {
+            "button": {"label": "Apply now", "background": "#121212", "textColor": "#ffffff", "borderRadius": 100}
+          }
+        }
+      }
+    },
+    "readMoreFeatureBanner": {
+      "description": "'Margin Money Scheme' banner read-more expand, shown on New Car Finance and (reusing identical content) Car Lease pages.",
+      "states": {
+        "mobileCollapsed": {
+          "nodeId": "2127:14760",
+          "trigger": "n/a (default inline state)",
+          "layout": "inline, light-grey section background",
+          "content": {
+            "heading": "Margin Money Scheme",
+            "body": "We offer a car loan covering up to 100% of the invoice value for new cars for select models.",
+            "toggleLabel": "Read more"
+          },
+          "styles": {
+            "heading": {"fontSize": 28, "lineHeight": 36, "fontWeight": "semibold", "tracking": -0.56, "color": "#121212"},
+            "body": {"fontSize": 16, "lineHeight": 24, "fontWeight": "medium", "color": "#666666"},
+            "button": {"background": "#121212", "textColor": "#ffffff", "borderRadius": 100}
+          },
+          "assets": ["raw/margin-money-banner.png"]
+        },
+        "mobileExpanded": {
+          "nodeId": "2127:14715",
+          "trigger": "click 'Read more'",
+          "layout": "full-screen takeover sheet, width 375 (full viewport)",
+          "closeControl": {"size": 40, "borderRadius": 8, "position": "top-right"},
+          "image": {"height": 250, "borderRadius": 24, "border": "1px #eeeeee", "background": "gradient white -> #f7f1f1"},
+          "content": {
+            "heading": "Margin Money Scheme",
+            "body": "We provide finance for acquisition of new car up to 100% of the invoice value for certain models.\n\nThe customer should pay the margin money (invoice value minus the finance amount) to the dealer directly. He also has an option to pay the margin money to KMPL upon which we would release the entire invoice value to the Dealer.\n\nThe financed amount can be repaid as per your convenience (12 - 84 months EMIs)."
+          },
+          "footer": {
+            "sticky": true,
+            "background": "linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.80) 100%)",
+            "button": {"label": "Apply now", "background": "#121212", "textColor": "#ffffff"}
+          },
+          "note": "internal scroll area; see mobileExpandedScrolled for the scrolled state"
+        },
+        "mobileExpandedScrolled": {
+          "nodeId": "2127:14856",
+          "trigger": "scroll down within the expanded sheet (also used as 'Car Lease page read more' reference, identical content)",
+          "content": "shows paragraph 3 ('The financed amount can be repaid...') with sticky Apply now bar still pinned at the bottom"
+        },
+        "desktopCollapsed": {
+          "nodeId": "2127:14834",
+          "trigger": "n/a (default inline state)",
+          "layout": "inline, two-column (text left, photo right)",
+          "content": {
+            "heading": "Margin Money Scheme",
+            "body": "We offer a car loan covering up to 100% of the invoice value for new cars for select models.",
+            "toggleLabel": "Read more"
+          }
+        },
+        "desktopExpanded": {
+          "nodeId": "2127:14791",
+          "trigger": "click 'Read more'",
+          "layout": "centered modal over scrim",
+          "styles": {
+            "scrim": "#000000cc",
+            "card": {"width": 580, "background": "#fcfcfc", "borderRadius": 32, "padding": 20}
+          },
+          "closeControl": {"size": 40, "borderRadius": 8, "position": "top-right, above card"},
+          "image": {"height": 280, "borderRadius": 24, "border": "1px #eeeeee", "background": "gradient #e8eaf0 -> #ecedf3 -> #ecedf3 -> #ebedf3 -> #e6e9ef"},
+          "content": {
+            "heading": "Margin Money Scheme",
+            "headingStyle": {"fontSize": 32, "lineHeight": 44, "tracking": -0.8, "fontWeight": "semibold"},
+            "body": "We provide finance for acquisition of new car up to 100% of the invoice value for certain models.\n\nThe customer should pay the margin money (invoice value minus the finance amount) to the dealer directly. He also has an option to pay the margin money to KMPL upon which we would release the entire invoice value to the Dealer.\n\nThe financed amount can be repaid as per your convenience (12 - 84 months EMIs)."
+          },
+          "footer": {
+            "sticky": true,
+            "width": 580,
+            "background": "linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.80) 100%)",
+            "button": {"label": "Apply now", "background": "#121212", "textColor": "#ffffff"}
+          }
+        },
+        "desktopExpandedScrolled_carLease": {
+          "nodeId": "2127:14901",
+          "trigger": "scroll down within the expanded modal (labelled 'Car Lease page read more', identical content/chrome to desktopExpanded)",
+          "content": "shows all 3 paragraphs fully, same modal chrome as desktopExpanded"
+        }
+      },
+      "toggleBehaviour": {
+        "collapsedLabel": "Read more",
+        "expandedCloseMethod": "X close control only (no in-place 'Read less' collapse observed for this banner, unlike the lead-form disclaimer)"
+      }
+    }
+  },
+  "crossCuttingNotes": [
+    "No validation-error or success states were present in any provided frame for the lead form or read-more components.",
+    "Both the lead-form modal and the read-more modal share the same chrome pattern on desktop: #000000cc scrim, 580px white card, 32px radius, 40x40/8px-radius close control above the top-right corner.",
+    "Both the lead-form full-screen sheet (implicit) and read-more full-screen sheet share the same sticky-footer gradient-fade pattern as the product-page sticky bottom CTA: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.80) 100%) behind a full-width black pill 'Apply now' button."
+  ]
+}

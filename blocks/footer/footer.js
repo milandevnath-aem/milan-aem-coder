@@ -19,6 +19,21 @@ function buildDropdown(li) {
     .trim();
   details.append(summary, submenu);
   li.replaceChildren(details);
+  // group companies are other sites
+  submenu.querySelectorAll('a[href]').forEach((a) => {
+    if (new URL(a.href, window.location).origin === window.location.origin) return;
+    a.target = '_blank';
+    a.rel = 'noopener';
+  });
+  document.addEventListener('click', (e) => {
+    if (!details.contains(e.target)) details.open = false;
+  });
+  details.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && details.open) {
+      details.open = false;
+      summary.focus();
+    }
+  });
 }
 
 /**

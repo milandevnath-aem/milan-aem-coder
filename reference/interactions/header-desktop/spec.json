@@ -1,0 +1,239 @@
+{
+  "group": "header-desktop",
+  "figmaFileKey": "ZQGlS9KmxOkyimBNouvOhZ",
+  "sourceSection": { "nodeId": "2701:35475", "name": "Navigation Menu" },
+  "viewport": { "width": 1366, "height": 768 },
+  "notes": [
+    "chromeTop instance (79px) on every 'Desktop - Home' frame is a decorative fake browser-window chrome (traffic lights, tab, address bar 'https://www.kotakprime.in/en/home.html', favicon). It is NOT part of the real site header; ignore it.",
+    "The real header is 'Hero FB' > 'Frame 2147231694' > 'Header Sleeve' (utility bar, 44px) + 'Nav container' (main nav, 68px).",
+    "Node 4497:41459 given in the task as 'Two-wheeler open state / Dealer Finance' is confirmed to be the Two-wheeler Loan open state only. Dealer Finance's open state is a separate, unrequested node 4497:42453, captured only incidentally.",
+    "No chevron/caret icon exists on any of the 5 desktop nav tabs (Car loan, Two-wheeler Loan, Dealer Finance, Loan Against Property, More). Active state is communicated purely by a grey pill background behind the label.",
+    "No page scrim/dimming overlay appears behind any open mega-menu panel; hero content stays fully visible/undimmed.",
+    "Open/close trigger (hover vs click) is not literally encoded in these static Figma frames; standard desktop mega-menu convention (hover-to-open) is assumed, not confirmed."
+  ],
+  "components": {
+    "chromeTop_decorative": {
+      "nodeId": "4497:40466",
+      "role": "decorative-browser-chrome-ignore",
+      "size": { "width": 1366, "height": 79 }
+    },
+    "utilityBar": {
+      "name": "Header Sleeve",
+      "nodeId": "4497:40470",
+      "size": { "width": 1366, "height": 44 },
+      "layout": { "background": "#e6e6e6", "paddingX": 104, "gap": 40 },
+      "content": [
+        {
+          "type": "announcement",
+          "icon": "Outlined-Info 16x16",
+          "text": "Please make payments towards your loan account only to Authorised Staff with valid ID cards and insist for receipt for every payment made. For any suspicious activity please call 18002095732 immediately. Important Update: Receive genuine service calls from 1600XXXXXX numbers. Promotional calls may come from 140XXXXXXX numbers. Report telecom fraud at sancharsaathi.gov.in and financial fraud at cybercrime.gov.in or call 1930.",
+          "style": { "font": "Manrope Medium 14/18", "color": "#121212" },
+          "fadeMask": "linear-gradient(90deg, rgba(217,217,217,0) 0%, #e6e6e6 100%) 52x44px on right edge, implies marquee/scroll"
+        },
+        {
+          "type": "links",
+          "items": [
+            { "label": "1800 4100", "icon": "Call 16x16" },
+            { "label": "Contact us", "icon": "Outlined-Help-And-Support 16x16" },
+            { "label": "Accessibility", "icon": null },
+            { "label": "Preferences", "icon": null },
+            { "label": "English", "icon": "Outlined-Chevron_Down 16x16, trailing", "state": "closed only — no open variant visible in this node set" }
+          ],
+          "style": { "font": "Manrope Regular 14/16", "color": "#121212" }
+        }
+      ]
+    },
+    "navBar": {
+      "name": "Nav container",
+      "nodeId": "4497:40483",
+      "size": { "width": 1366, "height": 68 },
+      "layout": { "background": "#fcfcfc", "maxWidth": 1736, "paddingX": 92, "paddingY": 8, "gap": 32 },
+      "logo": { "name": "Container", "size": { "width": 132, "height": 32 }, "description": "Kotak Prime wordmark + circular swirl logomark" },
+      "tabs": {
+        "gap": 12,
+        "itemPadding": "8px 12px",
+        "borderRadius": 100,
+        "textStyle": { "font": "Manrope Medium 14/20", "color": "#121212" },
+        "activeStyle": { "background": "#eeeeee", "textColorChange": false, "chevron": "none" },
+        "items": ["Car loan", "Two-wheeler Loan", "Dealer Finance", "Loan Against Property", "More"]
+      },
+      "rightGroup": {
+        "gap": 16,
+        "searchIcon": { "size": "24x24", "note": "no search box/overlay present in this node set" },
+        "buttons": [
+          { "label": "Login", "style": { "shape": "pill", "border": "1px solid #121212", "background": "transparent", "font": "Manrope Semibold 14/20", "color": "#121212" } },
+          { "label": "Web pay", "style": { "shape": "pill", "background": "#121212", "font": "Manrope Semibold 14/20", "color": "#ffffff" } }
+        ]
+      }
+    }
+  },
+  "megaMenuSharedStyle": {
+    "borderRadius": 24,
+    "background": "#fcfcfc",
+    "border": "1px solid #eeeeee",
+    "boxShadow": "0px 12px 32px rgba(18,18,18,0.08), 1px 2px 4px rgba(18,18,18,0.04)",
+    "outerPadding": "8px 8px 16px 8px",
+    "position": {
+      "anchor": "absolute, floats over hero section",
+      "topOffsetFromViewport": "~196-197px (nav bar bottom is at ~191px: 79 decorative chrome + 44 utility bar + 68 nav bar)",
+      "horizontalAnchor": {
+        "singleColumnPanels (393px wide)": "left-aligned to the left edge of their own trigger nav tab",
+        "morePanel (968px wide)": "right-aligned to the page's right content margin (92px inset, same as nav bar padding), not to the 'More' tab, to avoid viewport overflow"
+      }
+    },
+    "scrim": "none — hero content and rest of nav stay fully visible/undimmed",
+    "rowHoverStyle": {
+      "singleColumnMenus": { "background": "#eeeeee", "borderRadius": 8 },
+      "morePanel": { "background": "#f5f5f5", "borderRadius": 8 }
+    }
+  },
+  "states": [
+    {
+      "trigger": "hover (assumed) on 'Car loan' nav tab",
+      "nodeId": "4497:40465",
+      "overlayNodeId": "4497:40896",
+      "activeTab": "Car loan",
+      "panel": {
+        "layout": "single column, 393x312, rows padded 12px 16px 12px 24px",
+        "content": [
+          { "title": "New Car Finance", "description": "Drive home your ideal car with confidence.", "hover": false },
+          { "title": "Used Car & Refinance", "description": "Flexible finance for pre-owned vehicles", "hover": true },
+          { "title": "Top-up Loan", "description": "Additional funds to support your evolving needs", "hover": false },
+          { "title": "Car Leasing for Corporates", "description": "Smarter mobility solutions for your business", "hover": false }
+        ]
+      },
+      "assets": [],
+      "screenshot": "shots/car-loan-panel.png"
+    },
+    {
+      "trigger": "hover (assumed) on 'Two-wheeler Loan' nav tab",
+      "nodeId": "4497:41459",
+      "overlayNodeId": "4497:41890",
+      "activeTab": "Two-wheeler Loan",
+      "panel": {
+        "layout": "single column, 393x172",
+        "content": [
+          { "title": "Two-wheeler Finance", "description": "Ride home your new bike with easy EMIs", "hover": false },
+          { "title": "Top-up Loan", "description": "Extra funds on your existing two-wheeler loan", "hover": true }
+        ]
+      },
+      "assets": [],
+      "screenshot": "shots/two-wheeler-panel.png"
+    },
+    {
+      "trigger": "hover (assumed) on 'Dealer Finance' nav tab",
+      "nodeId": "4497:42453",
+      "note": "NOT one of the 5 requested nodes; captured incidentally from the group overview screenshot only, not individually fetched via get_design_context — verify before use.",
+      "activeTab": "Dealer Finance",
+      "panel": {
+        "layout": "single column, 4 rows (same visual pattern as other single-column menus)",
+        "content": [
+          { "title": "Dealer Finance", "description": "Keep your showroom stocked with ready credit", "hover": false },
+          { "title": "Inventory Funding", "description": "Keep your showroom stocked with ready credit", "hover": false, "flag": "description identical to row 1 in screenshot — likely a source-file placeholder duplicate, re-verify with design" },
+          { "title": "Trade Advance", "description": "Short-term funds to bridge your trade cycle", "hover": true },
+          { "title": "Term Loan", "description": "Long-term capital to grow your dealership", "hover": false }
+        ]
+      },
+      "assets": [],
+      "screenshot": "shots/overview-group.png (3rd desktop state in the stack)"
+    },
+    {
+      "trigger": "hover (assumed) on 'Loan Against Property' nav tab",
+      "nodeId": "4497:43482",
+      "overlayNodeId": "4497:43913",
+      "activeTab": "Loan Against Property",
+      "panel": {
+        "layout": "single column, 393x242",
+        "content": [
+          { "title": "Loan Against Property", "description": "Unlock funds with your property as collateral", "hover": false },
+          { "title": "Flexi Loan Against Property", "description": "Borrow, repay and redraw as you need", "hover": true },
+          { "title": "Top-up on Loan Against Property", "description": "Additional funds on your existing LAP", "hover": false }
+        ]
+      },
+      "assets": [],
+      "screenshot": "shots/loan-against-property-panel.png"
+    },
+    {
+      "trigger": "hover (assumed) on 'More' nav tab",
+      "nodeId": "4497:44426",
+      "overlayNodeId": "4497:44857",
+      "activeTab": "More",
+      "panel": {
+        "layout": "4 columns, 968x478, 40px gap between columns, 12px gap within column, 4px gap between link rows",
+        "columns": [
+          {
+            "caption": "Car Prices and News",
+            "links": [
+              { "title": "Car news", "description": "Stay updated with the latest car news", "hover": false },
+              { "title": "Latest cars", "description": "Discover the newest cars and launches", "hover": true },
+              { "title": "Upcoming cars", "description": "Preview the cars launching soon", "hover": false },
+              { "title": "Car prices", "description": "Check prices across models and variants", "hover": false },
+              { "title": "Compare cars", "description": "Compare features and prices side by side", "hover": false }
+            ]
+          },
+          {
+            "caption": "Two Wheeler Prices and News",
+            "links": [
+              { "title": "Two-wheeler news", "description": "Catch up on the latest bike and scooter news", "hover": false },
+              { "title": "Latest two-wheelers", "description": "Explore the newest bikes and scooters", "hover": false },
+              { "title": "Upcoming two-wheelers", "description": "See which bikes and scooters launch next", "hover": false },
+              { "title": "Two-wheeler prices", "description": "Check prices across bikes and scooters", "hover": false },
+              { "title": "Compare two-wheelers", "description": "Compare bikes and scooters side by side", "hover": false }
+            ]
+          },
+          {
+            "caption": "Help & Support",
+            "links": [
+              { "title": "Service request", "description": "Raise and track requests for your loan account", "hover": false },
+              { "title": "FAQs", "description": "Quick answers to common questions", "hover": false },
+              { "title": "Grievance redressal", "description": "Register a concern and track its resolution", "hover": false },
+              { "title": "Form download", "description": "Download application and service forms", "hover": false },
+              { "title": "Documents", "description": "Access your loan documents and statements", "hover": false }
+            ]
+          },
+          {
+            "caption": "Explore more",
+            "note": "layer group named 'Column · Kotak group' is a stale layer name; visible caption text is 'Explore more'",
+            "links": [
+              { "title": "Kotak Group", "description": "Explore life insurance from Kotak Group", "hover": false },
+              { "title": "About Us", "description": "Lorem ipsum dolor sit amet", "hover": false, "flag": "placeholder copy in source" },
+              { "title": "Careers", "description": "Lorem ipsum dolor sit amet", "hover": false, "flag": "placeholder copy in source" },
+              { "title": "Pre eligible offers", "description": "Lorem ipsum dolor sit amet", "hover": false, "flag": "placeholder copy in source" }
+            ]
+          }
+        ]
+      },
+      "assets": [],
+      "screenshot": "shots/more-panel.png"
+    }
+  ],
+  "mobileFramesObserved": [
+    {
+      "nodeId": "3234:20291",
+      "name": "Mobile - Home",
+      "size": { "width": 375, "height": 812 },
+      "description": "Closed/default state: status bar + decorative browser-chrome toolbar + scrolling home page starting at hero banner. No nav drawer open."
+    },
+    {
+      "nodeId": "3320:25844",
+      "name": "Navigation",
+      "size": { "width": 375, "height": 813 },
+      "description": "Full-screen hamburger drawer, base state: status bar, header row, 'Subsection Container' (settings/language controls row), 'App' frame (605px) with nav link list + Contact Us + Login. No sub-dropdown open."
+    },
+    {
+      "nodeId": "3320:25744",
+      "name": "Navigation with dropdown",
+      "size": { "width": 375, "height": 812 },
+      "description": "Same drawer as 3320:25844, plus a floating 148x90 overlay (layer named 'Language menu', node 3320:25835) with exactly 2 items reading 'Accessibility' and 'Preferences' in the screenshots — functionally a Settings dropdown despite the stale 'Language menu' layer name."
+    }
+  ],
+  "screenshots": {
+    "overview": "shots/overview-group.png",
+    "navBarClosed": "shots/nav-bar.png",
+    "carLoanPanel": "shots/car-loan-panel.png",
+    "twoWheelerPanel": "shots/two-wheeler-panel.png",
+    "loanAgainstPropertyPanel": "shots/loan-against-property-panel.png",
+    "morePanel": "shots/more-panel.png"
+  },
+  "rawAssetsDownloaded": []
+}
