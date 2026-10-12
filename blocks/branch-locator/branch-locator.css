@@ -38,53 +38,59 @@
 }
 
 .branch-locator .branch-locator-select {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+  --dropdown-value-size: 20px;
+  --dropdown-value-line: 28px;
+
   order: 1;
-  padding: 12px 52px 12px 20px;
-  border-radius: 16px;
+}
+
+.branch-locator .branch-locator-select .dropdown-field {
   background-color: var(--background-color);
-  cursor: pointer;
 }
 
-.branch-locator .branch-locator-select::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  right: 20px;
-  width: 20px;
-  height: 20px;
-  transform: translateY(-50%);
-  background: url('../../icons/chevron-down.svg') center / contain no-repeat;
-  pointer-events: none;
-}
-
-.branch-locator .branch-locator-select:focus-within {
-  outline: 2px solid var(--text-color);
-}
-
-.branch-locator .branch-locator-select span {
-  color: var(--muted-color);
+.branch-locator .branch-locator-select.is-filled .dropdown-label {
   font-size: var(--body-font-size-s);
-  font-weight: 500;
   line-height: 18px;
 }
 
-.branch-locator .branch-locator-select select {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--text-color);
-  font-size: var(--heading-font-size-m);
+.branch-locator .branch-locator-select .dropdown-value {
   font-weight: 500;
-  line-height: 28px;
-  appearance: none;
+}
+
+.branch-locator .branch-locator-locate {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 8px;
+  order: 1;
+  margin: 0;
+  border: 0;
+  border-radius: 100px;
+  padding: 8px 14px 8px 10px;
+  background-color: rgb(252 252 252 / 85%);
+  color: var(--text-color);
+  font-size: var(--body-font-size-s);
+  font-weight: 600;
+  line-height: 20px;
   cursor: pointer;
-  outline: none;
+}
+
+.branch-locator .branch-locator-locate:hover,
+.branch-locator .branch-locator-locate:focus-visible {
+  background-color: var(--background-color);
+}
+
+.branch-locator .branch-locator-status {
+  order: 1;
+  margin: 0;
+  color: var(--inverse-color);
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.branch-locator .branch-locator-status:empty {
+  display: none;
 }
 
 .branch-locator .branch-locator-map {
@@ -201,4 +207,93 @@
   .branch-locator .branch-locator-map {
     height: 268px;
   }
+}
+
+/* location permission prompt (shown in a dialog) */
+.branch-locator-permission {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  text-align: center;
+}
+
+dialog.modal .branch-locator-permission h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 32px;
+  letter-spacing: 0;
+}
+
+.branch-locator-permission .branch-locator-hint {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  border-radius: 12px;
+  padding: 14px 12px;
+  background-color: var(--light-color);
+  color: var(--text-color);
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  line-height: 20px;
+  text-align: left;
+}
+
+.branch-locator-permission .branch-locator-permission-error {
+  margin: 0;
+  color: #a32d2c;
+  font-size: var(--body-font-size-s);
+  line-height: 20px;
+}
+
+.branch-locator-permission .branch-locator-permission-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.branch-locator-permission .button {
+  width: 100%;
+}
+
+.branch-locator-permission .button.is-loading {
+  color: transparent;
+  position: relative;
+}
+
+.branch-locator-permission .button.is-loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 20px;
+  height: 20px;
+  margin: auto;
+  border: 2px solid rgb(255 255 255 / 40%);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: branch-locator-spin 0.8s linear infinite;
+}
+
+.branch-locator-permission button.button.primary.is-loading:disabled {
+  border-color: var(--text-color);
+  background-color: var(--text-color);
+}
+
+@keyframes branch-locator-spin {
+  to { transform: rotate(360deg); }
+}
+
+.branch-locator-permission .branch-locator-skip {
+  margin: 0;
+  border: 0;
+  padding: 4px;
+  background: none;
+  color: var(--text-color);
+  font-size: var(--body-font-size-s);
+  font-weight: 600;
+  line-height: 20px;
+  cursor: pointer;
 }

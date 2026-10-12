@@ -10,3 +10,4 @@ info: Local AEM dev server up and running: http://localhost:3001/
 info: Serving content from local content/, proxying missing files from https://main--milan-aem-coder--milandevnath-aem.aem.page
 info: Serving HTML files from folder: content at /content
 using proxy http://127.0.0.1:8443
+using proxy http://127.0.0.1:8443

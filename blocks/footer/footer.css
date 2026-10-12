@@ -165,26 +165,76 @@ footer .footer-dropdown[open] summary::after {
 }
 
 footer .footer-card .footer-bottom .footer-dropdown > ul {
+  box-sizing: border-box;
   position: absolute;
   bottom: calc(100% + 8px);
   left: 0;
-  z-index: 1;
-  min-width: 240px;
-  padding: 8px;
-  border-radius: 16px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  width: 327px;
+  max-width: calc(100vw - 40px);
+  margin: 0;
+  border: 1px solid var(--surface-color);
+  border-radius: 12px;
+  padding: 4px;
   background-color: var(--background-color);
-  box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
+  box-shadow: 0 1px 2px rgb(18 18 18 / 4%), 0 8px 24px rgb(18 18 18 / 8%);
+  overflow: hidden;
+}
+
+footer .footer-card .footer-bottom .footer-dropdown li {
+  min-height: 0;
 }
 
 footer .footer-dropdown li a:any-link {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-radius: 8px;
   padding: 8px 12px;
-  border-radius: 12px;
+  color: var(--text-color);
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0;
 }
 
-footer .footer-dropdown li a:any-link:hover {
-  background-color: var(--light-color);
+footer .footer-dropdown li a:any-link:hover,
+footer .footer-dropdown li a:any-link:focus-visible {
+  background-color: #e6e6e6;
   text-decoration: none;
+}
+
+footer .footer-dropdown li a[target='_blank']::after {
+  content: '';
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  background: url('../../icons/arrow-up-right.svg') center / contain no-repeat;
+  opacity: 0;
+}
+
+footer .footer-dropdown li a[target='_blank']:hover::after,
+footer .footer-dropdown li a[target='_blank']:focus-visible::after {
+  opacity: 1;
+}
+
+@media (width >= 900px) {
+  footer .footer-dropdown li a:any-link {
+    font-size: var(--body-font-size-m);
+    line-height: 24px;
+  }
+
+  /* the first company is highlighted on desktop */
+  footer .footer-dropdown li:first-child a:any-link {
+    background-color: #e6e6e6;
+  }
+
+  footer .footer-dropdown li:first-child a[target='_blank']::after {
+    opacity: 1;
+  }
 }
 
 footer .footer-bottom .default-content-wrapper > p {

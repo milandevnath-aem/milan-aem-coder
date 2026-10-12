@@ -1,0 +1,273 @@
+{
+  "group": "documents-dropdown-contact",
+  "fileKey": "ZQGlS9KmxOkyimBNouvOhZ",
+  "components": [
+    {
+      "name": "documents-required-tabs",
+      "node": "4533:61065",
+      "description": "Documents Required block: a loan-product tab (page context) with an employment/loan-type chip switcher and a checklist grid.",
+      "shared": {
+        "layout": "heading + sub-heading, chip row (flex-wrap, no horizontal scroll), 2-4 card grid (row on desktop >=1182px, stacked column on mobile 327px)",
+        "styles": {
+          "heading": { "font": "Manrope medium 32px/40px", "letterSpacing": "-0.8px", "color": "#121212" },
+          "subheading": { "font": "Manrope medium 16px/24px", "color": "#666666" },
+          "chipActiveDesktop": { "radius": "100px", "padding": "16px 9px", "background": "#121212", "label": "Manrope medium 14px/20px #f5f5f5" },
+          "chipInactiveDesktop": { "radius": "100px", "padding": "15px 8px", "border": "1px solid #8c8c8c", "label": "Manrope medium 14px/20px #121212" },
+          "chipActiveMobile": { "padding": "16px 8px", "label": "Manrope medium 12px/16px letterSpacing 0.24px #f5f5f5" },
+          "chipInactiveMobile": { "padding": "15px 7px", "border": "1px solid #8c8c8c", "label": "Manrope medium 12px/16px letterSpacing 0.24px #121212" },
+          "chipWrap": "flex-row flex-wrap; wraps to additional rows on mobile, never horizontal-scrolls",
+          "card": { "background": "#fcfcfc", "border": "1px solid #d6d6d6", "radius": "24px", "padding": "32px", "gap": "24px" },
+          "cardHeader": { "font": "Manrope semibold 16px/24px", "color": "#121212" },
+          "divider": { "border": "1px solid #eeeeee" },
+          "item": { "layout": "icon + text, gap 8px", "text": "Manrope medium 14px/20px #666666", "itemGap": "24px" }
+        }
+      },
+      "states": [
+        {
+          "tab": "New Car Loan",
+          "subheading": "Select employment type to update requirements",
+          "chips": ["Salaried", "Self-Employed", "Proprietary", "Partnership", "Company"],
+          "defaultChip": "Salaried",
+          "panels": {
+            "Salaried": {
+              "Identity & Address": ["Proof of Residence (electricity/telephone bill, passport, Voter ID, lease deed, rent agreement, or property registration document in the customer's name)", "Signature Verification Proof (Banker / Voter's ID / PAN / IT Return / DL / Passport)", "Photograph, signed by the customer"],
+              "Income & Business Documents": ["Latest salary slip", "Form 16 / IT Returns"],
+              "Application Form": ["KMPL Application Form, duly filled"]
+            },
+            "Self-Employed": {
+              "Identity & Address": ["Proof of Residence (electricity/telephone bill, passport, Voter ID, lease deed, rent agreement, or property registration document in the customer's name)", "Signature Verification Proof (Banker / Voter's ID / PAN / IT Return / DL / Passport)", "Photograph, signed by the customer"],
+              "Income & Business Documents": ["P&L A/C and B/S (2 years, CA certified)", "ITR (2 years)"],
+              "Application Form": ["KMPL Application Form, duly filled"]
+            },
+            "Proprietary": { "sameAs": "Self-Employed" },
+            "Partnership": {
+              "Identity & Address": ["Proof of Residence (electricity/telephone bill, passport, Voter ID, lease deed, rent agreement, or property registration document in the customer's name)", "Signature Verification Proof (Banker / Voter's ID / PAN / IT Return / DL / Passport)"],
+              "Income & Business Documents": ["P&L A/C and B/S (2 years, CA certified)", "ITR (2 years)", "Partnership Deed / Trust Deed", "Letter of Authority"],
+              "Application Form": ["KMPL Application Form, duly filled"]
+            },
+            "Company": {
+              "Identity & Address": ["Proof of Residence (electricity/telephone bill, passport, Voter ID, lease deed, rent agreement, or property registration document in the customer's name)", "Signature Verification Proof (Banker / Voter's ID / PAN / IT Return / DL / Passport)"],
+              "Income & Business Documents": ["P&L A/C and B/S (2 years, CA certified)", "ITR (2 years)", "MOA and Board Resolution authorising one director"],
+              "Application Form": ["KMPL Application Form, duly filled"]
+            }
+          }
+        },
+        {
+          "tab": "Top-up Loans",
+          "subheading": "Select loan type to update requirements",
+          "chips": ["Two Wheeler Loan", "Car Loan – Individual / Proprietor", "Car Loan – Partnership", "Car Loan – Company"],
+          "defaultChip": "Two Wheeler Loan",
+          "panels": {
+            "Two Wheeler Loan": {
+              "Identity & Address": ["Proof of Residence", "Signature Verification Proof", "Identity Proof"],
+              "Vehicle Documents": ["Registration Copy of Vehicle", "Invoice Copy of Vehicle", "Insurance Copy of Vehicle"],
+              "Additional Documents": ["Any product/customer-type specific documents (if applicable)"]
+            },
+            "Car Loan – Individual / Proprietor": {
+              "Identity & Address": ["Proof of Residence", "Signature Verification Proof", "Identity Proof", "Photograph", "Ownership Proof"],
+              "Vehicle Documents": ["Registration Copy of Vehicle", "Invoice Copy of Vehicle", "Insurance Copy of Vehicle"],
+              "Additional Documents": ["Customer-specific supporting documents"]
+            },
+            "Car Loan – Partnership": {
+              "Identity & Address": ["Proof of Residence", "Signature Verification Proof", "Identity Proof", "Photograph"],
+              "Business Documents": ["Partnership Deed / Trust Deed", "Letter of Authority signed by all partners"],
+              "Vehicle Documents": ["Registration Copy of Vehicle", "Invoice Copy of Vehicle", "Insurance Copy of Vehicle"]
+            },
+            "Car Loan – Company": {
+              "Identity & Address": ["Proof of Residence", "Signature Verification Proof", "Identity Proof", "Photograph of Director"],
+              "Income & Business Documents": ["Income Tax Returns (Last 2 Years)", "MOA", "Board Resolution"],
+              "Vehicle Documents": ["Registration Copy of Vehicle", "Invoice Copy of Vehicle", "Insurance Copy of Vehicle"]
+            }
+          }
+        },
+        {
+          "tab": "Loan Against Property",
+          "subheading": "Select employment type to update requirements",
+          "chips": ["Salaried Individuals", "Self-Employed Professionals / Non-Professionals"],
+          "defaultChip": "Salaried Individuals",
+          "panels": {
+            "Salaried Individuals": {
+              "Identity & Address": ["Photo Identity Proof & Address Proof (as per RBI KYC guidelines)", "Employee ID Card Copy"],
+              "Income Proof": ["Latest 3 Years ITR / Form 16", "Latest 6 Months Salary Slips", "Last 6 Months Bank Statement reflecting salary credit", "Sanction Letters / Statement of Account"],
+              "Property Documents": ["Complete Chain of Property Title Deeds", "Approved Layout / Building Plan", "Other documents required for creation of valid mortgage"]
+            },
+            "Self-Employed Professionals / Non-Professionals": {
+              "Identity & Address": ["Photo Identity Proof & Address Proof (as per RBI KYC guidelines)"],
+              "Income & Business Documents": ["Shop Act License", "MOA & AOA", "GST Registration", "Partnership Deed (where applicable)", "Shareholding Pattern (for Pvt. Ltd. Companies)", "Latest 3 Years ITR Copies", "Last 12 Months Banking Statements (Current / OD / CC / Savings Account)", "Sanction Letters / Statement of Account"],
+              "Property Documents": ["Complete Chain of Property Title Deeds", "Approved Layout / Building Plan", "Other documents required for creation of valid mortgage"]
+            }
+          }
+        },
+        {
+          "tab": "Used Car Loan",
+          "subheading": "Select employment type to update requirements",
+          "chips": ["Salaried", "Self-Employed", "Proprietary", "Partnership", "Company"],
+          "defaultChip": "Salaried",
+          "panels": {
+            "Salaried": {
+              "Identity & Address": ["Proof of Residence (electricity/telephone bill)", "Signature Verification Proof (Banker / Voter's ID / PAN / IT Return / DL / Passport)", "Photograph, signed by the customer"],
+              "Income & Business Documents": ["Latest salary slip", "Form 16 / IT Returns"],
+              "Vehicle & Application Documents": ["RC Copy", "Insurance Copy", "Valuation form from our authorised valuation agency", "KMPL Application Form, duly filled"]
+            },
+            "Self-Employed": {
+              "Identity & Address": ["Proof of Residence (electricity/telephone bill)", "Signature Verification Proof (Banker / Voter's ID / PAN / IT Return / DL / Passport)", "Photograph, signed by the customer"],
+              "Income & Business Documents": ["P&L A/C and B/S (2 years, CA certified)", "ITR (2 years)"],
+              "Vehicle & Application Documents": ["RC Copy", "Insurance Copy", "Valuation form from our authorised valuation agency", "KMPL Application Form, duly filled"]
+            },
+            "Proprietary": { "sameAs": "Self-Employed" },
+            "Partnership": {
+              "Identity & Address": ["Proof of Residence (electricity/telephone bill)", "Signature Verification Proof (Banker / Voter's ID / PAN / IT Return / DL / Passport)"],
+              "Income & Business Documents": ["P&L A/C and B/S (2 years, CA certified)", "ITR (2 years)", "Partnership Deed / Trust Deed", "Letter of Authority"],
+              "Vehicle & Application Documents": ["RC Copy", "Insurance Copy", "Valuation form from our authorised valuation agency", "KMPL Application Form, duly filled"]
+            },
+            "Company": {
+              "Identity & Address": ["Proof of Residence (electricity/telephone bill)", "Signature Verification Proof (Banker / Voter's ID / PAN / IT Return / DL / Passport)"],
+              "Income & Business Documents": ["P&L A/C and B/S (2 years, CA certified)", "ITR (2 years)", "MOA and Board Resolution authorising one director"],
+              "Vehicle & Application Documents": ["RC Copy", "Insurance Copy", "Valuation form from our authorised valuation agency", "KMPL Application Form, duly filled"]
+            }
+          }
+        },
+        {
+          "tab": "Two Wheeler Loan",
+          "subheading": "Select employment type to update requirements",
+          "chips": ["Salaried", "Self-Employed", "Proprietary", "Partnership", "Company"],
+          "defaultChip": "Salaried",
+          "panels": {
+            "Salaried": {
+              "Identity & Address": ["Proof of Residence (electricity/telephone bill)", "Proof of Identity (PAN, Voter ID, DL, Passport, Aadhaar)", "Signature Verification Proof (Banker / Voter's ID / PAN / IT Return / DL / Passport)", "Photograph, signed by the customer"],
+              "Income & Business Documents": ["Latest salary slip", "Bank statement (3 months)"],
+              "Vehicle & Application Documents": ["RC Copy", "Insurance Copy", "KMPL Application Form, duly filled"]
+            },
+            "Self-Employed": {
+              "Identity & Address": ["Proof of Residence (electricity/telephone bill)", "Proof of Identity (PAN, Voter ID, DL, Passport, Aadhaar)", "Signature Verification Proof (Banker / Voter's ID / PAN / IT Return / DL / Passport)", "Photograph, signed by the customer"],
+              "Income & Business Documents": ["Computation of income (1 year, CA certified)", "ITR (1 year)", "Bank statement (3 months)"],
+              "Vehicle & Application Documents": ["RC Copy", "Insurance Copy", "KMPL Application Form, duly filled"]
+            },
+            "Proprietary": { "sameAs": "Self-Employed" },
+            "Partnership": {
+              "Identity & Address": ["Proof of Residence (electricity/telephone bill)", "Proof of Identity (PAN, Voter ID, DL, Passport, Aadhaar)", "Signature Verification Proof (Banker / Voter's ID / PAN / IT Return / DL / Passport)", "Photograph, signed by the Partner"],
+              "Income & Business Documents": ["Computation of income (1 year, CA certified)", "ITR (1 year)", "Bank statement (3 months)", "Partnership Deed", "Letter of Authority"],
+              "Vehicle & Application Documents": ["RC Copy", "Insurance Copy", "KMPL Application Form, duly filled"]
+            },
+            "Company": {
+              "Identity & Address": ["Proof of Residence (electricity/telephone bill)", "Proof of Identity (PAN, Voter ID, DL, Passport, Aadhaar)", "Signature Verification Proof (Banker / Voter's ID / PAN / IT Return / DL / Passport)", "Photograph, signed by the Director"],
+              "Income & Business Documents": ["Computation of income (1 year, CA certified)", "ITR (1 year)", "Bank statement (3 months)", "Shareholding pattern, BO, MOA and Board Resolution authorising one director"],
+              "Vehicle & Application Documents": ["RC Copy", "Insurance Copy", "KMPL Application Form, duly filled"]
+            }
+          }
+        }
+      ],
+      "assets": []
+    },
+    {
+      "name": "dropdown-mechanism",
+      "node": "5227:77873",
+      "description": "Reusable dropdown field + floating panel, with/without a search row, used by the apply-now modal (City, searchable) and the Do Not Call Form modal (Title, no search).",
+      "shared": {
+        "styles": {
+          "fieldClosed": { "background": "#f5f5f5", "radius": "16px", "label": "Manrope medium 20px/28px #666666 (empty) or 14px/18px #666666 label + 20px/28px semibold #121212 value (filled)", "chevron": "20x20, down when closed / up when open" },
+          "panel": { "background": "#fcfcfc", "radius": "20px", "padding": "8px", "boxShadow": "0px 20px 40px rgba(0,0,0,0.14), 0px 2px 6px rgba(0,0,0,0.06)", "position": "absolute, 48px below field, left-aligned, 540px wide inside 580px modal" },
+          "searchRow": { "background": "#f5f5f5", "radius": "12px", "height": "44px", "icon": "18x18", "placeholder": "Search city, 16px/24px #808080" },
+          "row": { "padding": "12px", "radius": "12px", "label": "Manrope medium 20px/28px #121212", "subtitle": "Manrope medium 14px/18px #666666", "hoverBackground": "#f5f5f5" },
+          "scrollbar": { "width": "4px", "radius": "2px", "color": "#bababa" },
+          "fade": { "height": "40px", "gradient": "rgba(252,252,252,0) to #fcfcfc", "position": "bottom of panel only" },
+          "modal": { "background": "#fcfcfc", "radius": "32px", "border": "1px solid #d6d6d6", "padding": "40px 20px 20px 20px", "scrim": "#000000cc" },
+          "ctaDisabled": { "background": "#b2b2b2", "label": "16px/24px semibold #666666" },
+          "ctaEnabled": { "background": "#121212", "label": "16px/24px semibold #ffffff" }
+        }
+      },
+      "states": [
+        { "name": "closed-empty", "trigger": "initial render, no value", "content": ["City"], "assets": ["shots/dropdown-empty-desktop.png", "shots/dropdown-empty-mobile.png"] },
+        { "name": "open-with-search", "trigger": "click/tap field", "content": ["Search city", "Agra", "Ahmedabad", "Bengaluru (hover)", "Chandigarh", "Chennai", "Delhi"], "assets": ["shots/dropdown-open-desktop.png", "shots/dropdown-open-mobile.png"] },
+        { "name": "typing-filter", "trigger": "type into search box, e.g. 'Ch'", "content": ["Chandigarh", "Chennai", "clear (×) button"], "assets": ["shots/dropdown-typing-desktop.png", "shots/dropdown-typing-mobile.png"] },
+        { "name": "scrolled", "trigger": "scroll the open list", "content": ["Chandigarh", "Chennai", "Delhi", "Hyderabad", "Jaipur", "Kolkata", "scrollbar thumb visible"], "assets": ["shots/dropdown-scroll-desktop.png", "shots/dropdown-scroll-mobile.png"] },
+        { "name": "filled", "trigger": "click a row", "content": ["City: Chandigarh", "Zip / Postal code: 400055 (auto-filled)"], "assets": ["shots/dropdown-filled-desktop.png", "shots/dropdown-filled-mobile.png"] },
+        { "name": "expanded-after-selection", "trigger": "re-open dropdown with a value already selected", "content": ["Chandigarh ✓ (pinned to top)", "Agra", "Ahmedabad", "Bengaluru", "Chennai", "Delhi"], "assets": ["shots/dropdown-reselect-desktop.png", "shots/dropdown-reselect-mobile.png"] },
+        { "name": "without-search-bar", "trigger": "open Title field (Do Not Call Form)", "content": ["Dr.", "Mr. (hover)", "Mrs.", "Ms."], "note": "no search row, no scroll/fade (content fits), panel height auto", "assets": ["shots/dropdown-no-search-desktop.png", "shots/dropdown-no-search-mobile.png"] }
+      ]
+    },
+    {
+      "name": "contact-us-dropdown",
+      "node": "5202:71040 / 5202:71537 (+ scroll/typing/filled/expanded pairs)",
+      "description": "Inline (non-modal) Select-City dropdown on the Contact Us hero, driving a branch-detail card.",
+      "cityList": {
+        "base": [
+          "Agra", "Ahmedabad", "Bengaluru", "Chandigarh", "Chennai", "Delhi",
+          { "name": "Delhi", "subtitle": "Delhi NCR", "note": "duplicate Delhi row appearing later in the same list" },
+          { "name": "Hyderabad", "subtitle": "Telangana" },
+          { "name": "Jaipur", "subtitle": "Rajasthan" },
+          { "name": "Kolkata", "subtitle": "West Bengal" },
+          { "name": "Lucknow", "subtitle": "Uttar Pradesh" },
+          { "name": "Mumbai", "subtitle": "Maharashtra" },
+          { "name": "Pune", "subtitle": "Maharashtra" }
+        ],
+        "extraFoundInOneFrame": [
+          { "name": "Dimpur", "node": "5202:73310 (mobile expanded-after-selection only)", "note": "likely 'Dimapur'; not present in any other frame" }
+        ]
+      },
+      "behaviorDifferenceFromApplyForm": "Re-opening after selection keeps the list in alphabetical order and scrolls the selected row into view with a checkmark, instead of pinning the selection to the top.",
+      "branchDetails": {
+        "Agra": {
+          "Address": "B-9, Ground Floor Raghunath Nagar, M G Road, Shriram Hospital, Agra 282002",
+          "Phone": "18003095732 / 0562 4022401 / Toll-Free: 1800-209-5732",
+          "BranchTiming": "We operate between Monday and Friday | 9:30 am to 6:30 pm",
+          "WriteToUsOn": "kprime.service@kotak.com",
+          "mobileTypingStateDiscrepancy": "mobile 'typing' frame shows phone as '18003095732 / 18003095732' (duplicated) instead of two distinct numbers"
+        },
+        "Chandigarh": {
+          "Address": "Plot No. 57, 6th Floor Industrial and Business Park, Phase 1, Chandigarh 160002",
+          "Phone": "18002095732 / 0172-5143680 / Toll-Free: 1800-209-5732",
+          "BranchTiming": "We operate between Monday and Friday | 9:30 am to 6:30 pm",
+          "WriteToUsOn": "kprime.service@kotak.com",
+          "extra": "desktop 'filled' state additionally shows an embedded map with a pin at this branch"
+        }
+      },
+      "states": [
+        { "name": "dropdown-expanded", "assets": ["shots/contact-dropdown-desktop.png", "shots/contact-dropdown-mobile.png"] },
+        { "name": "scroll", "assets": ["shots/contact-scroll-desktop.png", "shots/contact-scroll-mobile.png"] },
+        { "name": "typing", "assets": ["shots/contact-typing-desktop.png", "shots/contact-typing-mobile.png"] },
+        { "name": "filled", "assets": ["shots/contact-filled-desktop.png", "shots/contact-filled-mobile.png"] },
+        { "name": "expanded-after-selection", "assets": ["shots/contact-expanded-after-selection-desktop.png", "shots/contact-expanded-after-selection-mobile.png"] }
+      ]
+    },
+    {
+      "name": "location-permission",
+      "nodes": { "customDesktop": "5202:68488", "chromeDesktop": "5202:68367", "customMobile": "5202:69021", "chromeMobile": "5202:69450" },
+      "description": "Two-step flow: a custom in-page 'use my location' modal, followed by the browser's native geolocation permission prompt.",
+      "steps": [
+        {
+          "step": 1,
+          "name": "custom-modal",
+          "layout": { "width": "440px (desktop)", "radius": "24px", "background": "#fcfcfc", "boxShadow": "0px 24px 64px rgba(0,0,0,0.18)", "padding": "40px 32px 24px 32px", "gap": "24px", "close": "40x40 '×' top-right" },
+          "content": {
+            "illustration": "140x140 red location pin inside fading radar rings",
+            "heading": "Find the nearest Kotak Prime branch",
+            "hint": "Tap Turn on location, then choose “Allow” when your browser asks.",
+            "primaryCta": "Turn on location",
+            "secondaryCta": "Continue without location"
+          },
+          "trigger": "tap/click 'Turn on location'",
+          "onTrigger": "primary button shows a loading spinner in place of its label; native permission prompt (step 2) opens on top; custom modal stays visible underneath",
+          "assets": ["shots/location-permission-custom-desktop.png", "shots/location-permission-custom-mobile.png"]
+        },
+        {
+          "step": 2,
+          "name": "native-chrome-prompt",
+          "desktop": {
+            "layout": "address-bar-anchored popover, top-left of viewport",
+            "content": ["www.kotakprime.in wants to", "Know your location", "Allow while visiting the site", "Allow this time", "Never allow"]
+          },
+          "mobile": {
+            "layout": "centered sheet, rounded top corners, dropped from under the status bar",
+            "content": ["Allow kotakprime.in to know your location?", "Allow while visiting the site", "Allow this time", "Never allow"]
+          },
+          "assets": ["shots/location-permission-chrome-desktop.png", "shots/location-permission-chrome-mobile.png"]
+        }
+      ],
+      "outcomes": {
+        "allow": "native prompt closes; custom modal's loading state resolves and closes; Contact Us city field is expected to auto-populate with the detected nearest city (not captured as its own frame)",
+        "deny": "falls back to the same state as 'Continue without location' — manual city selection via the dropdown"
+      }
+    }
+  ]
+}

@@ -29,10 +29,6 @@ function readRange(cell, [dMin, dMax, dValue]) {
   return [dMin, dMax, dValue];
 }
 
-function clamp(value, min, max) {
-  return Math.min(max, Math.max(min, value));
-}
-
 function formatAmountShort(value) {
   if (value >= 10000000) return `₹${inr.format(value / 10000000)} Crore`;
   if (value >= 100000) return `₹${inr.format(value / 100000)} Lakh`;
@@ -73,14 +69,15 @@ function sliderGroup(id, label) {
   group.innerHTML = `
     <div class="emi-calculator-field-head">
       <label for="${id}-value">${label}</label>
+      <img class="emi-calculator-error-icon" src="${window.hlx.codeBasePath}/icons/alert.svg" alt="" width="16" height="16">
       <div class="emi-calculator-value">
         <span class="emi-calculator-prefix"></span>
-        <input id="${id}-value" type="text" inputmode="decimal" autocomplete="off">
+        <input id="${id}-value" type="text" inputmode="decimal" autocomplete="off" aria-describedby="${id}-bounds">
         <span class="emi-calculator-suffix"></span>
       </div>
     </div>
     <input id="${id}-range" class="emi-calculator-range" type="range" aria-label="${label}">
-    <div class="emi-calculator-bounds"><span></span><span></span></div>`;
+    <div class="emi-calculator-bounds" id="${id}-bounds"><span></span><span></span></div>`;
   return group;
 }
 
@@ -174,20 +171,52 @@ function buildCalculator(types, link) {
     });
   };
 
+  // values outside the slider range mark the field as invalid;
+  // the result keeps showing the last valid values
+  const setInvalid = (group, invalid) => {
+    group.classList.toggle('is-invalid', invalid);
+    const input = group.querySelector('input[type="text"]');
+    if (invalid) input.setAttribute('aria-invalid', 'true');
+    else input.removeAttribute('aria-invalid');
+  };
+
   Object.entries(fields).forEach(([key, group]) => {
     const range = group.querySelector('.emi-calculator-range');
     const input = group.querySelector('input[type="text"]');
     range.addEventListener('input', () => {
       state[key] = Number(range.value);
+      setInvalid(group, false);
       update();
     });
-    const commit = () => {
+    const parse = () => {
       const value = parseFloat(input.value.replace(/[^0-9.]/g, ''));
-      if (Number.isFinite(value)) state[key] = clamp(value, Number(range.min), Number(range.max));
-      input.value = display[key](state[key]);
+      const valid = Number.isFinite(value)
+        && value >= Number(range.min) && value <= Number(range.max);
+      return { value, valid };
+    };
+    input.addEventListener('input', () => {
+      input.size = Math.max(1, input.value.length);
+      const { value, valid } = parse();
+      setInvalid(group, !valid);
+      if (valid) {
+        state[key] = value;
+        update();
+      } else {
+        range.value = range.min;
+        range.style.setProperty('--fill', '0%');
+      }
+    });
+    const commit = () => {
+      const { value, valid } = parse();
+      if (!valid) {
+        input.value = display[key](Number.isFinite(value) ? value : 0);
+        input.size = Math.max(1, input.value.length);
+        return;
+      }
+      state[key] = value;
+      input.value = display[key](value);
       update();
     };
-    input.addEventListener('input', () => { input.size = Math.max(1, input.value.length); });
     input.addEventListener('change', commit);
     input.addEventListener('blur', commit);
     input.addEventListener('keydown', (e) => { if (e.key === 'Enter') commit(); });
@@ -210,8 +239,14 @@ function buildCalculator(types, link) {
       lo.textContent = bounds[key](min);
       hi.textContent = bounds[key](max);
       state[key] = value;
+      setInvalid(group, false);
     });
     update();
+    // keep the selected tab in view when the tab row scrolls (small screens)
+    const tab = tablist.children[index];
+    if (tab && tablist.scrollWidth > tablist.clientWidth) {
+      tablist.scrollTo({ left: tab.offsetLeft - (tablist.clientWidth - tab.offsetWidth) / 2, behavior: 'smooth' });
+    }
   };
 
   [...tablist.children].forEach((tab, i) => {

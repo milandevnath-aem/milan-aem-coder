@@ -1,0 +1,162 @@
+{
+  "group": "check-eligibility",
+  "figmaFileKey": "ZQGlS9KmxOkyimBNouvOhZ",
+  "site": "Kotak Prime (kotakprime.in)",
+  "summary": "No numeric-input eligibility calculator exists in the Figma file. The 'Check Eligibility' interaction is a static criteria-display block titled 'What You'll Need to Get Started', with a 2-option tab control (Salaried/Self employed, or Car Loan/Two Wheeler Loan on Top-up loans) and 2-5 info cards. Only one tab state is authored per page; there is no eligible/not-eligible result anywhere.",
+  "nodes": {
+    "newCarFinance": { "mobile": "2692:33533", "desktop": "2692:32679", "componentMobile": "2692:33534", "componentDesktop": "2692:32726" },
+    "twoWheeler": { "mobile": "2692:33596", "desktop": "2692:32907", "componentMobile": "2692:33597", "componentDesktop": "2692:32954" },
+    "loanAgainstProperty": { "mobile": "2692:33665", "desktop": "2692:33151", "componentMobile": "2692:33666", "componentDesktop": "2692:33198" },
+    "topUpLoans": { "mobile": "2692:33734", "desktop": "2692:33395", "componentMobile": "2692:33735", "componentDesktop": "2692:33442" },
+    "usedCar": { "mobile": "2692:33791", "desktop": "2692:33461", "componentMobile": "2692:33792", "componentDesktop": "2692:33508" }
+  },
+  "components": {
+    "CheckEligibilityCriteria": {
+      "aka": "What You'll Need to Get Started",
+      "states": {
+        "default": {
+          "trigger": "page load; also re-renders when the tab control is toggled (behavior implied, not authored in Figma)",
+          "layout": {
+            "position": "inline, first content section directly under the global header (New Car Finance, Two-wheeler, LAP) or only section captured (Top-up loans, Used Car)",
+            "mobile": { "containerWidth": 375, "padding": "0 24px", "cardLayout": "vertical stack, gap 12px" },
+            "desktop": { "containerMaxWidth": 1736, "padding": "0 92px", "cardLayout": "horizontal row, gap 12px, card width 386px; becomes a carousel with prev/next arrows when more cards than fit (4-5 cards)" }
+          },
+          "styles": {
+            "heading": { "text": "What You'll Need to Get Started", "font": "Manrope Medium", "color": "#121212", "mobile": "32px/40px, -0.8px tracking", "desktop": "40px/48px, -1px tracking" },
+            "subheading": { "font": "Manrope Medium", "color": "#666666", "mobile": "16px/24px", "desktop": "20px/28px", "variesByProduct": true },
+            "card": { "background": "#eeeeee", "radiusMobile": "24px", "radiusDesktop": "32px", "paddingMobile": "24px", "paddingDesktop": "32px", "heightMobile": "230px", "iconSizeMobile": "52-60px", "iconSizeDesktop": "72px" },
+            "cardLabel": { "font": "Manrope Medium", "color": "#666666", "mobile": "14/20 or 16/24 (varies)", "desktop": "20/28" },
+            "cardValue": { "font": "Manrope Semibold", "color": "#121212", "mobile": "28/36, -0.56px tracking", "desktop": "32/40, -0.8px tracking", "note": "shipped as exported raster images in Figma, not live text" }
+          },
+          "content": {
+            "newCarFinance": {
+              "subheading": "Check candidate parameters for quick application processing.",
+              "tabs": ["Salaried", "Self employed"],
+              "activeTab": "Self employed",
+              "cards": [
+                { "icon": "ribbon", "label": "Minimum age of applicant", "value": "21 years" },
+                { "icon": "pinwheel", "label": "Maximum age at maturity", "value": "65 years" },
+                { "icon": "ribbon", "label": "Minimum employment", "value": "1 year in business" }
+              ]
+            },
+            "twoWheeler": {
+              "subheadingMobile": "A quick overview of the requirements for your loan application.",
+              "subheadingDesktop": "Check candidate parameters for quick application processing.",
+              "tabs": ["Salaried", "Self employed"],
+              "activeTab": "Self employed",
+              "cardsMobile": [
+                { "icon": "ribbon", "label": "Minimum age of applicant", "value": "21 years" },
+                { "icon": "pinwheel", "label": "Maximum age at maturity", "value": "65 years" },
+                { "icon": "pinwheel", "label": "Minimum employment", "value": "1 year in business" },
+                { "icon": "pinwheel", "label": "Average monthly balance", "value": "₹5,000 p.m." }
+              ],
+              "cardsDesktopExtra": [
+                { "icon": "clover", "label": "Past work experience", "value": "Min. 3 Years" }
+              ],
+              "note": "mobile is missing the 5th 'Past work experience' card that desktop shows; desktop carousel with prev/next arrows"
+            },
+            "loanAgainstProperty": {
+              "subheading": "A quick overview of the requirements for your loan application.",
+              "tabs": ["Salaried", "Self employed"],
+              "activeTab": "Self employed",
+              "cards": [
+                { "icon": "ribbon", "label": "Minimum age of applicant", "value": "18 years" },
+                { "icon": "pinwheel", "label": "Maximum age at maturity", "value": "65 years" },
+                { "icon": "pinwheel", "label": "Minimum business existence", "value": "3 year in business" },
+                { "icon": "pinwheel", "label": "Minimum income (as per latest ITR)", "value": "₹3,00,000 p.a." }
+              ],
+              "note": "desktop carousel with prev/next arrows (4 cards, only 3 fit)"
+            },
+            "topUpLoans": {
+              "subheading": "Check candidate parameters for quick application processing.",
+              "tabs": ["Car Loan", "Two Wheeler Loan"],
+              "activeTab": "Two Wheeler Loan",
+              "cards": [
+                { "icon": "ribbon", "label": "Minimum age of applicant", "value": "21 to 60 years" },
+                { "icon": "pinwheel", "label": "Minimum tenure of existing loan", "value": "6 months" }
+              ],
+              "note": "only product where tabs are loan-type based rather than employment-type based; no carousel needed (2 cards fit)"
+            },
+            "usedCar": {
+              "subheading": "Check candidate parameters for quick application processing.",
+              "tabs": ["Salaried", "Self employed"],
+              "activeTab": "Self employed",
+              "cards": [
+                { "icon": "pinwheel", "label": "Minimum age of applicant", "value": "21 years" },
+                { "icon": "ribbon", "label": "Minimum age at maturity", "value": "60 Years" },
+                { "icon": "clover", "label": "Minimum employment", "value": "1 year in business" }
+              ],
+              "note": "label says 'Minimum age at maturity' not 'Maximum age at maturity' like other products (likely source typo); no carousel (3 cards fit)"
+            }
+          },
+          "assets": ["icon-ribbon-72px.png", "icon-pinwheel-72px.png", "icon-clover-crop.png"]
+        }
+      }
+    },
+    "TabControl": {
+      "aka": "🌐 Breakpoint_Tab",
+      "states": {
+        "inactive": {
+          "trigger": "default / not currently selected pill",
+          "styles": { "background": "#f5f5f5 (same as track, blends in)", "textColor": "#666666", "font": "Manrope Medium", "radius": "12px", "padding": "20px 12px" }
+        },
+        "active": {
+          "trigger": "currently selected pill (click to switch, not demonstrated as an animation in Figma)",
+          "styles": { "background": "#121212", "textColor": "#f5f5f5", "font": "Manrope Medium", "radius": "12px", "padding": "20px 12px" }
+        }
+      },
+      "trackStyle": { "background": "#f5f5f5", "radius": "14px", "padding": "4px", "gap": "2px" },
+      "note": "no hover/focus/disabled states authored; only one tab's data set exists per page (the active one in the screenshot) — the alternate tab's values are not present in the Figma file"
+    },
+    "CarouselArrows": {
+      "aka": "🌐 Breakpoint_Pills Secondary_Buttons (desktop only)",
+      "appearsOn": ["twoWheeler", "loanAgainstProperty"],
+      "states": {
+        "prevDisabled": {
+          "trigger": "carousel at first card (initial state in all captures)",
+          "styles": { "diameter": "44px", "borderColor": "#8c8c8c", "borderWidth": "1px", "radius": "100px", "icon": "chevron-left 20x20" }
+        },
+        "nextEnabled": {
+          "trigger": "more cards available to scroll to",
+          "styles": { "diameter": "44px", "borderColor": "#121212", "borderWidth": "1px", "radius": "100px", "icon": "chevron-right 20x20" }
+        }
+      },
+      "layout": { "position": "bottom-right of the card row", "gap": "12px" },
+      "note": "no mid-scroll, hover, or fully-scrolled-to-end state authored"
+    }
+  },
+  "pageOrder": {
+    "newCarFinance": ["utility bar", "header/nav", "Check Eligibility criteria", "Documents section (grid)", "Need Help", "FAQ accordion", "Footer"],
+    "twoWheeler": ["utility bar", "header/nav", "Check Eligibility criteria", "Documents section (grid)", "Need Help", "FAQ accordion", "Footer"],
+    "loanAgainstProperty": ["utility bar", "header/nav", "Check Eligibility criteria", "Documents section (grid)", "Need Help", "FAQ accordion", "Footer"],
+    "topUpLoans": ["utility bar", "header/nav", "Check Eligibility criteria"],
+    "usedCar": ["utility bar", "header/nav", "Check Eligibility criteria"]
+  },
+  "knownGaps": [
+    "No eligible/not-eligible result state exists for any product.",
+    "No hover/focus states authored for tabs, cards, or carousel arrows beyond the two covered states.",
+    "Top-up loans and Used Car captures only include header + component; Documents/Need Help/FAQ/Footer may exist elsewhere on those pages but are outside the given node IDs.",
+    "Two-wheeler mobile is missing a 5th card ('Past work experience') that desktop has.",
+    "Two-wheeler subheading differs between mobile and desktop.",
+    "Used Car's 2nd card label reads 'Minimum age at maturity' instead of 'Maximum age at maturity' used elsewhere."
+  ],
+  "screenshots": [
+    "shots/new-car-finance-mobile-full.png",
+    "shots/new-car-finance-mobile-component.png",
+    "shots/new-car-finance-desktop-component.png",
+    "shots/new-car-finance-desktop-viewport.png",
+    "shots/two-wheeler-mobile-component.png",
+    "shots/two-wheeler-desktop-component.png",
+    "shots/lap-mobile-component.png",
+    "shots/lap-desktop-component.png",
+    "shots/topup-mobile-component.png",
+    "shots/topup-desktop-component.png",
+    "shots/used-car-mobile-component.png",
+    "shots/used-car-desktop-component.png"
+  ],
+  "assets": [
+    "raw/icon-ribbon-72px.png",
+    "raw/icon-pinwheel-72px.png",
+    "raw/icon-clover-crop.png"
+  ]
+}

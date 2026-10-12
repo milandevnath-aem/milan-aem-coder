@@ -1,0 +1,205 @@
+body.modal-open {
+  overflow: hidden;
+}
+
+dialog.modal {
+  --modal-padding: 20px;
+
+  box-sizing: border-box;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--text-color);
+  overflow: visible;
+}
+
+dialog.modal::backdrop {
+  background-color: rgb(0 0 0 / 80%);
+}
+
+dialog.modal .modal-content {
+  box-sizing: border-box;
+  height: 100%;
+  padding: 64px var(--modal-padding) var(--modal-padding);
+  background-color: var(--background-color);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+dialog.modal .modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  border: 0;
+  border-radius: 8px;
+  padding: 0;
+  background-color: var(--background-color);
+  cursor: pointer;
+}
+
+dialog.modal .modal-close:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+/* bottom sheet on small screens (e.g. accessibility settings) */
+dialog.modal.modal-sheet,
+dialog.modal.modal-compact {
+  inset: auto 0 0;
+  height: auto;
+  max-height: calc(100dvh - 24px);
+  padding-top: 52px;
+}
+
+dialog.modal.modal-sheet .modal-content,
+dialog.modal.modal-compact .modal-content {
+  max-height: calc(100dvh - 76px);
+  height: auto;
+  border-radius: 24px 24px 0 0;
+  padding: 20px 20px 32px;
+}
+
+dialog.modal.modal-sheet .modal-close,
+dialog.modal.modal-compact .modal-close {
+  top: 0;
+}
+
+@media (width >= 900px) {
+  dialog.modal,
+  dialog.modal.modal-sheet,
+  dialog.modal.modal-compact {
+    inset: 0;
+    width: 580px;
+    max-width: calc(100vw - 48px);
+    height: fit-content;
+    max-height: calc(100dvh - 48px);
+    margin: auto;
+    padding-top: 48px;
+  }
+
+  dialog.modal.modal-compact {
+    width: 440px;
+  }
+
+  dialog.modal .modal-content,
+  dialog.modal.modal-sheet .modal-content {
+    height: auto;
+    max-height: calc(100dvh - 96px);
+    border: 1px solid var(--border-light-color);
+    border-radius: 32px;
+    padding: 40px var(--modal-padding) var(--modal-padding);
+  }
+
+  dialog.modal.modal-sheet .modal-content {
+    padding: 32px;
+  }
+
+  dialog.modal.modal-compact .modal-content {
+    border: 0;
+    border-radius: 24px;
+    padding: 40px 32px 24px;
+    box-shadow: 0 24px 64px rgb(0 0 0 / 18%);
+  }
+
+  /* white close icon on the backdrop, above the card */
+  dialog.modal .modal-close,
+  dialog.modal.modal-sheet .modal-close,
+  dialog.modal.modal-compact .modal-close {
+    top: 0;
+    right: 0;
+    background-color: transparent;
+  }
+
+  dialog.modal .modal-close img {
+    filter: invert(1);
+  }
+}
+
+/* fragment content (e.g. "Read more" details) */
+dialog.modal .section {
+  margin: 0;
+  padding: 0;
+}
+
+dialog.modal .default-content-wrapper > :first-child {
+  margin-top: 0;
+}
+
+dialog.modal .default-content-wrapper picture {
+  display: block;
+  margin: 0 0 24px;
+  border: 1px solid var(--surface-color);
+  border-radius: 24px;
+  background: linear-gradient(180deg, #fff 0%, #f7f1f1 100%);
+  overflow: hidden;
+}
+
+dialog.modal .default-content-wrapper picture img {
+  display: block;
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+dialog.modal .default-content-wrapper h2 {
+  margin: 0 0 16px;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 36px;
+  letter-spacing: -0.56px;
+}
+
+dialog.modal .default-content-wrapper p {
+  margin: 0 0 16px;
+  color: var(--muted-color);
+  font-size: var(--body-font-size-m);
+  font-weight: 500;
+  line-height: 24px;
+}
+
+dialog.modal .default-content-wrapper p:has(> picture) {
+  margin: 0;
+}
+
+/* the last button stays reachable at the bottom while the text scrolls */
+dialog.modal .default-content-wrapper p.button-wrapper:last-child {
+  position: sticky;
+  bottom: calc(-1 * var(--modal-padding));
+  margin: 40px calc(-1 * var(--modal-padding)) calc(-1 * var(--modal-padding));
+  padding: 16px var(--modal-padding) var(--modal-padding);
+  background: linear-gradient(180deg, rgb(255 255 255 / 0%) 0%, rgb(255 255 255 / 80%) 100%);
+}
+
+dialog.modal .default-content-wrapper p.button-wrapper:last-child .button {
+  width: 100%;
+}
+
+@media (width >= 900px) {
+  dialog.modal .default-content-wrapper picture {
+    background: linear-gradient(90deg, #e8eaf0 0%, #ecedf3 35%, #ecedf3 65%, #ebedf3 80%, #e6e9ef 100%);
+  }
+
+  dialog.modal .default-content-wrapper picture img {
+    height: 280px;
+  }
+
+  dialog.modal .default-content-wrapper h2 {
+    font-size: 32px;
+    line-height: 44px;
+    letter-spacing: -0.8px;
+  }
+}
