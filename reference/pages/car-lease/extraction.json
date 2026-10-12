@@ -1,0 +1,324 @@
+{
+  "slug": "car-lease",
+  "title": "Car Lease for Corporate Customers",
+  "desktopNode": "2064:3594",
+  "mobileNode": "2064:3920",
+  "sections": [
+    {
+      "order": 1,
+      "type": "hero",
+      "figmaName": "Hero FB",
+      "desktop": {
+        "nodeId": "2064:3639",
+        "x": 0, "y": 0, "w": 1366, "h": 553,
+        "image": "raw/hero-desktop.png",
+        "imagePx": [2684, 1106],
+        "textBoxes": [[92, 48, 407, 164], [728, 48, 546, 457]]
+      },
+      "mobile": {
+        "nodeId": "2064:3953",
+        "x": 0, "y": 0, "w": 375, "h": 611,
+        "image": "raw/hero-mobile.png",
+        "imagePx": [734, 1222],
+        "textBoxes": [[28, 44, 319, 128], [28, 535, 319, 52]]
+      },
+      "content": {
+        "title": "Car Lease for Corporate Customers",
+        "subtitle": "A structured alternative to vehicle ownership with defined costs and flexible usage options.",
+        "form": {
+          "heading": "Start Your Loan Journey Today",
+          "description": "Receive a call from our loan expert and get the best offer for you.",
+          "selectLabel": "Select loan category",
+          "selectedCategory": "Car Lease",
+          "fields": ["Your name", "Mobile number"],
+          "button": "Apply now"
+        },
+        "mobileButton": "Apply now"
+      },
+      "notes": "Parent node 2064:3596 ('Hero FB') includes the shared Header Sleeve (44px) + Nav container (68px) which are skipped per spec; desktop/mobile boxes above start right after those (desktop content frame 'hero Fb' 2064:3639; mobile content frame 'Frame 2147231593' 2064:3953, itself after a 92px banner-animation + 60px app-nav strip at 2064:3922/3921). Background image (car + reflective architecture, blue/red lighting, white text) is inset by 12px on each side within the 1366-wide desktop frame (actual image box ~[12,0,1342,553]) and by 4px within the 375-wide mobile frame (actual image box ~[4,0,367,611]) due to container padding — textBoxes above are relative to the full padded frame, matching imagePx scale (~2x). On mobile there is NO lead-form card — only title, subtitle and a single white 'Apply now' pill button are overlaid directly on the image; the desktop-only lead-form card ('Contact Form' 2064:3646) has a white rounded-32 bg with dark text, 3 inputs (select, name, phone w/ +91 prefix) and a black 'Apply now' pill button."
+    },
+    {
+      "order": 2,
+      "type": "banner",
+      "figmaName": "Section 3 - FB",
+      "desktop": {
+        "nodeId": "2064:3656",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/banner-intro-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[774, 198, 500, 120], [774, 330, 500, 144]]
+      },
+      "mobile": {
+        "nodeId": "2064:3960",
+        "x": 0, "y": 0, "w": 375, "h": 672,
+        "image": "raw/banner-intro-mobile.png",
+        "imagePx": [750, 1344],
+        "textBoxes": [[24, 80, 327, 108], [24, 200, 327, 160]]
+      },
+      "content": {
+        "heading": "Vehicle leasing solution with defined rentals and bundled services.",
+        "text": "KMPL Car Lease offers a structured leasing solution that enables customers to use a vehicle for a defined tenure against fixed monthly rentals. The product is designed for eligible salaried individuals and corporate programs, with options that may include vehicle registration, insurance, and other services, subject to specific terms and conditions.",
+        "cta": null,
+        "align": "right",
+        "textColor": "light"
+      },
+      "notes": "Background photo: car side-mirror reflection on the left half fading to solid black on the right; text block right-aligned in white. Decorative dimming: in the heading, 'Vehicle leasing solution' renders noticeably dimmer/grey than the brighter white 'with defined rentals and bundled services.' — a fade effect, not a font-weight change (both runs are same weight), so not marked with **bold**. Similarly in the body text, 'designed for eligible salaried individuals and corporate programs' is dimmed. No CTA button present on this banner."
+    },
+    {
+      "order": 3,
+      "type": "feature-cards",
+      "figmaName": "Key features- AB",
+      "desktop": { "nodeId": "2064:3661", "x": 0, "y": 0, "w": 1366, "h": 850 },
+      "mobile": { "nodeId": "2064:3964", "x": 0, "y": 0, "w": 375, "h": 1320 },
+      "content": {
+        "heading": "Key features",
+        "subheading": null,
+        "variant": "image+icon-grid",
+        "cards": [
+          {
+            "title": "Fixed Tenure",
+            "text": "Structured lease tenure with fixed monthly rentals",
+            "size": "large-image",
+            "image": "raw/feature-card-fixed-tenure.png",
+            "mobileImage": "raw/feature-card-fixed-tenure-mobile.png",
+            "mobileTitle": "EMI Savings & Top-Up",
+            "mobileText": "Option to Save on EMI and avail top-up on existing loan."
+          },
+          {
+            "title": "Low Initial Outflow",
+            "text": "Enjoy a seamless virtual experience",
+            "size": "large-image",
+            "image": "raw/feature-card-low-outflow.png",
+            "mobileImage": "raw/feature-card-low-outflow-mobile.png"
+          },
+          {
+            "title": "Wide Vehicle Range",
+            "text": "Apply digitally, no branch visit required",
+            "size": "small-icon",
+            "icon": "Outlined-Car"
+          },
+          {
+            "title": "Bundled Services",
+            "text": "Enjoy a seamless virtual experience",
+            "size": "small-icon",
+            "icon": "Outlined-Upload Image"
+          },
+          {
+            "title": "Flexible End-of-Lease",
+            "text": "Funds credited within 5 working hours",
+            "size": "small-icon",
+            "icon": "Outlined-Document Check"
+          },
+          {
+            "title": "Tax Benefits",
+            "text": "Funds credited within 5 working hours",
+            "size": "wide-icon",
+            "icon": "Outlined-Interest"
+          },
+          {
+            "title": "Transparent Pricing",
+            "text": "Enjoy a seamless virtual experience",
+            "size": "wide-icon",
+            "icon": "Outlined-Show"
+          }
+        ],
+        "cta": null
+      },
+      "notes": "Desktop layout (top to bottom): row 1 = 2 large image cards side by side (585x350 each, rounded-32, text baked into the flattened image) — Fixed Tenure, Low Initial Outflow; row 2 = 3 small icon cards (386 wide, 40x40 icon top-left, title+text below, no visible card background in metadata); row 3 = 2 wide icon cards (585 wide, 40x40 icon + title/text laid out horizontally). Mobile stacks all 7 cards in one column, same order, image cards full-width 250px tall. DISCREPANCY: the mobile 'Fixed Tenure' card shows different copy ('EMI Savings & Top-Up' / 'Option to Save on EMI and avail top-up on existing loan.') than its desktop counterpart — recorded verbatim from raw/feature-card-fixed-tenure-mobile.png; likely stale/un-synced content between breakpoints in the Figma file rather than an intentional variant. Body copy 'Enjoy a seamless virtual experience' and 'Funds credited within 5 working hours' is reused verbatim across several unrelated cards — appears to be placeholder text not yet customized per card."
+    },
+    {
+      "order": 4,
+      "type": "banner",
+      "figmaName": "Section 3 - FB",
+      "desktop": {
+        "nodeId": "2064:3708",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/banner-1-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[92, 248, 500, 80], [92, 340, 500, 84]]
+      },
+      "mobile": {
+        "nodeId": "2064:4011",
+        "x": 0, "y": 0, "w": 375, "h": 600,
+        "image": "raw/banner-1-mobile.png",
+        "imagePx": [750, 1200],
+        "textBoxes": [[24, 80, 327, 72], [24, 160, 327, 96]]
+      },
+      "content": {
+        "heading": "KMPL Corporate Car Leasing Solutions",
+        "text": "KMPL Corporate Car Leasing solutions are offered through corporate tie-ups for eligible employees, as per approved programs.",
+        "cta": null,
+        "align": "left",
+        "textColor": "light"
+      },
+      "notes": "Text block left-aligned, white text on photographic background. No CTA button."
+    },
+    {
+      "order": 5,
+      "type": "banner",
+      "figmaName": "Section 3 - FB",
+      "desktop": {
+        "nodeId": "2064:3714",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/banner-2-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[774, 214, 500, 120], [774, 346, 500, 112]]
+      },
+      "mobile": {
+        "nodeId": "2064:4016",
+        "x": 0, "y": 0, "w": 375, "h": 600,
+        "image": "raw/banner-2-mobile.png",
+        "imagePx": [750, 1200],
+        "textBoxes": [[24, 80, 327, 144], [24, 232, 327, 96]]
+      },
+      "content": {
+        "heading": "KMPL Offers Tailored Car Leases with Corporate and Individual Registration Options",
+        "text": "KMPL offers tailored leases with both Corporate and Individual Registration options to provide better flexibility and cost-effectiveness to its Corporate Clients.",
+        "cta": null,
+        "align": "right",
+        "textColor": "light"
+      },
+      "notes": "Text block right-aligned, white text on photographic background. No CTA button. Parent wrapper frame is 2064:3713 ('Frame 2147231616'); inner 'Section 3 - FB' instance is 2064:3714."
+    },
+    {
+      "order": 6,
+      "type": "banner",
+      "figmaName": "Section 3 - FB",
+      "desktop": {
+        "nodeId": "2064:3719",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/banner-3-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[92, 262, 500, 80], [92, 354, 500, 56]]
+      },
+      "mobile": {
+        "nodeId": "2064:4021",
+        "x": 0, "y": 0, "w": 375, "h": 600,
+        "image": "raw/banner-3-mobile.png",
+        "imagePx": [750, 1200],
+        "textBoxes": [[24, 80, 327, 72], [24, 160, 327, 72]]
+      },
+      "content": {
+        "heading": "Bi-Partite Car Lease with Corporate Registration.",
+        "text": "Eligible customers can now avail instant funds through our quick and easy 5 click - digital journey!",
+        "mobileText": "Eligible customers can now avail instant funds through our quick & easy 5 click - digital journey!",
+        "cta": null,
+        "align": "left",
+        "textColor": "light"
+      },
+      "notes": "Text block left-aligned, white text on photographic background. Mobile copy uses '&' instead of 'and' ('quick & easy') — recorded verbatim per breakpoint. No CTA button."
+    },
+    {
+      "order": 7,
+      "type": "banner",
+      "figmaName": "Section 3 - FB",
+      "desktop": {
+        "nodeId": "2064:3725",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/banner-4-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[774, 242, 500, 120], [774, 374, 500, 56]]
+      },
+      "mobile": {
+        "nodeId": "2064:4026",
+        "x": 0, "y": 0, "w": 375, "h": 600,
+        "image": "raw/banner-4-mobile.png",
+        "imagePx": [750, 1200],
+        "textBoxes": [[24, 80, 327, 108], [24, 196, 327, 72]]
+      },
+      "content": {
+        "heading": "Tri-Partite Car Lease with Individual Registration in the name of Employee.",
+        "text": "Eligible customers can now avail instant funds through our quick and easy 5 click - digital journey!",
+        "mobileText": "Eligible customers can now avail instant funds through our quick & easy 5 click - digital journey!",
+        "cta": null,
+        "align": "right",
+        "textColor": "light"
+      },
+      "notes": "Text block right-aligned, white text on photographic background. Mobile design context reports an extra bottom fade overlay (linear-gradient transparent-to-white) on this one mobile instance only. Parent wrapper frame is 2064:3724 ('Frame 2147231617'); inner 'Section 3 - FB' instance is 2064:3725. Mobile copy uses '&' instead of 'and', same as banner 3."
+    },
+    {
+      "order": 8,
+      "type": "requirements",
+      "figmaName": "Frame 2147231066 (What You'll Need to Get Started)",
+      "desktop": { "nodeId": "2064:3730", "x": 0, "y": 0, "w": 1366, "h": 388 },
+      "mobile": { "nodeId": "2064:4031", "x": 0, "y": 0, "w": 375, "h": 890 },
+      "content": {
+        "heading": "What You'll Need to Get Started",
+        "subheading": "Check candidate parameters for quick application processing.",
+        "variant": "eligibility",
+        "tabs": [],
+        "panels": null,
+        "cards": [
+          { "icon": "raw/req-icon-1.png", "label": "Corporate employees", "value": "Approved Leasing Arrangements" },
+          { "icon": "raw/req-icon-2.png", "label": "Corporates & SMEs", "value": "Lease Solutions for Employees, Promoters & Management" },
+          { "icon": "raw/req-icon-3.png", "label": "Credit assessment", "value": "Documentation Review of Corporate / SME" }
+        ]
+      },
+      "notes": "No tab switcher — just 3 cards in a row (desktop) / stacked (mobile), confirmed by task instructions. Card bg #eeeeee, radius 32, desktop card size 386x272 (icon 72x72 top, label+value bottom); mobile card size ~327 wide, icon 52x52. Icons are abstract gradient ribbon/petal graphics (not literal pictograms) — req-icon-1 is a pink/orange twisted ring, req-icon-2 and req-icon-3 are pink/orange flower-petal shapes, all on transparent background. Content identical between desktop and mobile."
+    },
+    {
+      "order": 9,
+      "type": "requirements",
+      "figmaName": "Documents section FB",
+      "desktop": { "nodeId": "2064:3756", "x": 0, "y": 0, "w": 1366, "h": 696 },
+      "mobile": { "nodeId": "2064:4057", "x": 0, "y": 0, "w": 375, "h": 1104 },
+      "content": {
+        "heading": "Documents required",
+        "subheading": "Keep these documents ready for a seamless loan application process",
+        "variant": "documents",
+        "tabs": [],
+        "panels": null,
+        "cards": [
+          { "title": "Type 1", "items": ["Company PAN Card", "GST Certificates for State", "MOA & AOA"] },
+          { "title": "Type 2", "items": ["Certificate of Incorporation - COI", "KYCs of All authorized signatories", "Board resolution for Signing Authority", "Share holding pattern"] },
+          { "title": "Type 3", "items": ["Director list", "KYC of BR signatory", "Latest Audited Financials for Last 2 years", "UBO FORM with KYCs"] }
+        ],
+        "decorativeImage": null
+      },
+      "notes": "No tab switcher — 3 static columns side by side on desktop (Column-Identity / Column-Income / Column-Other, each a 386-wide card, bg #fcfcfc, 1px #d6d6d6 border, radius 32), stacked full-width on mobile. Column titles are literally 'Type 1' / 'Type 2' / 'Type 3' in the design (not customized to e.g. 'Identity Proof' despite the semantic layer names Column-Identity/Income/Other hinting otherwise) — recorded verbatim. Each checklist item has a small leading checkbox/tick glyph (decorative, not downloaded). No decorative red image on the right is present in this instance, unlike the generic pattern described for the 'documents' variant. Content identical between desktop and mobile."
+    },
+    {
+      "order": 10,
+      "type": "need-help",
+      "figmaName": "Need Help FB",
+      "desktop": {
+        "nodeId": "2064:3818",
+        "x": 0, "y": 0, "w": 1366, "h": 672,
+        "image": "raw/need-help-desktop.png",
+        "imagePx": [2732, 1344],
+        "textBoxes": [[497, 124, 372, 192]]
+      },
+      "mobile": {
+        "nodeId": "2089:5811",
+        "x": 0, "y": 0, "w": 375, "h": 672,
+        "image": "raw/need-help-mobile.png",
+        "imagePx": [750, 1344],
+        "textBoxes": [[24, 80, 327, 168]]
+      },
+      "content": {
+        "heading": "Need help?",
+        "text": "Connect with our dedicated automotive finance team for immediate assistance.",
+        "buttons": ["Locate us", "Apply now"],
+        "image": "decorative glossy red/orange/purple 3D flower-petal graphic, centered, overflowing the bottom edge"
+      },
+      "notes": "Black background, centered white heading/text, two white pill buttons side by side ('Locate us' then 'Apply now'). Content identical between desktop and mobile (mobile just restacks narrower)."
+    },
+    {
+      "order": 11,
+      "type": "faq",
+      "figmaName": "Content - Section",
+      "desktop": { "nodeId": "2064:3826", "x": 0, "y": 0, "w": 1366, "h": 396 },
+      "mobile": { "nodeId": "2064:4116", "x": 0, "y": 0, "w": 375, "h": 480 },
+      "content": {
+        "heading": "Frequently asked questions",
+        "items": [
+          { "q": "What is a car lease?", "a": "A car lease is a contractual arrangement where a customer is allowed to use a vehicle for a specified period against agreed monthly rentals, without transfer of ownership during the lease tenure." },
+          { "q": "What happens at the end of the lease tenure?", "a": null },
+          { "q": "Are insurance and other services included?", "a": null },
+          { "q": "Are tax benefits available?", "a": null }
+        ]
+      },
+      "notes": "Heading left (442px wide, desktop) / stacked top (mobile); accordion right (660px wide, desktop) / stacked below heading (mobile). Verified against get_design_context (forceCode) on desktop accordion frame 2064:3830 and mobile frame 2064:4116, which returned real Car Lease FAQ copy (the Figma layer names on the generic 🌐 Breakpoint_Accordion component instances had been misleadingly left as 'Heading'/placeholder in metadata, but the rendered <p> text is the correct Car Lease content below). First item open (chevron up) with answer visible, items 2-4 collapsed (chevron down) with answer not rendered (a: null)."
+    }
+  ]
+}
