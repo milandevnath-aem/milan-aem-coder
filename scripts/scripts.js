@@ -71,6 +71,35 @@ function buildAutoBlocks() {
 }
 
 /**
+ * Tells whether a link points to a page in a /modals/ folder (opened as a dialog).
+ * @param {string} href link URL
+ * @returns {boolean}
+ */
+export function isModalLink(href) {
+  try {
+    const { origin, pathname } = new URL(href, window.location);
+    return origin === window.location.origin && pathname.includes('/modals/');
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Opens links to /modals/ pages in a dialog instead of navigating.
+ * @param {Document} doc The document
+ */
+function autolinkModals(doc) {
+  doc.addEventListener('click', async (e) => {
+    const link = e.target.closest('a[href]');
+    if (!link || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    if (!isModalLink(link.href)) return;
+    e.preventDefault();
+    const { openModal } = await import(`${window.hlx.codeBasePath}/blocks/modal/modal.js`);
+    openModal(link.href);
+  });
+}
+
+/**
  * Decorates formatted links to style them as buttons.
  * @param {HTMLElement} main The main container element
  */
@@ -151,6 +180,7 @@ async function loadEager(doc) {
  * @param {Element} doc The container element
  */
 async function loadLazy(doc) {
+  autolinkModals(doc);
   loadHeader(doc.querySelector('header'));
 
   const main = doc.querySelector('main');

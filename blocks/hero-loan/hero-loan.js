@@ -1,5 +1,6 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
-import { moveInstrumentation } from '../../scripts/scripts.js';
+import { moveInstrumentation, isModalLink } from '../../scripts/scripts.js';
+import { createDropdown } from '../../scripts/dropdown.js';
 
 const VISIBLE_CATEGORIES = 5;
 const SLIDE_INTERVAL = 6000;
@@ -22,11 +23,19 @@ function buildChip(label, index) {
   return chip;
 }
 
-function confirmOnSubmit(form) {
-  form.addEventListener('submit', (e) => {
+function confirmOnSubmit(form, modalHref) {
+  form.addEventListener('submit', async (e) => {
     if (form.getAttribute('action')) return;
-    // no endpoint configured: confirm locally instead of reloading the page
     e.preventDefault();
+    if (modalHref) {
+      // continue in the full application form, carrying over what was entered
+      const data = Object.fromEntries(new FormData(form));
+      const { openModal } = await import('../modal/modal.js');
+      const modal = await openModal(modalHref);
+      modal?.dialog.querySelector('form')?.prefill?.(data);
+      return;
+    }
+    // no endpoint configured: confirm locally instead of reloading the page
     const thanks = document.createElement('p');
     thanks.className = 'hero-loan-thanks';
     thanks.setAttribute('role', 'status');
@@ -88,7 +97,8 @@ function buildForm(config, isProduct) {
   const form = document.createElement('form');
   const actionLink = actionRow?.querySelector('a');
   const action = actionLink?.getAttribute('href');
-  if (action && action !== '#') form.action = action;
+  const modalHref = action && isModalLink(action) ? action : '';
+  if (action && action !== '#' && !modalHref) form.action = action;
   form.method = 'get';
   form.innerHTML = `
     <div class="hero-loan-fields"></div>
@@ -107,14 +117,17 @@ function buildForm(config, isProduct) {
   const categories = categoriesText.split(',').map((c) => c.trim()).filter(Boolean);
   if (isProduct && categories.length) {
     // product pages: compact dropdown, first category preselected
-    const select = document.createElement('label');
-    select.className = 'hero-loan-select';
-    select.innerHTML = '<span class="hero-loan-select-label">Select loan category</span><select name="category"></select>';
-    categories.forEach((c) => select.querySelector('select').append(new Option(c, c)));
+    const select = createDropdown({
+      label: 'Select loan category',
+      name: 'category',
+      options: categories.map((c) => ({ value: c, label: c })),
+      value: categories[0],
+    });
+    select.classList.add('hero-loan-select');
     moveInstrumentation(optionsRow, select);
     form.querySelector('.hero-loan-categories').remove();
     form.prepend(select);
-    confirmOnSubmit(form);
+    confirmOnSubmit(form, modalHref);
     if (actionRow) moveInstrumentation(actionRow, form.querySelector('button[type="submit"]'));
     card.append(form);
     return card;
@@ -147,7 +160,7 @@ function buildForm(config, isProduct) {
   moveInstrumentation(optionsRow, form.querySelector('.hero-loan-categories'));
   if (actionRow) moveInstrumentation(actionRow, form.querySelector('button[type="submit"]'));
 
-  confirmOnSubmit(form);
+  confirmOnSubmit(form, modalHref);
 
   card.append(form);
   return card;
@@ -251,6 +264,32 @@ function buildSlides(rows, block) {
 }
 
 /**
+ * Small screens: once the hero is scrolled past, its call to action stays
+ * pinned to the bottom of the viewport.
+ * @param {Element} block The block element
+ */
+function addStickyCta(block) {
+  const source = block.querySelector('.hero-loan-content a.button');
+  if (!source) return;
+  const bar = document.createElement('div');
+  bar.className = 'hero-loan-sticky';
+  bar.setAttribute('aria-hidden', 'true');
+  const cta = document.createElement('a');
+  cta.className = 'button primary';
+  cta.href = source.href;
+  cta.textContent = source.textContent.trim();
+  cta.tabIndex = -1;
+  bar.append(cta);
+  block.append(bar);
+  new IntersectionObserver(([entry]) => {
+    const passed = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+    bar.classList.toggle('is-visible', passed);
+    bar.setAttribute('aria-hidden', !passed);
+    cta.tabIndex = passed ? 0 : -1;
+  }).observe(block.querySelector('.hero-loan-slides'));
+}
+
+/**
  * Hero with loan slides and a call-back lead form.
  * Block properties come first as single-cell rows (form heading, options = categories + fields,
  * submit link); every following multi-cell row is a slide
@@ -274,4 +313,5 @@ export default function decorate(block) {
   else block.classList.add('no-form');
 
   block.replaceChildren(slides, inner);
+  if (!block.classList.contains('plain')) addStickyCta(block);
 }

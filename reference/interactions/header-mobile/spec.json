@@ -1,0 +1,157 @@
+{
+  "group": "header-mobile",
+  "figmaFileKey": "ZQGlS9KmxOkyimBNouvOhZ",
+  "sourceSection": "2701:35475",
+  "viewport": { "width": 375, "height": 812 },
+  "nodes": {
+    "closedHeader": "3234:20291",
+    "menuOpenFull": "3320:25844",
+    "menuOpenDropdown": "3320:25744"
+  },
+  "components": [
+    {
+      "name": "mobile-header-closed",
+      "node": "3234:20297",
+      "states": [
+        {
+          "state": "default",
+          "trigger": null,
+          "layout": {
+            "position": "static, top of page",
+            "width": 375,
+            "structure": [
+              { "part": "announcement-sleeve", "height": 32, "background": "#e6e6e6", "padding": "8px 20px" },
+              { "part": "header-row", "height": 68, "background": "#fcfcfc", "padding": "12px 16px", "display": "flex", "justify": "space-between", "align": "center", "gap": 50 }
+            ]
+          },
+          "styles": {
+            "announcementText": { "font": "Manrope Medium 12px/16px", "color": "#121212" },
+            "logo": { "width": 99, "height": 24 },
+            "webPayButton": { "background": "#121212", "radius": 100, "padding": 12, "textColor": "#ffffff", "font": "Manrope Semibold 14px/20px" }
+          },
+          "content": [
+            "Please make payments towards your loan account only to Authorised Staff with valid ID cards and insist for receipt for every payment made. For any suspicious activity please call 18002095732 immediately.",
+            "Important Update: Receive genuine service calls from 1600XXXXXX numbers. Promotional calls may come from 140XXXXXXX numbers. Report telecom fraud at sancharsaathi.gov.in and financial fraud at cybercrime.gov.in or call 1930.",
+            "Web pay"
+          ],
+          "icons": ["info (16x16, announcement)", "search (generic)", "hamburger (generic, trigger)"],
+          "assets": ["raw/kotak-prime-logo.png"]
+        }
+      ]
+    },
+    {
+      "name": "mobile-menu-panel",
+      "node": "3320:25844",
+      "states": [
+        {
+          "state": "open-collapsed",
+          "trigger": "tap hamburger icon in closed header",
+          "layout": {
+            "position": "full-screen (replaces page content, not an overlay with scrim)",
+            "width": 375,
+            "height": 812,
+            "background": "#fcfcfc",
+            "structure": [
+              { "part": "header-row", "height": 68, "padding": "12px 16px", "display": "flex", "justify": "space-between", "align": "center", "gap": 50 },
+              { "part": "utility-bar", "background": "#eeeeee", "padding": "16px 24px", "display": "flex", "justify": "space-between", "align": "center", "gap": 20 },
+              { "part": "accordion-list", "itemPadding": "16px 20px" },
+              { "part": "sticky-contact-row", "shadow": "0px -6px 16px 0px rgba(18,18,18,0.05)" },
+              { "part": "login-button-container", "border": "1px solid #eeeeee", "padding": 20 }
+            ]
+          },
+          "styles": {
+            "headerLogo": { "width": 99, "height": 24 },
+            "closeIcon": { "hitArea": "24x24 + 4px padding, radius 10px" },
+            "settingsLabel": { "font": "Manrope Semibold 12px/18px", "color": "#121212" },
+            "englishLabel": { "font": "Manrope Semibold 12px/18px", "color": "#121212" },
+            "accordionLabel": { "font": "Manrope Semibold 16px/24px", "color": "#121212" },
+            "accordionChevron": { "size": "20x20", "state": "down (collapsed)" },
+            "contactTitle": { "font": "Manrope Semibold 16px/24px", "color": "#121212" },
+            "contactSubtitle": { "font": "Manrope Medium 12px/16px", "letterSpacing": 0.24, "color": "#666666" },
+            "contactAvatar": { "size": "30x30", "shape": "circle", "background": "#121212", "icon": "external-link arrow, white" },
+            "loginButton": { "background": "#121212", "radius": 100, "height": 44, "textColor": "#ffffff", "font": "Manrope Semibold 14px/20px" }
+          },
+          "content": [
+            "Settings", "English",
+            "Car Loan", "Two-wheeler Loan", "Dealer Finance", "Loan Against Property",
+            "Car Prices and News", "Two Wheeler Prices and News", "Help & Support", "Explore more",
+            "Contact Us", "1800 4100 · Toll-free", "Login"
+          ],
+          "icons": ["close/X (header, trigger to close)", "gear/settings (16x16)", "chevron (utility bar, 16x16)", "chevron-down (accordion rows, 20x20)", "external-link arrow (contact avatar)"],
+          "closeAction": "tap close (X) icon in header row; returns to prior page scroll position",
+          "notes": "Web pay button and search icon from the closed header are not present while menu is open."
+        }
+      ]
+    },
+    {
+      "name": "settings-dropdown",
+      "node": "3320:25835",
+      "states": [
+        {
+          "state": "open",
+          "trigger": "tap 'Settings' label/chevron in utility bar",
+          "layout": {
+            "position": "popover, anchored under 'Settings' label, left-aligned, overlaps top accordion row",
+            "width": 148,
+            "padding": 4,
+            "radius": 12,
+            "background": "#fcfcfc",
+            "border": "1px solid #eeeeee",
+            "shadow": "0px 1px 2px 0px rgba(18,18,18,0.04), 0px 8px 24px 0px rgba(18,18,18,0.08)"
+          },
+          "styles": {
+            "item": { "padding": "10px 12px", "radius": 8, "font": "Manrope Medium 14px/20px", "color": "#121212" }
+          },
+          "content": ["Accessibility", "Preferences"],
+          "icons": ["check mark (16x16, hidden/opacity 0 — shown only when 'Preferences' is the active selection)"],
+          "closeAction": "tap 'Settings' again or tap outside (not evidenced explicitly in frame); chevron reverts from up to down"
+        }
+      ]
+    },
+    {
+      "name": "accordion-item-expanded",
+      "node": "3320:25744",
+      "states": [
+        {
+          "state": "expanded",
+          "trigger": "tap 'Car Prices and News' row (applies to any accordion-basic row with sub-items)",
+          "layout": {
+            "position": "inline, pushes subsequent rows down (not an overlay)",
+            "wrapperPadding": "0 8px",
+            "cardPadding": "12px 20px",
+            "cardRadius": 16,
+            "gapBetweenCards": 0
+          },
+          "styles": {
+            "parentChevron": { "state": "up (expanded)", "icon": "outlinedchevronup" },
+            "cardTitle": { "font": "Manrope Semibold 14px/20px", "color": "#121212" },
+            "cardSubtitle": { "font": "Manrope Medium 14px/20px", "color": "#666666" }
+          },
+          "content": [
+            { "title": "Car News", "subtitle": "Drive home your dream car with confidence" },
+            { "title": "Latest Cars", "subtitle": "Easy finance for the car you've chosen" },
+            { "title": "Upcoming Cars", "subtitle": "Unlock the value of your existing car" },
+            { "title": "Car Prices", "subtitle": "Additional funds to support your evolving needs" },
+            { "title": "Compare Cars", "subtitle": "Exclusive benefits designed for valued customers" }
+          ],
+          "icons": [],
+          "closeAction": "tap parent row again; chevron reverts up->down and the 5 cards collapse",
+          "notes": "Remaining collapsed rows (Two Wheeler Prices and News, Help & Support, Explore more) keep generic chevron-down independently. Sticky contact row + Login button stay pinned at the bottom; list content scrolls underneath them (Upcoming Cars shown clipped behind the sticky footer in the capture)."
+        }
+      ]
+    }
+  ],
+  "desktopVsMobile": {
+    "desktop": "Mega-menu ('Menu Container') opens as an inline panel below a sticky top nav bar while page content stays visible/scrolled beneath it; multiple 'Desktop - Home' frames show the sticky chromeTop nav pinned at different scroll offsets. Web pay and other utility controls remain visible at all times.",
+    "mobile": "No separate sticky-header-on-scroll frame exists for mobile in this Figma section. The hamburger fully replaces the screen with the menu panel; Web pay and the search icon are dropped from the header the moment the menu opens, replaced by just the close icon, Settings, and English controls."
+  },
+  "assets": {
+    "downloaded": ["raw/kotak-prime-logo.png"],
+    "skippedGeneric": ["hamburger/close toggle", "search icon", "chevron-down/up icons", "gear/settings icon", "external-link arrow", "check mark"]
+  },
+  "shots": [
+    "shots/mobile-nav-overview.png",
+    "shots/full-menu.png",
+    "shots/accordion-expanded-and-settings-dropdown.png"
+  ]
+}

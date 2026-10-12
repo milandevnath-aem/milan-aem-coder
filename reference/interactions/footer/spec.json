@@ -1,0 +1,252 @@
+{
+  "group": "footer",
+  "figma": {
+    "fileKey": "ZQGlS9KmxOkyimBNouvOhZ",
+    "nodes": {
+      "desktop": { "id": "4124:25595", "name": "Footer - Laptop", "width": 1366, "height": 1136.87 },
+      "mobile": { "id": "4124:25475", "name": "Footer - Mobile", "width": 375, "height": 1918 }
+    }
+  },
+  "fontFamily": "Manrope",
+  "components": {
+    "brandBanner": {
+      "states": {
+        "default": {
+          "trigger": "none (static)",
+          "layout": {
+            "desktop": "centered column, gap 40px logo->headingBlock, 24px heading->paragraph, outer pt-140 pr/pl-12",
+            "mobile": "centered column, gap 40px logo->headingBlock, 20px heading->paragraph, outer pt-100"
+          },
+          "styles": {
+            "background": "#DB0D28",
+            "logoBackdrop": "#EA1F27",
+            "headingColor": "#F5F5F5",
+            "headingDesktop": "40px/48px, tracking -1px, font-medium, width 688px, centered",
+            "headingMobile": "32px/40px, tracking -0.8px, font-medium, full width, centered",
+            "paragraphColor": "#F5F5F5",
+            "paragraphDesktop": "16px/24px, font-medium, width 492px, centered",
+            "paragraphMobile": "14px/20px, font-medium, width 261px, centered"
+          },
+          "content": [
+            "Trusted Vehicle Finance Solutions since 1996",
+            "Kotak Mahindra Prime has been empowering customers with reliable vehicle financing solutions, helping individuals and businesses move forward with confidence."
+          ],
+          "assets": ["raw/logo-kotak-prime.png"]
+        }
+      }
+    },
+    "linkColumns": {
+      "states": {
+        "default": {
+          "trigger": "none (static)",
+          "layout": {
+            "desktop": "flex-row, 5 columns x 187px, 12px column gap, header->links gap 12px, link row gap 14px",
+            "mobile": "flex-col, 24px gap between column groups, header->links gap 8px, each link wrapped with 8px vertical padding tap target"
+          },
+          "styles": {
+            "headerColor": "#666666",
+            "headerDesktop": "14px/18px font-medium",
+            "headerMobile": "12px/16px font-medium, tracking 0.24px",
+            "linkColor": "#121212",
+            "linkDesktop": "14px/20px font-semibold",
+            "linkMobile": "12px/18px font-semibold, tracking 0.24px"
+          },
+          "content": [
+            { "heading": "Quick Links", "links": ["Charges & Fees", "Do Not Call Registry"] },
+            { "heading": "Grievance", "links": ["Grievance Redressal", "Investors - Debit"] },
+            { "heading": "Reports", "links": ["Annual Report", "Policies", "GST"] },
+            { "heading": "News", "links": ["Media Releases"] },
+            { "heading": "Forms", "links": ["CIC Related Bank Account Details Form"] }
+          ],
+          "assets": []
+        }
+      }
+    },
+    "otherLinksRow": {
+      "states": {
+        "default": {
+          "trigger": "none (static)",
+          "layout": {
+            "desktop": "flex-row, 20px gap, single line",
+            "mobile": "flex-col, 4px gap, stacked, min-height 36px per item"
+          },
+          "styles": {
+            "textColor": "#121212",
+            "desktop": "14px/20px font-semibold",
+            "mobile": "12px/18px font-semibold, tracking 0.24px"
+          },
+          "content": [
+            "Other links",
+            "Digital Lending Related Information",
+            "Download Forms",
+            "Contact Us",
+            "Sitemap",
+            "Account Aggregator",
+            "FAQs"
+          ],
+          "assets": [],
+          "notes": "'Other links' is an inline label mixed into the link list, not a separate heading row (inconsistent with linkColumns headers)."
+        }
+      }
+    },
+    "legalLinksAndGroupDropdown": {
+      "states": {
+        "default": {
+          "trigger": "none (static layout)",
+          "layout": {
+            "desktop": "flex-row justify-between; dropdown pill + legal links row (flex-row gap 24px) on the left",
+            "mobile": "flex-col gap 24px; dropdown pill row, then legal links (flex-col gap 4px) stacked below"
+          },
+          "styles": {
+            "textColor": "#121212",
+            "desktop": "14px/20px font-semibold",
+            "mobile": "12px/18px font-semibold, tracking 0.24px"
+          },
+          "content": ["Terms and conditions", "Privacy Policy", "Disclaimer"],
+          "assets": []
+        }
+      }
+    },
+    "groupCompaniesDropdown": {
+      "states": {
+        "closed": {
+          "trigger": "click on pill button",
+          "layout": "inline pill, same on both breakpoints",
+          "styles": {
+            "border": "1px solid #8C8C8C",
+            "borderRadius": "100px",
+            "padding": "8px",
+            "labelColor": "#121212",
+            "labelSize": "14px/18px font-semibold",
+            "icon": "generic chevron-down (not downloaded)"
+          },
+          "content": ["Kotak Group Companies"],
+          "assets": [],
+          "screenshot": "shots/desktop-dropdown-closed.png"
+        },
+        "open": {
+          "trigger": "click on pill button (toggle); assumed click-outside / re-click to close",
+          "layout": {
+            "position": "floating card anchored to trigger, overlaps link-columns grid above/around it; legal links, breadcrumb, copyright stay visible underneath",
+            "width": "327px fixed on both breakpoints",
+            "height": "auto, ~410px desktop for 10 items"
+          },
+          "styles": {
+            "background": "#FCFCFC",
+            "border": "1px solid #EEEEEE",
+            "borderRadius": "12px",
+            "padding": "4px",
+            "boxShadow": "0px 1px 2px rgba(18,18,18,0.04), 0px 8px 24px rgba(18,18,18,0.08)",
+            "itemPadding": "12px horizontal / 8px vertical",
+            "itemBorderRadius": "8px",
+            "itemGap": "8px",
+            "itemTextColor": "#121212",
+            "itemTextDesktop": "16px/24px font-medium",
+            "itemTextMobile": "14px/20px font-medium",
+            "activeItemDesktop": {
+              "appliesTo": "Kotak Mahindra Bank (first item, current entity)",
+              "background": "#E6E6E6",
+              "icon": "14x14 external-link / diagonal-arrow glyph (layer named 'Outlined-Debit' — stale name, visually an outward arrow)"
+            },
+            "activeItemMobile": "none — all 10 items render identically, no background highlight, no visible icon on any row",
+            "inactiveItemIcon": "16x16 'Arrow' icon slot reserved but opacity:0 (invisible) on all other items, both breakpoints"
+          },
+          "content": [
+            "Kotak Mahindra Bank",
+            "Kotak Asset Management",
+            "Zurich Kotak General Insurance",
+            "Kotak Institutional Equities",
+            "Kotak International Business",
+            "Kotak Investment Advisors",
+            "Kotak Investment Banking",
+            "Kotak Life Insurance",
+            "Kotak Mahindra Investments",
+            "Kotak Neo"
+          ],
+          "assets": [],
+          "screenshots": ["shots/desktop-dropdown-open.png", "shots/mobile-dropdown-open.png"]
+        }
+      }
+    },
+    "breadcrumb": {
+      "states": {
+        "default": {
+          "trigger": "none (static, page-dependent content)",
+          "layout": "flex-row items-center, gap 8px",
+          "styles": {
+            "homeColor": "#666666",
+            "currentColor": "#121212",
+            "desktop": "16px/24px font-semibold",
+            "mobile": "14px/20px font-semibold",
+            "separator": "generic 14x14 chevron-right icon (not downloaded)"
+          },
+          "content": ["Home", "New car finance"],
+          "assets": [],
+          "notes": "Page-specific trail; captured frame example is Home > New car finance. Embedding a breadcrumb inside the footer is unusual placement."
+        }
+      }
+    },
+    "copyrightAndSocial": {
+      "states": {
+        "default": {
+          "trigger": "none (static)",
+          "layout": {
+            "desktop": "flex-row justify-between items-center, gap 22px — copyright left, social icons right",
+            "mobile": "flex-col, gap 22px — copyright above, social icons below"
+          },
+          "styles": {
+            "copyrightColor": "#666666",
+            "copyrightDesktop": "12px/18px font-semibold",
+            "copyrightMobile": "10px/16px font-semibold",
+            "iconHitArea": "40x40px (8px padding)",
+            "iconSize": "24x24px, rounded-full",
+            "iconGap": "4px"
+          },
+          "content": [
+            "© Copyright Kotak Mahindra Prime Limited, 27BKC, C 27, G Block, Bandra Kurla Complex, Bandra (E), Mumbai - 400 051. All rights are reserved."
+          ],
+          "socialNetworks": ["Instagram", "X"],
+          "assets": ["raw/social-instagram.png", "raw/social-x.png"]
+        }
+      }
+    },
+    "mobileAnomalyEmptyFrame": {
+      "states": {
+        "default": {
+          "trigger": "none — static layout anomaly",
+          "layout": "flex-col items-center gap-20 px-4, declared 375x1360px, zero children (verified with includeHidden:true)",
+          "styles": {},
+          "content": [],
+          "assets": [],
+          "notes": "Mobile-only empty frame ('Frame 2147230913', node 4124:25594) directly below the white card. No desktop counterpart. Likely cause of mobile screenshot export rendering ~6739px tall (vs declared 1918px). Possibly an unfinished placeholder for app-store badges / QR code — no such assets exist anywhere in this footer on either breakpoint."
+        }
+      }
+    }
+  },
+  "differencesDesktopVsMobile": [
+    "Link columns: single row of 5 (desktop) vs stacked column groups with larger per-link tap targets (mobile)",
+    "Other links row: horizontal wrap (desktop) vs vertical stack (mobile)",
+    "Dropdown + legal links: side-by-side justify-between (desktop) vs stacked (mobile)",
+    "Group companies dropdown: desktop highlights current entity with gray bg + icon; mobile shows no highlight on any row",
+    "Copyright/social row: same row (desktop) vs stacked (mobile)",
+    "Card corner radius: 60px (desktop) vs 32px (mobile)",
+    "Type scale steps down and gains 0.24px tracking on several mobile text styles"
+  ],
+  "assetsDownloaded": [
+    "raw/logo-kotak-prime.png",
+    "raw/social-instagram.png",
+    "raw/social-x.png"
+  ],
+  "assetsSkippedGeneric": [
+    "chevron-down (dropdown trigger)",
+    "chevron-right (breadcrumb separator)",
+    "external-link/arrow glyphs inside group-companies panel"
+  ],
+  "screenshots": [
+    "shots/desktop-full.png",
+    "shots/desktop-dropdown-closed.png",
+    "shots/desktop-dropdown-open.png",
+    "shots/mobile-full.png",
+    "shots/mobile-dropdown-open.png"
+  ]
+}

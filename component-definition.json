@@ -388,6 +388,40 @@
           }
         },
         {
+          "title": "Lead Form",
+          "id": "lead-form",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Lead Form",
+                  "model": "lead-form",
+                  "filter": "lead-form",
+                  "submitLabel": "Apply now"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Form Field",
+          "id": "lead-form-field",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block/item",
+                "template": {
+                  "name": "Form Field",
+                  "model": "lead-form-field",
+                  "kind": "text",
+                  "required": true
+                }
+              }
+            }
+          }
+        },
+        {
           "title": "Offers",
           "id": "offers",
           "plugins": {

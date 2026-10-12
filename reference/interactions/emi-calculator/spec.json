@@ -1,0 +1,247 @@
+{
+  "group": "emi-calculator",
+  "figmaFileKey": "ZQGlS9KmxOkyimBNouvOhZ",
+  "nodes": {
+    "car": { "desktop": "4402:40995", "mobile": "4402:41607" },
+    "carTwoWheelerError": { "desktop": "4402:41056", "mobile": "4402:41703" },
+    "twoWheeler": { "desktop": "4402:41199", "mobile": "4402:41916" },
+    "lap": { "desktop": "4402:41403", "mobile": "4402:42234" },
+    "lapError": { "desktop": "4402:41464", "mobile": "4402:42332" }
+  },
+  "components": {
+    "shell": {
+      "states": {
+        "default": {
+          "trigger": "page load",
+          "layout": "card to the right of heading block (desktop); full-width stacked below heading (mobile)",
+          "styles": {
+            "background": "#FCFCFC",
+            "border": "1px solid #EEEEEE",
+            "radius": "32px",
+            "widthDesktop": "583px",
+            "widthMobile": "100%"
+          },
+          "content": [
+            "Find your monthly EMI payment",
+            "EMI calculator"
+          ],
+          "assets": []
+        }
+      }
+    },
+    "tabs": {
+      "states": {
+        "default": {
+          "trigger": "render",
+          "layout": "pill group, horizontal, overflow-x on mobile (clips/truncates neighboring tab labels)",
+          "styles": {
+            "groupBackground": "#F5F5F5",
+            "groupRadius": "14px",
+            "groupPadding": "4px",
+            "pillGap": "2px",
+            "pillRadius": "12px",
+            "activeBackground": "#121212",
+            "activeTextColor": "#F5F5F5",
+            "inactiveTextColor": "#666666",
+            "fontDesktop": "16px/24px medium",
+            "fontMobile": "14px/20px medium"
+          },
+          "content": ["Car loans", "Two wheeler loans", "Loan against property"],
+          "assets": []
+        },
+        "click": {
+          "trigger": "tap/click a tab",
+          "layout": "same as default; swaps active pill + all field values/ranges + result card content to the selected loan type",
+          "styles": {},
+          "content": [],
+          "assets": []
+        }
+      }
+    },
+    "sliderField": {
+      "states": {
+        "default": {
+          "trigger": "render / drag",
+          "layout": "label row (label left, value pill right) + slider row + min/max label row",
+          "styles": {
+            "pillBorder": "1px solid #D6D6D6",
+            "pillRadius": "12px",
+            "pillPaddingDesktop": "20px 12px",
+            "valueColor": "#121212",
+            "valueFontDesktop": "bold 20px/20px, tracking -1px",
+            "valueFontMobile": "bold 14px/14px, tracking -0.42px",
+            "labelFontDesktop": "16px/24px medium #121212",
+            "labelFontMobile": "14px/20px medium #121212",
+            "trackHeight": "12px",
+            "trackColor": "#EEEEEE",
+            "fillColor": "#3857FF",
+            "knobColor": "#3857FF",
+            "knobSize": "8px x 28px, radius 15px",
+            "minMaxFontDesktop": "14px/18px medium #666666",
+            "minMaxFontMobile": "12px/16px medium #666666, tracking 0.24px"
+          },
+          "content": [],
+          "assets": []
+        },
+        "error": {
+          "trigger": "field value invalid (e.g. cleared/zeroed)",
+          "layout": "red icon inserted left of the value pill; pill border/background swap to error colours; slider knob stays at left (0) with normal blue colour",
+          "styles": {
+            "iconSize": "16px circle",
+            "iconFill": "#A32D2C",
+            "iconGlyphColor": "#FFFFFF",
+            "iconGlyph": "!",
+            "pillBorder": "1px solid #FF3938",
+            "pillBackground": "#FFF6F6",
+            "sliderUnaffected": true
+          },
+          "content": [],
+          "assets": [],
+          "errorMessageText": null,
+          "notes": "No verbatim text error message exists in any frame; only icon + border/background changes. Observed zeroed values: '₹0', '0%', '0 Years'."
+        }
+      }
+    },
+    "resultCard": {
+      "states": {
+        "default": {
+          "trigger": "render / recompute on slider change",
+          "layout": "dark inset panel at bottom of calculator; row1 = (emi text block) + (Apply now CTA), divider, breakdown rows",
+          "styles": {
+            "background": "#1A1A1A",
+            "radius": "24px",
+            "padding": "24px",
+            "subTextColor": "#BABABA",
+            "subTextFontDesktop": "14px/18px medium",
+            "subTextFontMobile": "12px/16px medium",
+            "amountColor": "#F5F5F5",
+            "amountFontDesktop": "bold 36px/36px tracking -1.8px (currency glyph 24px/32px semibold)",
+            "amountFontMobile": "bold 28px/28px tracking -1.4px (currency glyph 20px/28px semibold)",
+            "ctaBackground": "#FFFFFF",
+            "ctaRadius": "100px",
+            "ctaTextColor": "#121212",
+            "ctaFontDesktop": "14px/20px semibold",
+            "ctaFontMobile": "12px/16px semibold",
+            "dividerColor": "#262626"
+          },
+          "content": [
+            "Your monthly EMI will be",
+            "Apply now",
+            "Principal",
+            "Interest Payable",
+            "Total Amount Payable"
+          ],
+          "assets": []
+        },
+        "errorUpstream": {
+          "trigger": "one or more sliderField states are in error (all 3 zeroed in the provided frames)",
+          "layout": "unchanged from default — no visual change, no disabled styling",
+          "styles": {},
+          "content": [],
+          "assets": [],
+          "notes": "Result card and CTA do not react to upstream field errors in this design; CTA remains enabled-looking and visible, values remain the tab's normal default example calculation."
+        }
+      }
+    },
+    "besideImage": {
+      "states": {
+        "desktop": {
+          "trigger": "static, same across all 3 tabs",
+          "layout": "large product photo bleeding off the left edge of the viewport, behind/outside the heading and calculator card frames",
+          "styles": {},
+          "content": [],
+          "assets": [
+            {
+              "description": "Dark grey/silver sedan, profile shot from front-left, red brake caliper accent, red light-trail reflection beneath",
+              "identicalAcrossTabs": true,
+              "note": "Not a child node of the Calculator/heading components; reads as a page-level decorative image, same asset reused for Car, Two Wheeler, and Loan against property tabs. No distinct two-wheeler or property artwork exists in this Figma file."
+            }
+          ]
+        },
+        "mobile": {
+          "trigger": "static",
+          "layout": "absent — not present in the mobile frame's node tree for any tab",
+          "styles": {},
+          "content": [],
+          "assets": []
+        }
+      }
+    }
+  },
+  "tabsData": {
+    "car": {
+      "fields": {
+        "loanRequirement": { "min": "₹1 Lakh", "max": "₹1 Crore", "default": "₹50,00,000" },
+        "interestRate": { "min": "8%", "max": "24%", "default": "8%" },
+        "loanTenure": { "min": "5 years", "max": "7 years", "default": "6 Years" }
+      },
+      "result": {
+        "emi": "₹1,01,382",
+        "subLine": "at 8% interest rate for 5 years",
+        "principal": "₹50,00,000",
+        "interestPayable": "₹10,82,920",
+        "totalAmountPayable": "₹60,82,920",
+        "cta": "Apply now"
+      },
+      "notes": "Tenure pill ('6 Years') and slider knob position disagree with the result sub-line ('5 years'); treat '5 years' + breakdown figures as authoritative, '6 Years' pill is stale demo content."
+    },
+    "twoWheeler": {
+      "fields": {
+        "loanRequirement": { "min": "₹35,000", "max": "₹10 Lakh", "default": "₹3,00,000" },
+        "interestRate": { "min": "10%", "max": "12%", "default": "10%" },
+        "loanTenure": { "min": "1 year", "max": "5 years", "default": "6 Years" }
+      },
+      "result": {
+        "emi": "₹13,843",
+        "subLine": "at 10% interest rate for 2 years",
+        "principal": "₹3,00,000",
+        "interestPayable": "₹32,243",
+        "totalAmountPayable": "₹3,32,243",
+        "cta": "Apply now"
+      },
+      "notes": "Tenure pill ('6 Years') exceeds its own slider max ('5 years') and disagrees with the result sub-line ('2 years'); clamp slider pill to its own range and treat '2 years' + breakdown figures as authoritative."
+    },
+    "lap": {
+      "fields": {
+        "loanRequirement": { "min": "₹1 Lakh", "max": "₹25 Cr", "default": "₹6,40,00,000" },
+        "interestRate": { "min": "9.5%", "max": "32%", "default": "9.5%" },
+        "loanTenure": { "min": "1 year", "max": "15 years", "default": "3 Years" }
+      },
+      "result": {
+        "emi": "₹20,50,109",
+        "subLine": "at 9.5% interest rate for 3 years",
+        "subLineWrapsOnMobile": true,
+        "principal": "₹6,40,00,000",
+        "interestPayable": "₹98,03,916",
+        "totalAmountPayable": "₹7,38,03,916",
+        "cta": "Apply now"
+      },
+      "notes": "Only tab where tenure pill agrees with the result sub-line. Min-label copy has a stray space ('₹ 1 Lakh') vs Car tab's '₹1 Lakh' — normalize spacing."
+    }
+  },
+  "errorState": {
+    "appliesTo": ["car", "twoWheeler", "lap"],
+    "fieldsInError": ["loanRequirement", "interestRate", "loanTenure"],
+    "zeroedValues": { "loanRequirement": "₹0", "interestRate": "0%", "loanTenure": "0 Years" },
+    "iconColor": "#A32D2C",
+    "borderColor": "#FF3938",
+    "backgroundTint": "#FFF6F6",
+    "errorMessageText": null,
+    "resultCardChanges": false,
+    "ctaDisabledOrHidden": false,
+    "desktopVsMobile": "identical content/styling, layout reflows only"
+  },
+  "shots": [
+    "shots/car-desktop.png",
+    "shots/car-mobile.png",
+    "shots/car-error-desktop.png",
+    "shots/car-error-mobile.png",
+    "shots/twowheeler-desktop.png",
+    "shots/twowheeler-mobile.png",
+    "shots/lap-desktop.png",
+    "shots/lap-mobile.png",
+    "shots/lap-error-desktop.png",
+    "shots/lap-error-mobile.png"
+  ],
+  "raw": []
+}

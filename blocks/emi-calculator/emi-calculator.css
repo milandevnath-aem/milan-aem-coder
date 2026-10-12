@@ -112,6 +112,24 @@
   border-color: var(--text-color);
 }
 
+/* error: value outside the allowed range */
+.emi-calculator .emi-calculator-error-icon {
+  display: none;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin: 0 -8px 0 auto;
+}
+
+.emi-calculator .emi-calculator-field.is-invalid .emi-calculator-error-icon {
+  display: block;
+}
+
+.emi-calculator .emi-calculator-field.is-invalid .emi-calculator-value {
+  border-color: #ff3938;
+  background-color: #fff6f6;
+}
+
 .emi-calculator .emi-calculator-value input {
   width: auto;
   min-width: 1ch;

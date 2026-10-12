@@ -28,7 +28,8 @@
       "requirements",
       "faq",
       "team",
-      "branch-locator"
+      "branch-locator",
+      "lead-form"
     ]
   },
   {
@@ -92,6 +93,12 @@
     "id": "hero-loan",
     "components": [
       "hero-loan-slide"
+    ]
+  },
+  {
+    "id": "lead-form",
+    "components": [
+      "lead-form-field"
     ]
   },
   {

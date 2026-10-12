@@ -1,0 +1,322 @@
+{
+  "group": "search-a11y-language",
+  "figmaFileKey": "ZQGlS9KmxOkyimBNouvOhZ",
+  "components": {
+    "search": {
+      "mobile": {
+        "basic": {
+          "trigger": "tap magnifying-glass icon in header",
+          "nodeId": "3795:22726",
+          "screenshot": "shots/search-mobile-basic.png",
+          "layout": "inline header icon, 22px magnifying glass, next to hamburger (3-line) icon and 'Web pay' pill",
+          "styles": {},
+          "content": [],
+          "assets": ["search icon (generic, not downloaded)", "hamburger icon (generic, not downloaded)"]
+        },
+        "openEmpty": {
+          "trigger": "search icon tapped; replaces search+hamburger icons with a single circular outline close (X) button",
+          "nodeId": "3795:22675",
+          "screenshot": "shots/search-mobile-open-empty.png",
+          "layout": "inline, pushes page content down (no scrim/overlay), full-bleed under header",
+          "styles": {
+            "field": {
+              "width": "full minus 16px side margins",
+              "height": "48px",
+              "radius": "24px",
+              "background": "#ffffff",
+              "border": "1.5px solid #eeeeee",
+              "iconSize": "22x22",
+              "caret": "2px x 26px, #121212",
+              "placeholderFont": "Manrope Medium 14/20",
+              "placeholderColor": "#666666"
+            }
+          },
+          "content": ["Search loans, branches,calculators"],
+          "assets": ["search icon (generic)", "close/X icon (generic)"]
+        },
+        "typing": {
+          "trigger": "user types a query (example: 'car')",
+          "nodeId": "3795:22594",
+          "screenshot": "shots/search-mobile-typing.png",
+          "layout": "field gains 24x24 clear icon; 'Suggested results' heading; vertical list of result rows below",
+          "styles": {
+            "heading": { "font": "Manrope Semibold 16/24", "color": "#121212" },
+            "row": { "gap": "4px", "paddingVertical": "10px", "labelFont": "Manrope Medium 14/20", "labelColor": "#121212" },
+            "tag": {
+              "background": "#eeeeee",
+              "radius": "100px (full)",
+              "padding": "8px/2px",
+              "font": "Manrope Medium 12/16, tracking 0.24px",
+              "color": "#121212"
+            },
+            "highlightOfTypedText": false
+          },
+          "content": [
+            { "label": "Car loan – New car", "tag": "Product" },
+            { "label": "Car loan – Used car", "tag": "Product" },
+            { "label": "Car loan EMI calculator", "tag": "Calculator" },
+            { "label": "Car loan refinance", "tag": "Product" },
+            { "label": "How to apply for a car loan", "tag": "Help" },
+            { "label": "Documents needed for a car loan", "tag": "Help" }
+          ],
+          "assets": ["clear/X icon (generic)"],
+          "notes": "No 'no results' state present among supplied frames."
+        }
+      },
+      "desktop": {
+        "basic": {
+          "trigger": "click magnifying-glass icon in main nav",
+          "nodeId": "4814:41840",
+          "screenshot": "shots/search-desktop-basic.png",
+          "layout": "24x24 icon between 'More' nav link and Login/Web pay buttons",
+          "styles": {},
+          "content": [],
+          "assets": ["search icon (generic, not downloaded)"]
+        },
+        "openEmpty": {
+          "trigger": "search icon clicked; replaced by circular outline close (X) in same nav slot",
+          "nodeId": "3795:22352",
+          "screenshot": "shots/search-desktop-open-empty.png",
+          "layout": "scrim over blurred page + white dropdown panel anchored under nav, full content width (1342px within 80px side margins); duplicate nav bar on top of panel",
+          "styles": {
+            "scrim": { "background": "#0000001a", "note": "10% black over blurred page copy" },
+            "searchCard": {
+              "background": "#fcfcfc",
+              "padding": "80px horizontal / 22px vertical",
+              "iconSize": "24x24",
+              "caret": "2px x 26px, #121212",
+              "placeholderFont": "Manrope Medium 14/20",
+              "placeholderColor": "#666666"
+            }
+          },
+          "content": ["Search loans, branches,calculators"],
+          "assets": ["search icon (generic)", "close/X icon (generic)"]
+        },
+        "typing": {
+          "trigger": "user types a query (example: 'Car lo')",
+          "nodeId": "3795:22460",
+          "screenshot": "shots/search-desktop-typing.png",
+          "layout": "panel grows to ~409.5px tall; field gains 'Clear' text link at far right; two-column results area below a divider, 48px gap between columns",
+          "styles": {
+            "typedTextHighlight": "matched prefix of each suggestion rendered darker/bold; remainder lighter grey",
+            "columnHeader": { "font": "Manrope Medium 12/16, tracking 0.24px", "color": "#666666", "case": "uppercase" },
+            "row": {
+              "radius": "12px",
+              "padding": "12px/10px",
+              "labelFont": "Manrope Medium 16/24",
+              "labelColor": "#666666",
+              "firstRowBackground": "#eeeeee (hover/first-active highlight)"
+            }
+          },
+          "content": {
+            "columns": [
+              { "heading": "LOANS", "items": ["Car loan - Used car", "Car loan - Used car", "Car loan - Used car", "Car loan - Used car"] },
+              { "heading": "TOOLS & HELP", "items": ["Car loan - EMI Calculator", "Car loan - EMI Calculator", "Car loan - EMI Calculator"] }
+            ]
+          },
+          "assets": ["clear text link (no icon)"],
+          "notes": "Sample/mock data repeats identical labels; no 'no results' state present among supplied frames."
+        }
+      }
+    },
+    "accessibility": {
+      "trigger": {
+        "desktop": {
+          "nodeId": "4402:26676",
+          "screenshot": "shots/a11y-topbar-desktop-default.png",
+          "layout": "top utility bar above main nav: phone '1800 4100' (call icon), 'Contact us' (help icon), then right-aligned 'Accessibility', 'Preferences', 'English ⌄'",
+          "styles": {
+            "font": "Manrope Regular 14px",
+            "color": "#121212",
+            "background": "none (plain text link)",
+            "iconGap": "4px (icon items only)",
+            "textOnlyPaddingVertical": "4px"
+          },
+          "content": ["Accessibility", "Preferences", "English"]
+        },
+        "mobile": {
+          "nodeId": "4402:27206",
+          "screenshot": "shots/nav-mobile-settings-language-default.png",
+          "layout": "grey sub-header bar in nav drawer, below drawer header: gear icon + 'Settings' + chevron (left), 'English ⌄' (right)",
+          "content": ["Settings", "English"]
+        }
+      },
+      "settingsDropdownMobile": {
+        "nodeId": "4402:27109",
+        "resolvedNodeId": "4402:27197",
+        "screenshot": "shots/nav-mobile-settings-menu-open.png",
+        "trigger": "tap 'Settings' row; chevron rotates up",
+        "layout": "small anchored dropdown under 'Settings' row (same component as language dropdown)",
+        "styles": {
+          "panel": {
+            "width": "148px",
+            "padding": "4px",
+            "radius": "12px",
+            "background": "#fcfcfc",
+            "border": "1px solid #eeeeee",
+            "shadow": "0 1px 2px rgba(18,18,18,0.04), 0 8px 24px rgba(18,18,18,0.08)"
+          },
+          "item": {
+            "width": "138px",
+            "padding": "12px/10px",
+            "radius": "8px",
+            "labelFont": "Manrope Medium 14/20",
+            "labelColor": "#121212",
+            "hoverBackground": "#f5f5f5",
+            "checkIconSize": "16x16 (unused slot, opacity 0, carried over from shared language component)"
+          }
+        },
+        "content": [
+          { "label": "Accessibility", "state": "hover/active (background #f5f5f5)" },
+          { "label": "Preferences", "state": "default" }
+        ],
+        "note": "Layer name 'Language menu' is stale/reused — this instance's items are Accessibility/Preferences, not languages."
+      },
+      "panel": {
+        "desktop": {
+          "nodeId": "4435:26460",
+          "resolvedNodeId": "4435:26951",
+          "screenshot": "shots/a11y-panel-desktop.png",
+          "trigger": "click 'Accessibility' in top bar",
+          "layout": "centered modal",
+          "styles": {
+            "scrim": { "background": "#000000cc", "coverage": "full viewport below top info bar" },
+            "panel": { "width": "580px", "background": "#fcfcfc", "radius": "32px", "padding": "32px", "gap": "28px" },
+            "closeButton": { "size": "40x40", "radius": "8px", "position": "in page nav-bar row, outside panel box" },
+            "title": { "font": "Manrope Semibold 24/32", "color": "#121212" },
+            "subtitle": { "font": "Manrope Medium 14/20", "color": "#666666" },
+            "segments": {
+              "gap": "8px",
+              "radius": "16px",
+              "padding": "12px",
+              "iconSize": "24x24",
+              "active": { "background": "#121212", "iconColor": "white", "labelFont": "Manrope Semibold 12/18", "labelColor": "#f5f5f5" },
+              "inactiveWithBg": { "background": "#f5f5f5", "labelColor": "#666666" },
+              "inactiveNoBg": { "background": "none", "labelColor": "#666666" }
+            },
+            "slider": {
+              "labelsFont": "Manrope Medium 16/24",
+              "labelsColor": "#121212",
+              "track": { "background": "#eeeeee", "height": "12px" },
+              "fill": { "background": "#3857ff" },
+              "knob": { "size": "8x28px", "radius": "15px", "background": "#3857ff" }
+            }
+          },
+          "content": {
+            "title": "Accessibility Settings",
+            "subtitle": "This is a preview of how text will look in this website. Adjust it based on your requirement.",
+            "segments": ["Text size", "Letter spacing", "Line height"],
+            "activeSegment": "Text size",
+            "sliderLabels": ["Slide to adjust", "Aa"]
+          },
+          "assets": ["text-adjustment icons x3 (generic UI icons, not downloaded)"]
+        },
+        "mobile": {
+          "nodeId": "4435:27731",
+          "resolvedNodeId": "4435:27790",
+          "screenshot": "shots/a11y-panel-mobile.png",
+          "trigger": "tap 'Accessibility' in mobile Settings dropdown",
+          "layout": "bottom sheet",
+          "styles": {
+            "scrim": { "background": "#000000cc", "coverage": "viewport below browser-chrome area" },
+            "sheet": { "width": "375px (full viewport)", "background": "#fcfcfc", "padding": "20px sides / 20px top / 32px bottom", "gap": "28px", "anchor": "bottom" },
+            "closeButton": { "size": "40x40", "radius": "8px", "position": "above sheet, overlapping underlying nav list near 'More' row" }
+          },
+          "content": {
+            "title": "Accessibility Settings",
+            "subtitle": "This is a preview of how text will look in this website. Adjust it based on your requirement.",
+            "segments": ["Text size", "Letter spacing", "Line height"],
+            "activeSegment": "Text size",
+            "sliderLabels": ["Slide to adjust", "Aa"]
+          },
+          "notes": "Same colors/radii/typography as desktop, reflowed to 375px width."
+        }
+      }
+    },
+    "language": {
+      "trigger": {
+        "desktop": {
+          "layout": "'English ⌄' at far right of top utility bar",
+          "styles": { "font": "Manrope Regular 14/18", "color": "#121212", "paddingVertical": "15px", "chevronIconSize": "16x16" }
+        },
+        "mobile": {
+          "layout": "'English ⌄' at right of drawer grey sub-header bar, next to 'Settings ⌄'"
+        }
+      },
+      "dropdown": {
+        "desktop": {
+          "nodeId": "4435:25874",
+          "screenshot": "shots/language-dropdown-desktop.png",
+          "layout": "small white panel anchored under 'English ⌄', right-aligned to it",
+          "styles": {
+            "panel": {
+              "background": "#fcfcfc",
+              "border": "~1px #eeeeee/#e4e4e4 (inferred)",
+              "radius": "~12px (inferred)",
+              "shadow": "0 1px 2px rgba(18,18,18,.04), 0 8px 24px rgba(18,18,18,.08) (inferred)"
+            },
+            "item": {
+              "padding": "~12px/10px (inferred)",
+              "radius": "~8px (inferred)",
+              "hoverBackground": "#e6e6e6 (inferred)",
+              "labelFont": "Manrope Medium 14/20",
+              "labelColor": "#121212",
+              "glossFont": "Manrope Medium 12/16",
+              "glossColor": "#666666"
+            },
+            "scrim": "none — rest of page stays visible/interactive"
+          },
+          "content": [
+            { "label": "English", "selected": true, "checkmark": true },
+            { "label": "हिन्दी", "gloss": "Hindi", "selected": false }
+          ],
+          "notes": "Live dropdown layer not resolvable via get_metadata for this frame; styles inferred from the identical mobile component below."
+        },
+        "mobile": {
+          "nodeId": "4402:27279",
+          "screenshot": null,
+          "note": "Hidden layer; could not be screenshotted directly, but fully resolved via get_design_context. The visually-open equivalent is captured at 4402:27197 (shown as the Settings dropdown, see accessibility.settingsDropdownMobile) because it reuses the same component.",
+          "layout": "small panel anchored under 'English ⌄' row",
+          "styles": {
+            "panel": {
+              "width": "148px",
+              "padding": "4px",
+              "radius": "12px",
+              "background": "#fcfcfc",
+              "border": "1px solid #e4e4e4",
+              "shadow": "0 1px 2px rgba(18,18,18,0.04), 0 8px 24px rgba(18,18,18,0.08)"
+            },
+            "item": {
+              "width": "138px",
+              "padding": "12px/10px",
+              "radius": "8px",
+              "labelFont": "Manrope Medium 14/20",
+              "labelColor": "#121212",
+              "checkIconSize": "16x16"
+            }
+          },
+          "content": [
+            { "label": "English", "background": "default (none)", "checkmark": { "visible": true, "opacity": 1 }, "selected": true },
+            {
+              "label": "हिन्दी",
+              "labelFont": "Noto Sans Devanagari Medium 14/20",
+              "gloss": "Hindi",
+              "glossFont": "Manrope Medium 12/16",
+              "glossColor": "#666666",
+              "background": "#e6e6e6 (hover/highlight)",
+              "checkmark": { "visible": true, "opacity": 0 },
+              "selected": false
+            }
+          ]
+        }
+      },
+      "closeBehavior": "select a language, tap/click elsewhere, or re-trigger the 'English ⌄' control (not separately captured; inferred standard dropdown behavior)"
+    }
+  },
+  "gaps": [
+    "No 'no results' search state in supplied frames (mobile or desktop).",
+    "No recent/popular/trending search list in supplied frames; empty states show only the bare input.",
+    "Desktop language dropdown's exact panel layer not resolvable via Figma API; values inferred from mobile equivalent.",
+    "'Preferences' panel (desktop top bar / mobile Settings dropdown) not in scope — only its trigger was captured."
+  ]
+}

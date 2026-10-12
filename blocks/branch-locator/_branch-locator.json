@@ -59,6 +59,14 @@
         {
           "component": "text",
           "valueType": "string",
+          "name": "region",
+          "label": "State / region",
+          "description": "Shown below the city name in the list.",
+          "value": ""
+        },
+        {
+          "component": "text",
+          "valueType": "string",
           "name": "details_address",
           "label": "Address",
           "value": ""
@@ -83,6 +91,14 @@
           "valueType": "string",
           "name": "details_email",
           "label": "Email",
+          "value": ""
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "location",
+          "label": "Coordinates",
+          "description": "Latitude, longitude (e.g. 27.1767, 78.0081). Used to suggest the nearest branch.",
           "value": ""
         }
       ]
