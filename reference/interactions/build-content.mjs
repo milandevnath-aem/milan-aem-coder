@@ -53,10 +53,10 @@ const MENUS = [
   ]],
   ['Two-wheeler Loan', [
     ['Two-wheeler Finance', 'Ride home your new bike with easy EMIs', 'two-wheeler-loan'],
-    ['Two-wheeler Top-up Loan', 'Extra funds on your existing two-wheeler loan', 'top-up-loan'],
+    ['Top-up Loan', 'Extra funds on your existing two-wheeler loan', 'top-up-loan'],
   ]],
   ['Dealer Finance', [
-    ['Dealer Finance', 'Working capital solutions for automobile dealers', 'dealer-finance'],
+    ['Dealer Finance', 'Keep your showroom stocked with ready credit', 'dealer-finance'],
     ['Inventory Funding', 'Keep your showroom stocked with ready credit', 'dealer-finance'],
     ['Trade Advance', 'Short-term funds to bridge your trade cycle', 'dealer-finance'],
     ['Term Loan', 'Long-term capital to grow your dealership', 'dealer-finance'],
@@ -90,7 +90,7 @@ const MORE = [
     ['Documents', 'Access your loan documents and statements'],
   ]],
   ['Explore more', [
-    ['Kotak Group', 'Explore the companies of the Kotak Group', 'https://www.kotak.com/'],
+    ['Kotak Group', 'Explore life insurance from Kotak Group', 'https://www.kotak.com/'],
     ['About Us', 'Our story, values and leadership', 'about-us'],
     ['Careers', 'Build your career with Kotak Prime'],
     ['Pre eligible offers', 'Check offers you already qualify for'],
