@@ -395,7 +395,7 @@ header .nav-menu {
 }
 
 header .nav-accordion {
-  padding: 8px 0 24px;
+  padding: 0 0 16px;
 }
 
 header .nav-accordion-toggle {
@@ -421,10 +421,11 @@ header .nav-accordion-toggle[aria-expanded='true'] .nav-icon {
 }
 
 header .nav-accordion .nav-links {
-  padding: 0 8px 8px;
+  padding: 0 8px;
 }
 
 header .nav-accordion .nav-link {
+  gap: 4px;
   border-radius: 16px;
   padding: 12px 20px;
   font-size: var(--body-font-size-s);
@@ -535,9 +536,9 @@ header nav .nav-login-wrapper .button {
     border-radius: 100px;
     padding: 8px 12px;
     color: var(--text-color);
-    font-size: var(--body-font-size-s);
+    font-size: var(--body-font-size-m);
     font-weight: 500;
-    line-height: 20px;
+    line-height: 24px;
   }
 
   header .nav-menu-toggle:hover,
@@ -555,7 +556,7 @@ header nav .nav-login-wrapper .button {
     box-sizing: border-box;
     position: absolute;
     top: calc(100% + 21px);
-    left: 0;
+    left: -8px;
     z-index: 4;
     display: none;
     width: 393px;
@@ -582,6 +583,7 @@ header nav .nav-login-wrapper .button {
   }
 
   header .nav-panel .nav-link {
+    gap: 4px;
     border-radius: 8px;
     padding: 12px 16px 12px 24px;
   }
@@ -607,7 +609,7 @@ header nav .nav-login-wrapper .button {
     right: 92px;
     width: 968px;
     max-width: calc(100% - 184px);
-    padding: 24px;
+    padding: 28px 16px 28px 24px;
   }
 
   header .nav-mega .nav-menu-toggle[aria-expanded='true'] + .nav-panel {
@@ -623,12 +625,11 @@ header nav .nav-login-wrapper .button {
   }
 
   header .nav-panel-caption {
+    padding: 0 8px 4px;
     color: var(--muted-color);
     font-size: 10px;
     font-weight: 600;
     line-height: 16px;
-    letter-spacing: 0.4px;
-    text-transform: uppercase;
   }
 
   header .nav-panel-group .nav-links {
@@ -638,6 +639,7 @@ header nav .nav-login-wrapper .button {
   }
 
   header .nav-panel .nav-panel-group .nav-link {
+    gap: 2px;
     padding: 8px;
   }
 
