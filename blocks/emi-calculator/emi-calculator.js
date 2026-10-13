@@ -1,5 +1,5 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
+import { createPicture } from '../../scripts/images.js';
 
 const inr = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 });
 
@@ -298,7 +298,7 @@ export default function decorate(block) {
 
   const img = imageRow?.querySelector('img');
   if (img) {
-    const picture = createOptimizedPicture(img.src, img.alt, false, [{ width: '1300' }]);
+    const picture = createPicture(img.src, img.alt, false, [{ width: '1300' }]);
     moveInstrumentation(img, picture.querySelector('img'));
     picture.classList.add('emi-calculator-image');
     intro.append(picture);

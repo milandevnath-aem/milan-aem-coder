@@ -1,5 +1,5 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
+import { createPicture } from '../../scripts/images.js';
 
 /**
  * People list (photo + details). Each row: photo, text (badge line, name heading, role).
@@ -15,7 +15,7 @@ export default function decorate(block) {
 
     const img = imageCell?.querySelector('img');
     if (img) {
-      const picture = createOptimizedPicture(img.src, img.alt, false, [{ width: '640' }]);
+      const picture = createPicture(img.src, img.alt, false, [{ width: '640' }]);
       moveInstrumentation(img, picture.querySelector('img'));
       picture.className = 'team-photo';
       item.append(picture);

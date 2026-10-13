@@ -62,7 +62,7 @@ function parseLink(li) {
 function parseMenus(ul) {
   return [...ul.children].map((li) => {
     const sub = li.querySelector(':scope > ul');
-    const link = li.querySelector(':scope > a');
+    const link = li.querySelector(':scope > a, :scope > p > a');
     const menu = {
       label: ownText(li), href: link?.getAttribute('href'), items: [], groups: [],
     };
@@ -519,16 +519,23 @@ export default async function decorate(block) {
     navTopbar.remove();
     const announcement = navTopbar.querySelector('p');
     if (announcement) {
+      // the info icon stays in place, only the text scrolls
       announcement.classList.add('nav-announcement');
+      const infoIcon = announcement.querySelector(':scope > .icon');
+      infoIcon?.remove();
       const track = document.createElement('span');
       track.className = 'nav-announcement-track';
       while (announcement.firstChild) track.append(announcement.firstChild);
-      announcement.append(track);
+      const viewport = document.createElement('span');
+      viewport.className = 'nav-announcement-text';
+      viewport.append(track);
+      announcement.replaceChildren(...[infoIcon, viewport].filter(Boolean));
     }
     const utility = navTopbar.querySelector('ul');
     utility?.classList.add('nav-utility');
     [...(utility?.children || [])].forEach((li) => {
-      const a = li.querySelector(':scope > a');
+      // authored links may be wrapped in a paragraph (loose lists)
+      const a = li.querySelector(':scope > a, :scope > p > a');
       if (li.querySelector(':scope > ul')) {
         language = li.cloneNode(true);
         li.classList.add('nav-utility-language');

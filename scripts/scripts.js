@@ -12,6 +12,7 @@ import {
 } from './aem.js';
 // sets the viewport classes on <html> before the page is shown
 import { isDesktop } from './viewport.js';
+import { decorateDynamicMedia } from './images.js';
 
 /**
  * Moves all the attributes from a given elmenet to another given element.
@@ -149,6 +150,8 @@ export function decorateMain(main) {
   decorateIcons(main);
   buildAutoBlocks(main);
   decorateSections(main);
+  // Dynamic Media references become images before blocks and buttons are decorated
+  decorateDynamicMedia(main);
   decorateBlocks(main);
   decorateButtons(main);
 }
