@@ -8,7 +8,7 @@
 .offers > ul {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 12px;
+  gap: var(--grid-gutter);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -107,36 +107,34 @@
   --offers-text: var(--text-color);
 }
 
-@media (width >= 900px) {
-  .offers {
-    --offers-radius: 40px;
-    --offers-height: 768px;
-    --offers-padding: 124px 12px 44px;
-  }
+:where(.desktop-view) .offers {
+  --offers-radius: 40px;
+  --offers-height: 768px;
+  --offers-padding: 124px 12px 44px;
+}
 
-  .offers > ul {
-    grid-template-columns: repeat(2, 1fr);
-  }
+:where(.desktop-view) .offers > ul {
+  grid-template-columns: repeat(2, 1fr);
+}
 
-  .offers .offers-full {
-    grid-column: 1 / -1;
-  }
+:where(.desktop-view) .offers .offers-full {
+  grid-column: 1 / -1;
+}
 
-  .offers .offers-half {
-    --offers-padding: 124px 92px 44px;
-  }
+:where(.desktop-view) .offers .offers-half {
+  --offers-padding: 124px 92px 44px;
+}
 
-  .offers .offers-content h2,
-  .offers .offers-content h3 {
-    font-size: var(--heading-font-size-xxl);
-    line-height: 40px;
-    letter-spacing: -0.8px;
-  }
+:where(.desktop-view) .offers .offers-content h2,
+:where(.desktop-view) .offers .offers-content h3 {
+  font-size: var(--heading-font-size-xxl);
+  line-height: 40px;
+  letter-spacing: -0.8px;
+}
 
-  .offers .offers-disclaimer {
-    font-size: var(--body-font-size-s);
-    line-height: 20px;
-  }
+:where(.desktop-view) .offers .offers-disclaimer {
+  font-size: var(--body-font-size-s);
+  line-height: 20px;
 }
 
 /* compact band (e.g. "Need help?") */
@@ -168,14 +166,12 @@
   min-width: 0;
 }
 
-@media (width >= 900px) {
-  .offers .offers-short {
-    --offers-height: 672px;
-    --offers-padding: 124px 12px 44px;
-  }
+:where(.desktop-view) .offers .offers-short {
+  --offers-height: 672px;
+  --offers-padding: 124px 12px 44px;
+}
 
-  .offers .offers-short .offers-content h2 {
-    font-size: var(--heading-font-size-xxl);
-    line-height: 48px;
-  }
+:where(.desktop-view) .offers .offers-short .offers-content h2 {
+  font-size: var(--heading-font-size-xxl);
+  line-height: 48px;
 }

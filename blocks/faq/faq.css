@@ -60,33 +60,31 @@
   margin: 0 0 8px;
 }
 
-@media (width >= 900px) {
-  .faq {
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 80px;
-  }
+:where(.desktop-view) .faq {
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 80px;
+}
 
-  .faq .faq-intro {
-    flex: 0 1 442px;
-  }
+:where(.desktop-view) .faq .faq-intro {
+  flex: 0 1 442px;
+}
 
-  .faq .faq-intro h2 {
-    font-size: var(--heading-font-size-xxl);
-    line-height: 48px;
-  }
+:where(.desktop-view) .faq .faq-intro h2 {
+  font-size: var(--heading-font-size-xxl);
+  line-height: 48px;
+}
 
-  .faq .faq-list {
-    flex: 0 1 660px;
-  }
+:where(.desktop-view) .faq .faq-list {
+  flex: 0 1 660px;
+}
 
-  .faq .faq-item summary,
-  .faq .faq-answer {
-    font-size: var(--heading-font-size-m);
-    line-height: 28px;
-  }
+:where(.desktop-view) .faq .faq-item summary,
+:where(.desktop-view) .faq .faq-answer {
+  font-size: var(--heading-font-size-m);
+  line-height: 28px;
+}
 
-  .faq .faq-item summary::after {
-    top: 24px;
-  }
+:where(.desktop-view) .faq .faq-item summary::after {
+  top: 24px;
 }

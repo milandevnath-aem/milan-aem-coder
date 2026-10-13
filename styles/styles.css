@@ -44,14 +44,75 @@
   --heading-font-size-s: 18px;
   --heading-font-size-xs: 16px;
 
-  /* layout */
-  --content-max-width: 1366px;
-  --content-padding: 24px;
+  /*
+   * grid (design system): values per viewport tier, the tiers are set on <html data-viewport>
+   * by scripts/viewport.js. Mobile values below, tablet / laptop / desktop overrides follow.
+   */
+  --grid-columns: 4;
+  --grid-gutter: 12px;
+  --grid-max-width: 1440px;
+
+  /* section margins: full bleed (FB), grid bound (GB), adaptive bound (AB) and footer */
+  --fb-margin: 4px;
+  --gb-margin: 24px;
+  --ab-margin: 8px;
+  --footer-padding: 20px;
+
+  /* container width for grid bound / adaptive bound blocks and the content limit (desktop only) */
+  --gb-max-width: none;
+  --grid-limit: 100vw;
+
+  /*
+   * distance from the viewport edge to the grid content; full bleed blocks pad their
+   * text by --fb-inset so it lines up with the grid
+   */
+  --gb-offset: var(--gb-margin);
+  --fb-inset: calc(var(--gb-offset) - var(--fb-margin));
   --section-spacing: 64px;
 
   /* nav height: announcement bar + nav bar */
   --topbar-height: 32px;
   --nav-height: 100px;
+}
+
+/* tablet portrait: 600px up to the desktop view */
+:root[data-viewport='tablet-portrait'] {
+  --grid-columns: 8;
+  --fb-margin: 8px;
+}
+
+/* tablet landscape: desktop view up to 1280px */
+:root[data-viewport='tablet-landscape'] {
+  --grid-columns: 12;
+  --fb-margin: 8px;
+  --gb-margin: 48px;
+  --footer-padding: 36px;
+}
+
+/* laptop: 1281px to 1679px, fluid */
+:root[data-viewport='laptop'] {
+  --grid-columns: 12;
+  --grid-gutter: 16px;
+  --fb-margin: 8px;
+  --gb-margin: 92px;
+  --ab-margin: 12px;
+  --footer-padding: 80px;
+}
+
+/*
+ * desktop: 1680px and up. Grid bound and adaptive bound containers are exactly 1440px wide
+ * and centered (margin "auto"), so they have no inner padding.
+ */
+:root[data-viewport='desktop'] {
+  --grid-columns: 12;
+  --grid-gutter: 16px;
+  --fb-margin: 12px;
+  --gb-margin: 0px;
+  --ab-margin: 0px;
+  --footer-padding: 80px;
+  --gb-max-width: var(--grid-max-width);
+  --grid-limit: var(--grid-max-width);
+  --gb-offset: calc((100vw - var(--grid-max-width)) / 2);
 }
 
 /* fallback fonts */
@@ -61,24 +122,21 @@
   src: local('Arial');
 }
 
-@media (width >= 900px) {
-  :root {
-    /* heading sizes */
-    --heading-font-size-xxl: 40px;
-    --heading-font-size-xl: 32px;
-    --heading-font-size-l: 24px;
-    --heading-font-size-m: 20px;
-    --heading-font-size-s: 18px;
-    --heading-font-size-xs: 16px;
+:root:where(.desktop-view) {
+  /* heading sizes */
+  --heading-font-size-xxl: 40px;
+  --heading-font-size-xl: 32px;
+  --heading-font-size-l: 24px;
+  --heading-font-size-m: 20px;
+  --heading-font-size-s: 18px;
+  --heading-font-size-xs: 16px;
 
-    /* layout */
-    --content-padding: 92px;
-    --section-spacing: 124px;
+  /* layout */
+  --section-spacing: 124px;
 
-    /* nav height: announcement bar + nav bar */
-    --topbar-height: 44px;
-    --nav-height: 112px;
-  }
+  /* nav height: announcement bar + nav bar */
+  --topbar-height: 44px;
+  --nav-height: 112px;
 }
 
 body {
@@ -318,28 +376,30 @@ main > .section {
   margin: var(--section-spacing) 0;
 }
 
+/* grid bound (GB) by default */
 main > .section > div {
   box-sizing: border-box;
-  max-width: var(--content-max-width);
+  max-width: var(--gb-max-width);
   margin: auto;
-  padding: 0 var(--content-padding);
+  padding: 0 var(--gb-margin);
 }
 
 main > .section:first-of-type {
   margin-top: 0;
 }
 
-/* full-bleed blocks keep a 12px gutter on every viewport */
+/* full bleed (FB): edge to edge with a small margin on every viewport */
 main > .section > .hero-loan-wrapper,
 main > .section > .offers-wrapper,
-main > .section > .branch-locator-wrapper {
-  padding: 0 12px;
-}
-
-/* edge-to-edge bands */
+main > .section > .branch-locator-wrapper,
 main > .section > .feature-banner-wrapper {
   max-width: none;
-  padding: 0;
+  padding: 0 var(--fb-margin);
+}
+
+/* adaptive bound (AB): close to the edge, 1440px and centered on desktop */
+main > .section > .service-links-wrapper {
+  padding: 0 var(--ab-margin);
 }
 
 main > .section.feature-banner-container {
@@ -356,15 +416,11 @@ main > .section.feature-banner-container + .section {
   margin-top: var(--section-spacing);
 }
 
+/* starts on the grid, scrolls off the right edge */
 main > .section > .testimonials-wrapper {
   max-width: none;
-  padding-right: 12px;
-}
-
-@media (width >= 1367px) {
-  main > .section > .testimonials-wrapper {
-    padding-left: calc((100vw - var(--content-max-width)) / 2 + var(--content-padding));
-  }
+  padding-right: var(--fb-margin);
+  padding-left: var(--gb-offset);
 }
 
 /* offers continue straight on from the highlighted EMI section */
@@ -386,10 +442,8 @@ main .default-content-wrapper > h2:first-child {
   line-height: 40px;
 }
 
-@media (width >= 900px) {
-  main .default-content-wrapper > h2:only-child {
-    margin-bottom: 40px;
-  }
+:where(.desktop-view) main .default-content-wrapper > h2:only-child {
+  margin-bottom: 40px;
 }
 
 /* heading with a subheading line below it (product pages) */
@@ -405,18 +459,16 @@ main .default-content-wrapper > h2 + p {
   line-height: 24px;
 }
 
-@media (width >= 900px) {
-  main .section .default-content-wrapper > h2:has(+ p) {
-    font-size: var(--heading-font-size-xxl);
-    line-height: 48px;
-    letter-spacing: -1px;
-  }
+:where(.desktop-view) main .section .default-content-wrapper > h2:has(+ p) {
+  font-size: var(--heading-font-size-xxl);
+  line-height: 48px;
+  letter-spacing: -1px;
+}
 
-  main .default-content-wrapper > h2 + p {
-    margin-bottom: 32px;
-    font-size: var(--heading-font-size-m);
-    line-height: 28px;
-  }
+:where(.desktop-view) main .default-content-wrapper > h2 + p {
+  margin-bottom: 32px;
+  font-size: var(--heading-font-size-m);
+  line-height: 28px;
 }
 
 /* section metadata */
@@ -436,7 +488,7 @@ main .section.brand {
 }
 
 main .section.brand .default-content-wrapper {
-  max-width: calc(680px + 2 * var(--content-padding));
+  max-width: calc(680px + 2 * var(--gb-margin));
 }
 
 main .section.brand p {
@@ -446,10 +498,8 @@ main .section.brand p {
   line-height: 24px;
 }
 
-@media (width >= 900px) {
-  main .section.brand {
-    padding: var(--section-spacing) 0;
-  }
+:where(.desktop-view) main .section.brand {
+  padding: var(--section-spacing) 0;
 }
 
 main > .section.branch-locator-container:last-of-type {

@@ -137,66 +137,64 @@
   mask: url('../../icons/arrow-up-right.svg') center / 14px no-repeat;
 }
 
-@media (width >= 900px) {
-  .product-tabs .product-tabs-list {
-    gap: 12px;
-  }
+:where(.desktop-view) .product-tabs .product-tabs-list {
+  gap: 12px;
+}
 
-  .product-tabs .product-tabs-tab {
-    flex: 1 1 0;
-    padding: 12px 32px;
-    font-size: var(--body-font-size-m);
-    line-height: 24px;
-  }
+:where(.desktop-view) .product-tabs .product-tabs-tab {
+  flex: 1 1 0;
+  padding: 12px 32px;
+  font-size: var(--body-font-size-m);
+  line-height: 24px;
+}
 
-  .product-tabs .product-tabs-panel {
-    position: relative;
-    display: block;
-    min-height: 680px;
-    padding: 24px;
-    box-sizing: border-box;
-    border-radius: 44px;
-    background-color: #c4bab0;
-    overflow: hidden;
-  }
+:where(.desktop-view) .product-tabs .product-tabs-panel {
+  position: relative;
+  display: block;
+  min-height: 680px;
+  padding: 24px;
+  box-sizing: border-box;
+  border-radius: 44px;
+  background-color: #c4bab0;
+  overflow: hidden;
+}
 
-  .product-tabs .product-tabs-image,
-  .product-tabs .product-tabs-image img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 0;
-  }
+:where(.desktop-view) .product-tabs .product-tabs-image,
+:where(.desktop-view) .product-tabs .product-tabs-image img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+}
 
-  .product-tabs .product-tabs-image img {
-    object-position: center;
-  }
+:where(.desktop-view) .product-tabs .product-tabs-image img {
+  object-position: center;
+}
 
-  .product-tabs .product-tabs-cards {
-    position: relative;
-    display: grid;
-    grid-template-columns: repeat(2, 234px);
-    gap: 12px;
-  }
+:where(.desktop-view) .product-tabs .product-tabs-cards {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, 234px);
+  gap: var(--grid-gutter);
+}
 
-  .product-tabs .product-tabs-card-link {
-    grid-template:
+:where(.desktop-view) .product-tabs .product-tabs-card-link {
+  grid-template:
       'title arrow' auto
       'text text' 1fr / 1fr auto;
-    align-items: start;
-    gap: 16px;
-    min-height: 150px;
-    padding: 20px;
-    border-radius: 24px;
-    background-color: var(--background-color);
-  }
+  align-items: start;
+  gap: 16px;
+  min-height: 150px;
+  padding: 20px;
+  border-radius: 24px;
+  background-color: var(--background-color);
+}
 
-  .product-tabs .product-tabs-card-text {
-    align-self: end;
-  }
+:where(.desktop-view) .product-tabs .product-tabs-card-text {
+  align-self: end;
+}
 
-  .product-tabs a.product-tabs-card-link:hover {
-    transform: translateY(-2px);
-  }
+:where(.desktop-view) .product-tabs a.product-tabs-card-link:hover {
+  transform: translateY(-2px);
 }

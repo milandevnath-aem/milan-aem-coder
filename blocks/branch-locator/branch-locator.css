@@ -1,6 +1,6 @@
 .branch-locator {
   box-sizing: border-box;
-  padding: 44px 24px 24px;
+  padding: 44px var(--fb-inset) 24px;
   border-radius: 32px;
   background:
     radial-gradient(circle at 85% 0%, rgb(238 156 147 / 80%) 0, transparent 45%),
@@ -28,7 +28,7 @@
 .branch-locator .branch-locator-main {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--grid-gutter);
   margin-top: 32px;
   color: var(--text-color);
 }
@@ -169,44 +169,42 @@
   text-decoration: underline;
 }
 
-@media (width >= 900px) {
-  .branch-locator {
-    padding: 48px 80px;
-    border-radius: 44px;
-  }
+:where(.desktop-view) .branch-locator {
+  padding: 48px var(--fb-inset);
+  border-radius: 44px;
+}
 
-  .branch-locator .branch-locator-intro {
-    max-width: 540px;
-  }
+:where(.desktop-view) .branch-locator .branch-locator-intro {
+  max-width: 540px;
+}
 
-  .branch-locator .branch-locator-intro h1,
-  .branch-locator .branch-locator-intro h2 {
-    font-size: var(--heading-font-size-xxl);
-    line-height: 48px;
-  }
+:where(.desktop-view) .branch-locator .branch-locator-intro h1,
+:where(.desktop-view) .branch-locator .branch-locator-intro h2 {
+  font-size: var(--heading-font-size-xxl);
+  line-height: 48px;
+}
 
-  .branch-locator .branch-locator-intro p {
-    margin-top: 24px;
-    font-size: var(--body-font-size-m);
-    line-height: 24px;
-  }
+:where(.desktop-view) .branch-locator .branch-locator-intro p {
+  margin-top: 24px;
+  font-size: var(--body-font-size-m);
+  line-height: 24px;
+}
 
-  .branch-locator .branch-locator-main {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: start;
-    gap: 12px;
-  }
+:where(.desktop-view) .branch-locator .branch-locator-main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  gap: var(--grid-gutter);
+}
 
-  .branch-locator .branch-locator-left {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
+:where(.desktop-view) .branch-locator .branch-locator-left {
+  display: flex;
+  flex-direction: column;
+  gap: var(--grid-gutter);
+}
 
-  .branch-locator .branch-locator-map {
-    height: 268px;
-  }
+:where(.desktop-view) .branch-locator .branch-locator-map {
+  height: 268px;
 }
 
 /* location permission prompt (shown in a dialog) */

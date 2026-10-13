@@ -1,9 +1,7 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 import { highlight } from '../../scripts/dropdown.js';
-
-// media query match that indicates mobile/tablet width
-const isDesktop = window.matchMedia('(min-width: 900px)');
+import { isDesktop } from '../../scripts/viewport.js';
 
 const A11Y_KEY = 'kmpl-accessibility';
 const A11Y_SETTINGS = [

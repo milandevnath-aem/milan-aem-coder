@@ -55,7 +55,8 @@ function addCarousel(panel) {
   };
   const step = (dir) => {
     const card = list.querySelector('.requirements-card');
-    list.scrollBy({ left: dir * ((card?.offsetWidth || 300) + 12), behavior: 'smooth' });
+    const gap = parseFloat(getComputedStyle(list).columnGap) || 0;
+    list.scrollBy({ left: dir * ((card?.offsetWidth || 300) + gap), behavior: 'smooth' });
   };
   prev.addEventListener('click', () => step(-1));
   next.addEventListener('click', () => step(1));

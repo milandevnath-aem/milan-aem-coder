@@ -291,39 +291,37 @@
   margin: 0;
 }
 
-@media (width >= 900px) {
-  .emi-calculator {
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 0;
-  }
+:where(.desktop-view) .emi-calculator {
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 0;
+}
 
-  .emi-calculator .emi-calculator-intro {
-    position: relative;
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-  }
+:where(.desktop-view) .emi-calculator .emi-calculator-intro {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
 
-  .emi-calculator .emi-calculator-image {
-    display: block;
-    margin: auto 0 -96px calc(-1 * var(--content-padding) - max(0px, (100vw - var(--content-max-width)) / 2));
-    max-width: calc(100% + var(--content-padding));
-  }
+:where(.desktop-view) .emi-calculator .emi-calculator-image {
+  display: block;
+  margin: auto 0 -96px calc(-1 * var(--gb-offset));
+  max-width: calc(100% + var(--gb-offset));
+}
 
-  .emi-calculator .emi-calculator-image img {
-    display: block;
-    width: 650px;
-    max-width: 100%;
-    height: auto;
-  }
+:where(.desktop-view) .emi-calculator .emi-calculator-image img {
+  display: block;
+  width: 650px;
+  max-width: 100%;
+  height: auto;
+}
 
-  .emi-calculator .emi-calculator-card {
-    flex: 0 0 583px;
-    max-width: 50%;
-  }
+:where(.desktop-view) .emi-calculator .emi-calculator-card {
+  flex: 0 0 583px;
+  max-width: 50%;
+}
 
-  .emi-calculator a.emi-calculator-cta {
-    width: 192px;
-  }
+:where(.desktop-view) .emi-calculator a.emi-calculator-cta {
+  width: 192px;
 }

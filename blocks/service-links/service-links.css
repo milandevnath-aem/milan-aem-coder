@@ -6,7 +6,7 @@
 .service-links > ul {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 12px;
+  gap: var(--grid-gutter);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -80,68 +80,66 @@
   object-position: left bottom;
 }
 
-@media (width >= 900px) {
-  .service-links > ul {
-    grid-template-columns: repeat(2, 1fr);
-    grid-auto-flow: row dense;
-  }
+:where(.desktop-view) .service-links > ul {
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-flow: row dense;
+}
 
-  .service-links .service-links-item {
-    grid-column: 1;
-  }
+:where(.desktop-view) .service-links .service-links-item {
+  grid-column: 1;
+}
 
-  .service-links .service-links-highlight,
-  .service-links .service-links-tall {
-    grid-column: 2;
-  }
+:where(.desktop-view) .service-links .service-links-highlight,
+:where(.desktop-view) .service-links .service-links-tall {
+  grid-column: 2;
+}
 
-  .service-links .service-links-tall {
-    grid-row: span 2;
-  }
+:where(.desktop-view) .service-links .service-links-tall {
+  grid-row: span 2;
+}
 
-  .service-links .service-links-tile {
-    padding: 32px;
-    border-radius: 32px;
-  }
+:where(.desktop-view) .service-links .service-links-tile {
+  padding: 32px;
+  border-radius: 32px;
+}
 
-  .service-links .service-links-title {
-    font-size: var(--heading-font-size-l);
-    line-height: 32px;
-  }
+:where(.desktop-view) .service-links .service-links-title {
+  font-size: var(--heading-font-size-l);
+  line-height: 32px;
+}
 
-  .service-links .service-links-arrow {
-    width: 40px;
-    height: 40px;
-  }
+:where(.desktop-view) .service-links .service-links-arrow {
+  width: 40px;
+  height: 40px;
+}
 
-  .service-links .service-links-arrow::before {
-    mask-size: 20px;
-  }
+:where(.desktop-view) .service-links .service-links-arrow::before {
+  mask-size: 20px;
+}
 
-  .service-links .service-links-has-image .service-links-tile,
-  .service-links .service-links-highlight .service-links-tile {
-    min-height: 300px;
-  }
+:where(.desktop-view) .service-links .service-links-has-image .service-links-tile,
+:where(.desktop-view) .service-links .service-links-highlight .service-links-tile {
+  min-height: 300px;
+}
 
-  .service-links .service-links-highlight .service-links-tile {
-    background-color: var(--service-links-highlight);
-    color: var(--inverse-color);
-  }
+:where(.desktop-view) .service-links .service-links-highlight .service-links-tile {
+  background-color: var(--service-links-highlight);
+  color: var(--inverse-color);
+}
 
-  .service-links .service-links-highlight .service-links-title {
-    font-size: var(--heading-font-size-m);
-    line-height: 28px;
-  }
+:where(.desktop-view) .service-links .service-links-highlight .service-links-title {
+  font-size: var(--heading-font-size-m);
+  line-height: 28px;
+}
 
-  .service-links .service-links-highlight .service-links-arrow {
-    background-color: var(--background-color);
-  }
+:where(.desktop-view) .service-links .service-links-highlight .service-links-arrow {
+  background-color: var(--background-color);
+}
 
-  .service-links .service-links-highlight .service-links-arrow::before {
-    background-color: var(--text-color);
-  }
+:where(.desktop-view) .service-links .service-links-highlight .service-links-arrow::before {
+  background-color: var(--text-color);
+}
 
-  .service-links .service-links-tall .service-links-tile {
-    min-height: 220px;
-  }
+:where(.desktop-view) .service-links .service-links-tall .service-links-tile {
+  min-height: 220px;
 }
