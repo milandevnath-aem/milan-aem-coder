@@ -258,6 +258,7 @@
 
 .hero-loan .hero-loan-input input::placeholder {
   color: var(--muted-color);
+  opacity: 1;
 }
 
 .hero-loan .hero-loan-prefix {

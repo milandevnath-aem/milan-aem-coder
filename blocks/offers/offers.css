@@ -1,8 +1,9 @@
 .offers {
-  --offers-radius: 32px;
-  --offers-height: 560px;
-  --offers-padding: 64px 24px 24px;
+  --offers-radius: 52px;
+  --offers-height: 628px;
+  --offers-padding: 80px 24px 32px;
   --offers-text: var(--inverse-color);
+  --offers-cta-gap: 32px;
 }
 
 .offers > ul {
@@ -59,10 +60,10 @@
 
 .offers .offers-content .offers-eyebrow {
   margin-bottom: 8px;
-  font-size: var(--body-font-size-xs);
+  font-size: var(--type-eyebrow-size);
   font-weight: 600;
-  line-height: 16px;
-  letter-spacing: 1.98px;
+  line-height: var(--type-eyebrow-line);
+  letter-spacing: var(--type-eyebrow-ls);
   text-transform: uppercase;
 }
 
@@ -70,21 +71,25 @@
 .offers .offers-content h3 {
   margin: 0;
   color: inherit;
-  font-size: 28px;
+  font-size: var(--type-display-size);
   font-weight: 500;
-  line-height: 36px;
-  letter-spacing: -0.7px;
+  line-height: var(--type-display-line);
+  letter-spacing: var(--type-display-ls);
 }
 
 .offers .offers-content .button-wrapper {
-  margin-top: 32px;
+  margin-top: var(--offers-cta-gap);
 }
 
+/* pill CTA: 192px wide, 12px (mobile) / 14px (desktop) vertical padding */
 .offers .offers-content a.button {
-  min-width: 192px;
+  width: 192px;
+  padding: 11px 0;
   border-color: #fff;
   background-color: #fff;
   color: var(--text-color);
+  font-size: var(--type-bt2-size);
+  line-height: var(--type-bt2-line);
 }
 
 .offers .offers-content a.button:hover,
@@ -98,9 +103,9 @@
   margin: auto 0 0;
   padding-top: 24px;
   color: var(--inverse-color);
-  font-size: var(--body-font-size-xs);
-  font-weight: 500;
-  line-height: 16px;
+  font-size: var(--type-h2-size);
+  font-weight: 600;
+  line-height: var(--type-h2-line);
 }
 
 .offers .offers-dark-text {
@@ -111,6 +116,11 @@
   --offers-radius: 40px;
   --offers-height: 768px;
   --offers-padding: 124px 12px 44px;
+  --offers-cta-gap: 40px;
+}
+
+:where(.desktop-view) .offers .offers-content a.button {
+  padding: 13px 0;
 }
 
 :where(.desktop-view) .offers > ul {
@@ -123,18 +133,6 @@
 
 :where(.desktop-view) .offers .offers-half {
   --offers-padding: 124px 92px 44px;
-}
-
-:where(.desktop-view) .offers .offers-content h2,
-:where(.desktop-view) .offers .offers-content h3 {
-  font-size: var(--heading-font-size-xxl);
-  line-height: 40px;
-  letter-spacing: -0.8px;
-}
-
-:where(.desktop-view) .offers .offers-disclaimer {
-  font-size: var(--body-font-size-s);
-  line-height: 20px;
 }
 
 /* compact band (e.g. "Need help?") */
@@ -163,7 +161,8 @@
 }
 
 .offers .offers-content .offers-buttons a.button {
-  min-width: 0;
+  width: auto;
+  padding-inline: 32px;
 }
 
 :where(.desktop-view) .offers .offers-short {
@@ -171,7 +170,3 @@
   --offers-padding: 124px 12px 44px;
 }
 
-:where(.desktop-view) .offers .offers-short .offers-content h2 {
-  font-size: var(--heading-font-size-xxl);
-  line-height: 48px;
-}

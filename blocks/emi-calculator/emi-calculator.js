@@ -76,7 +76,12 @@ function sliderGroup(id, label) {
         <span class="emi-calculator-suffix"></span>
       </div>
     </div>
-    <input id="${id}-range" class="emi-calculator-range" type="range" aria-label="${label}">
+    <div class="emi-calculator-slider">
+      <span class="emi-calculator-slider-fill" aria-hidden="true"></span>
+      <span class="emi-calculator-slider-knob" aria-hidden="true"></span>
+      <span class="emi-calculator-slider-track" aria-hidden="true"></span>
+      <input id="${id}-range" class="emi-calculator-range" type="range" aria-label="${label}">
+    </div>
     <div class="emi-calculator-bounds" id="${id}-bounds"><span></span><span></span></div>`;
   return group;
 }
@@ -162,7 +167,7 @@ function buildCalculator(types, link) {
     Object.entries(fields).forEach(([key, group]) => {
       const range = group.querySelector('.emi-calculator-range');
       const pct = ((state[key] - range.min) / (range.max - range.min || 1)) * 100;
-      range.style.setProperty('--fill', `${pct}%`);
+      range.parentElement.style.setProperty('--pct', pct / 100);
       range.value = state[key];
       range.setAttribute('aria-valuetext', bounds[key](state[key]));
       const input = group.querySelector('input[type="text"]');
@@ -203,7 +208,7 @@ function buildCalculator(types, link) {
         update();
       } else {
         range.value = range.min;
-        range.style.setProperty('--fill', '0%');
+        range.parentElement.style.setProperty('--pct', 0);
       }
     });
     const commit = () => {

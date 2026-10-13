@@ -27,9 +27,9 @@
   border-radius: 12px;
   background: transparent;
   color: var(--muted-color);
-  font-size: var(--body-font-size-s);
+  font-size: var(--type-b2-size);
   font-weight: 500;
-  line-height: 20px;
+  line-height: var(--type-b2-line);
   white-space: nowrap;
   cursor: pointer;
 }
@@ -106,24 +106,25 @@
 
 .product-tabs .product-tabs-card-title {
   grid-area: title;
-  font-size: var(--body-font-size-s);
+  font-size: var(--type-b2-size);
   font-weight: 500;
-  line-height: 20px;
+  line-height: var(--type-b2-line);
 }
 
 .product-tabs .product-tabs-card-text {
   grid-area: text;
   color: var(--muted-color);
-  font-size: var(--body-font-size-xs);
+  font-size: var(--type-b1-size);
   font-weight: 500;
-  line-height: 16px;
-  letter-spacing: 0.24px;
+  line-height: var(--type-b1-line);
+  letter-spacing: var(--type-b1-ls);
 }
 
+/* arrow avatar: 20px on small screens, 24px in the desktop view */
 .product-tabs .product-tabs-card-arrow {
   grid-area: arrow;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background-color: var(--text-color);
 }
@@ -134,7 +135,7 @@
   width: 100%;
   height: 100%;
   background-color: #fff;
-  mask: url('../../icons/arrow-up-right.svg') center / 14px no-repeat;
+  mask: url('../../icons/arrow-up-right.svg') center / 12px no-repeat;
 }
 
 :where(.desktop-view) .product-tabs .product-tabs-list {
@@ -144,8 +145,6 @@
 :where(.desktop-view) .product-tabs .product-tabs-tab {
   flex: 1 1 0;
   padding: 12px 32px;
-  font-size: var(--body-font-size-m);
-  line-height: 24px;
 }
 
 :where(.desktop-view) .product-tabs .product-tabs-panel {
@@ -193,6 +192,15 @@
 
 :where(.desktop-view) .product-tabs .product-tabs-card-text {
   align-self: end;
+}
+
+:where(.desktop-view) .product-tabs .product-tabs-card-arrow {
+  width: 24px;
+  height: 24px;
+}
+
+:where(.desktop-view) .product-tabs .product-tabs-card-arrow::before {
+  mask-size: 14px;
 }
 
 :where(.desktop-view) .product-tabs a.product-tabs-card-link:hover {

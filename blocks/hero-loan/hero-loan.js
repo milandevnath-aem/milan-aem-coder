@@ -282,12 +282,26 @@ function addStickyCta(block) {
   cta.tabIndex = -1;
   bar.append(cta);
   block.append(bar);
+  // shown once the hero is scrolled past, hidden again while the footer is on screen
+  let passed = false;
+  let atFooter = false;
+  const update = () => {
+    const visible = passed && !atFooter;
+    bar.classList.toggle('is-visible', visible);
+    bar.setAttribute('aria-hidden', !visible);
+    cta.tabIndex = visible ? 0 : -1;
+  };
   new IntersectionObserver(([entry]) => {
-    const passed = !entry.isIntersecting && entry.boundingClientRect.top < 0;
-    bar.classList.toggle('is-visible', passed);
-    bar.setAttribute('aria-hidden', !passed);
-    cta.tabIndex = passed ? 0 : -1;
+    passed = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+    update();
   }).observe(block.querySelector('.hero-loan-slides'));
+  const footer = document.querySelector('footer');
+  if (footer) {
+    new IntersectionObserver(([entry]) => {
+      atFooter = entry.isIntersecting;
+      update();
+    }).observe(footer);
+  }
 }
 
 /**

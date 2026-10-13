@@ -1,5 +1,6 @@
 .testimonials {
-  --testimonials-card-width: min(386px, 82vw);
+  --testimonials-card-width: 330px;
+  --testimonials-card-padding: 24px;
   --testimonials-card-bg: var(--surface-color);
 }
 
@@ -24,9 +25,9 @@
   flex-direction: column;
   justify-content: space-between;
   gap: 40px;
-  min-height: 260px;
+  min-height: 225px;
   box-sizing: border-box;
-  padding: 32px;
+  padding: var(--testimonials-card-padding);
   border-radius: 32px;
   background-color: var(--testimonials-card-bg);
   scroll-snap-align: start;
@@ -34,9 +35,10 @@
 
 .testimonials .testimonials-quote {
   margin: 0;
-  font-size: var(--body-font-size-s);
+  color: var(--text-color);
+  font-size: var(--type-b2-size);
   font-weight: 500;
-  line-height: 20px;
+  line-height: var(--type-b2-line);
 }
 
 .testimonials .testimonials-quote p {
@@ -67,20 +69,23 @@
 
 .testimonials .testimonials-meta p {
   margin: 0;
-  font-size: var(--body-font-size-xs);
 }
 
+/* name: Headline/H2, role: Body/B1 */
 .testimonials .testimonials-name {
+  color: var(--text-color);
+  font-size: var(--type-h2-size);
   font-weight: 600;
-  line-height: 18px;
+  line-height: var(--type-h2-line);
 }
 
 .testimonials .testimonials-role {
   margin-top: 2px;
   color: var(--muted-color);
+  font-size: var(--type-b1-size);
   font-weight: 500;
-  line-height: 16px;
-  letter-spacing: 0.24px;
+  line-height: var(--type-b1-line);
+  letter-spacing: var(--type-b1-ls);
 }
 
 .testimonials .testimonials-controls {
@@ -88,7 +93,9 @@
   justify-content: flex-end;
   gap: 12px;
   margin-top: 32px;
-  padding-right: 12px;
+
+  /* the wrapper keeps the full bleed margin on the right: line the buttons up with the grid */
+  padding-right: calc(var(--gb-offset) - var(--fb-margin));
 }
 
 .testimonials .testimonials-controls button {
@@ -116,6 +123,11 @@
   cursor: default;
 }
 
-:where(.desktop-view) .testimonials .testimonials-controls {
-  padding-right: calc(var(--gb-offset) - var(--fb-margin));
+:where(.desktop-view) .testimonials {
+  --testimonials-card-width: 386px;
+  --testimonials-card-padding: 32px;
+}
+
+:where(.desktop-view) .testimonials .testimonials-item {
+  min-height: 260px;
 }

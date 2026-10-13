@@ -10,19 +10,25 @@
   gap: 32px;
 }
 
-/* intro: eyebrow, heading, image */
+/* intro: eyebrow, heading, image (the heading sits on the grid, the card is full bleed) */
+.emi-calculator .emi-calculator-intro {
+  padding: 0 calc(var(--gb-margin) - var(--fb-margin));
+}
+
 .emi-calculator .emi-calculator-intro > p {
   margin: 0 0 8px;
-  font-size: var(--body-font-size-s);
+  color: var(--text-color);
+  font-size: var(--type-b2-size);
   font-weight: 500;
-  line-height: 20px;
+  line-height: var(--type-b2-line);
 }
 
 .emi-calculator .emi-calculator-intro h2 {
   margin: 0;
-  font-size: var(--heading-font-size-xxl);
-  line-height: 40px;
-  letter-spacing: -0.8px;
+  font-size: var(--type-display-size);
+  font-weight: 500;
+  line-height: var(--type-display-line);
+  letter-spacing: var(--type-display-ls);
 }
 
 .emi-calculator .emi-calculator-image {
@@ -65,9 +71,9 @@
   border-radius: 12px;
   background: transparent;
   color: var(--muted-color);
-  font-size: var(--body-font-size-s);
+  font-size: var(--type-b2-size);
   font-weight: 500;
-  line-height: 20px;
+  line-height: var(--type-b2-line);
   white-space: nowrap;
   cursor: pointer;
 }
@@ -83,6 +89,12 @@
   gap: 24px;
 }
 
+.emi-calculator .emi-calculator-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .emi-calculator .emi-calculator-field-head {
   display: flex;
   align-items: center;
@@ -91,21 +103,39 @@
 }
 
 .emi-calculator .emi-calculator-field-head label {
-  font-size: var(--body-font-size-s);
+  color: var(--text-color);
+  font-size: var(--type-b2-size);
   font-weight: 500;
-  line-height: 20px;
+  line-height: var(--type-b2-line);
 }
 
+/* value pill: currency symbol (S1) and amount (A1) */
 .emi-calculator .emi-calculator-value {
   display: inline-flex;
   align-items: baseline;
-  gap: 2px;
-  padding: 11px 20px;
+  padding: 11px 19px;
   border: 1px solid var(--border-light-color);
   border-radius: 12px;
-  font-size: var(--body-font-size-m);
+  color: var(--text-color);
+  font-size: var(--type-a1-size);
+  font-weight: 700;
+  line-height: var(--type-a1-line);
+  letter-spacing: var(--type-a1-ls);
+}
+
+.emi-calculator .emi-calculator-prefix {
+  font-size: var(--type-s1-size);
+  font-weight: 600;
+  line-height: var(--type-s1-line);
+  letter-spacing: 0;
+}
+
+/* small screens: rate and tenure pills use the semibold body size */
+.emi-calculator .emi-calculator-value:has(.emi-calculator-prefix:empty) {
+  font-size: 16px;
   font-weight: 600;
   line-height: 24px;
+  letter-spacing: 0;
 }
 
 .emi-calculator .emi-calculator-value:focus-within {
@@ -131,6 +161,8 @@
 }
 
 .emi-calculator .emi-calculator-value input {
+  /* as wide as the value, so the symbol and suffix sit right next to it */
+  field-sizing: content;
   width: auto;
   min-width: 1ch;
   padding: 0;
@@ -138,69 +170,82 @@
   background: transparent;
   color: var(--text-color);
   font: inherit;
+  letter-spacing: inherit;
   text-align: right;
   outline: none;
 }
 
 .emi-calculator .emi-calculator-suffix:not(:empty) {
-  margin-left: 2px;
+  margin-left: 1px;
 }
 
-/* slider */
-.emi-calculator .emi-calculator-range {
-  --fill: 0%;
+/*
+ * slider: rounded fill, 8 x 28px knob with a 4px gap on each side, rounded track.
+ * The native range input sits on top (invisible) for pointer, keyboard and screen readers.
+ */
+.emi-calculator .emi-calculator-slider {
+  --pct: 0;
+  --knob: calc(4px + (100% - 8px) * var(--pct));
 
-  width: 100%;
+  position: relative;
   height: 28px;
   margin: 8px 0 4px;
-  background: transparent;
-  appearance: none;
+}
+
+.emi-calculator .emi-calculator-slider-fill,
+.emi-calculator .emi-calculator-slider-track {
+  position: absolute;
+  top: 8px;
+  height: 12px;
+  border-radius: 12px;
+}
+
+.emi-calculator .emi-calculator-slider-fill {
+  left: 0;
+  width: max(0px, calc(var(--knob) - 8px));
+  background-color: var(--emi-fill);
+}
+
+.emi-calculator .emi-calculator-slider-track {
+  left: min(100%, calc(var(--knob) + 8px));
+  right: 0;
+  background-color: var(--emi-track);
+}
+
+.emi-calculator .emi-calculator-slider-knob {
+  position: absolute;
+  top: 0;
+  left: calc(var(--knob) - 4px);
+  width: 8px;
+  height: 28px;
+  border-radius: 15px;
+  background-color: var(--emi-fill);
+}
+
+.emi-calculator .emi-calculator-range {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
   cursor: pointer;
 }
 
-.emi-calculator .emi-calculator-range::-webkit-slider-runnable-track {
-  height: 12px;
-  background: linear-gradient(to right, var(--emi-fill) var(--fill), var(--emi-track) var(--fill));
-}
-
-.emi-calculator .emi-calculator-range::-moz-range-track {
-  height: 12px;
-  background: linear-gradient(to right, var(--emi-fill) var(--fill), var(--emi-track) var(--fill));
-}
-
-.emi-calculator .emi-calculator-range::-webkit-slider-thumb {
-  width: 8px;
-  height: 28px;
-  margin-top: -8px;
-  border: 0;
-  border-radius: 15px;
-  background: var(--emi-fill);
-  box-shadow: 0 0 0 4px var(--emi-card-bg);
-  appearance: none;
-}
-
-.emi-calculator .emi-calculator-range::-moz-range-thumb {
-  width: 8px;
-  height: 28px;
-  border: 0;
-  border-radius: 15px;
-  background: var(--emi-fill);
-  box-shadow: 0 0 0 4px var(--emi-card-bg);
-}
-
-.emi-calculator .emi-calculator-range:focus-visible {
+.emi-calculator .emi-calculator-slider:has(.emi-calculator-range:focus-visible) {
   outline: 2px solid var(--emi-fill);
   outline-offset: 4px;
+  border-radius: 8px;
 }
 
 .emi-calculator .emi-calculator-bounds {
   display: flex;
   justify-content: space-between;
   color: var(--muted-color);
-  font-size: var(--body-font-size-xs);
+  font-size: var(--type-b1-size);
   font-weight: 500;
-  line-height: 16px;
-  letter-spacing: 0.24px;
+  line-height: var(--type-b1-line);
+  letter-spacing: var(--type-b1-ls);
 }
 
 /* result */
@@ -224,46 +269,53 @@
   border-bottom: 1px solid #262626;
 }
 
+.emi-calculator .emi-calculator-summary > div {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .emi-calculator .emi-calculator-summary p {
   margin: 0;
 }
 
 .emi-calculator .emi-calculator-label {
-  font-size: var(--body-font-size-xs);
+  font-size: var(--type-b1-size);
   font-weight: 500;
-  line-height: 16px;
-  letter-spacing: 0.24px;
+  line-height: var(--type-b1-line);
+  letter-spacing: var(--type-b1-ls);
 }
 
 .emi-calculator .emi-calculator-summary .emi-calculator-emi {
   display: flex;
   align-items: baseline;
-  margin: 8px 0;
   color: var(--inverse-color);
 }
 
 .emi-calculator .emi-calculator-emi span {
-  font-size: 20px;
+  font-size: var(--type-s3-size);
   font-weight: 600;
-  line-height: 28px;
+  line-height: var(--type-s3-line);
 }
 
 .emi-calculator .emi-calculator-emi strong {
-  font-size: 28px;
+  font-size: var(--type-a5-size);
   font-weight: 700;
-  line-height: 28px;
-  letter-spacing: -1.4px;
+  line-height: var(--type-a5-line);
+  letter-spacing: var(--type-a5-ls);
 }
 
+/* small screens: the button takes the space next to the amount */
 .emi-calculator a.emi-calculator-cta {
-  flex: 0 0 auto;
-  min-width: 120px;
-  padding: 12px 24px;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 7px 11px;
   border-color: #fff;
   background-color: #fff;
   color: var(--text-color);
-  font-size: var(--body-font-size-s);
-  line-height: 20px;
+  font-size: var(--type-bt1-size);
+  line-height: var(--type-bt1-line);
 }
 
 .emi-calculator a.emi-calculator-cta:hover {
@@ -281,10 +333,10 @@
 .emi-calculator .emi-calculator-breakdown div {
   display: flex;
   justify-content: space-between;
-  font-size: var(--body-font-size-xs);
+  font-size: var(--type-b1-size);
   font-weight: 500;
-  line-height: 16px;
-  letter-spacing: 0.24px;
+  line-height: var(--type-b1-line);
+  letter-spacing: var(--type-b1-ls);
 }
 
 .emi-calculator .emi-calculator-breakdown dd {
@@ -302,6 +354,7 @@
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
+  padding: 0;
 }
 
 :where(.desktop-view) .emi-calculator .emi-calculator-image {
@@ -322,6 +375,15 @@
   max-width: 50%;
 }
 
+/* every value pill uses the amount style in the desktop view */
+:where(.desktop-view) .emi-calculator .emi-calculator-value:has(.emi-calculator-prefix:empty) {
+  font-size: var(--type-a1-size);
+  font-weight: 700;
+  line-height: var(--type-a1-line);
+  letter-spacing: var(--type-a1-ls);
+}
+
 :where(.desktop-view) .emi-calculator a.emi-calculator-cta {
-  width: 192px;
+  flex: 0 0 192px;
+  padding: 11px;
 }

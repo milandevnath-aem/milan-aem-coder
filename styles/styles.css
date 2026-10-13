@@ -45,6 +45,41 @@
   --heading-font-size-xs: 16px;
 
   /*
+   * type styles from the design system ("Web Breakpoint/…" in Figma): mobile values here,
+   * desktop view values below. Each style is size / line height / letter spacing (+ weight).
+   */
+  --type-display-size: 32px; /* Display/Medium/DF-1 */
+  --type-display-line: 40px;
+  --type-display-ls: -0.8px;
+  --type-b1-size: 12px; /* Body/B1 */
+  --type-b1-line: 16px;
+  --type-b1-ls: 0.24px;
+  --type-b2-size: 14px; /* Body/B2 */
+  --type-b2-line: 20px;
+  --type-b2-ls: 0;
+  --type-b3-size: 16px; /* Body/B3 */
+  --type-b3-line: 24px;
+  --type-h2-size: 12px; /* Headline/H2, semibold */
+  --type-h2-line: 16px;
+  --type-eyebrow-size: 12px; /* Section Title/S, semibold uppercase */
+  --type-eyebrow-line: 16px;
+  --type-eyebrow-ls: 1.98px;
+  --type-a1-size: 14px; /* Amount/A1, bold */
+  --type-a1-line: 14px;
+  --type-a1-ls: -0.42px;
+  --type-a5-size: 28px; /* Amount/A5, bold */
+  --type-a5-line: 28px;
+  --type-a5-ls: -1.4px;
+  --type-s1-size: 14px; /* Symbol/S1 (currency in value pills), semibold */
+  --type-s1-line: 18px;
+  --type-s3-size: 20px; /* currency next to A5, semibold */
+  --type-s3-line: 28px;
+  --type-bt1-size: 12px; /* Button/BT-1, semibold */
+  --type-bt1-line: 16px;
+  --type-bt2-size: 14px; /* Button/BT-2 (pill CTAs), semibold */
+  --type-bt2-line: 20px;
+
+  /*
    * grid (design system): values per viewport tier, the tiers are set on <html data-viewport>
    * by scripts/viewport.js. Mobile values below, tablet / laptop / desktop overrides follow.
    */
@@ -67,8 +102,8 @@
    * text by --fb-inset so it lines up with the grid
    */
   --gb-offset: var(--gb-margin);
-  --fb-inset: calc(var(--gb-offset) - var(--fb-margin));
-  --section-spacing: 64px;
+  --fb-inset: 24px; /* inner padding of full bleed blocks on small screens (Figma) */
+  --section-spacing: 80px;
 
   /* nav height: announcement bar + nav bar */
   --topbar-height: 32px;
@@ -131,8 +166,41 @@
   --heading-font-size-s: 18px;
   --heading-font-size-xs: 16px;
 
-  /* layout */
+
+  /* type styles (desktop view) */
+  --type-display-size: 40px;
+  --type-display-line: 48px;
+  --type-display-ls: -1px;
+  --type-b1-size: 14px;
+  --type-b1-line: 18px;
+  --type-b1-ls: 0;
+  --type-b2-size: 16px;
+  --type-b2-line: 24px;
+  --type-b3-size: 20px;
+  --type-b3-line: 28px;
+  --type-h2-size: 14px;
+  --type-h2-line: 20px;
+  --type-eyebrow-size: 16px;
+  --type-eyebrow-line: 24px;
+  --type-eyebrow-ls: 2.64px;
+  --type-a1-size: 20px;
+  --type-a1-line: 20px;
+  --type-a1-ls: -1px;
+  --type-a5-size: 36px;
+  --type-a5-line: 36px;
+  --type-a5-ls: -1.8px;
+  --type-s1-size: 16px;
+  --type-s1-line: 22px;
+  --type-s3-size: 24px;
+  --type-s3-line: 32px;
+  --type-bt1-size: 14px;
+  --type-bt1-line: 20px;
+  --type-bt2-size: 16px;
+  --type-bt2-line: 24px;
+
+  /* layout: full bleed blocks pad their text to the grid line */
   --section-spacing: 124px;
+  --fb-inset: calc(var(--gb-offset) - var(--fb-margin));
 
   /* nav height: announcement bar + nav bar */
   --topbar-height: 44px;
@@ -277,7 +345,7 @@ a.button.primary,
 button.button.primary {
   border-color: var(--text-color);
   background-color: var(--text-color);
-  color: var(--background-color);
+  color: #fff;
 }
 
 a.button.primary:hover,
@@ -286,7 +354,7 @@ button.button.primary:hover,
 button.button.primary:focus-visible {
   border-color: #333;
   background-color: #333;
-  color: var(--background-color);
+  color: #fff;
 }
 
 a.button.primary[aria-disabled="true"],
@@ -397,6 +465,15 @@ main > .section > .feature-banner-wrapper {
   padding: 0 var(--fb-margin);
 }
 
+/* EMI calculator: the heading stays on the grid, the card is full bleed on small screens */
+main > .section > .emi-calculator-wrapper {
+  padding: 0 var(--fb-margin);
+}
+
+:where(.desktop-view) main > .section > .emi-calculator-wrapper {
+  padding: 0 var(--gb-margin);
+}
+
 /* adaptive bound (AB): close to the edge, 1440px and centered on desktop */
 main > .section > .service-links-wrapper {
   padding: 0 var(--ab-margin);
@@ -428,18 +505,23 @@ main > .section.highlight + .section.offers-container {
   margin-top: 12px;
 }
 
-/* eyebrow paragraph directly above a section heading */
+/* eyebrow paragraph directly above a section heading (Body/B2) */
 main .default-content-wrapper > p:has(+ h2) {
   margin: 0 0 8px;
-  font-size: var(--body-font-size-s);
+  color: var(--text-color);
+  font-size: var(--type-b2-size);
   font-weight: 500;
-  line-height: 20px;
+  line-height: var(--type-b2-line);
 }
 
+/* section heading (Display/Medium/DF-1) */
 main .default-content-wrapper > p + h2,
 main .default-content-wrapper > h2:first-child {
   margin: 0 0 32px;
-  line-height: 40px;
+  font-size: var(--type-display-size);
+  font-weight: 500;
+  line-height: var(--type-display-line);
+  letter-spacing: var(--type-display-ls);
 }
 
 :where(.desktop-view) main .default-content-wrapper > h2:only-child {
