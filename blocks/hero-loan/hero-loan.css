@@ -168,7 +168,7 @@
 }
 
 :where(.desktop-view) .hero-loan .hero-loan-content a.button {
-  width: 220px;
+  display: none;
 }
 
 :where(.desktop-view) .hero-loan .hero-loan-dots {
