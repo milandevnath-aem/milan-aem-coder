@@ -1,5 +1,6 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
+import { MEDIA } from '../../scripts/viewport.js';
 
 function styleTokens(cell) {
   if (!cell) return [];
@@ -28,14 +29,14 @@ export default function decorate(block) {
     const img = imageCell?.querySelector('img');
     if (img) {
       const picture = createOptimizedPicture(img.src, img.alt, i === 0, [
-        { media: '(min-width: 900px)', width: '2000' },
+        { media: MEDIA.desktop, width: '2000' },
         { width: '900' },
       ]);
       const mobileImg = mobileCell?.querySelector('img');
       if (mobileImg) {
         const mobile = createOptimizedPicture(mobileImg.src, '', false, [{ width: '900' }]);
         mobile.querySelectorAll('source').forEach((source) => {
-          source.media = '(max-width: 899px)';
+          source.media = MEDIA.mobile;
           picture.prepend(source);
         });
         moveInstrumentation(mobileImg, picture.querySelector('source'));

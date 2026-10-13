@@ -6,7 +6,7 @@
 .feature-cards .feature-cards-list {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 12px;
+  gap: var(--grid-gutter);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -197,126 +197,125 @@
   line-height: 16px;
 }
 
-@media (width >= 900px) {
-  .feature-cards {
-    --feature-cards-radius: 32px;
-  }
+:where(.desktop-view) .feature-cards {
+  --feature-cards-radius: 32px;
+}
 
-  .feature-cards .feature-cards-list {
-    grid-template-columns: repeat(6, 1fr);
-    gap: 12px;
-  }
+:where(.desktop-view) .feature-cards .feature-cards-list {
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--grid-gutter);
+}
 
-  .feature-cards .feature-cards-card {
-    grid-column: span 2;
-    min-height: 272px;
-    padding: 32px;
-  }
+:where(.desktop-view) .feature-cards .feature-cards-card {
+  grid-column: span 2;
+  min-height: 272px;
+  padding: 32px;
+}
 
-  .feature-cards .feature-cards-card.is-media {
-    grid-column: span 3;
-    min-height: 350px;
-  }
+:where(.desktop-view) .feature-cards .feature-cards-card.is-media {
+  grid-column: span 3;
+  min-height: 350px;
+}
 
-  .feature-cards .feature-cards-icon img {
-    width: 40px;
-    height: 40px;
-  }
+:where(.desktop-view) .feature-cards .feature-cards-icon img {
+  width: 40px;
+  height: 40px;
+}
 
-  .feature-cards .feature-cards-body h3,
-  .feature-cards .feature-cards-body h4 {
-    font-size: var(--heading-font-size-m);
-    line-height: 28px;
-  }
+:where(.desktop-view) .feature-cards .feature-cards-body h3,
+:where(.desktop-view) .feature-cards .feature-cards-body h4 {
+  font-size: var(--heading-font-size-m);
+  line-height: 28px;
+}
 
-  .feature-cards .feature-cards-body p {
-    font-size: var(--body-font-size-m);
-    line-height: 24px;
-  }
+:where(.desktop-view) .feature-cards .feature-cards-body p {
+  font-size: var(--body-font-size-m);
+  line-height: 24px;
+}
 
-  /* trailing 2-up / single icon cards lay out horizontally */
-  .feature-cards .feature-cards-card.is-icon.half,
-  .feature-cards .feature-cards-card.is-icon.full {
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    min-height: 0;
-  }
+/* trailing 2-up / single icon cards lay out horizontally */
 
-  .feature-cards .feature-cards-card.is-icon.half {
-    grid-column: span 3;
-  }
+:where(.desktop-view) .feature-cards .feature-cards-card.is-icon.half,
+:where(.desktop-view) .feature-cards .feature-cards-card.is-icon.full {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 0;
+}
 
-  .feature-cards .feature-cards-card.is-icon.full {
-    grid-column: 1 / -1;
-  }
+:where(.desktop-view) .feature-cards .feature-cards-card.is-icon.half {
+  grid-column: span 3;
+}
 
-  .feature-cards .feature-cards-intro h2 {
-    margin-bottom: 40px;
-  }
+:where(.desktop-view) .feature-cards .feature-cards-card.is-icon.full {
+  grid-column: 1 / -1;
+}
 
-  .feature-cards.numbered .feature-cards-card {
-    min-height: 220px;
-  }
+:where(.desktop-view) .feature-cards .feature-cards-intro h2 {
+  margin-bottom: 40px;
+}
 
-  .feature-cards.info .feature-cards-list {
-    grid-template-columns: repeat(2, 1fr);
-  }
+:where(.desktop-view) .feature-cards.numbered .feature-cards-card {
+  min-height: 220px;
+}
 
-  .feature-cards.info .feature-cards-card {
-    grid-column: span 1;
-  }
+:where(.desktop-view) .feature-cards.info .feature-cards-list {
+  grid-template-columns: repeat(2, 1fr);
+}
 
-  .feature-cards.info .feature-cards-card:last-child:nth-child(odd) {
-    grid-column: 1 / -1;
-  }
+:where(.desktop-view) .feature-cards.info .feature-cards-card {
+  grid-column: span 1;
+}
 
-  .feature-cards.info .feature-cards-icon img {
-    width: 72px;
-    height: 72px;
-  }
+:where(.desktop-view) .feature-cards.info .feature-cards-card:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
 
-  .feature-cards.info .feature-cards-body p.feature-cards-value {
-    font-size: var(--heading-font-size-m);
-    line-height: 28px;
-  }
+:where(.desktop-view) .feature-cards.info .feature-cards-icon img {
+  width: 72px;
+  height: 72px;
+}
 
-  .feature-cards.split {
-    flex-direction: row;
-    gap: 80px;
-  }
+:where(.desktop-view) .feature-cards.info .feature-cards-body p.feature-cards-value {
+  font-size: var(--heading-font-size-m);
+  line-height: 28px;
+}
 
-  .feature-cards.split .feature-cards-aside,
-  .feature-cards.split .feature-cards-main {
-    flex: 1 1 0;
-  }
+:where(.desktop-view) .feature-cards.split {
+  flex-direction: row;
+  gap: 80px;
+}
 
-  .feature-cards.split .feature-cards-aside h2,
-  .feature-cards.split .feature-cards-aside h3 {
-    margin-bottom: 32px;
-    font-size: var(--heading-font-size-xxl);
-    line-height: 40px;
-  }
+:where(.desktop-view) .feature-cards.split .feature-cards-aside,
+:where(.desktop-view) .feature-cards.split .feature-cards-main {
+  flex: 1 1 0;
+}
 
-  .feature-cards.split .feature-cards-card.is-media {
-    min-height: 494px;
-  }
+:where(.desktop-view) .feature-cards.split .feature-cards-aside h2,
+:where(.desktop-view) .feature-cards.split .feature-cards-aside h3 {
+  margin-bottom: 32px;
+  font-size: var(--heading-font-size-xxl);
+  line-height: 40px;
+}
 
-  .feature-cards.split .feature-cards-list {
-    grid-template-columns: repeat(2, 1fr);
-  }
+:where(.desktop-view) .feature-cards.split .feature-cards-card.is-media {
+  min-height: 494px;
+}
 
-  .feature-cards.split .feature-cards-card.is-icon {
-    grid-column: span 1;
-  }
+:where(.desktop-view) .feature-cards.split .feature-cards-list {
+  grid-template-columns: repeat(2, 1fr);
+}
 
-  .feature-cards.split .feature-cards-body h3 {
-    font-size: var(--body-font-size-m);
-    line-height: 24px;
-  }
+:where(.desktop-view) .feature-cards.split .feature-cards-card.is-icon {
+  grid-column: span 1;
+}
 
-  .feature-cards.split .feature-cards-body p {
-    font-size: var(--body-font-size-s);
-    line-height: 20px;
-  }
+:where(.desktop-view) .feature-cards.split .feature-cards-body h3 {
+  font-size: var(--body-font-size-m);
+  line-height: 24px;
+}
+
+:where(.desktop-view) .feature-cards.split .feature-cards-body p {
+  font-size: var(--body-font-size-s);
+  line-height: 20px;
 }

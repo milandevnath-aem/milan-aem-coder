@@ -1,5 +1,6 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
+import { MEDIA } from '../../scripts/viewport.js';
 
 const VARIANTS = ['image', 'highlight', 'tall'];
 
@@ -29,7 +30,7 @@ export default function decorate(block) {
     const img = imageCell?.querySelector('img');
     if (img) {
       const picture = createOptimizedPicture(img.src, img.alt, false, [
-        { media: '(min-width: 900px)', width: '1200' },
+        { media: MEDIA.desktop, width: '1200' },
         { width: '750' },
       ]);
       moveInstrumentation(img, picture.querySelector('img'));
