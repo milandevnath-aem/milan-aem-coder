@@ -154,7 +154,7 @@ header .nav-topbar .nav-utility {
 }
 
 :where(.desktop-view) header .nav-topbar {
-  padding: 0 calc(var(--gb-margin) + 12px);
+  padding: 0 calc(var(--gb-offset) + 12px);
 }
 
 :where(.desktop-view) header .nav-topbar .nav-announcement {

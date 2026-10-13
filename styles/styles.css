@@ -58,7 +58,7 @@
   --ab-margin: 8px;
   --footer-padding: 20px;
 
-  /* outer width of a grid bound container and the content width limit (desktop only) */
+  /* container width for grid bound / adaptive bound blocks and the content limit (desktop only) */
   --gb-max-width: none;
   --grid-limit: 100vw;
 
@@ -99,17 +99,20 @@
   --footer-padding: 80px;
 }
 
-/* desktop: 1680px and up, grid content stops at 1440px and is centered */
+/*
+ * desktop: 1680px and up. Grid bound and adaptive bound containers are exactly 1440px wide
+ * and centered (margin "auto"), so they have no inner padding.
+ */
 :root[data-viewport='desktop'] {
   --grid-columns: 12;
   --grid-gutter: 16px;
   --fb-margin: 12px;
-  --gb-margin: 92px;
-  --ab-margin: 12px;
+  --gb-margin: 0px;
+  --ab-margin: 0px;
   --footer-padding: 80px;
-  --gb-max-width: calc(var(--grid-max-width) + 2 * var(--gb-margin));
+  --gb-max-width: var(--grid-max-width);
   --grid-limit: var(--grid-max-width);
-  --gb-offset: max(var(--gb-margin), (100vw - var(--grid-max-width)) / 2);
+  --gb-offset: calc((100vw - var(--grid-max-width)) / 2);
 }
 
 /* fallback fonts */
@@ -394,7 +397,7 @@ main > .section > .feature-banner-wrapper {
   padding: 0 var(--fb-margin);
 }
 
-/* adaptive bound (AB): close to the edge, centered with the grid on desktop */
+/* adaptive bound (AB): close to the edge, 1440px and centered on desktop */
 main > .section > .service-links-wrapper {
   padding: 0 var(--ab-margin);
 }
