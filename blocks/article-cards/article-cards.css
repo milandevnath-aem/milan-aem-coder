@@ -1,3 +1,7 @@
+.article-cards-container .default-content-wrapper > :first-child {
+  margin-bottom: 16px;
+}
+
 .article-cards {
   --article-cards-bg: var(--surface-color);
 }
@@ -16,7 +20,7 @@
   display: flex;
   align-items: stretch;
   gap: 16px;
-  padding: 4px 16px 4px 4px;
+  padding: 8px;
   border-radius: 24px;
   background-color: var(--article-cards-bg);
   transition: box-shadow 0.2s;
@@ -44,21 +48,22 @@
   flex: 1 1 auto;
   flex-direction: column;
   gap: 4px;
-  padding: 12px 0;
+  padding: 4px 4px 4px 0;
 }
 
 .article-cards .article-cards-category {
-  margin: 0;
-  font-size: var(--body-font-size-xs);
-  font-weight: 600;
-  line-height: 18px;
+  margin: 0 0 4px 0;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  color: #666;
 }
 
 .article-cards .article-cards-title {
   margin: 0;
-  font-size: var(--body-font-size-s);
-  font-weight: 600;
-  line-height: 20px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
   letter-spacing: 0;
 }
 
@@ -87,10 +92,23 @@
   margin: auto 0 0;
   padding-top: 8px;
   color: var(--muted-color);
-  font-size: var(--body-font-size-xs);
+  font-size: 12px;
   font-weight: 500;
   line-height: 16px;
   letter-spacing: 0.24px;
+}
+
+:where(.desktop-view) .article-cards .article-cards-category {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #121212;
+}
+
+:where(.desktop-view) .article-cards .article-cards-meta {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
 }
 
 :where(.desktop-view) .article-cards > ul {
@@ -119,6 +137,7 @@
 }
 
 :where(.desktop-view) .article-cards .article-cards-title {
-  font-size: var(--body-font-size-m);
-  line-height: 24px;
+  font-size: 20px;
+  line-height: 28px;
+  text-decoration: none;
 }
