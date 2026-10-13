@@ -340,6 +340,8 @@ for (const slug of SLUGS) {
 
   // assets and links relative to content/kmpl/
   body.querySelectorAll('img').forEach((img) => img.setAttribute('src', img.getAttribute('src').replace(/^\.\/images\//, '../images/')));
+  // home hero: area behind the form card rebuilt from the surrounding photo (reference/review/hero-fill.mjs)
+  body.querySelectorAll('img[src$="home/hero-car-loans.jpg"]').forEach((img) => img.setAttribute('src', img.getAttribute('src').replace('hero-car-loans.jpg', 'hero-car-loans-v2.jpg')));
   body.querySelectorAll('.metadata > div').forEach((row) => {
     const [key, value] = row.children;
     if (/^(nav|footer)$/.test(key.textContent.trim())) value.textContent = value.textContent.replace('/content/fragments/', `${BASE}/fragments/`);
