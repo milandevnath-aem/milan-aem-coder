@@ -164,6 +164,16 @@ async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
   const main = doc.querySelector('main');
+  // skip link to the main content (WCAG 2.4.1)
+  if (main && !doc.querySelector('.skip-link')) {
+    main.id = main.id || 'main';
+    main.tabIndex = -1;
+    const skip = doc.createElement('a');
+    skip.className = 'skip-link visually-hidden';
+    skip.href = `#${main.id}`;
+    skip.textContent = 'Skip to main content';
+    doc.body.prepend(skip);
+  }
   if (main) {
     decorateMain(main);
     document.body.classList.add('appear');

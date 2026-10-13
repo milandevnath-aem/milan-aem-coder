@@ -140,7 +140,7 @@ dialog.modal .default-content-wrapper > :first-child {
 
 dialog.modal .default-content-wrapper picture {
   display: block;
-  margin: 0 0 24px;
+  margin: 0 0 20px;
   border: 1px solid var(--surface-color);
   border-radius: 24px;
   background: linear-gradient(180deg, #fff 0%, #f7f1f1 100%);
@@ -155,7 +155,7 @@ dialog.modal .default-content-wrapper picture img {
 }
 
 dialog.modal .default-content-wrapper h2 {
-  margin: 0 0 16px;
+  margin: 0 0 20px;
   font-size: 28px;
   font-weight: 600;
   line-height: 36px;
@@ -163,7 +163,7 @@ dialog.modal .default-content-wrapper h2 {
 }
 
 dialog.modal .default-content-wrapper p {
-  margin: 0 0 16px;
+  margin: 0 0 24px;
   color: var(--muted-color);
   font-size: var(--body-font-size-m);
   font-weight: 500;
@@ -185,6 +185,63 @@ dialog.modal .default-content-wrapper p.button-wrapper:last-child {
 
 dialog.modal .default-content-wrapper p.button-wrapper:last-child .button {
   width: 100%;
+  border: 0;
+  padding: 14px 12px;
+  font-size: var(--body-font-size-m);
+  font-weight: 600;
+  line-height: 24px;
+}
+
+/* "Read more" details: fixed size, only the content scrolls under a pinned CTA.
+   Mobile: bottom sheet below a white close button on the backdrop. */
+dialog.modal.modal-details {
+  --modal-padding: 20px;
+
+  padding-top: 48px;
+}
+
+dialog.modal.modal-details .modal-close {
+  top: 4px;
+  right: 4px;
+  background-color: transparent;
+}
+
+dialog.modal.modal-details .modal-close img {
+  filter: invert(1);
+}
+
+dialog.modal.modal-details .modal-content {
+  border-radius: 32px 32px 0 0;
+  padding: var(--modal-padding) var(--modal-padding) 0;
+  background-color: var(--background-color);
+}
+
+dialog.modal.modal-details .default-content-wrapper p.button-wrapper:last-child {
+  bottom: 0;
+  margin: 36px calc(-1 * var(--modal-padding)) 0;
+}
+
+/* desktop: 580px card, 32px from the top, 48px free below */
+:where(.desktop-view) dialog.modal.modal-details {
+  inset: 32px 0 auto;
+  width: 580px;
+  height: min(calc(100dvh - 80px), 720px);
+  max-height: none;
+  margin: 0 auto;
+  padding-top: 40px;
+}
+
+:where(.desktop-view) dialog.modal.modal-details .modal-close {
+  top: 0;
+  right: 0;
+}
+
+:where(.desktop-view) dialog.modal.modal-details .modal-content {
+  height: 100%;
+  max-height: none;
+  border: 0;
+  border-radius: 32px;
+  padding: var(--modal-padding) var(--modal-padding) 0;
 }
 
 :where(.desktop-view) dialog.modal .default-content-wrapper picture {

@@ -138,8 +138,50 @@ header .nav-topbar .nav-announcement-track {
   animation: nav-marquee 60s linear infinite;
 }
 
-header .nav-topbar .nav-announcement:hover .nav-announcement-track {
+header .nav-topbar .nav-announcement:hover .nav-announcement-track,
+header .nav-topbar .nav-announcement:focus-within .nav-announcement-track,
+header .nav-topbar .nav-announcement.is-paused .nav-announcement-track {
   animation-play-state: paused;
+}
+
+header .nav-topbar .nav-announcement-pause {
+  position: relative;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  border: 0;
+  border-radius: 50%;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* pause bars, or a play triangle when paused */
+header .nav-topbar .nav-announcement-pause::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 8px;
+  height: 10px;
+  border-inline: 2px solid var(--text-color);
+  box-sizing: border-box;
+}
+
+header .nav-topbar .nav-announcement.is-paused .nav-announcement-pause::before {
+  width: 0;
+  height: 0;
+  border-width: 5px 0 5px 8px;
+  border-style: solid;
+  border-color: transparent transparent transparent var(--text-color);
+  margin-left: 9px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  header .nav-topbar .nav-announcement-pause {
+    display: none;
+  }
 }
 
 header .nav-topbar .icon {
