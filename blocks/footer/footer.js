@@ -57,8 +57,9 @@ export default async function decorate(block) {
 
   // link columns: top-level items are column headings
   footer.querySelectorAll('.footer-links .default-content-wrapper > ul > li').forEach((li) => {
-    const heading = [...li.childNodes]
-      .find((n) => n.nodeType === Node.TEXT_NODE && n.textContent.trim());
+    // plain text, or a <p> when the list is published as a loose list
+    const heading = [...li.childNodes].find((n) => (n.nodeType === Node.TEXT_NODE
+      && n.textContent.trim()) || (n.nodeName === 'P' && !n.querySelector('a')));
     if (heading) {
       const span = document.createElement('span');
       span.className = 'footer-heading';
@@ -88,6 +89,14 @@ export default async function decorate(block) {
   footer.querySelectorAll('.footer-links, .footer-other, .footer-bottom')
     .forEach((section) => card.append(section));
   footer.append(card);
+
+  // icon-only links (social) are named after their icon, e.g. icon-facebook -> "Facebook"
+  footer.querySelectorAll('a:has(> .icon)').forEach((a) => {
+    if (a.textContent.trim() || a.getAttribute('aria-label')) return;
+    const name = [...a.querySelector('.icon').classList]
+      .find((c) => c.startsWith('icon-'))?.slice(5).replace(/-/g, ' ');
+    if (name) a.setAttribute('aria-label', name.length <= 2 ? name.toUpperCase() : name.replace(/^\w/, (ch) => ch.toUpperCase()));
+  });
 
   block.append(footer);
 }

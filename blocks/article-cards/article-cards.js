@@ -1,8 +1,8 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
+import { createPicture } from '../../scripts/images.js';
 
 /**
- * Article teaser cards. Each row: image, category, link (title), reading time.
+ * Article teaser cards (not clickable). Each row: image, category, title, reading time.
  * @param {Element} block The block element
  */
 export default function decorate(block) {
@@ -15,7 +15,7 @@ export default function decorate(block) {
 
     const img = imageCell?.querySelector('img');
     if (img) {
-      const picture = createOptimizedPicture(img.src, img.alt, false, [{ width: '600' }]);
+      const picture = createPicture(img.src, img.alt, false, [{ width: '600' }]);
       moveInstrumentation(img, picture.querySelector('img'));
       picture.classList.add('article-cards-image');
       item.append(picture);
@@ -31,18 +31,12 @@ export default function decorate(block) {
       body.append(category);
     }
 
+    // the cards are teasers only: the title is shown as text, not as a link
     const heading = document.createElement('h3');
     heading.className = 'article-cards-title';
     const source = linkCell?.querySelector('a');
-    if (source) {
-      const link = document.createElement('a');
-      link.href = source.getAttribute('href');
-      link.textContent = source.textContent.trim();
-      moveInstrumentation(source, link);
-      heading.append(link);
-    } else {
-      heading.textContent = linkCell?.textContent.trim() || '';
-    }
+    heading.textContent = (source || linkCell)?.textContent.trim() || '';
+    if (source) moveInstrumentation(source, heading);
     body.append(heading);
 
     if (metaCell?.textContent.trim()) {

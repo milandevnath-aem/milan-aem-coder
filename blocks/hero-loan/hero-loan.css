@@ -1,5 +1,5 @@
 .hero-loan {
-  --hero-loan-radius: 32px;
+  --hero-loan-radius: 52px;
   --hero-loan-min-height: 611px;
   --hero-loan-padding: 44px var(--fb-inset) 24px;
   --hero-loan-text: var(--inverse-color);
@@ -9,7 +9,7 @@
   grid-template-areas: 'stack';
   min-height: var(--hero-loan-min-height);
   border-radius: var(--hero-loan-radius);
-  background-color: #1f2a24;
+  background-color: transparent;
   overflow: hidden;
 }
 
@@ -209,7 +209,9 @@
 .hero-loan .hero-loan-form-intro p {
   margin: 8px 0 0;
   color: var(--muted-color);
+  font-size: var(--body-font-size-m);
   font-weight: 500;
+  line-height: 24px;
 }
 
 .hero-loan .hero-loan-form form {
@@ -231,7 +233,7 @@
   align-items: center;
   gap: 8px;
   min-width: 0;
-  padding: 14px 20px;
+  padding: 20px;
   border-radius: 16px;
   background-color: var(--light-color);
   font-size: var(--heading-font-size-m);
@@ -246,7 +248,7 @@
 .hero-loan .hero-loan-input input {
   width: 100%;
   min-width: 0;
-  padding: 6px 0;
+  padding: 0;
   border: 0;
   background: transparent;
   color: var(--text-color);
@@ -353,6 +355,8 @@
 .hero-loan .hero-loan-form button[type='submit'] {
   width: 100%;
   margin-top: auto;
+  border: 0;
+  padding: 14px 12px;
 }
 
 .hero-loan .hero-loan-thanks {
@@ -362,6 +366,14 @@
 }
 
 /* product variant: stacked fields and a category dropdown */
+.hero-loan.product .hero-loan-form form {
+  gap: 12px;
+}
+
+.hero-loan.product .hero-loan-form form button[type='submit'] {
+  margin-top: 8px;
+}
+
 .hero-loan.product .hero-loan-fields {
   flex-direction: column;
 }
@@ -430,10 +442,16 @@
   display: none;
 }
 
-:where(.desktop-view) .hero-loan.product .hero-loan-content p {
+:where(.desktop-view) .hero-loan.product {
+  --hero-loan-radius: 20px;
+}
+
+:where(.desktop-view) .hero-loan.product .hero-loan-content p:not(.button-wrapper) {
   margin-top: 12px;
-  font-size: var(--body-font-size-s);
-  line-height: 20px;
+  color: var(--inverse-color);
+  font-size: var(--body-font-size-m);
+  font-weight: 500;
+  line-height: 24px;
 }
 
 :where(.desktop-view) .hero-loan.no-form .hero-loan-content {

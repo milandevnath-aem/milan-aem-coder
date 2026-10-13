@@ -1,5 +1,5 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation, isModalLink } from '../../scripts/scripts.js';
+import { createPicture } from '../../scripts/images.js';
 import { createDropdown } from '../../scripts/dropdown.js';
 import { MEDIA } from '../../scripts/viewport.js';
 
@@ -181,7 +181,7 @@ function buildSlides(rows, block) {
     const img = imageCell?.querySelector('img');
     if (img) {
       const mobileImg = mobileCell?.querySelector('img');
-      const optimized = createOptimizedPicture(img.src, img.alt, i === 0, [
+      const optimized = createPicture(img.src, img.alt, i === 0, [
         { media: MEDIA.desktop, width: '2000' },
         { width: '900' },
       ]);
@@ -189,7 +189,7 @@ function buildSlides(rows, block) {
         // art-directed crop for small screens
         const source = document.createElement('source');
         source.media = MEDIA.mobile;
-        source.srcset = createOptimizedPicture(mobileImg.src, '', false, [{ width: '900' }])
+        source.srcset = createPicture(mobileImg.src, '', false, [{ width: '900' }])
           .querySelector('source[type="image/webp"]').srcset;
         source.type = 'image/webp';
         optimized.prepend(source);
