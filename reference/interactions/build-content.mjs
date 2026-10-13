@@ -180,6 +180,12 @@ const GROUP = [
   const group = [...document.querySelectorAll('li')].find((li) => li.firstChild?.textContent.trim() === 'Kotak Group Companies');
   group.querySelector('ul').innerHTML = GROUP.map(([t, h]) => `<li><a href="${h}">${esc(t)}</a></li>`).join('');
   document.querySelectorAll('a').forEach((a) => { if (/^contact us$/i.test(a.textContent.trim())) a.href = page('contact-us'); });
+  // Figma social row: Instagram + Facebook
+  const x = document.querySelector('a[aria-label="X"]');
+  if (x) {
+    x.setAttribute('aria-label', 'Facebook');
+    x.querySelector('.icon-x')?.setAttribute('class', 'icon icon-facebook');
+  }
   write('fragments/footer.plain.html', document.body.innerHTML);
 }
 
@@ -347,6 +353,8 @@ for (const slug of SLUGS) {
   });
   // home hero: area behind the form card rebuilt from the surrounding photo (reference/review/hero-fill.mjs)
   body.querySelectorAll('img[src$="home/hero-car-loans.jpg"]').forEach((img) => img.setAttribute('src', img.getAttribute('src').replace('hero-car-loans.jpg', 'hero-car-loans-v2.jpg')));
+  // car loan mobile hero: baked-in text boxes and black frame removed (reference/review/row-fill.mjs)
+  body.querySelectorAll('img[src$="/car-loan/hero-1-mobile.jpg"]').forEach((img) => img.setAttribute('src', img.getAttribute('src').replace('hero-1-mobile.jpg', 'hero-1-mobile-clean.jpg')));
   body.querySelectorAll('.metadata > div').forEach((row) => {
     const [key, value] = row.children;
     if (/^(nav|footer)$/.test(key.textContent.trim())) value.textContent = value.textContent.replace('/content/fragments/', `${BASE}/fragments/`);

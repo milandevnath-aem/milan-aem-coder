@@ -1,5 +1,5 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
+import { createPicture } from '../../scripts/images.js';
 
 let blockCount = 0;
 
@@ -18,7 +18,7 @@ function buildCard(row, isDocuments) {
   card.className = 'requirements-card';
   const img = imageCell?.querySelector('img');
   if (img && !isDocuments) {
-    const picture = createOptimizedPicture(img.src, img.alt, false, [{ width: '160' }]);
+    const picture = createPicture(img.src, img.alt, false, [{ width: '160' }]);
     moveInstrumentation(img, picture.querySelector('img'));
     picture.className = 'requirements-icon';
     card.append(picture);
@@ -89,7 +89,7 @@ export default function decorate(block) {
   const content = [];
   const decoImg = decoRow?.querySelector('img');
   if (decoImg) {
-    const picture = createOptimizedPicture(decoImg.src, '', false, [{ width: '1000' }]);
+    const picture = createPicture(decoImg.src, '', false, [{ width: '1000' }]);
     picture.className = 'requirements-decoration';
     picture.querySelector('img').setAttribute('aria-hidden', 'true');
     moveInstrumentation(decoImg, picture.querySelector('img'));

@@ -1,5 +1,5 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
+import { createPicture } from '../../scripts/images.js';
 
 function updateButtons(track, prev, next) {
   const max = track.scrollWidth - track.clientWidth - 1;
@@ -32,7 +32,7 @@ export default function decorate(block) {
     author.className = 'testimonials-author';
     const img = imageCell?.querySelector('img');
     if (img) {
-      const picture = createOptimizedPicture(img.src, img.alt, false, [{ width: '96' }]);
+      const picture = createPicture(img.src, img.alt, false, [{ width: '96' }]);
       moveInstrumentation(img, picture.querySelector('img'));
       picture.classList.add('testimonials-avatar');
       author.append(picture);
