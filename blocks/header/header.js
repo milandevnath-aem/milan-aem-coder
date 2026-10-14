@@ -30,6 +30,17 @@ function icon(name, size = 24) {
 }
 
 /**
+ * An authored link that opens a panel instead of navigating: exposed as a button,
+ * activated with Enter (native) and Space like a real button.
+ * @param {HTMLAnchorElement} a
+ */
+function linkAsButton(a) {
+  a.setAttribute('role', 'button');
+  a.addEventListener('keydown', (e) => { if (e.key === ' ') e.preventDefault(); });
+  a.addEventListener('keyup', (e) => { if (e.key === ' ') a.click(); });
+}
+
+/**
  * Text of a list item without its nested list.
  * @param {HTMLLIElement} li
  * @returns {string}
@@ -529,7 +540,17 @@ export default async function decorate(block) {
       const viewport = document.createElement('span');
       viewport.className = 'nav-announcement-text';
       viewport.append(track);
-      announcement.replaceChildren(...[infoIcon, viewport].filter(Boolean));
+      // moving text can be paused (WCAG 2.2.2)
+      const pause = document.createElement('button');
+      pause.type = 'button';
+      pause.className = 'nav-announcement-pause';
+      pause.setAttribute('aria-label', 'Pause scrolling text');
+      pause.setAttribute('aria-pressed', 'false');
+      pause.addEventListener('click', () => {
+        const paused = announcement.classList.toggle('is-paused');
+        pause.setAttribute('aria-pressed', paused);
+      });
+      announcement.replaceChildren(...[infoIcon, viewport, pause].filter(Boolean));
     }
     const utility = navTopbar.querySelector('ul');
     utility?.classList.add('nav-utility');
@@ -547,7 +568,7 @@ export default async function decorate(block) {
       else if (/contact/i.test(a.textContent)) contact = a;
       if (!li.querySelector('.icon')) settingsItems.push(a);
       if (/accessibility/i.test(a.textContent)) {
-        a.setAttribute('role', 'button');
+        linkAsButton(a);
         a.addEventListener('click', (e) => {
           e.preventDefault();
           openAccessibility();
@@ -563,12 +584,13 @@ export default async function decorate(block) {
     brandLink.className = '';
     brandLink.closest('.button-wrapper, .button-container')?.removeAttribute('class');
   }
-  // an authored logo image without a link points to the home page
+  // an authored logo image without a link points to the home page, next to the nav
+  // fragment's site root (e.g. nav at /fragments/nav: logo links to /home)
   const brandPicture = navBrand.querySelector('picture');
   if (brandPicture && !brandPicture.closest('a')) {
     const home = document.createElement('a');
-    home.href = '/';
-    home.setAttribute('aria-label', 'Home');
+    home.href = `${navPath.replace(/\/(fragments\/)?nav$/, '')}/home`;
+    if (!brandPicture.querySelector('img')?.alt) home.setAttribute('aria-label', 'Home');
     brandPicture.replaceWith(home);
     home.append(brandPicture);
   }
@@ -681,7 +703,7 @@ export default async function decorate(block) {
     }
   };
   if (searchLink) {
-    searchLink.setAttribute('role', 'button');
+    linkAsButton(searchLink);
     searchLink.setAttribute('aria-controls', 'nav-search');
     searchLink.setAttribute('aria-expanded', 'false');
     searchLink.append(icon('close'));

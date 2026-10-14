@@ -2,7 +2,8 @@ import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createPicture } from '../../scripts/images.js';
 
 /**
- * Article teaser cards (not clickable). Each row: image, category, title, reading time.
+ * Article teaser cards. Each row: image, category, title (link), reading time.
+ * A card is clickable only when its title link has a URL ("#" or empty: plain text).
  * @param {Element} block The block element
  */
 export default function decorate(block) {
@@ -31,12 +32,25 @@ export default function decorate(block) {
       body.append(category);
     }
 
-    // the cards are teasers only: the title is shown as text, not as a link
     const heading = document.createElement('h3');
     heading.className = 'article-cards-title';
     const source = linkCell?.querySelector('a');
-    heading.textContent = (source || linkCell)?.textContent.trim() || '';
-    if (source) moveInstrumentation(source, heading);
+    const text = (source || linkCell)?.textContent.trim() || '';
+    const href = source?.getAttribute('href')?.trim();
+    if (href && href !== '#') {
+      // the title link covers the whole card (see .article-cards-link::after)
+      const link = document.createElement('a');
+      link.className = 'article-cards-link';
+      link.href = href;
+      link.textContent = text;
+      if (source.target) link.target = source.target;
+      moveInstrumentation(source, link);
+      heading.append(link);
+      item.classList.add('article-cards-clickable');
+    } else {
+      heading.textContent = text;
+      if (source) moveInstrumentation(source, heading);
+    }
     body.append(heading);
 
     if (metaCell?.textContent.trim()) {

@@ -2,6 +2,10 @@
   --feature-banner-height: 600px;
   --feature-banner-text: var(--text-color);
   --feature-banner-muted: var(--muted-color);
+
+  /* text reveal start colours, AA contrast on the banner background */
+  --feature-banner-heading-from: #666;
+  --feature-banner-text-from: #707070;
 }
 
 .feature-banner > ul {
@@ -24,6 +28,8 @@
 .feature-banner .feature-banner-item.light-text {
   --feature-banner-text: var(--inverse-color);
   --feature-banner-muted: #d6d6d6;
+  --feature-banner-heading-from: #949494;
+  --feature-banner-text-from: #8f8f8f;
 
   background-color: #1a1a1a;
 }
@@ -125,14 +131,18 @@
 }
 
 
-/* scroll reveal of the heading words (side image banners) */
-.feature-banner .feature-banner-word {
-  color: var(--feature-banner-muted);
-  transition: color 0.3s ease;
+/* scroll-linked text reveal (section style "animate-text"): each word blends from the
+   start colour to its final colour as --reveal goes from 0 to 1 */
+.feature-banner .feature-banner-reveal .feature-banner-content :is(h1, h2, h3) .feature-banner-word {
+  color: color-mix(in srgb, var(--feature-banner-text) calc(var(--reveal, 0) * 100%), var(--feature-banner-heading-from));
 }
 
-.feature-banner .feature-banner-word.is-on {
-  color: var(--feature-banner-text);
+.feature-banner .feature-banner-reveal .feature-banner-content p .feature-banner-word {
+  color: color-mix(in srgb, var(--feature-banner-muted) calc(var(--reveal, 0) * 100%), var(--feature-banner-text-from));
+}
+
+.feature-banner .feature-banner-reveal .feature-banner-content p strong .feature-banner-word {
+  color: color-mix(in srgb, var(--feature-banner-text) calc(var(--reveal, 0) * 100%), var(--feature-banner-text-from));
 }
 
 :where(.desktop-view) .feature-banner {

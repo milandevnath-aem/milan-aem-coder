@@ -9,35 +9,63 @@ function styleTokens(cell) {
 }
 
 /**
- * Side image banners: the heading words turn from muted to full colour as the banner
- * scrolls into view. Skipped for reduced motion and in the Universal Editor.
+ * Wraps every word of the element's text in a span, keeping inline markup (links, bold).
+ * @param {HTMLElement} el text element
+ * @returns {HTMLSpanElement[]} word spans in reading order
+ */
+function splitWords(el) {
+  const words = [];
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach((node) => {
+    const parts = node.textContent.split(/(\s+)/);
+    const frag = document.createDocumentFragment();
+    parts.forEach((part) => {
+      if (!part) return;
+      if (/^\s+$/.test(part)) {
+        frag.append(part);
+        return;
+      }
+      const span = document.createElement('span');
+      span.className = 'feature-banner-word';
+      span.textContent = part;
+      words.push(span);
+      frag.append(span);
+    });
+    node.replaceWith(frag);
+  });
+  return words;
+}
+
+/**
+ * Banners in a section with the "animate-text" style: the heading and text light up
+ * word by word as the banner scrolls through the viewport (and dim again when scrolling
+ * back). Skipped for reduced motion and in the Universal Editor.
  * @param {HTMLElement} item banner item
  */
-function revealHeading(item) {
-  const heading = item.querySelector('.feature-banner-content h2, .feature-banner-content h3');
+function revealText(item) {
   const editing = document.documentElement.classList.contains('adobe-ue-edit');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!heading || editing || reduceMotion) return;
-  const text = heading.textContent.trim();
-  heading.setAttribute('aria-label', text);
-  heading.textContent = '';
-  const words = text.split(/\s+/).map((word) => {
-    const span = document.createElement('span');
-    span.className = 'feature-banner-word';
-    span.setAttribute('aria-hidden', 'true');
-    span.textContent = word;
-    heading.append(span, ' ');
-    return span;
-  });
+  const content = item.querySelector('.feature-banner-content');
+  if (!content || editing || reduceMotion) return;
+  const texts = content.querySelectorAll(':scope > :is(h1, h2, h3, p:not(.button-wrapper))');
+  const words = [...texts].flatMap(splitWords);
+  if (!words.length) return;
+  item.classList.add('feature-banner-reveal');
+
   let frame;
   const update = () => {
     frame = null;
-    const { top } = heading.getBoundingClientRect();
+    const { top } = content.getBoundingClientRect();
     const vh = window.innerHeight;
-    // fully revealed once the heading reaches the upper third of the viewport
+    // starts when the text enters the lower part of the viewport, done in the upper third
     const progress = Math.min(1, Math.max(0, (vh * 0.85 - top) / (vh * 0.5)));
-    const count = Math.round(progress * words.length);
-    words.forEach((word, i) => word.classList.toggle('is-on', i < count));
+    const lit = progress * words.length;
+    words.forEach((word, i) => {
+      const amount = Math.min(1, Math.max(0, lit - i));
+      word.style.setProperty('--reveal', amount.toFixed(2));
+    });
   };
   const onScroll = () => { if (!frame) frame = requestAnimationFrame(update); };
   new IntersectionObserver(([entry]) => {
@@ -53,6 +81,9 @@ function revealHeading(item) {
  * @param {Element} block The block element
  */
 export default function decorate(block) {
+  // text animation only when the section (or the block) has the "animate-text" style
+  const animate = block.classList.contains('animate-text')
+    || Boolean(block.closest('.section.animate-text'));
   const list = document.createElement('ul');
   [...block.children].forEach((row, i) => {
     const [imageCell, mobileCell, textCell, styleCell] = row.children;
@@ -90,7 +121,7 @@ export default function decorate(block) {
       textCell.className = 'feature-banner-content';
       item.append(textCell);
     }
-    if (item.classList.contains('side-image')) revealHeading(item);
+    if (animate) revealText(item);
     list.append(item);
   });
   block.replaceChildren(list);

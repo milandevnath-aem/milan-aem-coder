@@ -33,6 +33,11 @@
   text-decoration: none;
 }
 
+.service-links a.service-links-tile:focus-visible {
+  outline: 2px solid var(--text-color);
+  outline-offset: 2px;
+}
+
 .service-links .service-links-title {
   position: relative;
   font-size: var(--body-font-size-m);
