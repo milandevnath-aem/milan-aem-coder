@@ -1,3 +1,13 @@
+
+.feature-cards-container h2#key-features{
+  padding-block: 44px;
+}
+
+:where(.desktop-view) .feature-cards-container h2#key-features{
+  padding-block: 0;
+  margin-bottom: 32px;
+}
+
 .feature-cards {
   --feature-cards-bg: var(--surface-color);
   --feature-cards-radius: 24px;
@@ -19,11 +29,22 @@
   justify-content: space-between;
   gap: 24px;
   box-sizing: border-box;
-  min-height: 200px;
   padding: 24px;
   border-radius: var(--feature-cards-radius);
   background-color: var(--feature-cards-bg);
   overflow: hidden;
+}
+
+.feature-cards .feature-cards-card.is-icon{
+  flex-direction: row;
+  gap: 12px;
+  justify-content: flex-start;
+}
+
+:where(.desktop-view) .feature-cards .feature-cards-card.is-icon{
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
 }
 
 .feature-cards .feature-cards-number {
@@ -37,10 +58,11 @@
   font-weight: 600;
   line-height: 24px;
   letter-spacing: 0;
+  color: var(--text-color);
 }
 
 .feature-cards .feature-cards-body p {
-  margin: 4px 0 0;
+  margin: 8px 0 0;
   color: var(--muted-color);
   font-size: var(--body-font-size-s);
   font-weight: 500;
@@ -203,7 +225,7 @@
 
 :where(.desktop-view) .feature-cards .feature-cards-list {
   grid-template-columns: repeat(6, 1fr);
-  gap: var(--grid-gutter);
+  gap: var(--grid-columns);
 }
 
 :where(.desktop-view) .feature-cards .feature-cards-card {
