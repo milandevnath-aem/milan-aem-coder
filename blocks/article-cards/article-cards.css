@@ -1,3 +1,7 @@
+.article-cards-container .default-content-wrapper > :first-child {
+  margin-bottom: 16px;
+}
+
 .article-cards {
   --article-cards-bg: var(--surface-color);
 }
@@ -96,6 +100,19 @@
   font-weight: 500;
   line-height: var(--type-b1-line);
   letter-spacing: var(--type-b1-ls);
+}
+
+:where(.desktop-view) .article-cards .article-cards-category {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #121212;
+}
+
+:where(.desktop-view) .article-cards .article-cards-meta {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
 }
 
 :where(.desktop-view) .article-cards > ul {

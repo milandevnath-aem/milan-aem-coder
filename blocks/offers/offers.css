@@ -84,7 +84,7 @@
 /* pill CTA: 192px wide, 12px (mobile) / 14px (desktop) vertical padding */
 .offers .offers-content a.button {
   width: 192px;
-  padding: 11px 0;
+  padding: 12px 15px;
   border-color: #fff;
   background-color: #fff;
   color: var(--text-color);
@@ -120,7 +120,7 @@
 }
 
 :where(.desktop-view) .offers .offers-content a.button {
-  padding: 13px 0;
+  padding: 14px 15px;
 }
 
 :where(.desktop-view) .offers > ul {
