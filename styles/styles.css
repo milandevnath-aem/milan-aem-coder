@@ -78,6 +78,9 @@
   --type-bt1-line: 16px;
   --type-bt2-size: 14px; /* Button/BT-2 (pill CTAs), semibold */
   --type-bt2-line: 20px;
+  --type-h4-size: 16px; /* Headline/H4 (card titles) */
+  --type-h4-line: 24px;
+  --type-h4-weight: 500;
 
   /*
    * grid (design system): values per viewport tier, the tiers are set on <html data-viewport>
@@ -128,7 +131,7 @@
 :root[data-viewport='laptop'] {
   --grid-columns: 12px;
   --grid-gutter: 16px;
-  --fb-margin: 8px;
+  --fb-margin: 12px;
   --gb-margin: 92px;
   --ab-margin: 12px;
   --footer-padding: 80px;
@@ -197,6 +200,9 @@
   --type-bt1-line: 20px;
   --type-bt2-size: 16px;
   --type-bt2-line: 24px;
+  --type-h4-size: 20px;
+  --type-h4-line: 28px;
+  --type-h4-weight: 600;
 
   /* layout: full bleed blocks pad their text to the grid line */
   --section-spacing: 124px;
@@ -456,6 +462,66 @@ main > .section:first-of-type {
   margin-top: 0;
 }
 
+/* keyboard focus: dark ring with a light halo, visible on light and dark backgrounds
+   (blocks may refine it; zero specificity) */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--text-color);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--background-color);
+}
+
+/* sticky header and bottom bars never cover the focused element (WCAG 2.4.11) */
+html {
+  scroll-padding-top: calc(var(--nav-height) + 16px);
+  scroll-padding-bottom: 96px;
+}
+
+/* skip link: first focusable element, shown on focus */
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 1000;
+  padding: 12px 20px;
+  border-radius: 100px;
+  background-color: var(--text-color);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.skip-link:any-link {
+  color: #fff;
+}
+
+main:focus {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* text for screen readers only (stays visible while focused, e.g. skip links) */
+.visually-hidden:where(:not(:focus-within, :active)) {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  border: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+}
+
 /* full bleed (FB): edge to edge with a small margin on every viewport */
 main > .section > .hero-loan-wrapper,
 main > .section > .offers-wrapper,
@@ -463,6 +529,24 @@ main > .section > .branch-locator-wrapper,
 main > .section > .feature-banner-wrapper {
   max-width: none;
   padding: 0 var(--fb-margin);
+}
+
+/* product pages: eligibility and documents sections */
+main > .section.requirements-container .default-content-wrapper > h2 + p {
+  margin-bottom: 32px;
+}
+
+/* product pages: feature banners run edge to edge (Figma "Section 3 - FB"), the text
+   stays on the grid */
+main:has(.hero-loan.product) > .section > .feature-banner-wrapper {
+  --fb-inset: var(--gb-offset);
+
+  padding: 0;
+}
+
+/* "Need help?" band: edge to edge, no rounded corners */
+main > .section > .offers-wrapper:has(.offers-short) {
+  padding: 0;
 }
 
 /* EMI calculator: the heading stays on the grid, the card is full bleed on small screens */
@@ -474,9 +558,26 @@ main > .section > .emi-calculator-wrapper {
   padding: 0 var(--gb-margin);
 }
 
+/* regulatory updates: adaptive bound on small screens, grid bound in the desktop view */
+main > .section > .article-cards-wrapper {
+  padding: 0 var(--ab-margin);
+}
+
+:where(.desktop-view) main > .section > .article-cards-wrapper {
+  padding: 0 var(--gb-margin);
+}
+
+main > .section.article-cards-container .default-content-wrapper > h2:first-child {
+  margin-bottom: 16px;
+}
+
+:where(.desktop-view) main > .section.article-cards-container .default-content-wrapper > h2:first-child {
+  margin-bottom: 32px;
+}
+
 /* adaptive bound (AB): close to the edge, 1440px and centered on desktop */
 main > .section > .service-links-wrapper {
-  padding: 0 var(--ab-margin);
+  padding: 0 var(--gb-margin);
 }
 
 main > .section.feature-banner-container {

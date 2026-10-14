@@ -5,10 +5,13 @@ import { loadFragment } from '../fragment/fragment.js';
   Modal: not authored as a block. Links pointing to a page below a /modals/ folder
   open that page (a fragment) in a dialog: centered card on desktop, full screen on
   mobile. Pass className "modal-sheet" for a bottom sheet on mobile or
-  "modal-compact" for a small centered dialog.
+  "modal-compact" for a small centered dialog. Text-only pages (e.g. "Read more")
+  get "modal-details": a fixed size card (bottom sheet on mobile) where only the
+  content scrolls.
 */
 
 let cssLoaded;
+let modalCount = 0;
 
 function loadModalCss() {
   cssLoaded = cssLoaded || loadCSS(`${window.hlx.codeBasePath}/blocks/modal/modal.css`);
@@ -25,7 +28,15 @@ export async function createModal(contentNodes, { className = '', label = '' } =
   await loadModalCss();
   const dialog = document.createElement('dialog');
   dialog.className = `modal ${className}`.trim();
-  if (label) dialog.setAttribute('aria-label', label);
+  // Esc and clicks outside the card close the dialog
+  dialog.setAttribute('closedby', 'any');
+  const heading = contentNodes
+    .map((node) => node.querySelector?.('h1, h2')).find(Boolean);
+  if (heading) {
+    modalCount += 1;
+    heading.id = heading.id || `modal-title-${modalCount}`;
+    dialog.setAttribute('aria-labelledby', heading.id);
+  } else if (label) dialog.setAttribute('aria-label', label);
 
   const close = document.createElement('button');
   close.type = 'button';
@@ -39,7 +50,7 @@ export async function createModal(contentNodes, { className = '', label = '' } =
   content.append(...contentNodes);
   dialog.append(close, content);
 
-  // click on the backdrop closes the dialog
+  // click on the backdrop (or the dialog area around the card) closes the dialog
   dialog.addEventListener('click', (e) => {
     if (e.target === dialog) dialog.close();
   });
@@ -70,6 +81,7 @@ export async function openModal(url) {
   if (!fragment) return null;
   document.querySelectorAll('dialog.modal[open]').forEach((open) => open.close());
   const modal = await createModal([...fragment.childNodes], {
+    className: fragment.querySelector('.block') ? '' : 'modal-details',
     label: fragment.querySelector('h1, h2')?.textContent.trim() || '',
   });
   modal.showModal();

@@ -9,7 +9,7 @@ footer {
 footer .footer > div {
   box-sizing: border-box;
   margin: auto;
-  padding: 80px var(--fb-margin) var(--fb-margin);
+  padding: 100px var(--fb-margin) var(--fb-margin);
 }
 
 footer .footer p {
@@ -27,7 +27,7 @@ footer .footer-brand .default-content-wrapper {
   align-items: center;
   gap: 24px;
   max-width: 688px;
-  margin: 0 auto 80px;
+  margin: 0 auto 100px;
   padding: 0 12px;
   color: var(--inverse-color);
   text-align: center;
@@ -42,9 +42,9 @@ footer .footer-brand img {
 footer .footer-brand h2 {
   margin: 0;
   color: var(--inverse-color);
-  font-size: 28px;
-  line-height: 36px;
-  letter-spacing: -0.7px;
+  font-size: var(--type-display-size);
+  line-height: var(--type-display-line);
+  letter-spacing: var(--type-display-ls);
 }
 
 footer .footer-brand p {
@@ -52,6 +52,7 @@ footer .footer-brand p {
   font-size: var(--body-font-size-s);
   font-weight: 500;
   line-height: 20px;
+  letter-spacing: 0;
 }
 
 footer .footer-brand p:has(picture) {
@@ -62,8 +63,8 @@ footer .footer-brand p:has(picture) {
 footer .footer-card {
   display: flex;
   flex-direction: column;
-  gap: 32px;
-  padding: 48px var(--footer-padding) 32px;
+  gap: 24px;
+  padding: 40px var(--footer-padding);
   border-radius: 32px;
   background-color: var(--background-color);
 }
@@ -79,14 +80,15 @@ footer .footer-links .default-content-wrapper > ul {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  padding-bottom: 32px;
+  padding-bottom: 24px;
   border-bottom: 1px solid var(--surface-color);
 }
 
+/* typography: column headings, links, breadcrumb */
 footer .footer-links .footer-heading {
   display: block;
-  margin-bottom: 12px;
   color: var(--muted-color);
+  font-size: 12px;
   font-weight: 500;
   line-height: 16px;
   letter-spacing: 0.24px;
@@ -95,21 +97,33 @@ footer .footer-links .footer-heading {
 footer .footer-other li,
 footer .footer-bottom li,
 footer .footer-links li li {
+  font-size: 12px;
   font-weight: 600;
   line-height: 18px;
+  letter-spacing: 0.24px;
 }
 
-footer .footer-links li li + li {
-  margin-top: 14px;
+footer .footer-links li ul {
+  margin-top: 8px;
+}
+
+footer .footer-links li li {
+  padding: 8px 0;
 }
 
 /* other links */
 footer .footer-other .default-content-wrapper > ul {
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  padding-bottom: 32px;
+  gap: 4px;
+  padding-bottom: 24px;
   border-bottom: 1px solid var(--surface-color);
+}
+
+footer .footer-other .default-content-wrapper > ul > li {
+  display: flex;
+  align-items: center;
+  min-height: 36px;
 }
 
 footer .footer-other a:any-link {
@@ -127,7 +141,24 @@ footer .footer-bottom .default-content-wrapper > ul:first-child {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 18px;
+  gap: 0;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--surface-color);
+}
+
+footer .footer-bottom .default-content-wrapper > ul:first-child > li {
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+}
+
+footer .footer-bottom .default-content-wrapper > ul:first-child > li:first-child {
+  min-height: unset;
+  margin-bottom: 24px;
+}
+
+footer .footer-bottom .default-content-wrapper > ul:first-child > li:nth-child(n + 3) {
+  margin-top: 4px;
 }
 
 footer .footer-dropdown {
@@ -241,11 +272,12 @@ footer .footer-bottom .default-content-wrapper > p {
   font-size: 10px;
   font-weight: 600;
   line-height: 16px;
+  letter-spacing: 0;
 }
 
 footer .footer-bottom .default-content-wrapper > ul:last-child {
   display: flex;
-  gap: 4px;
+  gap: 0;
 }
 
 footer .footer-bottom .default-content-wrapper > ul:last-child a {
@@ -269,34 +301,71 @@ footer .footer-bottom .icon {
   width: 193px;
 }
 
-:where(.desktop-view) footer .footer-brand h2 {
-  font-size: var(--heading-font-size-xxl);
-  line-height: 40px;
-  letter-spacing: -0.8px;
+:where(.desktop-view) footer .footer-brand p {
+  font-size: var(--body-font-size-m);
+  line-height: 24px;
 }
 
 :where(.desktop-view) footer .footer-card {
-  gap: 40px;
+  gap: 24px;
 
   /* the card content stays within the grid width on large screens */
-  padding: 100px max(var(--footer-padding), (100% - var(--grid-limit)) / 2) 40px;
+  padding: 80px max(var(--footer-padding), (100% - var(--grid-limit)) / 2) 40px;
   border-radius: 60px;
 }
 
 :where(.desktop-view) footer .footer-links .default-content-wrapper > ul {
   flex-flow: row wrap;
-  gap: 40px;
-  padding-bottom: 48px;
+  gap: 12px;
+  padding-bottom: 24px;
 }
 
 :where(.desktop-view) footer .footer-links .default-content-wrapper > ul > li {
-  width: 150px;
+  width: 187px;
+}
+
+:where(.desktop-view) footer .footer-links li ul {
+  margin-top: 12px;
+}
+
+:where(.desktop-view) footer .footer-links li li {
+  padding: 0;
+}
+
+:where(.desktop-view) footer .footer-links li li + li {
+  margin-top: 12px;
+}
+
+:where(.desktop-view) footer .footer-links .footer-heading {
+  font-size: var(--body-font-size-s);
+  line-height: 18px;
+  letter-spacing: 0;
+}
+
+:where(.desktop-view) footer .footer-other li,
+:where(.desktop-view) footer .footer-bottom li,
+:where(.desktop-view) footer .footer-links li li {
+  font-size: var(--body-font-size-s);
+  line-height: 20px;
+  letter-spacing: 0;
 }
 
 :where(.desktop-view) footer .footer-other .default-content-wrapper > ul {
   flex-flow: row wrap;
-  gap: 24px;
+  gap: 20px;
   padding-bottom: 24px;
+}
+
+:where(.desktop-view) footer .footer-other .default-content-wrapper > ul > li {
+  min-height: 36px;
+}
+
+/* desktop: "Kotak Group Companies" uses Body/B2 */
+:where(.desktop-view) footer .footer-dropdown summary {
+  font-size: var(--body-font-size-m);
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: 0;
 }
 
 :where(.desktop-view) footer .footer-bottom .default-content-wrapper {
@@ -311,21 +380,27 @@ footer .footer-bottom .icon {
   flex-direction: row;
   align-items: center;
   gap: 24px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--surface-color);
 }
 
+:where(.desktop-view) footer .footer-bottom .default-content-wrapper > ul:first-child > li,
 :where(.desktop-view) footer .footer-bottom .default-content-wrapper > ul:first-child > li:first-child {
-  margin-right: 16px;
+  min-height: unset;
+  margin: 0;
 }
 
 :where(.desktop-view) footer .footer-bottom .default-content-wrapper > p {
   grid-column: 1;
+  font-size: 12px;
+  line-height: 18px;
 }
 
 :where(.desktop-view) footer .footer-bottom .default-content-wrapper > ul:last-child {
   grid-column: 2;
   justify-content: flex-end;
+}
+
+:where(html:not(.desktop-view)) footer .footer-bottom .default-content-wrapper > p + ul:last-child {
+  margin-top: -2px;
 }
 
 /* breadcrumb */
@@ -339,12 +414,23 @@ footer .footer-breadcrumb ol {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   margin: 0;
   padding: 0;
   list-style: none;
+  font-size: var(--body-font-size-s);
+  font-weight: 600;
+  line-height: 20px;
+}
+
+:where(.desktop-view) footer .footer-breadcrumb ol {
   font-size: var(--body-font-size-m);
   line-height: 24px;
+}
+
+footer .footer-card .footer-bottom .footer-breadcrumb li {
+  font: inherit;
+  letter-spacing: 0;
 }
 
 footer .footer-breadcrumb li + li::before {
@@ -352,7 +438,7 @@ footer .footer-breadcrumb li + li::before {
   display: inline-block;
   width: 16px;
   height: 16px;
-  margin-right: 12px;
+  margin-right: 8px;
   vertical-align: -2px;
   background: url('../../icons/chevron-right.svg') center / contain no-repeat;
 }

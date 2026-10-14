@@ -12,6 +12,7 @@ import {
 } from './aem.js';
 // sets the viewport classes on <html> before the page is shown
 import { isDesktop } from './viewport.js';
+import { decorateDynamicMedia } from './images.js';
 
 /**
  * Moves all the attributes from a given elmenet to another given element.
@@ -149,6 +150,8 @@ export function decorateMain(main) {
   decorateIcons(main);
   buildAutoBlocks(main);
   decorateSections(main);
+  // Dynamic Media references become images before blocks and buttons are decorated
+  decorateDynamicMedia(main);
   decorateBlocks(main);
   decorateButtons(main);
 }
@@ -161,6 +164,16 @@ async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
   const main = doc.querySelector('main');
+  // skip link to the main content (WCAG 2.4.1)
+  if (main && !doc.querySelector('.skip-link')) {
+    main.id = main.id || 'main';
+    main.tabIndex = -1;
+    const skip = doc.createElement('a');
+    skip.className = 'skip-link visually-hidden';
+    skip.href = `#${main.id}`;
+    skip.textContent = 'Skip to main content';
+    doc.body.prepend(skip);
+  }
   if (main) {
     decorateMain(main);
     document.body.classList.add('appear');

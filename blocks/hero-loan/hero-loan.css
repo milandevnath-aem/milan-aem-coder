@@ -1,5 +1,5 @@
 .hero-loan {
-  --hero-loan-radius: 32px;
+  --hero-loan-radius: 52px;
   --hero-loan-min-height: 611px;
   --hero-loan-padding: 44px var(--fb-inset) 24px;
   --hero-loan-text: var(--inverse-color);
@@ -9,7 +9,7 @@
   grid-template-areas: 'stack';
   min-height: var(--hero-loan-min-height);
   border-radius: var(--hero-loan-radius);
-  background-color: #1f2a24;
+  background-color: transparent;
   overflow: hidden;
 }
 
@@ -105,28 +105,65 @@
 .hero-loan .hero-loan-dots {
   position: absolute;
   left: 50%;
-  bottom: 100px;
+  bottom: 92px;
   display: flex;
-  gap: 4px;
+  align-items: center;
+  gap: 0;
   transform: translateX(-50%);
   pointer-events: auto;
 }
 
-.hero-loan .hero-loan-dots button {
-  width: 8px;
-  height: 8px;
+/* 8px dots with a 24px hit area (WCAG 2.5.8) */
+.hero-loan .hero-loan-dots .hero-loan-dot {
+  box-sizing: border-box;
+  width: 16px;
+  height: 24px;
   margin: 0;
-  padding: 0;
   border: 0;
-  border-radius: 8px;
+  border-radius: 12px;
+  padding: 8px 4px;
   background-color: rgb(255 255 255 / 60%);
+  background-clip: content-box;
   cursor: pointer;
   transition: width 0.3s;
 }
 
-.hero-loan .hero-loan-dots button[aria-current='true'] {
-  width: 24px;
+.hero-loan .hero-loan-dots .hero-loan-dot[aria-current='true'] {
+  width: 32px;
   background-color: #fff;
+}
+
+.hero-loan .hero-loan-pause {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  margin: 0 0 0 8px;
+  border: 0;
+  border-radius: 50%;
+  padding: 0;
+  background-color: rgb(0 0 0 / 40%);
+  cursor: pointer;
+}
+
+/* pause bars, or a play triangle when paused */
+.hero-loan .hero-loan-pause::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 8px;
+  height: 10px;
+  border-inline: 3px solid #fff;
+  box-sizing: border-box;
+}
+
+.hero-loan .hero-loan-pause.is-paused::before {
+  width: 0;
+  height: 0;
+  border-width: 5px 0 5px 8px;
+  border-style: solid;
+  border-color: transparent transparent transparent #fff;
+  margin-left: 9px;
 }
 
 .hero-loan .hero-loan-form {
@@ -168,7 +205,7 @@
 }
 
 :where(.desktop-view) .hero-loan .hero-loan-content a.button {
-  width: 220px;
+  display: none;
 }
 
 :where(.desktop-view) .hero-loan .hero-loan-dots {
@@ -209,7 +246,9 @@
 .hero-loan .hero-loan-form-intro p {
   margin: 8px 0 0;
   color: var(--muted-color);
+  font-size: var(--body-font-size-m);
   font-weight: 500;
+  line-height: 24px;
 }
 
 .hero-loan .hero-loan-form form {
@@ -231,7 +270,7 @@
   align-items: center;
   gap: 8px;
   min-width: 0;
-  padding: 14px 20px;
+  padding: 20px;
   border-radius: 16px;
   background-color: var(--light-color);
   font-size: var(--heading-font-size-m);
@@ -246,10 +285,10 @@
 .hero-loan .hero-loan-input input {
   width: 100%;
   min-width: 0;
-  padding: 6px 0;
+  padding: 0;
   border: 0;
   background: transparent;
-  color: var(--text-color);
+  color: var(--dark-color);
   font-size: inherit;
   font-weight: inherit;
   line-height: inherit;
@@ -353,6 +392,8 @@
 .hero-loan .hero-loan-form button[type='submit'] {
   width: 100%;
   margin-top: auto;
+  border: 0;
+  padding: 14px 12px;
 }
 
 .hero-loan .hero-loan-thanks {
@@ -362,6 +403,14 @@
 }
 
 /* product variant: stacked fields and a category dropdown */
+.hero-loan.product .hero-loan-form form {
+  gap: 12px;
+}
+
+.hero-loan.product .hero-loan-form form button[type='submit'] {
+  margin-top: 8px;
+}
+
 .hero-loan.product .hero-loan-fields {
   flex-direction: column;
 }
@@ -430,10 +479,35 @@
   display: none;
 }
 
-:where(.desktop-view) .hero-loan.product .hero-loan-content p {
+:where(.desktop-view) .hero-loan.product {
+  --hero-loan-radius: 20px;
+}
+
+/* product form card (Figma): 546px wide, 68px fields, 24px above the button */
+:where(.desktop-view) .hero-loan.product .hero-loan-form {
+  width: max(546px, 46%);
+}
+
+:where(.desktop-view) .hero-loan.product .hero-loan-form .dropdown-field {
+  height: 68px;
+  min-height: 0;
+  padding-block: 0;
+}
+
+:where(.desktop-view) .hero-loan.product .hero-loan-form form {
+  margin-bottom: 0;
+}
+
+:where(.desktop-view) .hero-loan.product .hero-loan-form form button[type='submit'] {
   margin-top: 12px;
-  font-size: var(--body-font-size-s);
-  line-height: 20px;
+}
+
+:where(.desktop-view) .hero-loan.product .hero-loan-content p:not(.button-wrapper) {
+  margin-top: 20px;
+  color: var(--inverse-color);
+  font-size: var(--body-font-size-m);
+  font-weight: 500;
+  line-height: 24px;
 }
 
 :where(.desktop-view) .hero-loan.no-form .hero-loan-content {

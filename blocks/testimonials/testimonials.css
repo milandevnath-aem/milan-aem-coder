@@ -67,9 +67,9 @@
   font-weight: 600;
 }
 
-.testimonials .testimonials-meta p {
+/* .testimonials .testimonials-meta p {
   margin: 0;
-}
+} */
 
 /* name: Headline/H2, role: Body/B1 */
 .testimonials .testimonials-name {
@@ -77,15 +77,16 @@
   font-size: var(--type-h2-size);
   font-weight: 600;
   line-height: var(--type-h2-line);
+  margin: 0 0 2px;
 }
 
 .testimonials .testimonials-role {
-  margin-top: 2px;
   color: var(--muted-color);
   font-size: var(--type-b1-size);
   font-weight: 500;
   line-height: var(--type-b1-line);
   letter-spacing: var(--type-b1-ls);
+  margin: 0;
 }
 
 .testimonials .testimonials-controls {
