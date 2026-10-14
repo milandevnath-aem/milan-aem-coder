@@ -362,6 +362,16 @@ for (const slug of SLUGS) {
     if (section.querySelector('.section-metadata')) return;
     section.insertAdjacentHTML('beforeend', '<div class="section-metadata"><div><div>style</div><div>animate-text</div></div></div>');
   });
+  // dealer finance intro band: Figma gradient artwork as section background images
+  // (desktop + mobile), text removed with reference/review/harmonic-fill.mjs
+  if (slug === 'dealer-finance') {
+    const brandMeta = [...body.querySelectorAll('.section-metadata')]
+      .find((meta) => [...meta.querySelectorAll(':scope > div > div:last-child')]
+        .some((cell) => /\bbrand\b/.test(cell.textContent)));
+    brandMeta?.insertAdjacentHTML('beforeend', `
+      <div><div>background</div><div><picture><img src="../images/dealer-finance/intro-bg-desktop.jpg" alt=""></picture></div></div>
+      <div><div>backgroundMobile</div><div><picture><img src="../images/dealer-finance/intro-bg-mobile.jpg" alt=""></picture></div></div>`);
+  }
   // car loan mobile hero:baked-in text boxes and black frame removed (reference/review/row-fill.mjs)
   body.querySelectorAll('img[src$="/car-loan/hero-1-mobile.jpg"]').forEach((img) => img.setAttribute('src', img.getAttribute('src').replace('hero-1-mobile.jpg', 'hero-1-mobile-clean.jpg')));
   body.querySelectorAll('.metadata > div').forEach((row) => {

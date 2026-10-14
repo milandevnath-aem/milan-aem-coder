@@ -1,4 +1,5 @@
 import { createOptimizedPicture } from './aem.js';
+import { MEDIA } from './viewport.js';
 
 /*
  * Responsive images that work with AEM Dynamic Media as well as with images stored on
@@ -108,6 +109,32 @@ function copyEditorAttributes(from, to) {
  * responsive renditions. Blocks then find a normal <img> to decorate.
  * @param {Element} main container element
  */
+/**
+ * Picture with separate desktop and mobile images (art direction); either may be empty.
+ * Dynamic Media aware, like createPicture.
+ * @param {string} desktopSrc image for the desktop view
+ * @param {string} mobileSrc image for small screens
+ * @param {string} alt alternative text
+ * @param {boolean} eager load eagerly
+ * @returns {HTMLPictureElement}
+ */
+export function createResponsivePicture(desktopSrc, mobileSrc, alt = '', eager = false) {
+  if (!desktopSrc || !mobileSrc || desktopSrc === mobileSrc) {
+    return createPicture(desktopSrc || mobileSrc, alt, eager, [
+      { media: MEDIA.desktop, width: '2000' },
+      { width: '750' },
+    ]);
+  }
+  const desktop = createPicture(desktopSrc, alt, eager, [
+    { media: MEDIA.desktop, width: '2000' },
+    { width: '2000' },
+  ]);
+  const mobile = createPicture(mobileSrc, alt, eager, [{ width: '750' }]);
+  const picture = document.createElement('picture');
+  picture.append(...desktop.querySelectorAll('source[media]'), ...mobile.children);
+  return picture;
+}
+
 export function decorateDynamicMedia(main) {
   main.querySelectorAll('a[href]').forEach((a) => {
     const type = dynamicMediaType(a.href);
