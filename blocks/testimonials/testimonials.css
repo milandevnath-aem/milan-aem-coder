@@ -81,7 +81,6 @@
 }
 
 .testimonials .testimonials-role {
-  margin-top: 2px;
   color: var(--muted-color);
   font-size: var(--type-b1-size);
   font-weight: 500;
