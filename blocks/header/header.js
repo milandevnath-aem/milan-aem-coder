@@ -540,17 +540,7 @@ export default async function decorate(block) {
       const viewport = document.createElement('span');
       viewport.className = 'nav-announcement-text';
       viewport.append(track);
-      // moving text can be paused (WCAG 2.2.2)
-      const pause = document.createElement('button');
-      pause.type = 'button';
-      pause.className = 'nav-announcement-pause';
-      pause.setAttribute('aria-label', 'Pause scrolling text');
-      pause.setAttribute('aria-pressed', 'false');
-      pause.addEventListener('click', () => {
-        const paused = announcement.classList.toggle('is-paused');
-        pause.setAttribute('aria-pressed', paused);
-      });
-      announcement.replaceChildren(...[infoIcon, viewport, pause].filter(Boolean));
+      announcement.replaceChildren(...[infoIcon, viewport].filter(Boolean));
     }
     const utility = navTopbar.querySelector('ul');
     utility?.classList.add('nav-utility');

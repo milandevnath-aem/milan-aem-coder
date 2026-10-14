@@ -116,13 +116,13 @@
 /* tablet portrait: 600px up to the desktop view */
 :root[data-viewport='tablet-portrait'] {
   --grid-columns: 8;
-  --fb-margin: 8px;
+  --fb-margin: 12px;
 }
 
 /* tablet landscape: desktop view up to 1280px */
 :root[data-viewport='tablet-landscape'] {
   --grid-columns: 12;
-  --fb-margin: 8px;
+  --fb-margin: 12px;
   --gb-margin: 48px;
   --footer-padding: 36px;
 }
@@ -131,7 +131,7 @@
 :root[data-viewport='laptop'] {
   --grid-columns: 12;
   --grid-gutter: 16px;
-  --fb-margin: 8px;
+  --fb-margin: 12px;
   --gb-margin: 92px;
   --ab-margin: 12px;
   --footer-padding: 80px;
@@ -573,7 +573,7 @@ main > .section.article-cards-container .default-content-wrapper > h2:first-chil
 
 /* adaptive bound (AB): close to the edge, 1440px and centered on desktop */
 main > .section > .service-links-wrapper {
-  padding: 0 var(--ab-margin);
+  padding: 0 var(--gb-margin);
 }
 
 main > .section.feature-banner-container {
