@@ -33,9 +33,13 @@
 /* heading left, long text right */
 .columns.columns-split > div > div:first-child h2,
 .columns.columns-split > div > div:first-child h3 {
-  margin: 0 0 16px;
+  margin: 0 0 32px;
   font-size: var(--heading-font-size-xxl);
   line-height: 40px;
+}
+
+.feature-cards-container .columns.columns-split > div > div:first-child h2{
+  color: var(--text-color);
 }
 
 .columns.columns-split p,
@@ -46,12 +50,26 @@
   line-height: 24px;
 }
 
+.feature-cards-container .columns.columns-split p , 
+.feature-cards-container .columns.columns-split li {
+ margin-bottom: 24px;
+}
+
 .columns.columns-split p:first-child {
   margin-top: 0;
 }
 
 .columns.columns-split ul {
   padding-left: 20px;
+}
+
+.feature-cards-container .columns.columns-split ul {
+  margin-top: 24px;
+  padding-left: 24px;
+}
+
+.columns-container.feature-cards-container .feature-cards-wrapper{
+  margin-top: 80px;
 }
 
 .columns.columns-split a:any-link {

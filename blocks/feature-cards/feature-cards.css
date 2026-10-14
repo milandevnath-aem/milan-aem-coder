@@ -126,23 +126,24 @@
 
 /* info: icon + label/value pairs */
 .feature-cards.info .feature-cards-icon img {
-  width: 56px;
-  height: 56px;
+  width: 83px;
+  height: 72px;
 }
 
 .feature-cards.info .feature-cards-card {
   justify-content: flex-start;
   min-height: 0;
+  gap: 40px;
 }
 
 .feature-cards.info .feature-cards-body p {
   margin: 0;
-  font-size: var(--body-font-size-s);
-  line-height: 18px;
+  font-size: var(--body-font-size-xs);
+  line-height: 16px;
 }
 
 .feature-cards.info .feature-cards-body p.feature-cards-value {
-  margin: 6px 0 0;
+  margin: 8px 0 0;
   color: var(--text-color);
   font-size: var(--body-font-size-m);
   font-weight: 600;
@@ -151,8 +152,8 @@
 }
 
 .feature-cards.info .feature-cards-body p.feature-cards-value:not(:last-child) {
-  margin-bottom: 16px;
-  padding-bottom: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
   border-bottom: 1px solid #dedede;
 }
 

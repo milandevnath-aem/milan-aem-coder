@@ -381,7 +381,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 12px;
+  gap: 8px;
   margin: auto 0 0;
   padding: 32px 0 0;
   list-style: none;
@@ -391,39 +391,39 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 20px 12px 12px;
-  border-radius: 20px;
-  background-color: rgb(252 252 252 / 85%);
+  padding: 8px 12px;
+  border-radius: 50px;
+  background:rgba(0, 0, 0, 0.80);
   backdrop-filter: blur(8px);
-  color: var(--text-color);
+  color: var(--light-color);
   text-align: left;
+  width: 100%;
 }
 
 .hero-loan .hero-loan-stats .icon {
   flex: 0 0 auto;
-  width: 24px;
-  height: 24px;
-  padding: 8px;
+  width: 28px;
+  height: 28px;
   border-radius: 12px;
-  background-color: var(--surface-color);
 }
 
 .hero-loan .hero-loan-stats span {
   display: flex;
   flex-direction: column;
+  gap: 2px;
 }
 
 .hero-loan .hero-loan-stats small {
-  color: var(--muted-color);
-  font-size: var(--body-font-size-s);
-  font-weight: 500;
+  color: #ABABAB;
+  font-size: var(--body-font-size-xs);
+  font-weight: 600;
   line-height: 18px;
 }
 
 .hero-loan .hero-loan-stats strong {
-  font-size: var(--body-font-size-m);
-  font-weight: 600;
-  line-height: 24px;
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  line-height: 20px;
 }
 
 :where(.desktop-view) .hero-loan.product .hero-loan-content .button-wrapper {
