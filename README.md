@@ -1,6 +1,7 @@
 # KMPL AEM content packages
 
-- kmpl-site-content-1.7.0.zip (latest): same pages and images as 1.6.0, rebuilt with the product page styling release (PR #20).
+- kmpl-site-content-1.8.0.zip (latest): the Dealer Finance intro section has background images (desktop and mobile) as section properties; 2 new images (dealer-finance/intro-bg-desktop.jpg, intro-bg-mobile.jpg).
+- kmpl-site-content-1.7.0.zip: same pages and images as 1.6.0, rebuilt with the product page styling release (PR #20).
 - kmpl-site-content-1.6.0.zip: same pages as 1.5.0; the New Car Finance banner section has the "Animate text" section style (scroll text reveal).
 - kmpl-site-content-1.5.0.zip: same pages as 1.4.0; the New Car Finance mobile hero uses the cleaned photo (car-loan/hero-1-mobile-clean.jpg) and the footer social links are Instagram and Facebook.
 - kmpl-site-content-1.4.0.zip: same pages as 1.3.0; the home page now uses the rebuilt hero photo (hero-car-loans-v2.jpg) and offer photos without baked black corners (offer-*-clean.jpg).
