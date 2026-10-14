@@ -56,12 +56,6 @@
   margin-top: 80px;
 }
 
-:where(.desktop-view) .team .team-details h3{
-  font-size: var(--type-display-size);
-  line-height: var(--type-display-line);
-  letter-spacing: var(--type-display-ls);
-}
-
 :where(.desktop-view) .team .team-details .team-badge{
   font-size: var(--type-b2-size);
   line-height: 18px;
@@ -94,6 +88,7 @@
 :where(.desktop-view) .team .team-details h3 {
   font-size: var(--heading-font-size-xxl);
   line-height: 40px;
+  letter-spacing: var(--type-display-ls);
 }
 
 :where(.desktop-view) .team .team-details p {
