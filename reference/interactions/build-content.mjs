@@ -353,7 +353,16 @@ for (const slug of SLUGS) {
   });
   // home hero: area behind the form card rebuilt from the surrounding photo (reference/review/hero-fill.mjs)
   body.querySelectorAll('img[src$="home/hero-car-loans.jpg"]').forEach((img) => img.setAttribute('src', img.getAttribute('src').replace('hero-car-loans.jpg', 'hero-car-loans-v2.jpg')));
-  // car loan mobile hero: baked-in text boxes and black frame removed (reference/review/row-fill.mjs)
+  // sections with a side image banner animate their text (section style "animate-text")
+  body.querySelectorAll(':scope > div').forEach((section) => {
+    const styles = [...section.querySelectorAll('.feature-banner > div > div:last-child')];
+    const isSide = (cell) => [...cell.querySelectorAll('p')].some((p) => p.textContent.trim() === 'side')
+      || /\bside\b/.test(cell.textContent);
+    if (!styles.some(isSide)) return;
+    if (section.querySelector('.section-metadata')) return;
+    section.insertAdjacentHTML('beforeend', '<div class="section-metadata"><div><div>style</div><div>animate-text</div></div></div>');
+  });
+  // car loan mobile hero:baked-in text boxes and black frame removed (reference/review/row-fill.mjs)
   body.querySelectorAll('img[src$="/car-loan/hero-1-mobile.jpg"]').forEach((img) => img.setAttribute('src', img.getAttribute('src').replace('hero-1-mobile.jpg', 'hero-1-mobile-clean.jpg')));
   body.querySelectorAll('.metadata > div').forEach((row) => {
     const [key, value] = row.children;

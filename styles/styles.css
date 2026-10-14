@@ -462,6 +462,66 @@ main > .section:first-of-type {
   margin-top: 0;
 }
 
+/* keyboard focus: dark ring with a light halo, visible on light and dark backgrounds
+   (blocks may refine it; zero specificity) */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--text-color);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--background-color);
+}
+
+/* sticky header and bottom bars never cover the focused element (WCAG 2.4.11) */
+html {
+  scroll-padding-top: calc(var(--nav-height) + 16px);
+  scroll-padding-bottom: 96px;
+}
+
+/* skip link: first focusable element, shown on focus */
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 1000;
+  padding: 12px 20px;
+  border-radius: 100px;
+  background-color: var(--text-color);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.skip-link:any-link {
+  color: #fff;
+}
+
+main:focus {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* text for screen readers only (stays visible while focused, e.g. skip links) */
+.visually-hidden:where(:not(:focus-within, :active)) {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  border: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+}
+
 /* full bleed (FB): edge to edge with a small margin on every viewport */
 main > .section > .hero-loan-wrapper,
 main > .section > .offers-wrapper,

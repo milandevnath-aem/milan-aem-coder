@@ -1,3 +1,7 @@
+.article-cards-container .default-content-wrapper > :first-child {
+  margin-bottom: 16px;
+}
+
 .article-cards {
   --article-cards-bg: var(--surface-color);
 }
@@ -12,6 +16,7 @@
 }
 
 .article-cards .article-cards-item {
+  position: relative;
   display: flex;
   align-items: stretch;
   min-height: 136px;
@@ -61,6 +66,32 @@
   letter-spacing: 0;
 }
 
+/* clickable card: the title link covers the whole card */
+.article-cards .article-cards-link:any-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.article-cards .article-cards-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.article-cards .article-cards-clickable:hover .article-cards-link {
+  text-decoration: underline;
+}
+
+.article-cards .article-cards-link:focus-visible {
+  outline: none;
+}
+
+.article-cards .article-cards-clickable:has(.article-cards-link:focus-visible) {
+  outline: 2px solid var(--text-color);
+  outline-offset: 2px;
+}
+
 .article-cards .article-cards-meta {
   margin: auto 0 0;
   padding-top: 8px;
@@ -69,6 +100,19 @@
   font-weight: 500;
   line-height: var(--type-b1-line);
   letter-spacing: var(--type-b1-ls);
+}
+
+:where(.desktop-view) .article-cards .article-cards-category {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #121212;
+}
+
+:where(.desktop-view) .article-cards .article-cards-meta {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
 }
 
 :where(.desktop-view) .article-cards > ul {

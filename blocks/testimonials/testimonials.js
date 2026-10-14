@@ -14,6 +14,9 @@ function updateButtons(track, prev, next) {
 export default function decorate(block) {
   const track = document.createElement('ul');
   track.className = 'testimonials-track';
+  // the list scrolls sideways: focusable so keyboard users can scroll it with arrow keys
+  track.tabIndex = 0;
+  track.setAttribute('aria-label', 'Testimonials');
 
   [...block.children].forEach((row) => {
     const [quoteCell, imageCell, nameCell, roleCell] = row.children;

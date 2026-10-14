@@ -39,8 +39,11 @@ function buildCard(row, isDocuments) {
   return card;
 }
 
-function addCarousel(panel) {
+function addCarousel(panel, label) {
   const list = panel.querySelector('.requirements-cards');
+  // the cards scroll sideways: focusable so keyboard users can scroll with arrow keys
+  list.tabIndex = 0;
+  list.setAttribute('aria-label', label || 'Requirements');
   const nav = document.createElement('div');
   nav.className = 'requirements-nav';
   nav.innerHTML = `
@@ -115,7 +118,7 @@ export default function decorate(block) {
       else list.append(card);
     });
     panel.append(list);
-    if (!isDocuments) addCarousel(panel);
+    if (!isDocuments) addCarousel(panel, tab);
 
     if (showTabs) {
       const button = document.createElement('button');
