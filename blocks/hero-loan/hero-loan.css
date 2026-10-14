@@ -492,6 +492,7 @@
 :where(.desktop-view) .hero-loan.product .hero-loan-form .dropdown-field {
   height: 68px;
   min-height: 0;
+  
   /* padding-block: 0; */
 }
 
