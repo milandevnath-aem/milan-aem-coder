@@ -87,6 +87,7 @@
   border-color: #fff;
   background-color: #fff;
   color: var(--text-color);
+  padding: 14px 12px;
 }
 
 .hero-loan .hero-loan-content a.button:hover,
@@ -491,7 +492,7 @@
 :where(.desktop-view) .hero-loan.product .hero-loan-form .dropdown-field {
   height: 68px;
   min-height: 0;
-  padding-block: 0;
+  /* padding-block: 0; */
 }
 
 :where(.desktop-view) .hero-loan.product .hero-loan-form form {
@@ -499,7 +500,7 @@
 }
 
 :where(.desktop-view) .hero-loan.product .hero-loan-form form button[type='submit'] {
-  margin-top: 12px;
+  margin-top: 13px;
 }
 
 :where(.desktop-view) .hero-loan.product .hero-loan-content p:not(.button-wrapper) {
