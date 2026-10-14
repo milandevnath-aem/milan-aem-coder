@@ -12,14 +12,14 @@
 .branch-locator .branch-locator-intro h2 {
   margin: 0;
   color: inherit;
-  font-size: var(--heading-font-size-xxl);
+  font-size: var(--heading-font-size-xl);
   font-weight: 500;
   line-height: 40px;
   letter-spacing: -0.8px;
 }
 
 .branch-locator .branch-locator-intro p {
-  margin: 12px 0 0;
+  margin: 8px 0 0;
   font-size: var(--body-font-size-s);
   font-weight: 500;
   line-height: 20px;
@@ -48,13 +48,14 @@
   background-color: var(--background-color);
 }
 
-.branch-locator .branch-locator-select.is-filled .dropdown-label {
+/* .branch-locator .branch-locator-select.is-filled .dropdown-label {
   font-size: var(--body-font-size-s);
   line-height: 18px;
-}
+} */
 
 .branch-locator .branch-locator-select .dropdown-value {
-  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
 }
 
 .branch-locator .branch-locator-locate {
@@ -112,10 +113,10 @@
 .branch-locator .branch-locator-card {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 32px;
   order: 2;
   margin: 0;
-  padding: 24px;
+  padding: 24px 20px;
   border-radius: 20px;
   background-color: var(--background-color);
 }
@@ -123,7 +124,7 @@
 .branch-locator .branch-locator-row {
   display: grid;
   grid-template-columns: 40px 1fr;
-  gap: 2px 24px;
+  gap: 4px 16px;
   align-items: start;
 }
 
@@ -170,7 +171,7 @@
 }
 
 :where(.desktop-view) .branch-locator {
-  padding: 48px var(--fb-inset);
+  padding: 48px var(--fb-inset) 28px;
   border-radius: 44px;
 }
 
@@ -178,33 +179,39 @@
   max-width: 540px;
 }
 
-:where(.desktop-view) .branch-locator .branch-locator-intro h1,
+/* :where(.desktop-view) .branch-locator .branch-locator-intro h1,
 :where(.desktop-view) .branch-locator .branch-locator-intro h2 {
-  font-size: var(--heading-font-size-xxl);
-  line-height: 48px;
-}
+  font-size: var(--heading-font-size-xl);
+} */
 
 :where(.desktop-view) .branch-locator .branch-locator-intro p {
-  margin-top: 24px;
-  font-size: var(--body-font-size-m);
-  line-height: 24px;
+  margin-top: 20px;
+}
+
+:where(.desktop-view) .branch-locator .branch-locator-card {
+  padding: 24px;
+  gap: 24px;
 }
 
 :where(.desktop-view) .branch-locator .branch-locator-main {
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: start;
-  gap: var(--grid-gutter);
+  gap: 12px;
 }
 
 :where(.desktop-view) .branch-locator .branch-locator-left {
   display: flex;
   flex-direction: column;
-  gap: var(--grid-gutter);
+  gap: 8px;
 }
 
 :where(.desktop-view) .branch-locator .branch-locator-map {
   height: 268px;
+}
+
+:where(.desktop-view) .branch-locator .branch-locator-row {
+  gap: 2px 22px;
 }
 
 /* location permission prompt (shown in a dialog) */
