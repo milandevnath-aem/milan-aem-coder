@@ -43,6 +43,22 @@
               "value": "animate-text"
             }
           ]
+        },
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "background",
+          "label": "Background image (desktop)",
+          "description": "Optional. Covers the whole section on desktop (and on mobile when no mobile image is set).",
+          "multi": false
+        },
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "backgroundMobile",
+          "label": "Background image (mobile)",
+          "description": "Optional. Used on small screens instead of the desktop image.",
+          "multi": false
         }
       ]
     }

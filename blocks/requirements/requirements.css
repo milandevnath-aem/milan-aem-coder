@@ -307,6 +307,11 @@
   scroll-snap-align: start;
 }
 
+/* more than three cards: three and a half in view, so the half card shows there is more */
+:where(.desktop-view) .requirements.eligibility .requirements-cards:has(> .requirements-card:nth-child(4)) > .requirements-card {
+  flex-basis: calc((100% - 3 * var(--grid-gutter)) / 3.5);
+}
+
 :where(.desktop-view) .requirements .requirements-icon img {
   width: 72px;
   height: 72px;

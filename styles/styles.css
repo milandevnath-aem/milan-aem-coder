@@ -662,6 +662,46 @@ main .section.highlight {
   padding: var(--section-spacing) 0;
 }
 
+/* section background image (section properties), behind the content */
+main > .section.has-background {
+  position: relative;
+  isolation: isolate;
+
+  /* the image paints the whole section: its spacing sits inside, so the image meets the
+     next section (Figma) */
+  margin-bottom: 0;
+  padding-block: var(--section-spacing);
+}
+
+/* documents section that still uses the block decoration (no section background):
+   same layout, the artwork covers the whole section down to the next one */
+main > .section.requirements-container:not(.has-background):has(.requirements.documents .requirements-decoration) {
+  position: relative;
+  isolation: isolate;
+  margin-bottom: 0;
+  padding-block: var(--section-spacing);
+  overflow: hidden;
+}
+
+/* a full-bleed band (e.g. "Need help?") right after a background section touches it */
+main > .section.has-background + .section:has(> .offers-wrapper .offers-short),
+main > .section.requirements-container:has(.requirements.documents .requirements-decoration) + .section:has(> .offers-wrapper .offers-short) {
+  margin-top: 0;
+}
+
+main > .section > .section-background,
+main > .section > .section-background img {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+}
+
+main > .section > .section-background img {
+  object-fit: cover;
+}
+
 main .section.brand {
   margin: 0;
   padding: 80px 0;
@@ -676,13 +716,18 @@ main .section.brand .default-content-wrapper {
 
 main .section.brand p {
   margin: 0;
-  font-size: var(--body-font-size-m);
+  font-size: var(--body-font-size-s);
   font-weight: 600;
-  line-height: 24px;
+  line-height: 20px;
 }
 
 :where(.desktop-view) main .section.brand {
   padding: var(--section-spacing) 0;
+}
+
+:where(.desktop-view) main .section.brand p {
+  font-size: var(--body-font-size-m);
+  line-height: 24px;
 }
 
 main > .section.branch-locator-container:last-of-type {
