@@ -2,6 +2,10 @@ import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createPicture } from '../../scripts/images.js';
 import { MEDIA } from '../../scripts/viewport.js';
 
+// text reveal: letters fading at the same time, and how quickly (s) it catches up with scrolling
+const SOFT_EDGE = 12;
+const SMOOTHING = 0.12;
+
 function styleTokens(cell) {
   if (!cell) return [];
   const values = [...cell.querySelectorAll('p')].map((p) => p.textContent);
@@ -67,27 +71,47 @@ function revealText(item) {
   if (!chars.length) return;
   item.classList.add('feature-banner-reveal');
 
-  let frame;
-  const update = () => {
-    frame = null;
+  const targetProgress = () => {
     const { top } = content.getBoundingClientRect();
     const vh = window.innerHeight;
     // starts when the text enters the lower part of the viewport, done in the upper third
-    const progress = Math.min(1, Math.max(0, (vh * 0.85 - top) / (vh * 0.5)));
-    const lit = progress * chars.length;
+    return Math.min(1, Math.max(0, (vh * 0.85 - top) / (vh * 0.5)));
+  };
+
+  const render = (progress) => {
+    // the lit edge is SOFT_EDGE letters wide, so letters fade in gradually one after another
+    const lit = progress * (chars.length + SOFT_EDGE);
     chars.forEach((char, i) => {
-      const amount = Math.min(1, Math.max(0, lit - i)).toFixed(2);
+      const amount = Math.min(1, Math.max(0, (lit - i) / SOFT_EDGE)).toFixed(2);
       // only touch letters whose value changed: long texts have hundreds of them
       if (char.dataset.reveal === amount) return;
       char.dataset.reveal = amount;
       char.style.setProperty('--reveal', amount);
     });
   };
-  const onScroll = () => { if (!frame) frame = requestAnimationFrame(update); };
+
+  // the shown progress eases toward the scroll position instead of jumping with each wheel step
+  let current = null;
+  let frame;
+  let last;
+  const tick = (now) => {
+    frame = null;
+    const target = targetProgress();
+    const dt = last ? Math.min(0.1, (now - last) / 1000) : 1 / 60;
+    last = now;
+    // first paint: no easing, text already in view shows its final state right away
+    const ease = 1 - Math.exp(-dt / SMOOTHING);
+    current = current === null ? target : current + (target - current) * ease;
+    if (Math.abs(target - current) < 0.0005) current = target;
+    render(current);
+    if (current !== target) frame = requestAnimationFrame(tick);
+    else last = null;
+  };
+  const onScroll = () => { if (!frame) frame = requestAnimationFrame(tick); };
   new IntersectionObserver(([entry]) => {
     if (entry.isIntersecting) window.addEventListener('scroll', onScroll, { passive: true });
     else window.removeEventListener('scroll', onScroll);
-    update();
+    onScroll();
   }).observe(item);
 }
 
