@@ -513,7 +513,7 @@ main > .section.article-cards-container .default-content-wrapper > h2:first-chil
 
 /* adaptive bound (AB): close to the edge, 1440px and centered on desktop */
 main > .section > .service-links-wrapper {
-  padding: 0 var(--ab-margin);
+  padding: 0 var(--gb-margin);
 }
 
 main > .section.feature-banner-container {
