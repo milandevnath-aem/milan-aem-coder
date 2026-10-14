@@ -96,7 +96,7 @@
   margin-top: 32px;
 
   /* the wrapper keeps the full bleed margin on the right: line the buttons up with the grid */
-  padding-right: calc(var(--gb-offset) - var(--fb-margin));
+  padding-right: calc(var(--gb-offset));
 }
 
 .testimonials .testimonials-controls button {
