@@ -37,6 +37,10 @@
             {
               "name": "Brand (red, centered text)",
               "value": "brand"
+            },
+            {
+              "name": "Animate text (banner text lights up on scroll)",
+              "value": "animate-text"
             }
           ]
         }

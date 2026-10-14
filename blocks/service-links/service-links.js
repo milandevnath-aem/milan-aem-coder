@@ -1,11 +1,12 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
+import { createPicture } from '../../scripts/images.js';
 import { MEDIA } from '../../scripts/viewport.js';
 
 const VARIANTS = ['image', 'highlight', 'tall'];
 
 /**
- * Customer service link tiles. Each row: link, optional image, tile style.
+ * Customer service tiles. Each row: link, optional image, tile style.
+ * A tile is clickable only when its link has a URL.
  * @param {Element} block The block element
  */
 export default function decorate(block) {
@@ -19,17 +20,18 @@ export default function decorate(block) {
     const variant = variantCell?.textContent.trim().toLowerCase();
     if (VARIANTS.includes(variant)) item.classList.add(`service-links-${variant}`);
 
+    // the tile is a link only when a URL is authored ("#" or empty: plain tile)
     const source = linkCell?.querySelector('a');
-    const tile = document.createElement(source ? 'a' : 'div');
+    const href = source?.getAttribute('href')?.trim();
+    const isLink = Boolean(href && href !== '#');
+    const tile = document.createElement(isLink ? 'a' : 'div');
     tile.className = 'service-links-tile';
-    if (source) {
-      tile.href = source.getAttribute('href');
-      moveInstrumentation(source, tile);
-    }
+    if (isLink) tile.href = href;
+    if (source) moveInstrumentation(source, tile);
 
     const img = imageCell?.querySelector('img');
     if (img) {
-      const picture = createOptimizedPicture(img.src, img.alt, false, [
+      const picture = createPicture(img.src, img.alt, false, [
         { media: MEDIA.desktop, width: '1200' },
         { width: '750' },
       ]);
@@ -42,10 +44,13 @@ export default function decorate(block) {
     const title = document.createElement('span');
     title.className = 'service-links-title';
     title.textContent = (source || linkCell)?.textContent.trim() || '';
-    const arrow = document.createElement('span');
-    arrow.className = 'service-links-arrow';
-    arrow.setAttribute('aria-hidden', 'true');
-    tile.append(title, arrow);
+    tile.append(title);
+    if (isLink) {
+      const arrow = document.createElement('span');
+      arrow.className = 'service-links-arrow';
+      arrow.setAttribute('aria-hidden', 'true');
+      tile.append(arrow);
+    }
 
     item.append(tile);
     list.append(item);

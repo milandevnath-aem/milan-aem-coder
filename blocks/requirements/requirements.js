@@ -1,5 +1,5 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
+import { createPicture } from '../../scripts/images.js';
 
 let blockCount = 0;
 
@@ -18,7 +18,7 @@ function buildCard(row, isDocuments) {
   card.className = 'requirements-card';
   const img = imageCell?.querySelector('img');
   if (img && !isDocuments) {
-    const picture = createOptimizedPicture(img.src, img.alt, false, [{ width: '160' }]);
+    const picture = createPicture(img.src, img.alt, false, [{ width: '160' }]);
     moveInstrumentation(img, picture.querySelector('img'));
     picture.className = 'requirements-icon';
     card.append(picture);
@@ -39,8 +39,11 @@ function buildCard(row, isDocuments) {
   return card;
 }
 
-function addCarousel(panel) {
+function addCarousel(panel, label) {
   const list = panel.querySelector('.requirements-cards');
+  // the cards scroll sideways: focusable so keyboard users can scroll with arrow keys
+  list.tabIndex = 0;
+  list.setAttribute('aria-label', label || 'Requirements');
   const nav = document.createElement('div');
   nav.className = 'requirements-nav';
   nav.innerHTML = `
@@ -89,7 +92,7 @@ export default function decorate(block) {
   const content = [];
   const decoImg = decoRow?.querySelector('img');
   if (decoImg) {
-    const picture = createOptimizedPicture(decoImg.src, '', false, [{ width: '1000' }]);
+    const picture = createPicture(decoImg.src, '', false, [{ width: '1000' }]);
     picture.className = 'requirements-decoration';
     picture.querySelector('img').setAttribute('aria-hidden', 'true');
     moveInstrumentation(decoImg, picture.querySelector('img'));
@@ -115,7 +118,7 @@ export default function decorate(block) {
       else list.append(card);
     });
     panel.append(list);
-    if (!isDocuments) addCarousel(panel);
+    if (!isDocuments) addCarousel(panel, tab);
 
     if (showTabs) {
       const button = document.createElement('button');

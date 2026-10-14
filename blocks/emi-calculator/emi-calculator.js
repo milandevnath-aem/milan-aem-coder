@@ -1,5 +1,5 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
+import { createPicture } from '../../scripts/images.js';
 
 const inr = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 });
 
@@ -72,10 +72,11 @@ function sliderGroup(id, label) {
       <img class="emi-calculator-error-icon" src="${window.hlx.codeBasePath}/icons/alert.svg" alt="" width="16" height="16">
       <div class="emi-calculator-value">
         <span class="emi-calculator-prefix"></span>
-        <input id="${id}-value" type="text" inputmode="decimal" autocomplete="off" aria-describedby="${id}-bounds">
+        <input id="${id}-value" type="text" inputmode="numeric" autocomplete="off" aria-describedby="${id}-bounds ${id}-error">
         <span class="emi-calculator-suffix"></span>
       </div>
     </div>
+    <p class="emi-calculator-error visually-hidden" id="${id}-error" aria-live="polite"></p>
     <div class="emi-calculator-slider">
       <span class="emi-calculator-slider-fill" aria-hidden="true"></span>
       <span class="emi-calculator-slider-knob" aria-hidden="true"></span>
@@ -193,38 +194,74 @@ function buildCalculator(types, link) {
       setInvalid(group, false);
       update();
     });
+    const decimals = key === 'rate';
+    const error = group.querySelector('.emi-calculator-error');
+    const min = () => Number(range.min);
+    const max = () => Number(range.max);
     const parse = () => {
       const value = parseFloat(input.value.replace(/[^0-9.]/g, ''));
-      const valid = Number.isFinite(value)
-        && value >= Number(range.min) && value <= Number(range.max);
+      const valid = Number.isFinite(value) && value >= min() && value <= max();
       return { value, valid };
     };
+    const showError = (invalid) => {
+      setInvalid(group, invalid);
+      error.textContent = invalid ? `Enter a value from ${bounds[key](min())} to ${bounds[key](max())}` : '';
+    };
+
+    // numbers only (one decimal point for the interest rate)
+    input.addEventListener('beforeinput', (e) => {
+      if (!e.data || !e.inputType.startsWith('insert')) return;
+      const allowed = decimals ? /^[0-9.]+$/ : /^[0-9,]+$/;
+      if (!allowed.test(e.data) || (decimals && e.data.includes('.') && input.value.includes('.'))) {
+        e.preventDefault();
+      }
+    });
     input.addEventListener('input', () => {
+      // clean pasted or dropped text and keep the caret after the same digit
+      const caret = input.selectionStart ?? input.value.length;
+      const digitsBefore = input.value.slice(0, caret).replace(/[^0-9.]/g, '').length;
+      let raw = input.value.replace(decimals ? /[^0-9.]/g : /[^0-9]/g, '');
+      if (decimals) {
+        const [whole, ...rest] = raw.split('.');
+        raw = rest.length ? `${whole}.${rest.join('').slice(0, 2)}` : whole;
+      }
+      // never more than the maximum
+      if (raw && parseFloat(raw) > max()) raw = String(max());
+      const next = key === 'amount' && raw ? inr.format(Number(raw)) : raw;
+      if (next !== input.value) {
+        input.value = next;
+        let pos = 0;
+        let seen = 0;
+        while (pos < next.length && seen < digitsBefore) {
+          if (/[0-9.]/.test(next[pos])) seen += 1;
+          pos += 1;
+        }
+        input.setSelectionRange(pos, pos);
+      }
       input.size = Math.max(1, input.value.length);
       const { value, valid } = parse();
-      setInvalid(group, !valid);
+      // below the minimum while typing: flagged, fixed on leaving the field
+      showError(!valid && input.value !== '');
       if (valid) {
         state[key] = value;
         update();
-      } else {
-        range.value = range.min;
-        range.parentElement.style.setProperty('--pct', 0);
       }
     });
     const commit = () => {
-      const { value, valid } = parse();
-      if (!valid) {
-        input.value = display[key](Number.isFinite(value) ? value : 0);
-        input.size = Math.max(1, input.value.length);
-        return;
-      }
-      state[key] = value;
-      input.value = display[key](value);
+      const { value } = parse();
+      // empty or below the minimum: back to the nearest allowed value
+      const fixed = Number.isFinite(value) ? Math.min(max(), Math.max(min(), value)) : state[key];
+      showError(false);
+      state[key] = fixed;
+      input.value = display[key](fixed);
       update();
     };
     input.addEventListener('change', commit);
     input.addEventListener('blur', commit);
     input.addEventListener('keydown', (e) => { if (e.key === 'Enter') commit(); });
+    if (decimals) input.inputMode = 'decimal';
+    // the whole value box (symbol and unit included) focuses the field
+    input.parentElement.addEventListener('click', (e) => { if (e.target !== input) input.focus(); });
   });
 
   const selectType = (index) => {
@@ -298,7 +335,7 @@ export default function decorate(block) {
 
   const img = imageRow?.querySelector('img');
   if (img) {
-    const picture = createOptimizedPicture(img.src, img.alt, false, [{ width: '1300' }]);
+    const picture = createPicture(img.src, img.alt, false, [{ width: '1300' }]);
     moveInstrumentation(img, picture.querySelector('img'));
     picture.classList.add('emi-calculator-image');
     intro.append(picture);

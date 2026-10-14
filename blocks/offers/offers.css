@@ -138,14 +138,21 @@
 /* compact band (e.g. "Need help?") */
 .offers .offers-short {
   --offers-height: 672px;
-  --offers-padding: 80px 24px 24px;
+  --offers-padding: 80px 24px;
+
+  border-radius: 0;
+}
+
+.offers .offers-short .offers-content h2 {
+  color: #fff;
 }
 
 .offers .offers-content > p:not(.offers-eyebrow, .button-wrapper) {
-  margin-top: 16px;
-  font-size: var(--body-font-size-m);
+  margin-top: 12px;
+  font-size: var(--type-b2-size);
   font-weight: 500;
-  line-height: 24px;
+  line-height: var(--type-b2-line);
+  letter-spacing: 0;
 }
 
 .offers .offers-buttons {
@@ -162,7 +169,22 @@
 
 .offers .offers-content .offers-buttons a.button {
   width: auto;
-  padding-inline: 32px;
+  border: 0;
+  padding: 12px;
+  font-size: var(--body-font-size-s);
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: 0;
+}
+
+:where(.desktop-view) .offers .offers-content .offers-buttons a.button {
+  padding: 14px 12px;
+  font-size: var(--type-bt2-size);
+  line-height: var(--type-bt2-line);
+}
+
+:where(.desktop-view) .offers .offers-short .offers-content h2 {
+  letter-spacing: -1px;
 }
 
 :where(.desktop-view) .offers .offers-short {

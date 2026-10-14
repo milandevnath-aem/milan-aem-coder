@@ -1,8 +1,9 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
+import { createPicture } from '../../scripts/images.js';
 
 /**
- * Article teaser cards. Each row: image, category, link (title), reading time.
+ * Article teaser cards. Each row: image, category, title (link), reading time.
+ * A card is clickable only when its title link has a URL ("#" or empty: plain text).
  * @param {Element} block The block element
  */
 export default function decorate(block) {
@@ -15,7 +16,7 @@ export default function decorate(block) {
 
     const img = imageCell?.querySelector('img');
     if (img) {
-      const picture = createOptimizedPicture(img.src, img.alt, false, [{ width: '600' }]);
+      const picture = createPicture(img.src, img.alt, false, [{ width: '600' }]);
       moveInstrumentation(img, picture.querySelector('img'));
       picture.classList.add('article-cards-image');
       item.append(picture);
@@ -34,14 +35,21 @@ export default function decorate(block) {
     const heading = document.createElement('h3');
     heading.className = 'article-cards-title';
     const source = linkCell?.querySelector('a');
-    if (source) {
+    const text = (source || linkCell)?.textContent.trim() || '';
+    const href = source?.getAttribute('href')?.trim();
+    if (href && href !== '#') {
+      // the title link covers the whole card (see .article-cards-link::after)
       const link = document.createElement('a');
-      link.href = source.getAttribute('href');
-      link.textContent = source.textContent.trim();
+      link.className = 'article-cards-link';
+      link.href = href;
+      link.textContent = text;
+      if (source.target) link.target = source.target;
       moveInstrumentation(source, link);
       heading.append(link);
+      item.classList.add('article-cards-clickable');
     } else {
-      heading.textContent = linkCell?.textContent.trim() || '';
+      heading.textContent = text;
+      if (source) moveInstrumentation(source, heading);
     }
     body.append(heading);
 
