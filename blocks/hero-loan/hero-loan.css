@@ -483,8 +483,27 @@
   --hero-loan-radius: 20px;
 }
 
-:where(.desktop-view) .hero-loan.product .hero-loan-content p:not(.button-wrapper) {
+/* product form card (Figma): 546px wide, 68px fields, 24px above the button */
+:where(.desktop-view) .hero-loan.product .hero-loan-form {
+  width: max(546px, 46%);
+}
+
+:where(.desktop-view) .hero-loan.product .hero-loan-form .dropdown-field {
+  height: 68px;
+  min-height: 0;
+  padding-block: 0;
+}
+
+:where(.desktop-view) .hero-loan.product .hero-loan-form form {
+  margin-bottom: 0;
+}
+
+:where(.desktop-view) .hero-loan.product .hero-loan-form form button[type='submit'] {
   margin-top: 12px;
+}
+
+:where(.desktop-view) .hero-loan.product .hero-loan-content p:not(.button-wrapper) {
+  margin-top: 20px;
   color: var(--inverse-color);
   font-size: var(--body-font-size-m);
   font-weight: 500;

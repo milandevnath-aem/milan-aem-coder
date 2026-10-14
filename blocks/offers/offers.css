@@ -187,6 +187,15 @@
   letter-spacing: -1px;
 }
 
+/* "Need help?" pill buttons: 12px + 14px inner padding (Figma) */
+.offers .offers-short .offers-content .offers-buttons a.button {
+  padding: 12px 26px;
+}
+
+:where(.desktop-view) .offers .offers-short .offers-content .offers-buttons a.button {
+  padding: 14px 26px;
+}
+
 :where(.desktop-view) .offers .offers-short {
   --offers-height: 672px;
   --offers-padding: 124px 12px 44px;
