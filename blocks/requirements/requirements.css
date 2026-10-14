@@ -4,42 +4,45 @@
   position: relative;
 }
 
+/* the documents artwork is positioned against the whole section (heading to cards,
+   edge to edge), not the block */
+.requirements-container:has(.requirements.documents) {
+  position: relative;
+  isolation: isolate;
+  padding: 80px 0;
+}
+
+.requirements.documents {
+  position: static;
+}
+
 .requirements .requirements-decoration {
   position: absolute;
-  top: 0;
-  right: calc(-1 * var(--gb-offset));
+  inset: 0;
   z-index: -1;
-  width: fit-content;
-  max-width: 70vw;
+  overflow: hidden;
   pointer-events: none;
 }
 
+/* small screens (Figma): the image is stretched to 589.435% of the section width and
+   the full height, showing the slice that starts 1181px in on a 390px wide frame */
 .requirements .requirements-decoration img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-/* small screens: only the left streaks of the artwork, as a tall band along the right
-   edge from above the heading to the cards (Figma) */
-:where(html:not(.desktop-view)) .requirements.documents .requirements-decoration {
-  top: -125px;
-  width: 200px;
-  height: 800px;
-  max-width: none;
-  overflow: hidden;
-
-  /* soft left and top edges, no visible box */
-  mask-image: linear-gradient(90deg, transparent, #000 80px), linear-gradient(180deg, transparent, #000 120px);
-  mask-composite: intersect;
-}
-
-:where(html:not(.desktop-view)) .requirements.documents .requirements-decoration img {
   position: absolute;
   top: 0;
-  left: -190px;
-  width: 1115px;
+  left: -302.8%;
+  display: block;
+  width: 589.435%;
   max-width: none;
+  height: 100%;
+  object-fit: fill;
+}
+
+/* desktop (Figma): covers the whole section, centred */
+:where(.desktop-view) .requirements .requirements-decoration img {
+  inset: 0;
+  width: 100%;
+  object-fit: cover;
+  object-position: 50%;
 }
 
 /* tabs */
@@ -149,8 +152,11 @@
 }
 
 .requirements.eligibility .requirements-card {
-  justify-content: space-between;
   min-height: 230px;
+}
+
+.requirements.eligibility .requirements-card .requirements-title{
+  margin-top: auto;
 }
 
 .requirements .requirements-icon img {
@@ -365,8 +371,4 @@
 
 :where(.desktop-view) .requirements.documents .requirements-text li::before {
   top: 3px;
-}
-
-:where(.desktop-view) .requirements .requirements-decoration {
-  top: -180px;
 }
