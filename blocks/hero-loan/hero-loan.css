@@ -380,8 +380,8 @@
 
 .hero-loan .hero-loan-more::after {
   content: '';
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   background: url('../../icons/chevron-down.svg') center / contain no-repeat;
 }
 
