@@ -362,6 +362,22 @@ for (const slug of SLUGS) {
     if (section.querySelector('.section-metadata')) return;
     section.insertAdjacentHTML('beforeend', '<div class="section-metadata"><div><div>style</div><div>animate-text</div></div></div>');
   });
+  // documents sections: the Figma streak artwork is the section background (desktop +
+  // mobile, content removed with reference/review/harmonic-fill.mjs and directional-fill.mjs),
+  // so it fills the whole section up to the next one; replaces the cropped block decoration
+  body.querySelectorAll('.requirements.documents').forEach((block) => {
+    const first = block.firstElementChild;
+    if (first?.children.length === 1 && first.querySelector('picture')) first.remove();
+    const section = block.closest('body > div');
+    let meta = section.querySelector('.section-metadata');
+    if (!meta) {
+      section.insertAdjacentHTML('beforeend', '<div class="section-metadata"></div>');
+      meta = section.querySelector('.section-metadata');
+    }
+    meta.insertAdjacentHTML('beforeend', `
+      <div><div>background</div><div><picture><img src="../images/shared/documents-bg-desktop.jpg" alt=""></picture></div></div>
+      <div><div>backgroundMobile</div><div><picture><img src="../images/shared/documents-bg-mobile.jpg" alt=""></picture></div></div>`);
+  });
   // dealer finance intro band: Figma gradient artwork as section background images
   // (desktop + mobile), text removed with reference/review/harmonic-fill.mjs
   if (slug === 'dealer-finance') {

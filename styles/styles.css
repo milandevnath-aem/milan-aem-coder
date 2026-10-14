@@ -666,6 +666,16 @@ main .section.highlight {
 main > .section.has-background {
   position: relative;
   isolation: isolate;
+
+  /* the image paints the whole section: its spacing sits inside, so the image meets the
+     next section (Figma) */
+  margin-bottom: 0;
+  padding-block: var(--section-spacing);
+}
+
+/* a full-bleed band (e.g. "Need help?") right after a background section touches it */
+main > .section.has-background + .section:has(> .offers-wrapper .offers-short) {
+  margin-top: 0;
 }
 
 main > .section > .section-background,
