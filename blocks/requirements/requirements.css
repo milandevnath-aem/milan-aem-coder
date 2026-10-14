@@ -20,6 +20,28 @@
   height: auto;
 }
 
+/* small screens: only the left streaks of the artwork, as a tall band along the right
+   edge from above the heading to the cards (Figma) */
+:where(html:not(.desktop-view)) .requirements.documents .requirements-decoration {
+  top: -125px;
+  width: 200px;
+  height: 800px;
+  max-width: none;
+  overflow: hidden;
+
+  /* soft left and top edges, no visible box */
+  mask-image: linear-gradient(90deg, transparent, #000 80px), linear-gradient(180deg, transparent, #000 120px);
+  mask-composite: intersect;
+}
+
+:where(html:not(.desktop-view)) .requirements.documents .requirements-decoration img {
+  position: absolute;
+  top: 0;
+  left: -190px;
+  width: 1115px;
+  max-width: none;
+}
+
 /* tabs */
 .requirements .requirements-tabs {
   display: flex;
@@ -71,6 +93,12 @@
   border-color: var(--text-color);
   background-color: var(--text-color);
   color: var(--inverse-color);
+}
+
+/* documents chips: the selected chip has no border, its padding takes the border's place */
+.requirements.documents .requirements-tabs button[aria-selected='true'] {
+  border: 0;
+  padding: 8px 16px;
 }
 
 .requirements .requirements-tabs button:focus-visible {
@@ -127,8 +155,8 @@
 
 .requirements .requirements-icon img {
   display: block;
-  width: 52px;
-  height: 52px;
+  width: 60px;
+  height: 60px;
   object-fit: contain;
 }
 
@@ -142,9 +170,10 @@
 
 .requirements .requirements-text p {
   margin: 8px 0 0;
-  font-size: var(--heading-font-size-l);
+  font-size: 28px;
   font-weight: 600;
-  line-height: 32px;
+  line-height: 36px;
+  letter-spacing: -0.56px;
 }
 
 /* documents cards */
@@ -154,7 +183,7 @@
 }
 
 .requirements.documents .requirements-title {
-  margin: 24px 0 0;
+  margin: 0;
   padding-bottom: 24px;
   border-bottom: 1px solid var(--surface-color);
   color: var(--text-color);
@@ -167,8 +196,8 @@
 .requirements.documents .requirements-text ul {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin: 16px 0 0;
+  gap: 24px;
+  margin: 24px 0 0;
   padding: 0;
   list-style: none;
 }
@@ -242,6 +271,10 @@
   letter-spacing: 0;
 }
 
+:where(.desktop-view) .requirements.documents .requirements-tabs button[aria-selected='true'] {
+  padding: 9px 16px;
+}
+
 :where(.desktop-view) .requirements.eligibility .requirements-tabs button {
   padding: 12px 20px;
   font-size: var(--body-font-size-m);
@@ -284,6 +317,7 @@
   margin-top: 8px;
   font-size: 32px;
   line-height: 40px;
+  letter-spacing: normal;
 }
 
 :where(.desktop-view) .requirements .requirements-nav {
@@ -298,6 +332,7 @@
 }
 
 :where(.desktop-view) .requirements.documents .requirements-cards {
+  gap: 12px;
   display: grid;
   grid-auto-columns: minmax(0, 1fr);
   grid-auto-flow: column;

@@ -536,8 +536,12 @@ main > .section.requirements-container .default-content-wrapper > h2 + p {
   margin-bottom: 32px;
 }
 
-:where(.desktop-view) main > .section.requirements-container:has(.requirements.documents) {
-  padding-bottom: 62px;
+/* product pages: feature banners run edge to edge (Figma "Section 3 - FB"), the text
+   stays on the grid */
+main:has(.hero-loan.product) > .section > .feature-banner-wrapper {
+  --fb-inset: var(--gb-offset);
+
+  padding: 0;
 }
 
 /* "Need help?" band: edge to edge, no rounded corners */
