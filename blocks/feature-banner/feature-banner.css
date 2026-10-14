@@ -131,17 +131,26 @@
 }
 
 
-/* scroll-linked text reveal (section style "animate-text"): each word blends from the
+/* scroll-linked text reveal (section style "animate-text"): each letter blends from the
    start colour to its final colour as --reveal goes from 0 to 1 */
-.feature-banner .feature-banner-reveal .feature-banner-content :is(h1, h2, h3) .feature-banner-word {
+.feature-banner .feature-banner-word {
+  white-space: nowrap;
+}
+
+/* the screen reader copy of each word stays out of copied text */
+.feature-banner .feature-banner-word > .visually-hidden {
+  user-select: none;
+}
+
+.feature-banner .feature-banner-reveal .feature-banner-content :is(h1, h2, h3) .feature-banner-char {
   color: color-mix(in srgb, var(--feature-banner-text) calc(var(--reveal, 0) * 100%), var(--feature-banner-heading-from));
 }
 
-.feature-banner .feature-banner-reveal .feature-banner-content p .feature-banner-word {
+.feature-banner .feature-banner-reveal .feature-banner-content p .feature-banner-char {
   color: color-mix(in srgb, var(--feature-banner-muted) calc(var(--reveal, 0) * 100%), var(--feature-banner-text-from));
 }
 
-.feature-banner .feature-banner-reveal .feature-banner-content p strong .feature-banner-word {
+.feature-banner .feature-banner-reveal .feature-banner-content p strong .feature-banner-char {
   color: color-mix(in srgb, var(--feature-banner-text) calc(var(--reveal, 0) * 100%), var(--feature-banner-text-from));
 }
 

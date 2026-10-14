@@ -9,12 +9,14 @@ function styleTokens(cell) {
 }
 
 /**
- * Wraps every word of the element's text in a span, keeping inline markup (links, bold).
+ * Wraps every letter of the element's text in a span, keeping inline markup (links, bold).
+ * Each word stays unbreakable and keeps a screen reader copy, so assistive tech reads
+ * whole words instead of single letters.
  * @param {HTMLElement} el text element
- * @returns {HTMLSpanElement[]} word spans in reading order
+ * @returns {HTMLSpanElement[]} letter spans in reading order
  */
-function splitWords(el) {
-  const words = [];
+function splitChars(el) {
+  const chars = [];
   const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
   const nodes = [];
   while (walker.nextNode()) nodes.push(walker.currentNode);
@@ -27,20 +29,31 @@ function splitWords(el) {
         frag.append(part);
         return;
       }
-      const span = document.createElement('span');
-      span.className = 'feature-banner-word';
-      span.textContent = part;
-      words.push(span);
-      frag.append(span);
+      const word = document.createElement('span');
+      word.className = 'feature-banner-word';
+      const label = document.createElement('span');
+      label.className = 'visually-hidden';
+      label.textContent = part;
+      const letters = document.createElement('span');
+      letters.setAttribute('aria-hidden', 'true');
+      [...part].forEach((letter) => {
+        const span = document.createElement('span');
+        span.className = 'feature-banner-char';
+        span.textContent = letter;
+        chars.push(span);
+        letters.append(span);
+      });
+      word.append(label, letters);
+      frag.append(word);
     });
     node.replaceWith(frag);
   });
-  return words;
+  return chars;
 }
 
 /**
  * Banners in a section with the "animate-text" style: the heading and text light up
- * word by word as the banner scrolls through the viewport (and dim again when scrolling
+ * letter by letter as the banner scrolls through the viewport (and dim again when scrolling
  * back). Skipped for reduced motion and in the Universal Editor.
  * @param {HTMLElement} item banner item
  */
@@ -50,8 +63,8 @@ function revealText(item) {
   const content = item.querySelector('.feature-banner-content');
   if (!content || editing || reduceMotion) return;
   const texts = content.querySelectorAll(':scope > :is(h1, h2, h3, p:not(.button-wrapper))');
-  const words = [...texts].flatMap(splitWords);
-  if (!words.length) return;
+  const chars = [...texts].flatMap(splitChars);
+  if (!chars.length) return;
   item.classList.add('feature-banner-reveal');
 
   let frame;
@@ -61,10 +74,13 @@ function revealText(item) {
     const vh = window.innerHeight;
     // starts when the text enters the lower part of the viewport, done in the upper third
     const progress = Math.min(1, Math.max(0, (vh * 0.85 - top) / (vh * 0.5)));
-    const lit = progress * words.length;
-    words.forEach((word, i) => {
-      const amount = Math.min(1, Math.max(0, lit - i));
-      word.style.setProperty('--reveal', amount.toFixed(2));
+    const lit = progress * chars.length;
+    chars.forEach((char, i) => {
+      const amount = Math.min(1, Math.max(0, lit - i)).toFixed(2);
+      // only touch letters whose value changed: long texts have hundreds of them
+      if (char.dataset.reveal === amount) return;
+      char.dataset.reveal = amount;
+      char.style.setProperty('--reveal', amount);
     });
   };
   const onScroll = () => { if (!frame) frame = requestAnimationFrame(update); };
