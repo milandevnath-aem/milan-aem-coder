@@ -112,13 +112,13 @@
 
 /* tablet portrait: 600px up to the desktop view */
 :root[data-viewport='tablet-portrait'] {
-  --grid-columns: 8;
+  --grid-columns: 8px;
   --fb-margin: 8px;
 }
 
 /* tablet landscape: desktop view up to 1280px */
 :root[data-viewport='tablet-landscape'] {
-  --grid-columns: 12;
+  --grid-columns: 12px;
   --fb-margin: 8px;
   --gb-margin: 48px;
   --footer-padding: 36px;
@@ -126,7 +126,7 @@
 
 /* laptop: 1281px to 1679px, fluid */
 :root[data-viewport='laptop'] {
-  --grid-columns: 12;
+  --grid-columns: 12px;
   --grid-gutter: 16px;
   --fb-margin: 8px;
   --gb-margin: 92px;
