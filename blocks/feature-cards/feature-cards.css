@@ -38,13 +38,6 @@
     font-weight: 600;
 }
 
-:where(.desktop-view) .feature-cards .feature-cards-body h3,
-:where(.desktop-view) .feature-cards .feature-cards-body h4 {
-    font-size: var(--body-font-size-m);
-    line-height: 24px;
-    letter-spacing: 0;
-}
-
 .feature-cards .feature-cards-body p{
   margin: 8px 0 0;
   color: var(--muted-color);
@@ -52,11 +45,6 @@
   font-size: 12px;
   line-height: 16px;
   letter-spacing: 0.24px;
-}
-
-:where(.desktop-view) .feature-cards .feature-cards-body p {
-    font-size: var(--body-font-size-s);
-    line-height: 20px;
 }
 
 .feature-cards .feature-cards-icon img {
@@ -115,7 +103,7 @@
     font-size: 16px;
     font-weight: 600;
     line-height: 24px;
-    letter-spacing: 0px;
+    letter-spacing: 0;
 }
 
 /* numbered */
@@ -141,7 +129,7 @@
     padding-top: 40px;
     font-size: 16px;
     line-height: 24px;
-    letter-spacing: 0px;
+    letter-spacing: 0;
 }
 
 :where(.desktop-view) .feature-cards.numbered .feature-cards-body h3 {
@@ -153,7 +141,7 @@
 .feature-cards.numbered .feature-cards-body p {
     font-size: 14px;
     line-height: 20px;
-    letter-spacing: 0px;
+    letter-spacing: 0;
 }
 
 :where(.desktop-view) .feature-cards.numbered .feature-cards-body p {
@@ -200,10 +188,6 @@
     gap: 12px;
 }
 
-:where(.desktop-view) .feature-cards.split {
-    gap: 32px;
-}
-
 .feature-cards.split .feature-cards-aside h2,
 .feature-cards.split .feature-cards-aside h3 {
     margin: 0 0 24px;
@@ -238,7 +222,7 @@
     font-size: 14px;
     line-height: 18px;
     font-weight: 500;
-    letter-spacing: 0px;
+    letter-spacing: 0;
 }
 
 :where(.desktop-view) .feature-cards {
@@ -270,6 +254,7 @@
 :where(.desktop-view) .feature-cards .feature-cards-body h4 {
     font-size: var(--heading-font-size-m);
     line-height: 28px;
+    letter-spacing: 0;
 }
 
 :where(.desktop-view) .feature-cards .feature-cards-body p {
