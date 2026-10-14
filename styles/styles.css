@@ -597,7 +597,7 @@ main > .section.feature-banner-container + .section {
 /* starts on the grid, scrolls off the right edge */
 main > .section > .testimonials-wrapper {
   max-width: none;
-  padding-right: var(--fb-margin);
+  padding-right: 0;
   padding-left: var(--gb-offset);
 }
 

@@ -78,7 +78,7 @@
 }
 
 .feature-banner .feature-banner-content p {
-  margin: 8px 0 0;
+  margin: 12px 0 0;
   color: var(--feature-banner-muted);
   font-size: var(--body-font-size-m);
   font-weight: 500;
@@ -223,7 +223,8 @@
 }
 
 main:has(.hero-loan.product) .feature-banner .feature-banner-content a.button {
-  padding: 12px 26px;
+  padding: 14px 12px;
+  min-width: 134px;
 }
 
 :where(.desktop-view) main:has(.hero-loan.product) .feature-banner .feature-banner-content a.button {
