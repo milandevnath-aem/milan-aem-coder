@@ -18,6 +18,23 @@ export default function decorate(block) {
       } catch { return; }
       p.classList.add('columns-website');
     });
+
+    // the heading sits in a track it sticks within (desktop): the column's height, or down
+    // to the end of a team list placed right after this block (e.g. "Promoters")
+    const track = document.createElement('div');
+    track.className = 'columns-sticky';
+    track.append(...first.childNodes);
+    first.append(track);
+    const team = block.parentElement?.nextElementSibling;
+    if (team?.matches('.team-wrapper')) {
+      const update = () => {
+        const end = team.getBoundingClientRect().bottom - first.getBoundingClientRect().top;
+        first.style.setProperty('--sticky-end', `${Math.max(0, end)}px`);
+      };
+      const observer = new ResizeObserver(update);
+      observer.observe(block);
+      observer.observe(team);
+    }
   }
 
   // setup image columns

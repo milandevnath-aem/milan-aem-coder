@@ -144,8 +144,19 @@
 }
 
 /* about-us: the heading stays below the pinned nav while the text column scrolls past,
-   and is released when the text (end of the row) reaches it */
+   released at the end of the row, or of a team list right after the block (--sticky-end) */
 :where(.desktop-view) .columns.about-us.columns-split > div > div:first-child {
+    position: relative;
+    align-self: stretch;
+}
+
+:where(.desktop-view) .columns.about-us .columns-sticky {
+    position: absolute;
+    inset: 0 0 auto;
+    height: var(--sticky-end, 100%);
+}
+
+:where(.desktop-view) .columns.about-us .columns-sticky > * {
     position: sticky;
     top: calc(var(--nav-height) - var(--topbar-height) + 24px);
 }
