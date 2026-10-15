@@ -1,7 +1,7 @@
 import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createPicture } from '../../scripts/images.js';
 
-const VARIANTS = ['numbered', 'split', 'info'];
+const VARIANTS = ['numbered', 'split', 'info', 'about-us'];
 
 function buildCard(row, index) {
   const [imageCell, textCell, layoutCell] = row.children;
@@ -49,7 +49,8 @@ function sizeIconCards(cards) {
 }
 
 /**
- * Feature cards. Variants: default (image + icon grid), numbered, split, info.
+ * Feature cards. Variants: default (image + icon grid), numbered, split, info,
+ * about-us (company detail cards on the About Us page).
  * An optional single-cell first row holds intro text (heading, CTA, note);
  * each other row is a card: image, text, layout (icon | image).
  * @param {Element} block The block element

@@ -33,6 +33,17 @@
           "name": "rows",
           "value": "",
           "label": "Rows"
+        },
+        {
+          "component": "select",
+          "name": "classes",
+          "label": "Variant",
+          "valueType": "string",
+          "value": "",
+          "options": [
+            { "name": "Default", "value": "" },
+            { "name": "About Us (sticky heading, website link with icon)", "value": "about-us" }
+          ]
         }
       ]
     }

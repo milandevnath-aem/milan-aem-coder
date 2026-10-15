@@ -165,8 +165,47 @@
           {
             "name": "Animate text (banner text lights up on scroll)",
             "value": "animate-text"
+          },
+          {
+            "name": "Padding top (124px desktop / 80px mobile)",
+            "value": "padding-top"
+          },
+          {
+            "name": "Padding bottom (124px desktop / 80px mobile)",
+            "value": "padding-bottom"
+          },
+          {
+            "name": "No margin top",
+            "value": "no-margin-top"
+          },
+          {
+            "name": "No margin bottom",
+            "value": "no-margin-bottom"
+          },
+          {
+            "name": "No margin top (mobile only)",
+            "value": "no-margin-top-mobile"
+          },
+          {
+            "name": "No margin top (desktop only)",
+            "value": "no-margin-top-desktop"
+          },
+          {
+            "name": "No margin bottom (mobile only)",
+            "value": "no-margin-bottom-mobile"
+          },
+          {
+            "name": "No margin bottom (desktop only)",
+            "value": "no-margin-bottom-desktop"
           }
         ]
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "backgroundColor",
+        "label": "Background color",
+        "description": "Optional. A CSS color such as #eeeeee or rgb(238 238 238). Fills the whole section."
       },
       {
         "component": "reference",
@@ -336,6 +375,23 @@
         "name": "rows",
         "value": "",
         "label": "Rows"
+      },
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Variant",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "About Us (sticky heading, website link with icon)",
+            "value": "about-us"
+          }
+        ]
       }
     ]
   },
@@ -477,6 +533,28 @@
     ]
   },
   {
+    "id": "feature-banner",
+    "fields": [
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Variant",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Edge to edge (full width, no side padding)",
+            "value": "edge-to-edge"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "feature-banner-item",
     "fields": [
       {
@@ -587,6 +665,10 @@
           {
             "name": "Info cards (label / value pairs)",
             "value": "info"
+          },
+          {
+            "name": "About Us info cards (company details)",
+            "value": "about-us"
           }
         ]
       },

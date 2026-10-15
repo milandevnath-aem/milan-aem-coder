@@ -536,12 +536,19 @@ main > .section.requirements-container .default-content-wrapper > h2 + p {
   margin-bottom: 32px;
 }
 
-/* product pages: feature banners run edge to edge (Figma "Section 3 - FB"), the text
-   stays on the grid */
-main:has(.hero-loan.product) > .section > .feature-banner-wrapper {
+/* product pages and the edge-to-edge variant: feature banners run edge to edge
+   (Figma "Section 3 - FB"), the text stays on the grid */
+main:has(.hero-loan.product) > .section > .feature-banner-wrapper,
+main > .section > .feature-banner-wrapper:has(> .feature-banner.edge-to-edge) {
   --fb-inset: var(--gb-offset);
 
   padding: 0;
+}
+
+/* plain hero (About us): 24px below the banner before the section spacing (Figma); padding,
+   since a margin would collapse into the section margin */
+:where(.desktop-view) main > .section > .hero-loan-wrapper:has(> .hero-loan.plain) {
+  padding-bottom: 24px;
 }
 
 /* "Need help?" band: edge to edge, no rounded corners */
@@ -687,6 +694,37 @@ main > .section.requirements-container:not(.has-background):has(.requirements.do
 main > .section.has-background + .section:has(> .offers-wrapper .offers-short),
 main > .section.requirements-container:has(.requirements.documents .requirements-decoration) + .section:has(> .offers-wrapper .offers-short) {
   margin-top: 0;
+}
+
+/* section background color (section properties): spacing sits inside the color */
+main > .section.has-bg-color {
+  margin-block: 0;
+  background-color: var(--section-bg-color);
+}
+
+/* section padding (section style): 80px mobile / 124px desktop via --section-spacing,
+   replacing the default margin on that side */
+main > .section.padding-top {
+  margin-top: 0;
+  padding-top: var(--section-spacing);
+}
+
+main > .section.padding-bottom {
+  margin-bottom: 0;
+  padding-bottom: var(--section-spacing);
+}
+
+/* section margin (section style), both viewports or one (mobile = below the desktop
+   breakpoint); the :root prefix lets the authored choice beat layout-specific margins
+   such as ".feature-banner-container + .section" */
+:root:not(.desktop-view) main > .section:is(.no-margin-top, .no-margin-top-mobile),
+:root.desktop-view main > .section:is(.no-margin-top, .no-margin-top-desktop) {
+  margin-top: 0;
+}
+
+:root:not(.desktop-view) main > .section:is(.no-margin-bottom, .no-margin-bottom-mobile),
+:root.desktop-view main > .section:is(.no-margin-bottom, .no-margin-bottom-desktop) {
+  margin-bottom: 0;
 }
 
 main > .section > .section-background,

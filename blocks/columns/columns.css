@@ -47,12 +47,21 @@
     letter-spacing: -0.8px;
 }
 
+.feature-cards-container .columns.columns-split > div > div:first-child h2{
+  color: var(--text-color);
+}
+
 .columns.columns-split p,
 .columns.columns-split li {
     color: var(--muted-color);
     font-size: var(--body-font-size-m);
     font-weight: 500;
     line-height: 24px;
+}
+
+.feature-cards-container .columns.columns-split p , 
+.feature-cards-container .columns.columns-split li {
+ margin-bottom: 24px;
 }
 
 .columns.columns-split p:first-child {
@@ -63,9 +72,65 @@
     padding-left: 20px;
 }
 
+.feature-cards-container .columns.columns-split ul {
+  margin-top: 24px;
+  padding-left: 24px;
+}
+
+.columns-container.feature-cards-container .feature-cards-wrapper{
+  margin-top: 80px;
+}
+
 .columns.columns-split a:any-link {
     color: var(--text-color);
     text-decoration: underline;
+}
+
+/* about-us website link: 40px icon box (16px globe) + underlined URL, 32px below the text */
+.columns.about-us p.columns-website {
+    margin: 32px 0 0;
+}
+
+.columns.about-us p.columns-website a:any-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: #003874;
+    font-size: var(--body-font-size-m);
+    font-weight: 500;
+    line-height: 24px;
+    text-decoration: underline;
+    overflow-wrap: anywhere;
+}
+
+/* icon box */
+.columns.about-us p.columns-website a:any-link::before {
+    content: '';
+    flex: none;
+    box-sizing: border-box;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #dedede;
+    border-radius: 8px;
+    background-color: var(--surface-color);
+}
+
+/* globe, centered in the box (12px padding) */
+.columns.about-us p.columns-website a:any-link::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    width: 16px;
+    height: 16px;
+    background-color: currentcolor;
+    mask: url('../../icons/globe.svg') center / contain no-repeat;
+    transform: translateY(-50%);
+}
+
+:where(.desktop-view) .columns.about-us p.columns-website a:any-link {
+    font-size: var(--heading-font-size-s);
 }
 
 :where(.desktop-view) .columns.columns-split > div {
@@ -76,6 +141,24 @@
 
 :where(.desktop-view) .columns.columns-split > div > div:first-child {
     flex: 0 1 442px;
+}
+
+/* about-us: the heading stays below the pinned nav while the text column scrolls past,
+   released at the end of the row, or of a team list right after the block (--sticky-end) */
+:where(.desktop-view) .columns.about-us.columns-split > div > div:first-child {
+    position: relative;
+    align-self: stretch;
+}
+
+:where(.desktop-view) .columns.about-us .columns-sticky {
+    position: absolute;
+    inset: 0 0 auto;
+    height: var(--sticky-end, 100%);
+}
+
+:where(.desktop-view) .columns.about-us .columns-sticky > * {
+    position: sticky;
+    top: calc(var(--nav-height) - var(--topbar-height) + 24px);
 }
 
 :where(.desktop-view) .columns.columns-split > div > div:last-child {
