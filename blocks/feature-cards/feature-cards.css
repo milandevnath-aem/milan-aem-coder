@@ -205,7 +205,7 @@
 
 /* about-us: company detail cards (icon + label/value pairs) */
 .feature-cards.about-us .feature-cards-list {
-  gap: var(--grid-gutter);
+  gap: 12px;
 }
 
 .feature-cards.about-us .feature-cards-card {

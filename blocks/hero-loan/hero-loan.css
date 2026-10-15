@@ -450,6 +450,10 @@
   width: 100%;
 }
 
+:where(.desktop-view) .hero-loan .hero-loan-stats li {
+ min-width: 345px;
+}
+
 .hero-loan .hero-loan-stats .icon {
   flex: 0 0 auto;
   width: 28px;
@@ -468,6 +472,11 @@
   font-size: var(--body-font-size-xs);
   font-weight: 600;
   line-height: 18px;
+}
+
+:where(.desktop-view) .hero-loan .hero-loan-stats small {
+  font-size: var(--body-font-size-s);
+  line-height: 20px;
 }
 
 .hero-loan .hero-loan-stats strong {
@@ -534,12 +543,18 @@
 
 :where(.desktop-view) .hero-loan .hero-loan-slide .hero-loan-content .hero-loan-stats {
   align-self: center;
-  gap: 40px;
+  gap: 12px;
 }
 
 :where(.desktop-view) .hero-loan .hero-loan-stats strong {
   font-size: var(--heading-font-size-m);
   line-height: 28px;
+}
+
+/* plain hero (About us): stat values are Body/B2 */
+:where(.desktop-view) .hero-loan.plain .hero-loan-stats strong {
+  font-size: var(--body-font-size-m);
+  line-height: 24px;
 }
 
 /* product / plain heroes: soft shade behind the title for contrast */
