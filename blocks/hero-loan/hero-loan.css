@@ -175,6 +175,8 @@
   --hero-loan-radius: 44px;
   --hero-loan-min-height: 553px;
   --hero-loan-padding: 48px var(--fb-inset);
+  
+  padding-bottom: 24px;
 }
 
 :where(.desktop-view) .hero-loan .hero-loan-image img {
