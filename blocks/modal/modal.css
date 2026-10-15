@@ -140,11 +140,15 @@ dialog.modal .default-content-wrapper > :first-child {
 
 dialog.modal .default-content-wrapper picture {
   display: block;
-  margin: 0 0 20px;
+  margin: 0 0 14px;
   border: 1px solid var(--surface-color);
   border-radius: 24px;
   background: linear-gradient(180deg, #fff 0%, #f7f1f1 100%);
   overflow: hidden;
+}
+
+:where(.desktop-view) dialog.modal .default-content-wrapper picture {
+  margin: 0 0 20px;
 }
 
 dialog.modal .default-content-wrapper picture img {
@@ -160,10 +164,12 @@ dialog.modal .default-content-wrapper h2 {
   font-weight: 600;
   line-height: 36px;
   letter-spacing: -0.56px;
+  color: #121212;
+  margin-bottom: 20px;
 }
 
 dialog.modal .default-content-wrapper p {
-  margin: 0 0 24px;
+  margin: 0 0 20px;
   color: var(--muted-color);
   font-size: var(--body-font-size-m);
   font-weight: 500;
