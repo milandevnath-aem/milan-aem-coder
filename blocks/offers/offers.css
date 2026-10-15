@@ -6,10 +6,6 @@
     --offers-cta-gap: 32px;
 }
 
-:where(.desktop-view) .offers-wrapper {
-  padding-bottom: 12px;
-}
-
 .offers > ul {
     display: grid;
     grid-template-columns: 1fr;

@@ -531,6 +531,10 @@ main > .section > .feature-banner-wrapper {
   padding: 0 var(--fb-margin);
 }
 
+:where(.desktop-view) main > .section > .offers-wrapper{
+  padding-bottom: 12px;
+}
+
 /* product pages: eligibility and documents sections */
 main > .section.requirements-container .default-content-wrapper > h2 + p {
   margin-bottom: 32px;
