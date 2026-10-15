@@ -104,7 +104,31 @@
 }
 
 .lead-form .lead-form-zip input:placeholder-shown:not(:focus) + .lead-form-label {
-  color: #b2b2b2;
+  color: var(--muted-color);
+}
+
+/* field errors: text under the field, not colour alone */
+.lead-form .lead-form-error {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: -4px 0 0;
+  color: #c4161c;
+  font-size: var(--body-font-size-xs);
+  font-weight: 600;
+  line-height: 18px;
+}
+
+.lead-form .lead-form-error[hidden] {
+  display: none;
+}
+
+.lead-form .lead-form-error::before {
+  content: '';
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  background: url('../../icons/alert.svg') center / contain no-repeat;
 }
 
 .lead-form .lead-form-prefix {
@@ -212,7 +236,7 @@
   width: 100%;
 }
 
-.lead-form button.button.primary.lead-form-submit:disabled {
+.lead-form button.button.primary.lead-form-submit[aria-disabled='true'] {
   border-color: #b2b2b2;
   background-color: #b2b2b2;
   color: var(--muted-color);

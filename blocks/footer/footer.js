@@ -57,8 +57,9 @@ export default async function decorate(block) {
 
   // link columns: top-level items are column headings
   footer.querySelectorAll('.footer-links .default-content-wrapper > ul > li').forEach((li) => {
-    const heading = [...li.childNodes]
-      .find((n) => n.nodeType === Node.TEXT_NODE && n.textContent.trim());
+    // plain text, or a <p> when the list is published as a loose list
+    const heading = [...li.childNodes].find((n) => (n.nodeType === Node.TEXT_NODE
+      && n.textContent.trim()) || (n.nodeName === 'P' && !n.querySelector('a')));
     if (heading) {
       const span = document.createElement('span');
       span.className = 'footer-heading';
@@ -70,14 +71,17 @@ export default async function decorate(block) {
   footer.querySelectorAll('.footer-bottom li:has(> ul)').forEach(buildDropdown);
 
   // breadcrumb (Home > current page) above the copyright line on inner pages
-  const isHome = /^\/(home|index|content\/home)?\/?$/.test(window.location.pathname);
+  const { pathname } = window.location;
+  const isHome = pathname === '/' || /\/(home|index)\/?$/.test(pathname);
   const crumb = getMetadata('breadcrumb') || (!isHome && document.querySelector('main h1')?.textContent.trim());
   const bottom = footer.querySelector('.footer-bottom .default-content-wrapper');
   if (crumb && bottom) {
     const nav = document.createElement('nav');
     nav.className = 'footer-breadcrumb';
     nav.setAttribute('aria-label', 'Breadcrumb');
-    nav.innerHTML = '<ol><li><a href="/">Home</a></li><li aria-current="page"></li></ol>';
+    nav.innerHTML = '<ol><li><a>Home</a></li><li aria-current="page"></li></ol>';
+    // home page next to the footer fragment's site root (/fragments/footer: /home)
+    nav.querySelector('a').href = `${footerPath.replace(/\/(fragments\/)?footer$/, '')}/home`;
     nav.querySelector('[aria-current]').textContent = crumb;
     bottom.querySelector(':scope > p')?.before(nav);
   }
@@ -88,6 +92,14 @@ export default async function decorate(block) {
   footer.querySelectorAll('.footer-links, .footer-other, .footer-bottom')
     .forEach((section) => card.append(section));
   footer.append(card);
+
+  // icon-only links (social) are named after their icon, e.g. icon-facebook -> "Facebook"
+  footer.querySelectorAll('a:has(> .icon)').forEach((a) => {
+    if (a.textContent.trim() || a.getAttribute('aria-label')) return;
+    const name = [...a.querySelector('.icon').classList]
+      .find((c) => c.startsWith('icon-'))?.slice(5).replace(/-/g, ' ');
+    if (name) a.setAttribute('aria-label', name.length <= 2 ? name.toUpperCase() : name.replace(/^\w/, (ch) => ch.toUpperCase()));
+  });
 
   block.append(footer);
 }

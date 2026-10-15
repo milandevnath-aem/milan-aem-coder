@@ -14,7 +14,7 @@ header nav {
     'brand tools hamburger' var(--nav-bar-height)
     'sections sections sections' auto / auto 1fr auto;
   align-items: center;
-  gap: 0 12px;
+  gap: 0 8px;
   max-width: var(--gb-max-width);
   height: var(--nav-bar-height);
   margin: auto;
@@ -100,18 +100,31 @@ header .nav-topbar .default-content-wrapper {
   min-width: 0;
 }
 
+header .nav-topbar p {
+  margin: 0;
+}
+
 header .nav-topbar .nav-announcement {
-  position: relative;
+  display: flex;
   flex: 1 1 auto;
+  align-items: center;
+  gap: 8px;
   min-width: 0;
   margin: 0;
-  overflow: hidden;
   font-size: var(--body-font-size-xs);
   font-weight: 500;
+  line-height: 16px;
   white-space: nowrap;
 }
 
-header .nav-topbar .nav-announcement::after {
+header .nav-topbar .nav-announcement-text {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+header .nav-topbar .nav-announcement-text::after {
   content: '';
   position: absolute;
   inset: 0 0 0 auto;
@@ -120,18 +133,19 @@ header .nav-topbar .nav-announcement::after {
 }
 
 header .nav-topbar .nav-announcement-track {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  display: inline-block;
   padding-left: 100%;
   animation: nav-marquee 60s linear infinite;
 }
 
-header .nav-topbar .nav-announcement:hover .nav-announcement-track {
+header .nav-topbar .nav-announcement:hover .nav-announcement-track,
+header .nav-topbar .nav-announcement:focus-within .nav-announcement-track,
+header .nav-topbar .nav-announcement.is-paused .nav-announcement-track {
   animation-play-state: paused;
 }
 
 header .nav-topbar .icon {
+  display: block;
   width: 16px;
   height: 16px;
   flex-shrink: 0;
@@ -159,6 +173,7 @@ header .nav-topbar .nav-utility {
 
 :where(.desktop-view) header .nav-topbar .nav-announcement {
   font-size: var(--body-font-size-s);
+  line-height: 18px;
 }
 
 :where(.desktop-view) header .nav-topbar .nav-utility {
@@ -166,10 +181,21 @@ header .nav-topbar .nav-utility {
   flex-shrink: 0;
   align-items: center;
   gap: 16px;
+  height: 100%;
   margin: 0;
   padding: 0;
   list-style: none;
   white-space: nowrap;
+}
+
+:where(.desktop-view) header .nav-topbar .nav-utility > li {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+:where(.desktop-view) header .nav-topbar .nav-utility > li > p {
+  display: contents;
 }
 
 :where(.desktop-view) header .nav-topbar .nav-utility li:nth-child(2) {
@@ -181,10 +207,16 @@ header .nav-topbar .nav-utility {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 4px 0;
+  padding: 14px 0;
   color: var(--text-color);
   font-size: var(--body-font-size-s);
+  font-weight: 400;
   line-height: 16px;
+}
+
+:where(.desktop-view) header .nav-topbar .nav-popover-toggle .nav-icon {
+  width: 16px;
+  height: 16px;
 }
 
 :where(.desktop-view) header .nav-topbar .nav-utility a:hover,
@@ -289,7 +321,7 @@ header nav .nav-hamburger {
 header nav .nav-hamburger button {
   display: flex;
   border-radius: 10px;
-  padding: 4px;
+  padding: 0;
 }
 
 header nav .nav-hamburger .nav-icon-close,
@@ -357,7 +389,7 @@ header nav .nav-sections ul {
 header .nav-link {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
   color: var(--text-color);
   text-decoration: none;
 }
@@ -678,7 +710,8 @@ header nav .nav-tools .button-wrapper {
 }
 
 header nav .nav-tools a.button {
-  padding: 10px 16px;
+  min-width: 106px;
+  padding: 11px;
   font-size: var(--body-font-size-s);
   line-height: 20px;
 }
@@ -695,11 +728,24 @@ header nav .nav-tools a[aria-controls='nav-search'] {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
+  padding: 2px;
   border: 1px solid transparent;
   border-radius: 50%;
   box-sizing: border-box;
+}
+
+header nav .nav-tools a[aria-controls='nav-search'] .icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* open: a 32px outlined close button in the same slot */
+header nav .nav-tools a[aria-controls='nav-search'][aria-expanded='true'] {
+  width: 32px;
+  height: 32px;
+  margin: -4px;
 }
 
 header nav .nav-tools a[aria-controls='nav-search'] .nav-icon-close,
@@ -741,7 +787,8 @@ header nav .nav-tools a[aria-expanded='true'] .nav-icon-close {
 }
 
 :where(.desktop-view) header nav .nav-tools a.button {
-  padding: 12px 26px;
+  min-width: 0;
+  padding: 11px 25px;
 }
 
 /* search */

@@ -31,6 +31,40 @@ function parseOptions(text) {
   return { options, value };
 }
 
+let errorCount = 0;
+
+/**
+ * Text error message shown under a field and linked to its control (WCAG 3.3.1).
+ * @param {HTMLElement} control the focusable control (input or dropdown button)
+ * @param {string} message error text
+ * @returns {{ el: HTMLParagraphElement, show: Function }}
+ */
+function fieldError(control, message) {
+  errorCount += 1;
+  const el = document.createElement('p');
+  el.className = 'lead-form-error';
+  el.id = `lead-form-error-${errorCount}`;
+  el.hidden = true;
+  el.textContent = message;
+  const described = control.getAttribute('aria-describedby');
+  control.setAttribute('aria-describedby', [described, el.id].filter(Boolean).join(' '));
+  const show = (invalid) => {
+    el.hidden = !invalid;
+    if (invalid) control.setAttribute('aria-invalid', 'true');
+    else control.removeAttribute('aria-invalid');
+  };
+  return { el, show };
+}
+
+function errorMessage(label, kind) {
+  if (kind === 'tel') return 'Enter a valid 10-digit mobile number';
+  if (kind === 'email') return 'Enter a valid email address';
+  if (kind === 'zip') return 'Enter a valid 6-digit PIN code';
+  if (kind === 'select' || kind === 'search') return `Select ${label.toLowerCase()}`;
+  if (kind === 'captcha') return 'Enter the characters shown in the image';
+  return `Enter your ${label.toLowerCase().replace(/^your /, '')}`;
+}
+
 function textField(label, kind, required) {
   const field = document.createElement('label');
   field.className = `lead-form-input lead-form-${kind}`;
@@ -183,6 +217,7 @@ export default function decorate(block) {
   const fields = document.createElement('div');
   fields.className = 'lead-form-fields';
   const dropdowns = [];
+  const checks = [];
   let captcha;
 
   fieldRows.forEach((row) => {
@@ -211,7 +246,19 @@ export default function decorate(block) {
       field = textField(label, kind, required);
     }
     moveInstrumentation(row, field);
-    fields.append(field);
+    // text error under each field: what is wrong and how to fix it
+    const control = field.querySelector('.dropdown-field') || field.querySelector('input:not([type="hidden"])');
+    if (control) {
+      const error = fieldError(control, errorMessage(label, kind));
+      const isDropdown = dropdowns.includes(field);
+      let valid = () => control.checkValidity();
+      if (field === captcha) valid = () => captcha.isValid();
+      if (isDropdown) valid = () => !field.dataset.required || Boolean(field.value);
+      checks.push({
+        field, control, error, valid,
+      });
+      fields.append(field, error.el);
+    } else fields.append(field);
   });
   form.append(fields);
 
@@ -242,26 +289,44 @@ export default function decorate(block) {
   const isValid = () => form.checkValidity()
     && dropdowns.every((d) => !d.dataset.required || d.value)
     && (!captcha || captcha.isValid());
+  const setState = (check, invalid) => {
+    check.error.show(invalid);
+    const box = check.field.closest('.lead-form-input')
+      || check.field.querySelector('.lead-form-input') || check.field;
+    box.classList.toggle('is-invalid', invalid);
+  };
+  // the button stays focusable while the form is incomplete (aria-disabled, not disabled);
+  // submitting then lists what is missing
   const refresh = () => {
-    submit.disabled = !isValid();
+    submit.setAttribute('aria-disabled', !isValid());
   };
   form.addEventListener('input', refresh);
   form.addEventListener('change', refresh);
   refresh();
 
-  // mark fields the user left with an invalid value
+  // mark fields the user left with an invalid value; clear the message while correcting
   form.addEventListener('focusout', (e) => {
-    const input = e.target.closest('input');
-    if (!input?.value) return;
-    input.closest('.lead-form-input')?.classList.toggle('is-invalid', !input.checkValidity());
+    const check = checks.find((c) => c.control === e.target);
+    if (!check || !e.target.value) return;
+    setState(check, !check.valid());
   });
   form.addEventListener('input', (e) => {
-    e.target.closest('.lead-form-input')?.classList.remove('is-invalid');
+    const check = checks.find((c) => c.control === e.target);
+    if (check) setState(check, false);
   });
+  dropdowns.forEach((d) => d.addEventListener('change', () => {
+    const check = checks.find((c) => c.field === d);
+    if (check) setState(check, false);
+  }));
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    if (!isValid()) return;
+    if (!isValid()) {
+      const invalid = checks.filter((check) => !check.valid());
+      checks.forEach((check) => setState(check, invalid.includes(check)));
+      invalid[0]?.control.focus();
+      return;
+    }
     const thanks = document.createElement('div');
     thanks.className = 'lead-form-thanks';
     thanks.setAttribute('role', 'status');

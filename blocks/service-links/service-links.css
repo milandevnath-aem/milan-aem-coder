@@ -20,7 +20,7 @@
   gap: 24px;
   height: 100%;
   box-sizing: border-box;
-  padding: 20px 24px;
+  padding: 24px;
   border-radius: 24px;
   background-color: var(--service-links-bg);
   color: var(--text-color);
@@ -33,11 +33,20 @@
   text-decoration: none;
 }
 
+.service-links a.service-links-tile:focus-visible {
+  outline: 2px solid var(--text-color);
+  outline-offset: 2px;
+}
+
 .service-links .service-links-title {
   position: relative;
-  font-size: var(--body-font-size-m);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 32px;
+}
+
+.service-links-item.service-links-has-image .service-links-title {
   font-weight: 500;
-  line-height: 24px;
 }
 
 .service-links .service-links-arrow {
@@ -128,8 +137,8 @@
 }
 
 :where(.desktop-view) .service-links .service-links-highlight .service-links-title {
-  font-size: var(--heading-font-size-m);
-  line-height: 28px;
+  font-size: 24px;
+  line-height: 32px;
 }
 
 :where(.desktop-view) .service-links .service-links-highlight .service-links-arrow {
