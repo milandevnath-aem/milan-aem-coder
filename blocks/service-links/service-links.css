@@ -92,7 +92,7 @@
 :where(.desktop-view) .service-links > ul {
   grid-template-columns: repeat(2, 1fr);
   grid-auto-flow: row dense;
-  gap: 12px;
+  gap: var(--spacing-lg);
 }
 
 :where(.desktop-view) .service-links .service-links-item {
