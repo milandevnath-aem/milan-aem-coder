@@ -12,7 +12,7 @@ import {
 } from './aem.js';
 // sets the viewport classes on <html> before the page is shown
 import { isDesktop } from './viewport.js';
-import { decorateDynamicMedia } from './images.js';
+import { createResponsivePicture, decorateDynamicMedia } from './images.js';
 
 /**
  * Moves all the attributes from a given elmenet to another given element.
@@ -142,6 +142,24 @@ export function decorateButtons(main) {
 }
 
 /**
+ * Sections with background images (section properties "background" and
+ * "backgroundMobile"): a decorative picture covering the section behind its content.
+ * @param {Element} main The main element
+ */
+function decorateSectionBackgrounds(main) {
+  main.querySelectorAll(':scope > .section').forEach((section) => {
+    const { background } = section.dataset;
+    const mobile = section.dataset.backgroundmobile || section.dataset.backgroundMobile;
+    if (!background && !mobile) return;
+    const picture = createResponsivePicture(background, mobile);
+    picture.classList.add('section-background');
+    picture.querySelector('img').alt = '';
+    section.classList.add('has-background');
+    section.prepend(picture);
+  });
+}
+
+/**
  * Decorates the main element.
  * @param {Element} main The main element
  */
@@ -150,6 +168,7 @@ export function decorateMain(main) {
   decorateIcons(main);
   buildAutoBlocks(main);
   decorateSections(main);
+  decorateSectionBackgrounds(main);
   // Dynamic Media references become images before blocks and buttons are decorated
   decorateDynamicMedia(main);
   decorateBlocks(main);

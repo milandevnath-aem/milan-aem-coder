@@ -115,21 +115,21 @@
 
 /* tablet portrait: 600px up to the desktop view */
 :root[data-viewport='tablet-portrait'] {
-  --grid-columns: 8;
-  --fb-margin: 12px;
+  --grid-columns: 8px;
+  --fb-margin: 8px;
 }
 
 /* tablet landscape: desktop view up to 1280px */
 :root[data-viewport='tablet-landscape'] {
-  --grid-columns: 12;
-  --fb-margin: 12px;
+  --grid-columns: 12px;
+  --fb-margin: 8px;
   --gb-margin: 48px;
   --footer-padding: 36px;
 }
 
 /* laptop: 1281px to 1679px, fluid */
 :root[data-viewport='laptop'] {
-  --grid-columns: 12;
+  --grid-columns: 12px;
   --grid-gutter: 16px;
   --fb-margin: 12px;
   --gb-margin: 92px;
@@ -536,8 +536,12 @@ main > .section.requirements-container .default-content-wrapper > h2 + p {
   margin-bottom: 32px;
 }
 
-:where(.desktop-view) main > .section.requirements-container:has(.requirements.documents) {
-  padding-bottom: 62px;
+/* product pages: feature banners run edge to edge (Figma "Section 3 - FB"), the text
+   stays on the grid */
+main:has(.hero-loan.product) > .section > .feature-banner-wrapper {
+  --fb-inset: var(--gb-offset);
+
+  padding: 0;
 }
 
 /* "Need help?" band: edge to edge, no rounded corners */
@@ -593,7 +597,7 @@ main > .section.feature-banner-container + .section {
 /* starts on the grid, scrolls off the right edge */
 main > .section > .testimonials-wrapper {
   max-width: none;
-  padding-right: var(--fb-margin);
+  padding-right: 0;
   padding-left: var(--gb-offset);
 }
 
@@ -658,6 +662,46 @@ main .section.highlight {
   padding: var(--section-spacing) 0;
 }
 
+/* section background image (section properties), behind the content */
+main > .section.has-background {
+  position: relative;
+  isolation: isolate;
+
+  /* the image paints the whole section: its spacing sits inside, so the image meets the
+     next section (Figma) */
+  margin-bottom: 0;
+  padding-block: var(--section-spacing);
+}
+
+/* documents section that still uses the block decoration (no section background):
+   same layout, the artwork covers the whole section down to the next one */
+main > .section.requirements-container:not(.has-background):has(.requirements.documents .requirements-decoration) {
+  position: relative;
+  isolation: isolate;
+  margin-bottom: 0;
+  padding-block: var(--section-spacing);
+  overflow: hidden;
+}
+
+/* a full-bleed band (e.g. "Need help?") right after a background section touches it */
+main > .section.has-background + .section:has(> .offers-wrapper .offers-short),
+main > .section.requirements-container:has(.requirements.documents .requirements-decoration) + .section:has(> .offers-wrapper .offers-short) {
+  margin-top: 0;
+}
+
+main > .section > .section-background,
+main > .section > .section-background img {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+}
+
+main > .section > .section-background img {
+  object-fit: cover;
+}
+
 main .section.brand {
   margin: 0;
   padding: 80px 0;
@@ -672,13 +716,18 @@ main .section.brand .default-content-wrapper {
 
 main .section.brand p {
   margin: 0;
-  font-size: var(--body-font-size-m);
+  font-size: var(--body-font-size-s);
   font-weight: 600;
-  line-height: 24px;
+  line-height: 20px;
 }
 
 :where(.desktop-view) main .section.brand {
   padding: var(--section-spacing) 0;
+}
+
+:where(.desktop-view) main .section.brand p {
+  font-size: var(--body-font-size-m);
+  line-height: 24px;
 }
 
 main > .section.branch-locator-container:last-of-type {

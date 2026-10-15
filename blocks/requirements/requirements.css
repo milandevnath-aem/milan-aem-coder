@@ -4,20 +4,45 @@
   position: relative;
 }
 
+/* the documents artwork is positioned against the whole section (heading to cards,
+   edge to edge), not the block */
+.requirements-container:has(.requirements.documents) {
+  position: relative;
+  isolation: isolate;
+  padding: 80px 0;
+}
+
+.requirements.documents {
+  position: static;
+}
+
 .requirements .requirements-decoration {
   position: absolute;
-  top: 0;
-  right: calc(-1 * var(--gb-offset));
+  inset: 0;
   z-index: -1;
-  width: fit-content;
-  max-width: 70vw;
+  overflow: hidden;
   pointer-events: none;
 }
 
+/* small screens (Figma): the image is stretched to 589.435% of the section width and
+   the full height, showing the slice that starts 1181px in on a 390px wide frame */
 .requirements .requirements-decoration img {
+  position: absolute;
+  top: 0;
+  left: -302.8%;
   display: block;
+  width: 589.435%;
+  max-width: none;
+  height: 100%;
+  object-fit: fill;
+}
+
+/* desktop (Figma): covers the whole section, centred */
+:where(.desktop-view) .requirements .requirements-decoration img {
+  inset: 0;
   width: 100%;
-  height: auto;
+  object-fit: cover;
+  object-position: 50%;
 }
 
 /* tabs */
@@ -73,6 +98,12 @@
   color: var(--inverse-color);
 }
 
+/* documents chips: the selected chip has no border, its padding takes the border's place */
+.requirements.documents .requirements-tabs button[aria-selected='true'] {
+  border: 0;
+  padding: 8px 16px;
+}
+
 .requirements .requirements-tabs button:focus-visible {
   outline: 2px solid var(--accent-color);
   outline-offset: 2px;
@@ -121,14 +152,17 @@
 }
 
 .requirements.eligibility .requirements-card {
-  justify-content: space-between;
   min-height: 230px;
+}
+
+.requirements.eligibility .requirements-card .requirements-title{
+  margin-top: auto;
 }
 
 .requirements .requirements-icon img {
   display: block;
-  width: 52px;
-  height: 52px;
+  width: 60px;
+  height: 60px;
   object-fit: contain;
 }
 
@@ -142,9 +176,10 @@
 
 .requirements .requirements-text p {
   margin: 8px 0 0;
-  font-size: var(--heading-font-size-l);
+  font-size: 28px;
   font-weight: 600;
-  line-height: 32px;
+  line-height: 36px;
+  letter-spacing: -0.56px;
 }
 
 /* documents cards */
@@ -154,7 +189,7 @@
 }
 
 .requirements.documents .requirements-title {
-  margin: 24px 0 0;
+  margin: 0;
   padding-bottom: 24px;
   border-bottom: 1px solid var(--surface-color);
   color: var(--text-color);
@@ -167,8 +202,8 @@
 .requirements.documents .requirements-text ul {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin: 16px 0 0;
+  gap: 24px;
+  margin: 24px 0 0;
   padding: 0;
   list-style: none;
 }
@@ -242,6 +277,10 @@
   letter-spacing: 0;
 }
 
+:where(.desktop-view) .requirements.documents .requirements-tabs button[aria-selected='true'] {
+  padding: 9px 16px;
+}
+
 :where(.desktop-view) .requirements.eligibility .requirements-tabs button {
   padding: 12px 20px;
   font-size: var(--body-font-size-m);
@@ -268,6 +307,11 @@
   scroll-snap-align: start;
 }
 
+/* more than three cards: three and a half in view, so the half card shows there is more */
+:where(.desktop-view) .requirements.eligibility .requirements-cards:has(> .requirements-card:nth-child(4)) > .requirements-card {
+  flex-basis: calc((100% - 3 * var(--grid-gutter)) / 3.5);
+}
+
 :where(.desktop-view) .requirements .requirements-icon img {
   width: 72px;
   height: 72px;
@@ -284,6 +328,7 @@
   margin-top: 8px;
   font-size: 32px;
   line-height: 40px;
+  letter-spacing: normal;
 }
 
 :where(.desktop-view) .requirements .requirements-nav {
@@ -298,6 +343,7 @@
 }
 
 :where(.desktop-view) .requirements.documents .requirements-cards {
+  gap: 12px;
   display: grid;
   grid-auto-columns: minmax(0, 1fr);
   grid-auto-flow: column;
@@ -330,8 +376,4 @@
 
 :where(.desktop-view) .requirements.documents .requirements-text li::before {
   top: 3px;
-}
-
-:where(.desktop-view) .requirements .requirements-decoration {
-  top: -180px;
 }

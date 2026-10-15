@@ -87,6 +87,7 @@
   border-color: #fff;
   background-color: #fff;
   color: var(--text-color);
+  padding: 14px 12px;
 }
 
 .hero-loan .hero-loan-content a.button:hover,
@@ -380,8 +381,8 @@
 
 .hero-loan .hero-loan-more::after {
   content: '';
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   background: url('../../icons/chevron-down.svg') center / contain no-repeat;
 }
 
@@ -483,8 +484,28 @@
   --hero-loan-radius: 20px;
 }
 
+/* product form card (Figma): 546px wide, 68px fields, 24px above the button */
+:where(.desktop-view) .hero-loan.product .hero-loan-form {
+  width: max(546px, 46%);
+}
+
+:where(.desktop-view) .hero-loan.product .hero-loan-form .dropdown-field {
+  height: 68px;
+  min-height: 0;
+  
+  /* padding-block: 0; */
+}
+
+:where(.desktop-view) .hero-loan.product .hero-loan-form form {
+  margin-bottom: 0;
+}
+
+:where(.desktop-view) .hero-loan.product .hero-loan-form form button[type='submit'] {
+  margin-top: 13px;
+}
+
 :where(.desktop-view) .hero-loan.product .hero-loan-content p:not(.button-wrapper) {
-  margin-top: 12px;
+  margin-top: 20px;
   color: var(--inverse-color);
   font-size: var(--body-font-size-m);
   font-weight: 500;

@@ -357,7 +357,15 @@ footer .footer-bottom .icon {
 }
 
 :where(.desktop-view) footer .footer-other .default-content-wrapper > ul > li {
-  min-height: unset;
+  min-height: 36px;
+}
+
+/* desktop: "Kotak Group Companies" uses Body/B2 */
+:where(.desktop-view) footer .footer-dropdown summary {
+  font-size: var(--body-font-size-m);
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: 0;
 }
 
 :where(.desktop-view) footer .footer-bottom .default-content-wrapper {
@@ -391,6 +399,10 @@ footer .footer-bottom .icon {
   justify-content: flex-end;
 }
 
+:where(html:not(.desktop-view)) footer .footer-bottom .default-content-wrapper > p + ul:last-child {
+  margin-top: -2px;
+}
+
 /* breadcrumb */
 footer .footer-breadcrumb {
   grid-column: 1 / -1;
@@ -414,6 +426,11 @@ footer .footer-breadcrumb ol {
 :where(.desktop-view) footer .footer-breadcrumb ol {
   font-size: var(--body-font-size-m);
   line-height: 24px;
+}
+
+footer .footer-card .footer-bottom .footer-breadcrumb li {
+  font: inherit;
+  letter-spacing: 0;
 }
 
 footer .footer-breadcrumb li + li::before {

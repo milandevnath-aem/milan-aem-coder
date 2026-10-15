@@ -78,7 +78,7 @@
 }
 
 .feature-banner .feature-banner-content p {
-  margin: 8px 0 0;
+  margin: 12px 0 0;
   color: var(--feature-banner-muted);
   font-size: var(--body-font-size-m);
   font-weight: 500;
@@ -192,6 +192,44 @@
   line-height: 24px;
 }
 
+
+/* product pages, small screens: side image banner 672px high, the car drawn large with
+   its rear 15px from the right edge and the front running off the left (Figma) */
+:where(html:not(.desktop-view)) main:has(.hero-loan.product) .feature-banner .side-image {
+  min-height: 672px;
+}
+
+:where(html:not(.desktop-view)) main:has(.hero-loan.product) .feature-banner .side-image .feature-banner-content {
+  z-index: 1;
+}
+
+:where(html:not(.desktop-view)) main:has(.hero-loan.product) .feature-banner .side-image .feature-banner-image {
+  position: absolute;
+  inset: auto -8px 21px auto;
+  width: auto;
+  height: 321px;
+  margin: 0;
+}
+
+:where(html:not(.desktop-view)) main:has(.hero-loan.product) .feature-banner .feature-banner-item.side-image .feature-banner-image img {
+  width: auto;
+  max-width: none;
+  height: 100%;
+}
+
+/* product pages: 12px between heading and text, Figma pill buttons (12px + 14px inner) */
+:where(.desktop-view) main:has(.hero-loan.product) .feature-banner .feature-banner-content p {
+  margin-top: 12px;
+}
+
+main:has(.hero-loan.product) .feature-banner .feature-banner-content a.button {
+  padding: 14px 12px;
+  min-width: 134px;
+}
+
+:where(.desktop-view) main:has(.hero-loan.product) .feature-banner .feature-banner-content a.button {
+  padding: 14px 26px;
+}
 
 :where(.desktop-view) .feature-banner .side-image .feature-banner-image {
   position: absolute;
