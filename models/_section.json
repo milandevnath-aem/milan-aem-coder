@@ -49,6 +49,30 @@
             {
               "name": "Padding bottom (124px desktop / 80px mobile)",
               "value": "padding-bottom"
+            },
+            {
+              "name": "No margin top",
+              "value": "no-margin-top"
+            },
+            {
+              "name": "No margin bottom",
+              "value": "no-margin-bottom"
+            },
+            {
+              "name": "No margin top (mobile only)",
+              "value": "no-margin-top-mobile"
+            },
+            {
+              "name": "No margin top (desktop only)",
+              "value": "no-margin-top-desktop"
+            },
+            {
+              "name": "No margin bottom (mobile only)",
+              "value": "no-margin-bottom-mobile"
+            },
+            {
+              "name": "No margin bottom (desktop only)",
+              "value": "no-margin-bottom-desktop"
             }
           ]
         },
