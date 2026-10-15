@@ -532,7 +532,7 @@ main > .section > .feature-banner-wrapper {
 }
 
 :where(.desktop-view) main > .section > .offers-wrapper{
-  padding-bottom: 12px;
+  padding-bottom: var(--spacing-lg);
 }
 
 /* product pages: eligibility and documents sections */
@@ -576,7 +576,7 @@ main > .section.article-cards-container .default-content-wrapper > h2:first-chil
 }
 
 :where(.desktop-view) main > .section.article-cards-container .default-content-wrapper > h2:first-child {
-  margin-bottom: 40px;
+  margin-bottom: var(--spacing-5xl);
 }
 
 /* adaptive bound (AB): close to the edge, 1440px and centered on desktop */

@@ -9,7 +9,7 @@
 .offers > ul {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 4px;
+    gap: var(--spacing-xs);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -125,7 +125,7 @@
 
 :where(.desktop-view) .offers > ul {
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: var(--spacing-lg);
 }
 
 :where(.desktop-view) .offers .offers-full {

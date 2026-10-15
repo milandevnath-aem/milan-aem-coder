@@ -6,7 +6,7 @@
 
 .testimonials .testimonials-track {
   display: flex;
-  gap: 12px;
+  gap: var(--spacing-lg);
   margin: 0;
   padding: 0;
   list-style: none;
