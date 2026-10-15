@@ -1087,6 +1087,18 @@
         ]
       },
       {
+        "component": "multiselectCaa",
+        "name": "classes",
+        "label": "Add Classes",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Carousel Card",
+            "value": "carousel-card"
+          }
+        ]
+      },
+      {
         "component": "reference",
         "valueType": "string",
         "name": "image",
