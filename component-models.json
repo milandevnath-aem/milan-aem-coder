@@ -673,6 +673,18 @@
         ]
       },
       {
+        "component": "multiselect",
+        "name": "classes_options",
+        "label": "Options",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "top-up-loan",
+            "value": "Top Up Loan Cards"
+          }
+        ]
+      },
+      {
         "component": "richtext",
         "name": "text",
         "value": "",
@@ -1083,18 +1095,6 @@
           {
             "name": "Documents (title and checklist)",
             "value": "documents"
-          }
-        ]
-      },
-      {
-        "component": "multiselect",
-        "name": "classes_options",
-        "label": "Options",
-        "valueType": "string",
-        "options": [
-          {
-            "name": "top-up-loan",
-            "value": "Top Up Loan Cards"
           }
         ]
       },
