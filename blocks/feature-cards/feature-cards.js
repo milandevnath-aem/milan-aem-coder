@@ -1,5 +1,5 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
+import { createPicture } from '../../scripts/images.js';
 
 const VARIANTS = ['numbered', 'split', 'info', 'about-us'];
 
@@ -15,7 +15,7 @@ function buildCard(row, index) {
   card.classList.add(isMedia ? 'is-media' : 'is-icon');
 
   if (img) {
-    const picture = createOptimizedPicture(img.src, img.alt, false, [{ width: isMedia ? '1200' : '160' }]);
+    const picture = createPicture(img.src, img.alt, false, [{ width: isMedia ? '1200' : '160' }]);
     moveInstrumentation(img, picture.querySelector('img'));
     picture.classList.add(isMedia ? 'feature-cards-image' : 'feature-cards-icon');
     card.append(picture);

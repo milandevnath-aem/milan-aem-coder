@@ -12,6 +12,22 @@ import { decorateButtons, decorateMain } from './scripts.js';
 
 let promiseChanges$ = Promise.resolve();
 
+/**
+ * Tabbed blocks (product tabs, requirements, EMI calculator) hide their inactive panels.
+ * Activates the tab that holds an element so authors can see and edit it.
+ * @param {Element} element selected or updated element
+ */
+function revealInTabs(element) {
+  if (!element) return;
+  if (element.matches('[role="tab"]')) {
+    if (element.getAttribute('aria-selected') !== 'true') element.click();
+    return;
+  }
+  const panel = element.closest('[role="tabpanel"]');
+  if (!panel?.hidden) return;
+  document.querySelector(`[role="tab"][aria-controls="${panel.id}"]`)?.click();
+}
+
 async function applyChanges(event) {
   await promiseChanges$;
 
@@ -64,6 +80,8 @@ async function applyChanges(event) {
         await loadBlock(newBlock);
         block.remove();
         newBlock.style.display = null;
+        // keep the edited tab open instead of falling back to the first one
+        revealInTabs(newBlock.querySelector(`[data-aue-resource="${resource}"]`));
         return true;
       }
     } else {
@@ -114,6 +132,13 @@ function attachEventListeners(main) {
 }
 
 attachEventListeners(document.querySelector('main'));
+
+// selecting a component in the content tree opens the tab it lives in
+document.addEventListener('aue:ui-select', (event) => {
+  const { resource, selected } = event.detail || {};
+  if (!selected || !resource) return;
+  revealInTabs(document.querySelector(`[data-aue-resource="${resource}"]`));
+});
 
 // decorate rich text
 // this has to happen after decorateMain(), and everythime decorateBlocks() is called
