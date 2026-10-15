@@ -266,6 +266,10 @@
   cursor: default;
 }
 
+:where(.desktop-view) .requirements-container .requirements-wrapper {
+  padding: 0 0 0 var(--gb-margin);
+}
+
 :where(.desktop-view) .requirements .requirements-tabs {
   margin-bottom: 32px;
 }
@@ -302,6 +306,7 @@
   flex: 0 0 calc((100% - 2 * var(--grid-gutter)) / 3);
   justify-content: flex-start;
   min-height: 272px;
+  max-width: 386px;
   padding: 32px;
   border-radius: 32px;
   scroll-snap-align: start;
@@ -336,6 +341,7 @@
   justify-content: flex-end;
   gap: 12px;
   margin-top: 32px;
+  padding-right: calc(var(--gb-offset));
 }
 
 :where(.desktop-view) .requirements .requirements-nav[hidden] {
