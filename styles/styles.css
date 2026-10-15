@@ -689,6 +689,25 @@ main > .section.requirements-container:has(.requirements.documents .requirements
   margin-top: 0;
 }
 
+/* section background color (section properties): spacing sits inside the color */
+main > .section.has-bg-color {
+  margin-block: 0;
+  padding-block: var(--section-spacing);
+  background-color: var(--section-bg-color);
+}
+
+/* section padding (section style): 80px mobile / 124px desktop via --section-spacing,
+   replacing the default margin on that side */
+main > .section.padding-top {
+  margin-top: 0;
+  padding-top: var(--section-spacing);
+}
+
+main > .section.padding-bottom {
+  margin-bottom: 0;
+  padding-bottom: var(--section-spacing);
+}
+
 main > .section > .section-background,
 main > .section > .section-background img {
   position: absolute;

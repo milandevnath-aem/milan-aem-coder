@@ -165,8 +165,23 @@
           {
             "name": "Animate text (banner text lights up on scroll)",
             "value": "animate-text"
+          },
+          {
+            "name": "Padding top (124px desktop / 80px mobile)",
+            "value": "padding-top"
+          },
+          {
+            "name": "Padding bottom (124px desktop / 80px mobile)",
+            "value": "padding-bottom"
           }
         ]
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "backgroundColor",
+        "label": "Background color",
+        "description": "Optional. A CSS color such as #eeeeee or rgb(238 238 238). Fills the whole section."
       },
       {
         "component": "reference",

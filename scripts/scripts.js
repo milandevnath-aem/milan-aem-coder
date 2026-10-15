@@ -142,12 +142,19 @@ export function decorateButtons(main) {
 }
 
 /**
- * Sections with background images (section properties "background" and
- * "backgroundMobile"): a decorative picture covering the section behind its content.
+ * Sections with a background color (section property "backgroundColor") and/or
+ * background images ("background" and "backgroundMobile"): the color fills the section,
+ * a decorative picture covers it behind its content.
  * @param {Element} main The main element
  */
 function decorateSectionBackgrounds(main) {
   main.querySelectorAll(':scope > .section').forEach((section) => {
+    const color = (section.dataset.backgroundcolor || section.dataset.backgroundColor || '').trim();
+    if (color && CSS.supports('background-color', color)) {
+      section.style.setProperty('--section-bg-color', color);
+      section.classList.add('has-bg-color');
+    }
+
     const { background } = section.dataset;
     const mobile = section.dataset.backgroundmobile || section.dataset.backgroundMobile;
     if (!background && !mobile) return;

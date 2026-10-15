@@ -213,11 +213,12 @@
   gap: 40px;
   min-height: 0;
   padding: 24px;
+  flex-direction: column;
 }
 
 .feature-cards.about-us .feature-cards-icon img {
-  width: auto;
-  height: 56px;
+  width: 83px;
+  height: 72px;
 }
 
 .feature-cards.about-us .feature-cards-body p {
