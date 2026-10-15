@@ -51,7 +51,7 @@
         {
           "component": "multiselectCaa",
           "name": "card-classes",
-          "label": "Add Classes",
+          "label": "Card Classes",
           "valueType": "string",
           "options": [
             { "name": "Carousel Card", "value": "carousel-card" }
