@@ -1088,7 +1088,7 @@
       },
       {
         "component": "multiselect",
-        "name": "card-classes",
+        "name": "card_classes",
         "label": "Card Classes",
         "options": [
           {
