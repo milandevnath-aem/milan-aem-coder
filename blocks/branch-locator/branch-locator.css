@@ -1,3 +1,7 @@
+.section.branch-locator-container {
+  margin: 40px 16px;
+}
+
 .branch-locator {
   box-sizing: border-box;
   padding: 44px var(--fb-inset) 24px;
@@ -113,7 +117,7 @@
 .branch-locator .branch-locator-card {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 16px;
   order: 2;
   margin: 0;
   padding: 24px 20px;
@@ -126,6 +130,13 @@
   grid-template-columns: 40px 1fr;
   gap: 4px 16px;
   align-items: start;
+  padding: 0 0 16px;
+  border-bottom: 1px solid var(--surface-color);
+}
+
+.branch-locator .branch-locator-row:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
 }
 
 .branch-locator .branch-locator-icon {
@@ -145,16 +156,16 @@
 
 .branch-locator .branch-locator-row dt {
   color: var(--muted-color);
-  font-size: var(--body-font-size-s);
-  font-weight: 500;
+  font-size: var(--body-font-size-xs);
+  font-weight: 600;
   line-height: 18px;
 }
 
 .branch-locator .branch-locator-row dd {
   margin: 0;
-  font-size: var(--body-font-size-m);
+  font-size: var(--body-font-size-s);
   font-weight: 500;
-  line-height: 24px;
+  line-height: var(--type-bt2-line);
 }
 
 .branch-locator .branch-locator-row dd a {
@@ -168,6 +179,10 @@
 .branch-locator .branch-locator-row dd .branch-locator-tollfree a {
   color: #0b7d42;
   text-decoration: underline;
+}
+
+:where(.desktop-view) .section.branch-locator-container {
+  margin: 40px 16px;
 }
 
 :where(.desktop-view) .branch-locator {
@@ -190,7 +205,7 @@
 
 :where(.desktop-view) .branch-locator .branch-locator-card {
   padding: 24px;
-  gap: 24px;
+  gap: 12px;
 }
 
 :where(.desktop-view) .branch-locator .branch-locator-main {
@@ -212,6 +227,11 @@
 
 :where(.desktop-view) .branch-locator .branch-locator-row {
   gap: 2px 22px;
+  padding-bottom: 12px;
+}
+
+:where(.desktop-view) .branch-locator .branch-locator-row:last-child {
+  padding-bottom: 0;
 }
 
 /* location permission prompt (shown in a dialog) */
