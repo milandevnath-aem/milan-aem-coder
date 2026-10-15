@@ -142,6 +142,20 @@ export function decorateButtons(main) {
 }
 
 /**
+ * Reads the "backgroundColor" section property as a valid CSS color.
+ * @param {Element} section The section element
+ * @returns {string} The color, or '' when missing or invalid
+ */
+function readSectionColor(section) {
+  let value = (section.dataset.backgroundcolor || section.dataset.backgroundColor || '').trim();
+  // AEM renders a value starting with "#" as a link: ".../page#eee" -> "#eee"
+  if (value.includes('#')) value = `#${value.split('#').pop()}`;
+  // allow hex without the leading "#": "eeeeee" -> "#eeeeee"
+  if (/^([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(value)) value = `#${value}`;
+  return value && CSS.supports('background-color', value) ? value : '';
+}
+
+/**
  * Sections with a background color (section property "backgroundColor") and/or
  * background images ("background" and "backgroundMobile"): the color fills the section,
  * a decorative picture covers it behind its content.
@@ -149,8 +163,8 @@ export function decorateButtons(main) {
  */
 function decorateSectionBackgrounds(main) {
   main.querySelectorAll(':scope > .section').forEach((section) => {
-    const color = (section.dataset.backgroundcolor || section.dataset.backgroundColor || '').trim();
-    if (color && CSS.supports('background-color', color)) {
+    const color = readSectionColor(section);
+    if (color) {
       section.style.setProperty('--section-bg-color', color);
       section.classList.add('has-bg-color');
     }
