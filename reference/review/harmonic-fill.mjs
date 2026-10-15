@@ -13,7 +13,7 @@ const scale = Number(scaleArg);
 const PAD = 8;
 const F = 4; // working resolution factor
 
-const src = sharp(input).flatten({ background: '#000000' }).removeAlpha();
+const src = sharp(input).flatten({ background: '#ffffff' }).removeAlpha();
 const { data, info } = await src.clone().raw().toBuffer({ resolveWithObject: true });
 const { width, height } = info;
 const sw = Math.round(width / F);

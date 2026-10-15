@@ -666,6 +666,27 @@ main .section.highlight {
 main > .section.has-background {
   position: relative;
   isolation: isolate;
+
+  /* the image paints the whole section: its spacing sits inside, so the image meets the
+     next section (Figma) */
+  margin-bottom: 0;
+  padding-block: var(--section-spacing);
+}
+
+/* documents section that still uses the block decoration (no section background):
+   same layout, the artwork covers the whole section down to the next one */
+main > .section.requirements-container:not(.has-background):has(.requirements.documents .requirements-decoration) {
+  position: relative;
+  isolation: isolate;
+  margin-bottom: 0;
+  padding-block: var(--section-spacing);
+  overflow: hidden;
+}
+
+/* a full-bleed band (e.g. "Need help?") right after a background section touches it */
+main > .section.has-background + .section:has(> .offers-wrapper .offers-short),
+main > .section.requirements-container:has(.requirements.documents .requirements-decoration) + .section:has(> .offers-wrapper .offers-short) {
+  margin-top: 0;
 }
 
 main > .section > .section-background,
