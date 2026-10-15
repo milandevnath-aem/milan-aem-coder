@@ -86,6 +86,36 @@
     text-decoration: underline;
 }
 
+/* about-us website link: globe icon + URL */
+.columns.about-us p.columns-website {
+    margin: 0;
+}
+
+.columns.about-us p.columns-website a:any-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #003874;
+    font-size: var(--body-font-size-s);
+    font-weight: 600;
+    line-height: 20px;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+.columns.about-us p.columns-website a:any-link::before {
+    content: '';
+    flex: none;
+    width: 20px;
+    height: 20px;
+    background-color: currentcolor;
+    mask: url('../../icons/globe.svg') center / contain no-repeat;
+}
+
+.columns.about-us p.columns-website a:any-link:hover {
+    text-decoration: underline;
+}
+
 :where(.desktop-view) .columns.columns-split > div {
     align-items: flex-start;
     justify-content: space-between;
@@ -94,6 +124,13 @@
 
 :where(.desktop-view) .columns.columns-split > div > div:first-child {
     flex: 0 1 442px;
+}
+
+/* about-us: the heading stays below the pinned nav while the text column scrolls past,
+   and is released when the text (end of the row) reaches it */
+:where(.desktop-view) .columns.about-us.columns-split > div > div:first-child {
+    position: sticky;
+    top: calc(var(--nav-height) - var(--topbar-height) + 24px);
 }
 
 :where(.desktop-view) .columns.columns-split > div > div:last-child {

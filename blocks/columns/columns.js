@@ -8,6 +8,18 @@ export default function decorate(block) {
     block.classList.add('columns-split');
   }
 
+  if (block.classList.contains('about-us') && block.classList.contains('columns-split')) {
+    // a paragraph holding only a URL link (text = address) is a website link with a globe icon
+    cols[1].querySelectorAll(':scope > p > a[href]:only-child').forEach((a) => {
+      const p = a.parentElement;
+      if (p.textContent.trim() !== a.textContent.trim()) return;
+      try {
+        if (new URL(a.href).href !== new URL(a.textContent.trim(), window.location).href) return;
+      } catch { return; }
+      p.classList.add('columns-website');
+    });
+  }
+
   // setup image columns
   [...block.children].forEach((row) => {
     [...row.children].forEach((col) => {
