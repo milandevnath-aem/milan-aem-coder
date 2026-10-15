@@ -299,6 +299,7 @@ footer .footer-bottom .icon {
 
 :where(.desktop-view) footer .footer-brand img {
   width: 193px;
+  height: 46.873px;
 }
 
 :where(.desktop-view) footer .footer-brand p {
