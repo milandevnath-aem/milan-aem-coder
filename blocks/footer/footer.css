@@ -185,10 +185,11 @@ footer .footer-dropdown summary::-webkit-details-marker {
 
 footer .footer-dropdown summary::after {
   content: '';
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
   background: url('../../icons/chevron-down.svg') center / contain no-repeat;
   transition: transform 0.2s;
+  padding: 1.5px;
 }
 
 footer .footer-dropdown[open] summary::after {
