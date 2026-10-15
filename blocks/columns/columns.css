@@ -1,80 +1,89 @@
 .columns > div {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 .columns img {
-  width: 100%;
+    width: 100%;
 }
 
 .columns > div > div {
-  order: 1;
+    order: 1;
 }
 
 .columns > div > .columns-img-col {
-  order: 0;
+    order: 0;
 }
 
 .columns > div > .columns-img-col img {
-  display: block;
+    display: block;
 }
 
 :where(.desktop-view) .columns > div {
-  align-items: center;
-  flex-direction: unset;
-  gap: 24px;
+    align-items: center;
+    flex-direction: unset;
+    gap: 24px;
 }
 
 :where(.desktop-view) .columns > div > div {
-  flex: 1;
-  order: unset;
+    flex: 1;
+    order: unset;
 }
 
 /* heading left, long text right */
 .columns.columns-split > div > div:first-child h2,
 .columns.columns-split > div > div:first-child h3 {
-  margin: 0 0 16px;
-  font-size: var(--heading-font-size-xxl);
-  line-height: 40px;
+    margin: 0 0 32px;
+    font-size: var(--heading-font-size-xxl);
+    line-height: 48px;
+    letter-spacing: -0.1px;
+    color: #121212;
+}
+
+:where(.desktop-view) .columns.columns-split > div > div:first-child h2,
+:where(.desktop-view) .columns.columns-split > div > div:first-child h3 {
+    font-size: var(--heading-font-size-xxl);
+    line-height: 48px;
+    letter-spacing: -0.8px;
 }
 
 .columns.columns-split p,
 .columns.columns-split li {
-  color: var(--muted-color);
-  font-size: var(--body-font-size-m);
-  font-weight: 500;
-  line-height: 24px;
+    color: var(--muted-color);
+    font-size: var(--body-font-size-m);
+    font-weight: 500;
+    line-height: 24px;
 }
 
 .columns.columns-split p:first-child {
-  margin-top: 0;
+    margin-top: 0;
 }
 
 .columns.columns-split ul {
-  padding-left: 20px;
+    padding-left: 20px;
 }
 
 .columns.columns-split a:any-link {
-  color: var(--text-color);
-  text-decoration: underline;
+    color: var(--text-color);
+    text-decoration: underline;
 }
 
 :where(.desktop-view) .columns.columns-split > div {
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 80px;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 80px;
 }
 
 :where(.desktop-view) .columns.columns-split > div > div:first-child {
-  flex: 0 1 442px;
+    flex: 0 1 442px;
 }
 
 :where(.desktop-view) .columns.columns-split > div > div:last-child {
-  flex: 0 1 660px;
+    flex: 0 1 660px;
 }
 
 :where(.desktop-view) .columns.columns-split p,
 :where(.desktop-view) .columns.columns-split li {
-  font-size: var(--heading-font-size-m);
-  line-height: 28px;
+    font-size: var(--heading-font-size-m);
+    line-height: 28px;
 }
