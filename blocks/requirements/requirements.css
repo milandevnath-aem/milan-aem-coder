@@ -266,7 +266,7 @@
   cursor: default;
 }
 
-:where(.desktop-view) .requirements-container .requirements-wrapper {
+:where(.desktop-view) .requirements-container:has(.carousel-card) .requirements-wrapper {
   padding: 0 0 0 var(--gb-margin);
 }
 
