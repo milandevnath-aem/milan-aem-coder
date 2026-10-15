@@ -5,7 +5,7 @@
 .team > ul {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: var(--spacing-4xl);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -14,46 +14,46 @@
 .team .team-member {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--spacing-lg);
 }
 
 .team .team-photo img {
   display: block;
   width: 100%;
   aspect-ratio: 163 / 163;
-  border-radius: 32px;
+  border-radius: var(--radius-4xl);
   object-fit: cover;
-  background-color: var(--surface-color);
+  background-color: var(--color-background-2-default-base);
 }
 
 .team .team-details p {
   margin: 0;
-  color: var(--muted-color);
+  color: var(--color-text-secondary-default-base);
   font-size: var(--body-font-size-s);
-  font-weight: 600;
+  font-weight: var(--type-headline-h3-font-weight);
   line-height: 20px;
 }
 
 .team .team-details .team-badge {
   display: inline-block;
-  margin-bottom: 8px;
-  color: var(--muted-color);
+  margin-bottom: var(--spacing-md);
+  color: var(--color-text-secondary-default-base);
   font-size: var(--body-font-size-xs);
-  font-weight: 500;
+  font-weight: var(--type-body-b1-font-weight);
   line-height: 16px;
   letter-spacing: 0.24px;
 }
 
 .team .team-details h3 {
-  margin: 0 0 8px;
+  margin: 0 0 var(--spacing-md);
   font-size: var(--heading-font-size-l);
-  font-weight: 600;
+  font-weight: var(--type-headline-h6-font-weight);
   line-height: 32px;
-  color: #121212;
+  color: var(--color-text-primary-default-base);
 }
 
 :where(.desktop-view) .team {
-  margin-top: 80px;
+  margin-top: var(--spacing-8xl);
 }
 
 :where(.desktop-view) .team .team-details .team-badge{
@@ -63,14 +63,14 @@
 }
 
 :where(.desktop-view) .team > ul {
-  gap: 32px;
+  gap: var(--spacing-4xl);
   margin-left: calc(100% - 660px);
 }
 
 :where(.desktop-view) .team .team-member {
   flex-direction: row;
   align-items: flex-start;
-  gap: 12px;
+  gap: var(--spacing-lg);
 }
 
 :where(.desktop-view) .team .team-photo {
@@ -78,11 +78,11 @@
 }
 
 :where(.desktop-view) .team .team-photo img {
-  border-radius: 32px;
+  border-radius: var(--radius-4xl);
 }
 
 :where(.desktop-view) .team .team-details {
-  padding: 20px;
+  padding: var(--spacing-2xl);
 }
 
 :where(.desktop-view) .team .team-details h3 {

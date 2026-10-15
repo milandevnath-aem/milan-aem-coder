@@ -1,7 +1,7 @@
 .faq {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: var(--spacing-4xl);
 }
 
 .faq .faq-intro h2 {
@@ -12,14 +12,14 @@
 }
 
 .faq .faq-item {
-  border-bottom: 1px solid var(--surface-color);
+  border-bottom: 1px solid var(--color-stroke-1-default);
 }
 
 .faq .faq-item summary {
   position: relative;
-  padding: 20px 32px 12px 0;
+  padding: var(--spacing-2xl) var(--spacing-4xl) var(--spacing-lg) 0;
   font-size: var(--body-font-size-s);
-  font-weight: 600;
+  font-weight: var(--type-headline-h3-font-weight);
   line-height: 20px;
   letter-spacing: 0;
   list-style: none;
@@ -27,11 +27,11 @@
 }
 
 .faq .faq-item:not([open]) summary {
-  padding-bottom: 20px;
+  padding-bottom: var(--spacing-2xl);
 }
 
 .faq .faq-item[open] summary {
-  padding-bottom: 8px;
+  padding-bottom: var(--spacing-md);
 }
 
 .faq .faq-item summary::-webkit-details-marker {
@@ -59,22 +59,22 @@
 }
 
 .faq .faq-answer {
-  padding: 0 40px 20px 0;
-  color: var(--muted-color);
+  padding: 0 var(--spacing-5xl) var(--spacing-2xl) 0;
+  color: var(--color-text-secondary-default-base);
   font-size: var(--body-font-size-s);
-  font-weight: 600;
+  font-weight: var(--type-headline-h3-font-weight);
   line-height: 20px;
   letter-spacing: 0;
 }
 
 .faq .faq-answer p {
-  margin: 0 0 8px;
+  margin: 0 0 var(--spacing-md);
 }
 
 :where(.desktop-view) .faq {
   flex-direction: row;
   justify-content: space-between;
-  gap: 80px;
+  gap: var(--spacing-8xl);
 }
 
 :where(.desktop-view) .faq .faq-intro {
@@ -90,12 +90,12 @@
 :where(.desktop-view) .faq .faq-item summary,
 :where(.desktop-view) .faq .faq-answer {
   font-size: var(--heading-font-size-m);
-  font-weight: 500;
+  font-weight: var(--type-body-b4-font-weight);
   line-height: 28px;
 }
 
 :where(.desktop-view) .faq .faq-item[open] summary {
-  padding-bottom: 12px;
+  padding-bottom: var(--spacing-lg);
 }
 
 :where(.desktop-view) .faq .faq-item summary::after {

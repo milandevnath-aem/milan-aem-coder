@@ -11,15 +11,15 @@
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--spacing-lg);
   width: 100%;
   min-height: 64px;
   margin: 0;
   border: 1px solid transparent;
-  border-radius: 16px;
-  padding: 10px 20px;
-  background-color: var(--light-color);
-  color: var(--text-color);
+  border-radius: var(--radius-xl);
+  padding: 10px var(--spacing-2xl);
+  background-color: var(--color-input-field-filled-color-default);
+  color: var(--color-text-primary-default-base);
   font: inherit;
   text-align: left;
   cursor: pointer;
@@ -34,14 +34,14 @@
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--spacing-xs);
   min-width: 0;
 }
 
 .dropdown-label {
-  color: var(--muted-color);
+  color: var(--color-text-secondary-default-base);
   font-size: var(--dropdown-value-size);
-  font-weight: 500;
+  font-weight: var(--type-body-b3-font-weight);
   line-height: var(--dropdown-value-line);
 }
 
@@ -76,7 +76,7 @@
 
 .dropdown.is-invalid .dropdown-field {
   border-color: #ff3938;
-  background-color: #fff6f6;
+  background-color: var(--color-input-field-filled-color-error);
 }
 
 .dropdown-panel {
@@ -86,9 +86,9 @@
   left: 0;
   right: 0;
   z-index: 5;
-  border-radius: 20px;
-  padding: 8px;
-  background-color: var(--background-color);
+  border-radius: var(--radius-2xl);
+  padding: var(--spacing-md);
+  background-color: var(--color-background-1-default-base);
   box-shadow: 0 20px 40px rgb(0 0 0 / 14%), 0 2px 6px rgb(0 0 0 / 6%);
 }
 
@@ -99,12 +99,12 @@
 .dropdown-search {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--spacing-md);
   height: 44px;
-  margin-bottom: 8px;
-  border-radius: 12px;
-  padding: 0 8px 0 14px;
-  background-color: var(--light-color);
+  margin-bottom: var(--spacing-md);
+  border-radius: var(--radius-lg);
+  padding: 0 var(--spacing-md) 0 14px;
+  background-color: var(--color-input-field-filled-color-default);
 }
 
 .dropdown-search img {
@@ -118,15 +118,15 @@
   border: 0;
   padding: 0;
   background: transparent;
-  color: var(--text-color);
+  color: var(--color-text-primary-default-base);
   font-size: var(--body-font-size-m);
-  font-weight: 500;
+  font-weight: var(--type-body-b3-font-weight);
   line-height: 24px;
   outline: none;
 }
 
 .dropdown-search input::placeholder {
-  color: #808080;
+  color: var(--color-text-tertiary-default-base);
 }
 
 .dropdown-clear {
@@ -155,7 +155,7 @@
 .dropdown-list {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--spacing-xxs);
   max-height: 340px;
   margin: 0;
   padding: 0;
@@ -173,23 +173,23 @@
   right: 8px;
   bottom: 8px;
   height: 40px;
-  border-radius: 0 0 12px 12px;
-  background: linear-gradient(180deg, rgb(252 252 252 / 0%) 0%, var(--background-color) 100%);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  background: linear-gradient(180deg, rgb(252 252 252 / 0%) 0%, var(--color-background-1-default-base) 100%);
   pointer-events: none;
 }
 
 .dropdown-list [role='option'] {
   display: flex;
   align-items: center;
-  gap: 12px;
-  border-radius: 12px;
-  padding: 12px;
+  gap: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
   cursor: pointer;
 }
 
 .dropdown-list [role='option'].is-active,
 .dropdown-list [role='option']:hover {
-  background-color: var(--light-color);
+  background-color: var(--color-background-1-default-hover);
 }
 
 .dropdown-option-text {
@@ -200,23 +200,23 @@
 
 .dropdown-option-label {
   font-size: var(--dropdown-value-size);
-  font-weight: 500;
+  font-weight: var(--type-body-b3-font-weight);
   line-height: var(--dropdown-value-line);
 }
 
 .dropdown-option-label.is-match {
-  color: var(--muted-color);
+  color: var(--color-text-secondary-default-base);
 }
 
 .dropdown-option-label strong {
-  color: var(--text-color);
+  color: var(--color-text-primary-default-base);
   font-weight: 700;
 }
 
 .dropdown-option-desc {
-  color: var(--muted-color);
+  color: var(--color-text-secondary-default-base);
   font-size: var(--body-font-size-s);
-  font-weight: 500;
+  font-weight: var(--type-body-b2-font-weight);
   line-height: 18px;
 }
 
@@ -227,6 +227,6 @@
 }
 
 .dropdown-empty {
-  padding: 12px;
-  color: var(--muted-color);
+  padding: var(--spacing-lg);
+  color: var(--color-text-secondary-default-base);
 }

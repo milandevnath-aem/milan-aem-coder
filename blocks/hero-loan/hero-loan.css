@@ -1,8 +1,8 @@
 .hero-loan {
   --hero-loan-radius: 52px;
   --hero-loan-min-height: 611px;
-  --hero-loan-padding: 44px var(--fb-inset) 24px;
-  --hero-loan-text: var(--inverse-color);
+  --hero-loan-padding: 44px var(--fb-inset) var(--spacing-3xl);
+  --hero-loan-text: var(--color-text-primary-inverse-base);
 
   position: relative;
   display: grid;
@@ -64,30 +64,30 @@
   margin: 0;
   color: var(--hero-loan-text);
   font-size: 32px;
-  font-weight: 500;
+  font-weight: var(--type-display-medium-df-1-font-weight);
   line-height: 40px;
   letter-spacing: -0.8px;
 }
 
 .hero-loan .hero-loan-content p {
-  margin: 8px 0 0;
+  margin: var(--spacing-md) 0 0;
   font-size: var(--body-font-size-s);
-  font-weight: 500;
+  font-weight: var(--type-body-b2-font-weight);
   line-height: 20px;
 }
 
 .hero-loan .hero-loan-content .button-wrapper {
   width: 100%;
   margin: auto 0 0;
-  padding-top: 32px;
+  padding-top: var(--spacing-4xl);
 }
 
 .hero-loan .hero-loan-content a.button {
   width: 100%;
-  border-color: #fff;
-  background-color: #fff;
-  color: var(--text-color);
-  padding: 14px 12px;
+  border-color: var(--color-button-pills-stroke-inverse-stroke-base);
+  background-color: var(--color-button-pills-inverse-bg-base);
+  color: var(--color-button-pills-stroke-default-text-base);
+  padding: 14px var(--spacing-lg);
 }
 
 .hero-loan .hero-loan-content a.button:hover,
@@ -121,8 +121,8 @@
   height: 24px;
   margin: 0;
   border: 0;
-  border-radius: 12px;
-  padding: 8px 4px;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md) var(--spacing-xs);
   background-color: rgb(255 255 255 / 60%);
   background-clip: content-box;
   cursor: pointer;
@@ -138,7 +138,7 @@
   position: relative;
   width: 24px;
   height: 24px;
-  margin: 0 0 0 8px;
+  margin: 0 0 0 var(--spacing-md);
   border: 0;
   border-radius: 50%;
   padding: 0;
@@ -174,7 +174,7 @@
 :where(.desktop-view) .hero-loan {
   --hero-loan-radius: 44px;
   --hero-loan-min-height: 553px;
-  --hero-loan-padding: 48px var(--fb-inset);
+  --hero-loan-padding: var(--spacing-6xl) var(--fb-inset);
 }
 
 :where(.desktop-view) .hero-loan .hero-loan-image img {
@@ -195,7 +195,7 @@
 }
 
 :where(.desktop-view) .hero-loan .hero-loan-content p {
-  margin-top: 20px;
+  margin-top: var(--spacing-2xl);
   font-size: var(--body-font-size-m);
   line-height: 24px;
 }
@@ -218,7 +218,7 @@
 :where(.desktop-view) .hero-loan .hero-loan-inner {
   display: flex;
   justify-content: flex-end;
-  padding: 48px var(--fb-inset);
+  padding: var(--spacing-6xl) var(--fb-inset);
 }
 
 :where(.desktop-view) .hero-loan .hero-loan-form {
@@ -228,27 +228,27 @@
 
   /* grows on wide screens: the hero photos are designed with the card covering their right half */
   width: max(min(546px, 52%), 47%);
-  padding: 32px;
-  border-radius: 32px;
-  background-color: var(--background-color);
+  padding: var(--spacing-4xl);
+  border-radius: var(--radius-4xl);
+  background-color: var(--color-background-1-default-base);
   pointer-events: auto;
 }
 
 /* lead form */
 .hero-loan .hero-loan-form-intro h2 {
   margin: 0;
-  color: var(--text-color);
+  color: var(--color-text-primary-default-base);
   font-size: var(--heading-font-size-l);
-  font-weight: 600;
+  font-weight: var(--type-headline-h6-font-weight);
   line-height: 32px;
   letter-spacing: 0;
 }
 
 .hero-loan .hero-loan-form-intro p {
-  margin: 8px 0 0;
-  color: var(--muted-color);
+  margin: var(--spacing-md) 0 0;
+  color: var(--color-text-secondary-default-base);
   font-size: var(--body-font-size-m);
-  font-weight: 500;
+  font-weight: var(--type-body-b3-font-weight);
   line-height: 24px;
 }
 
@@ -256,26 +256,26 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: 24px;
-  margin-top: 24px;
+  gap: var(--spacing-3xl);
+  margin-top: var(--spacing-3xl);
 }
 
 .hero-loan .hero-loan-fields {
   display: flex;
-  gap: 12px;
+  gap: var(--spacing-lg);
 }
 
 .hero-loan .hero-loan-input {
   display: flex;
   flex: 1 1 0;
   align-items: center;
-  gap: 8px;
+  gap: var(--spacing-md);
   min-width: 0;
-  padding: 20px;
-  border-radius: 16px;
-  background-color: var(--light-color);
+  padding: var(--spacing-2xl);
+  border-radius: var(--radius-xl);
+  background-color: var(--color-input-field-filled-color-default);
   font-size: var(--heading-font-size-m);
-  font-weight: 500;
+  font-weight: var(--type-body-b4-font-weight);
   line-height: 28px;
 }
 
@@ -289,7 +289,7 @@
   padding: 0;
   border: 0;
   background: transparent;
-  color: var(--dark-color);
+  color: var(--color-text-secondary-default-base);
   font-size: inherit;
   font-weight: inherit;
   line-height: inherit;
@@ -297,14 +297,14 @@
 }
 
 .hero-loan .hero-loan-input input::placeholder {
-  color: var(--muted-color);
+  color: var(--color-text-secondary-default-base);
   opacity: 1;
 }
 
 .hero-loan .hero-loan-prefix {
-  padding-right: 8px;
-  border-right: 1px solid #dedede;
-  color: var(--text-color);
+  padding-right: var(--spacing-md);
+  border-right: 1px solid var(--color-stroke-2-default);
+  color: var(--color-text-primary-default-base);
 }
 
 .hero-loan .hero-loan-sr {
@@ -323,18 +323,18 @@
 }
 
 .hero-loan .hero-loan-categories legend {
-  margin-bottom: 16px;
+  margin-bottom: var(--spacing-xl);
   padding: 0;
-  color: var(--muted-color);
+  color: var(--color-text-secondary-default-base);
   font-size: var(--body-font-size-s);
-  font-weight: 500;
+  font-weight: var(--type-body-b2-font-weight);
   line-height: 18px;
 }
 
 .hero-loan .hero-loan-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: var(--spacing-lg);
 }
 
 .hero-loan .hero-loan-chip {
@@ -342,13 +342,13 @@
   display: inline-flex;
   align-items: center;
   margin: 0;
-  padding: 8px 15px;
+  padding: var(--spacing-md) 15px;
   border: 1px solid var(--border-color);
-  border-radius: 100px;
+  border-radius: var(--radius-full);
   background: transparent;
-  color: var(--text-color);
+  color: var(--color-button-pills-stroke-default-text-base);
   font-size: var(--body-font-size-m);
-  font-weight: 500;
+  font-weight: var(--type-body-b3-font-weight);
   line-height: 24px;
   cursor: pointer;
 }
@@ -364,9 +364,9 @@
 }
 
 .hero-loan .hero-loan-chip:has(input:checked) {
-  border-color: var(--text-color);
-  background-color: var(--text-color);
-  color: var(--inverse-color);
+  border-color: var(--color-button-pills-stroke-default-stroke-base);
+  background-color: var(--color-button-pills-default-bg-base);
+  color: var(--color-text-primary-inverse-base);
 }
 
 .hero-loan .hero-loan-chip:has(input:focus-visible) {
@@ -375,8 +375,8 @@
 }
 
 .hero-loan .hero-loan-more {
-  gap: 4px;
-  padding-right: 16px;
+  gap: var(--spacing-xs);
+  padding-right: var(--spacing-xl);
 }
 
 .hero-loan .hero-loan-more::after {
@@ -394,22 +394,22 @@
   width: 100%;
   margin-top: auto;
   border: 0;
-  padding: 14px 12px;
+  padding: 14px var(--spacing-lg);
 }
 
 .hero-loan .hero-loan-thanks {
-  margin: 24px 0 0;
-  color: var(--text-color);
+  margin: var(--spacing-3xl) 0 0;
+  color: var(--color-text-primary-default-base);
   font-weight: 600;
 }
 
 /* product variant: stacked fields and a category dropdown */
 .hero-loan.product .hero-loan-form form {
-  gap: 12px;
+  gap: var(--spacing-lg);
 }
 
 .hero-loan.product .hero-loan-form form button[type='submit'] {
-  margin-top: 8px;
+  margin-top: var(--spacing-md);
 }
 
 .hero-loan.product .hero-loan-fields {
@@ -431,21 +431,21 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 12px;
+  gap: var(--spacing-lg);
   margin: auto 0 0;
-  padding: 32px 0 0;
+  padding: var(--spacing-4xl) 0 0;
   list-style: none;
 }
 
 .hero-loan .hero-loan-stats li {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 20px 12px 12px;
-  border-radius: 20px;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg) var(--spacing-2xl) var(--spacing-lg) var(--spacing-lg);
+  border-radius: var(--radius-2xl);
   background-color: rgb(252 252 252 / 85%);
   backdrop-filter: blur(8px);
-  color: var(--text-color);
+  color: var(--color-text-primary-default-base);
   text-align: left;
 }
 
@@ -453,9 +453,9 @@
   flex: 0 0 auto;
   width: 24px;
   height: 24px;
-  padding: 8px;
-  border-radius: 12px;
-  background-color: var(--surface-color);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-background-2-default-base);
 }
 
 .hero-loan .hero-loan-stats span {
@@ -464,15 +464,15 @@
 }
 
 .hero-loan .hero-loan-stats small {
-  color: var(--muted-color);
+  color: var(--color-text-secondary-default-base);
   font-size: var(--body-font-size-s);
-  font-weight: 500;
+  font-weight: var(--type-body-b2-font-weight);
   line-height: 18px;
 }
 
 .hero-loan .hero-loan-stats strong {
   font-size: var(--body-font-size-m);
-  font-weight: 600;
+  font-weight: var(--type-headline-h4-font-weight);
   line-height: 24px;
 }
 
@@ -481,7 +481,7 @@
 }
 
 :where(.desktop-view) .hero-loan.product {
-  --hero-loan-radius: 20px;
+  --hero-loan-radius: var(--radius-2xl);
 }
 
 /* product form card (Figma): 546px wide, 68px fields, 24px above the button */
@@ -505,10 +505,10 @@
 }
 
 :where(.desktop-view) .hero-loan.product .hero-loan-content p:not(.button-wrapper) {
-  margin-top: 20px;
-  color: var(--inverse-color);
+  margin-top: var(--spacing-2xl);
+  color: var(--color-text-primary-inverse-base);
   font-size: var(--body-font-size-m);
-  font-weight: 500;
+  font-weight: var(--type-body-b3-font-weight);
   line-height: 24px;
 }
 
@@ -534,7 +534,7 @@
 
 :where(.desktop-view) .hero-loan .hero-loan-slide .hero-loan-content .hero-loan-stats {
   align-self: center;
-  gap: 40px;
+  gap: var(--spacing-5xl);
 }
 
 :where(.desktop-view) .hero-loan .hero-loan-stats strong {
@@ -548,14 +548,14 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgb(0 0 0 / 45%) 0%, rgb(0 0 0 / 20%) 35%, transparent 60%);
+  background: linear-gradient(90deg, rgb(0 0 0 / 45%) 0%, var(--color-overlay-overlay-3) 35%, transparent 60%);
   pointer-events: none;
 }
 
 :where(.desktop-view) .hero-loan.no-form .hero-loan-slide::after {
   background:
-      linear-gradient(0deg, rgb(0 0 0 / 50%) 0%, transparent 35%),
-      linear-gradient(90deg, rgb(0 0 0 / 45%) 0%, rgb(0 0 0 / 20%) 35%, transparent 60%);
+      linear-gradient(0deg, var(--color-overlay-overlay-2) 0%, transparent 35%),
+      linear-gradient(90deg, rgb(0 0 0 / 45%) 0%, var(--color-overlay-overlay-3) 35%, transparent 60%);
 }
 
 :where(.desktop-view) .hero-loan.product .hero-loan-content {
@@ -568,7 +568,7 @@
   position: fixed;
   inset: auto 0 0;
   z-index: 15;
-  padding: 16px 20px 20px;
+  padding: var(--spacing-xl) var(--spacing-2xl) var(--spacing-2xl);
   background: linear-gradient(180deg, rgb(255 255 255 / 0%) 0%, rgb(255 255 255 / 80%) 100%);
   transform: translateY(100%);
   transition: transform 0.25s ease;

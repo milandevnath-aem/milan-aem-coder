@@ -22,7 +22,7 @@
 :where(.desktop-view) .columns > div {
     align-items: center;
     flex-direction: unset;
-    gap: 24px;
+    gap: var(--spacing-3xl);
 }
 
 :where(.desktop-view) .columns > div > div {
@@ -33,11 +33,11 @@
 /* heading left, long text right */
 .columns.columns-split > div > div:first-child h2,
 .columns.columns-split > div > div:first-child h3 {
-    margin: 0 0 32px;
+    margin: 0 0 var(--spacing-4xl);
     font-size: var(--heading-font-size-xxl);
     line-height: 48px;
     letter-spacing: -0.1px;
-    color: #121212;
+    color: var(--color-text-primary-default-base);
 }
 
 :where(.desktop-view) .columns.columns-split > div > div:first-child h2,
@@ -49,9 +49,9 @@
 
 .columns.columns-split p,
 .columns.columns-split li {
-    color: var(--muted-color);
+    color: var(--color-text-secondary-default-base);
     font-size: var(--body-font-size-m);
-    font-weight: 500;
+    font-weight: var(--type-body-b3-font-weight);
     line-height: 24px;
 }
 
@@ -60,18 +60,18 @@
 }
 
 .columns.columns-split ul {
-    padding-left: 20px;
+    padding-left: var(--spacing-2xl);
 }
 
 .columns.columns-split a:any-link {
-    color: var(--text-color);
+    color: var(--color-text-primary-default-base);
     text-decoration: underline;
 }
 
 :where(.desktop-view) .columns.columns-split > div {
     align-items: flex-start;
     justify-content: space-between;
-    gap: 80px;
+    gap: var(--spacing-8xl);
 }
 
 :where(.desktop-view) .columns.columns-split > div > div:first-child {

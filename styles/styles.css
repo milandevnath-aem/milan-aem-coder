@@ -87,14 +87,14 @@
    * by scripts/viewport.js. Mobile values below, tablet / laptop / desktop overrides follow.
    */
   --grid-columns: 4;
-  --grid-gutter: 12px;
+  --grid-gutter: var(--spacing-lg);
   --grid-max-width: 1440px;
 
   /* section margins: full bleed (FB), grid bound (GB), adaptive bound (AB) and footer */
-  --fb-margin: 4px;
-  --gb-margin: 24px;
-  --ab-margin: 8px;
-  --footer-padding: 20px;
+  --fb-margin: var(--spacing-xs);
+  --gb-margin: var(--spacing-3xl);
+  --ab-margin: var(--spacing-md);
+  --footer-padding: var(--spacing-2xl);
 
   /* container width for grid bound / adaptive bound blocks and the content limit (desktop only) */
   --gb-max-width: none;
@@ -105,8 +105,8 @@
    * text by --fb-inset so it lines up with the grid
    */
   --gb-offset: var(--gb-margin);
-  --fb-inset: 24px; /* inner padding of full bleed blocks on small screens (Figma) */
-  --section-spacing: 80px;
+  --fb-inset: var(--spacing-3xl); /* inner padding of full bleed blocks on small screens (Figma) */
+  --section-spacing: var(--spacing-8xl);
 
   /* nav height: announcement bar + nav bar */
   --topbar-height: 32px;
@@ -116,25 +116,25 @@
 /* tablet portrait: 600px up to the desktop view */
 :root[data-viewport='tablet-portrait'] {
   --grid-columns: 8px;
-  --fb-margin: 8px;
+  --fb-margin: var(--spacing-md);
 }
 
 /* tablet landscape: desktop view up to 1280px */
 :root[data-viewport='tablet-landscape'] {
   --grid-columns: 12px;
-  --fb-margin: 8px;
-  --gb-margin: 48px;
+  --fb-margin: var(--spacing-md);
+  --gb-margin: var(--spacing-6xl);
   --footer-padding: 36px;
 }
 
 /* laptop: 1281px to 1679px, fluid */
 :root[data-viewport='laptop'] {
   --grid-columns: 12px;
-  --grid-gutter: 16px;
-  --fb-margin: 12px;
+  --grid-gutter: var(--spacing-xl);
+  --fb-margin: var(--spacing-lg);
   --gb-margin: 92px;
-  --ab-margin: 12px;
-  --footer-padding: 80px;
+  --ab-margin: var(--spacing-lg);
+  --footer-padding: var(--spacing-8xl);
 }
 
 /*
@@ -143,11 +143,11 @@
  */
 :root[data-viewport='desktop'] {
   --grid-columns: 12;
-  --grid-gutter: 16px;
-  --fb-margin: 12px;
+  --grid-gutter: var(--spacing-xl);
+  --fb-margin: var(--spacing-lg);
   --gb-margin: 0px;
   --ab-margin: 0px;
-  --footer-padding: 80px;
+  --footer-padding: var(--spacing-8xl);
   --gb-max-width: var(--grid-max-width);
   --grid-limit: var(--grid-max-width);
   --gb-offset: calc((100vw - var(--grid-max-width)) / 2);
@@ -216,8 +216,8 @@
 body {
   display: none;
   margin: 0;
-  background-color: var(--background-color);
-  color: var(--text-color);
+  background-color: var(--color-background-1-default-base);
+  color: var(--color-text-primary-default-base);
   font-family: var(--body-font-family);
   font-size: var(--body-font-size-m);
   line-height: 1.5;
@@ -284,15 +284,15 @@ pre {
 }
 
 pre {
-  padding: 16px;
-  border-radius: 8px;
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-md);
   background-color: var(--light-color);
   overflow-x: auto;
   white-space: pre;
 }
 
 main > div {
-  margin: 40px 16px;
+  margin: var(--spacing-5xl) var(--spacing-xl);
 }
 
 input,
@@ -304,19 +304,19 @@ button {
 
 /* links */
 a:any-link {
-  color: var(--link-color);
+  color: var(--color-text-primary-default-base);
   text-decoration: none;
   overflow-wrap: break-word;
 }
 
 a:hover {
-  color: var(--link-hover-color);
+  color: var(--color-button-tertiary-default-text-base);
   text-decoration: underline;
 }
 
 /* buttons */
 p.button-wrapper {
-  margin: 12px 0;
+  margin: var(--spacing-lg) 0;
 }
 
 a.button:any-link,
@@ -328,11 +328,11 @@ button.button {
   max-width: 100%;
   margin: 0;
   border: 1px solid transparent;
-  border-radius: 100px;
-  padding: 13px 32px;
+  border-radius: var(--radius-full);
+  padding: 13px var(--spacing-4xl);
   font: inherit;
   font-size: var(--body-font-size-m);
-  font-weight: 600;
+  font-weight: var(--type-button-bt-3-font-weight);
   line-height: 24px;
   text-decoration: none;
   cursor: pointer;
@@ -349,9 +349,9 @@ button.button:disabled {
 
 a.button.primary,
 button.button.primary {
-  border-color: var(--text-color);
-  background-color: var(--text-color);
-  color: #fff;
+  border-color: var(--color-button-pills-stroke-default-stroke-base);
+  background-color: var(--color-button-pills-default-bg-base);
+  color: var(--color-button-pills-default-text-base);
 }
 
 a.button.primary:hover,
@@ -360,7 +360,7 @@ button.button.primary:hover,
 button.button.primary:focus-visible {
   border-color: #333;
   background-color: #333;
-  color: #fff;
+  color: var(--color-button-pills-default-text-base);
 }
 
 a.button.primary[aria-disabled="true"],
@@ -371,14 +371,14 @@ button.button.primary:disabled:hover,
 button.button.primary:disabled:focus-visible {
   background-color: var(--light-color);
   border-color: var(--light-color);
-  color: var(--dark-color);
+  color: var(--color-button-pills-default-text-disabled);
 }
 
 a.button.secondary,
 button.button.secondary {
-  border-color: var(--text-color);
+  border-color: var(--color-button-pills-stroke-default-stroke-base);
   background-color: transparent;
-  color: var(--text-color);
+  color: var(--color-button-pills-stroke-default-text-base);
 }
 
 a.button.secondary:hover,
@@ -398,14 +398,14 @@ button.button.secondary:disabled:hover,
 button.button.secondary:disabled:focus-visible {
   background-color: var(--light-color);
   border-color: var(--light-color);
-  color: var(--dark-color);
+  color: var(--color-button-pills-default-text-disabled);
 }
 
 /* high-impact call-to-action */
 a.button.accent,
 button.button.accent {
-  border-color: var(--link-color);
-  background-color: var(--link-color);
+  border-color: var(--color-button-pills-stroke-default-stroke-base);
+  background-color: var(--color-button-pills-default-bg-base);
   color: var(--background-color);
 }
 
@@ -425,7 +425,7 @@ button.button.accent:disabled:hover,
 button.button.accent:disabled:focus-visible {
   background-color: var(--light-color);
   border-color: var(--light-color);
-  color: var(--dark-color);
+  color: var(--color-button-pills-default-text-disabled);
 }
 
 main img {
@@ -467,7 +467,7 @@ main > .section:first-of-type {
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
   outline: 2px solid var(--text-color);
   outline-offset: 2px;
-  box-shadow: 0 0 0 2px var(--background-color);
+  box-shadow: 0 0 0 2px var(--color-background-1-default-base);
 }
 
 /* sticky header and bottom bars never cover the focused element (WCAG 2.4.11) */
@@ -482,16 +482,16 @@ html {
   top: 8px;
   left: 8px;
   z-index: 1000;
-  padding: 12px 20px;
-  border-radius: 100px;
-  background-color: var(--text-color);
-  color: #fff;
-  font-weight: 600;
+  padding: var(--spacing-lg) var(--spacing-2xl);
+  border-radius: var(--radius-full);
+  background-color: var(--color-button-pills-default-bg-base);
+  color: var(--color-button-pills-default-text-base);
+  font-weight: var(--type-button-bt-3-font-weight);
   text-decoration: none;
 }
 
 .skip-link:any-link {
-  color: #fff;
+  color: var(--color-button-pills-default-text-base);
 }
 
 main:focus {
@@ -533,7 +533,7 @@ main > .section > .feature-banner-wrapper {
 
 /* product pages: eligibility and documents sections */
 main > .section.requirements-container .default-content-wrapper > h2 + p {
-  margin-bottom: 32px;
+  margin-bottom: var(--spacing-4xl);
 }
 
 /* product pages: feature banners run edge to edge (Figma "Section 3 - FB"), the text
@@ -568,11 +568,11 @@ main > .section > .article-cards-wrapper {
 }
 
 main > .section.article-cards-container .default-content-wrapper > h2:first-child {
-  margin-bottom: 16px;
+  margin-bottom: var(--spacing-xl);
 }
 
 :where(.desktop-view) main > .section.article-cards-container .default-content-wrapper > h2:first-child {
-  margin-bottom: 32px;
+  margin-bottom: var(--spacing-4xl);
 }
 
 /* adaptive bound (AB): close to the edge, 1440px and centered on desktop */
@@ -581,13 +581,13 @@ main > .section > .service-links-wrapper {
 }
 
 main > .section.feature-banner-container {
-  margin-top: 24px;
+  margin-top: var(--spacing-3xl);
   margin-bottom: 0;
 }
 
 main > .section.hero-loan-container:has(+ .feature-banner-container),
 main > .section.hero-loan-container:has(+ .brand) {
-  margin-bottom: 24px;
+  margin-bottom: var(--spacing-3xl);
 }
 
 main > .section.feature-banner-container + .section {
@@ -603,42 +603,42 @@ main > .section > .testimonials-wrapper {
 
 /* offers continue straight on from the highlighted EMI section */
 main > .section.highlight + .section.offers-container {
-  margin-top: 12px;
+  margin-top: var(--spacing-lg);
 }
 
 /* eyebrow paragraph directly above a section heading (Body/B2) */
 main .default-content-wrapper > p:has(+ h2) {
-  margin: 0 0 8px;
-  color: var(--text-color);
+  margin: 0 0 var(--spacing-md);
+  color: var(--color-text-primary-default-base);
   font-size: var(--type-b2-size);
-  font-weight: 500;
+  font-weight: var(--type-body-b2-font-weight);
   line-height: var(--type-b2-line);
 }
 
 /* section heading (Display/Medium/DF-1) */
 main .default-content-wrapper > p + h2,
 main .default-content-wrapper > h2:first-child {
-  margin: 0 0 32px;
+  margin: 0 0 var(--spacing-4xl);
   font-size: var(--type-display-size);
-  font-weight: 500;
+  font-weight: var(--type-display-medium-df-1-font-weight);
   line-height: var(--type-display-line);
   letter-spacing: var(--type-display-ls);
 }
 
 :where(.desktop-view) main .default-content-wrapper > h2:only-child {
-  margin-bottom: 40px;
+  margin-bottom: var(--spacing-5xl);
 }
 
 /* heading with a subheading line below it (product pages) */
 main .section .default-content-wrapper > h2:has(+ p) {
-  margin: 0 0 8px;
+  margin: 0 0 var(--spacing-md);
 }
 
 main .default-content-wrapper > h2 + p {
-  margin: 0 0 24px;
-  color: var(--muted-color);
+  margin: 0 0 var(--spacing-3xl);
+  color: var(--color-text-secondary-default-base);
   font-size: var(--body-font-size-m);
-  font-weight: 500;
+  font-weight: var(--type-body-b3-font-weight);
   line-height: 24px;
 }
 
@@ -649,7 +649,7 @@ main .default-content-wrapper > h2 + p {
 }
 
 :where(.desktop-view) main .default-content-wrapper > h2 + p {
-  margin-bottom: 32px;
+  margin-bottom: var(--spacing-4xl);
   font-size: var(--heading-font-size-m);
   line-height: 28px;
 }
@@ -657,7 +657,7 @@ main .default-content-wrapper > h2 + p {
 /* section metadata */
 main .section.light,
 main .section.highlight {
-  background-color: var(--surface-color);
+  background-color: var(--color-background-2-default-base);
   margin: 0;
   padding: var(--section-spacing) 0;
 }
@@ -704,8 +704,8 @@ main > .section > .section-background img {
 
 main .section.brand {
   margin: 0;
-  padding: 80px 0;
-  background-color: var(--brand-color);
+  padding: var(--spacing-8xl) 0;
+  background-color: var(--color-brand-gradient-kotak-mahindra-default-2);
   color: #fff;
   text-align: center;
 }
@@ -717,7 +717,7 @@ main .section.brand .default-content-wrapper {
 main .section.brand p {
   margin: 0;
   font-size: var(--body-font-size-s);
-  font-weight: 600;
+  font-weight: var(--type-headline-h3-font-weight);
   line-height: 20px;
 }
 
@@ -731,5 +731,5 @@ main .section.brand p {
 }
 
 main > .section.branch-locator-container:last-of-type {
-  margin-bottom: 24px;
+  margin-bottom: var(--spacing-3xl);
 }

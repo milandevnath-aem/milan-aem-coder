@@ -1,7 +1,7 @@
 .testimonials {
   --testimonials-card-width: 330px;
-  --testimonials-card-padding: 24px;
-  --testimonials-card-bg: var(--surface-color);
+  --testimonials-card-padding: var(--spacing-3xl);
+  --testimonials-card-bg: var(--color-background-2-default-base);
 }
 
 .testimonials .testimonials-track {
@@ -24,20 +24,20 @@
   flex: 0 0 var(--testimonials-card-width);
   flex-direction: column;
   justify-content: space-between;
-  gap: 40px;
+  gap: var(--spacing-5xl);
   min-height: 225px;
   box-sizing: border-box;
   padding: var(--testimonials-card-padding);
-  border-radius: 32px;
+  border-radius: var(--radius-4xl);
   background-color: var(--testimonials-card-bg);
   scroll-snap-align: start;
 }
 
 .testimonials .testimonials-quote {
   margin: 0;
-  color: var(--text-color);
+  color: var(--color-text-primary-default-base);
   font-size: var(--type-b2-size);
-  font-weight: 500;
+  font-weight: var(--type-body-b2-font-weight);
   line-height: var(--type-b2-line);
 }
 
@@ -48,7 +48,7 @@
 .testimonials .testimonials-author {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--spacing-md);
 }
 
 .testimonials .testimonials-avatar,
@@ -73,17 +73,17 @@
 
 /* name: Headline/H2, role: Body/B1 */
 .testimonials .testimonials-name {
-  color: var(--text-color);
+  color: var(--color-text-primary-default-base);
   font-size: var(--type-h2-size);
-  font-weight: 600;
+  font-weight: var(--type-headline-h2-font-weight);
   line-height: var(--type-h2-line);
-  margin: 0 0 2px;
+  margin: 0 0 var(--spacing-xxs);
 }
 
 .testimonials .testimonials-role {
-  color: var(--muted-color);
+  color: var(--color-text-secondary-default-base);
   font-size: var(--type-b1-size);
-  font-weight: 500;
+  font-weight: var(--type-body-b1-font-weight);
   line-height: var(--type-b1-line);
   letter-spacing: var(--type-b1-ls);
   margin: 0;
@@ -92,8 +92,8 @@
 .testimonials .testimonials-controls {
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
-  margin-top: 32px;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-4xl);
 
   /* the wrapper keeps the full bleed margin on the right: line the buttons up with the grid */
   padding-right: calc(var(--gb-offset));
@@ -104,7 +104,7 @@
   height: 44px;
   margin: 0;
   padding: 0;
-  border: 1px solid var(--text-color);
+  border: 1px solid var(--color-button-pills-stroke-default-stroke-base);
   border-radius: 50%;
   background: center / 20px no-repeat transparent;
   cursor: pointer;
@@ -126,7 +126,7 @@
 
 :where(.desktop-view) .testimonials {
   --testimonials-card-width: 386px;
-  --testimonials-card-padding: 32px;
+  --testimonials-card-padding: var(--spacing-4xl);
 }
 
 :where(.desktop-view) .testimonials .testimonials-item {

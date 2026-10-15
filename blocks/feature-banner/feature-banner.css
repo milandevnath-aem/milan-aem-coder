@@ -1,7 +1,7 @@
 .feature-banner {
   --feature-banner-height: 600px;
-  --feature-banner-text: var(--text-color);
-  --feature-banner-muted: var(--muted-color);
+  --feature-banner-text: var(--color-text-primary-default-base);
+  --feature-banner-muted: var(--color-text-secondary-default-base);
 
   /* text reveal start colours, AA contrast on the banner background */
   --feature-banner-heading-from: #666;
@@ -21,17 +21,17 @@
   flex-direction: column;
   min-height: var(--feature-banner-height);
   overflow: hidden;
-  background-color: var(--background-color);
+  background-color: var(--color-background-1-default-base);
   color: var(--feature-banner-text);
 }
 
 .feature-banner .feature-banner-item.light-text {
-  --feature-banner-text: var(--inverse-color);
+  --feature-banner-text: var(--color-text-primary-inverse-base);
   --feature-banner-muted: #d6d6d6;
   --feature-banner-heading-from: #949494;
   --feature-banner-text-from: #8f8f8f;
 
-  background-color: #1a1a1a;
+  background-color: var(--color-background-1-inverse-base);
 }
 
 .feature-banner .feature-banner-image,
@@ -59,7 +59,7 @@
   position: relative;
   box-sizing: border-box;
   width: 100%;
-  padding: 80px 24px 40px;
+  padding: var(--spacing-8xl) var(--spacing-3xl) var(--spacing-5xl);
 }
 
 .feature-banner .feature-banner-content h2,
@@ -67,7 +67,7 @@
   margin: 0;
   color: inherit;
   font-size: 28px;
-  font-weight: 600;
+  font-weight: var(--type-headline-h7-font-weight);
   line-height: 36px;
   letter-spacing: -0.56px;
 }
@@ -78,10 +78,10 @@
 }
 
 .feature-banner .feature-banner-content p {
-  margin: 12px 0 0;
+  margin: var(--spacing-lg) 0 0;
   color: var(--feature-banner-muted);
   font-size: var(--body-font-size-m);
-  font-weight: 500;
+  font-weight: var(--type-body-b3-font-weight);
   line-height: 24px;
 }
 
@@ -95,24 +95,24 @@
 
 .feature-banner .feature-banner-content a.button {
   border: 0;
-  padding: 12px;
-  background-color: var(--text-color);
-  color: #fff;
+  padding: var(--spacing-lg);
+  background-color: var(--color-button-pills-default-bg-base);
+  color: var(--color-button-pills-default-text-base);
   font-size: var(--body-font-size-s);
-  font-weight: 600;
+  font-weight: var(--type-button-bt-2-font-weight);
   line-height: 20px;
   letter-spacing: 0;
 }
 
 .feature-banner .light-text .feature-banner-content a.button {
-  border-color: #fff;
-  background-color: #fff;
-  color: var(--text-color);
+  border-color: var(--color-button-pills-stroke-inverse-stroke-base);
+  background-color: var(--color-button-pills-inverse-bg-base);
+  color: var(--color-button-pills-stroke-default-text-base);
 }
 
 /* side image: the picture sits in its own half instead of filling the band */
 .feature-banner .side-image {
-  background-color: var(--background-color);
+  background-color: var(--color-background-1-default-base);
 }
 
 .feature-banner .side-image .feature-banner-image {
@@ -172,7 +172,7 @@
 :where(.desktop-view) .feature-banner .feature-banner-content h2,
 :where(.desktop-view) .feature-banner .feature-banner-content h3 {
   font-size: 32px;
-  font-weight: 600;
+  font-weight: var(--type-display-semibold-df-1-font-weight);
   line-height: 40px;
   letter-spacing: -0.8px;
 }
@@ -187,7 +187,7 @@
 }
 
 :where(.desktop-view) .feature-banner .feature-banner-content a.button {
-  padding: 14px 12px;
+  padding: 14px var(--spacing-lg);
   font-size: var(--body-font-size-m);
   line-height: 24px;
 }
@@ -219,11 +219,11 @@
 
 /* product pages: 12px between heading and text, Figma pill buttons (12px + 14px inner) */
 :where(.desktop-view) main:has(.hero-loan.product) .feature-banner .feature-banner-content p {
-  margin-top: 12px;
+  margin-top: var(--spacing-lg);
 }
 
 main:has(.hero-loan.product) .feature-banner .feature-banner-content a.button {
-  padding: 14px 12px;
+  padding: 14px var(--spacing-lg);
   min-width: 134px;
 }
 

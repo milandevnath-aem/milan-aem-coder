@@ -4,16 +4,16 @@
   padding: 0;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
-  gap: 24px;
+  gap: var(--spacing-3xl);
 }
 
 .cards > ul > li {
   border: 1px solid #dadada;
-  background-color: var(--background-color);
+  background-color: var(--color-background-1-default-base);
 }
 
 .cards .cards-card-body {
-  margin: 16px;
+  margin: var(--spacing-xl);
 }
 
 .cards .cards-card-image {

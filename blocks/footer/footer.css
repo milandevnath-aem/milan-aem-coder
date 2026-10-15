@@ -1,5 +1,5 @@
 footer {
-  --footer-bg: var(--brand-color);
+  --footer-bg: var(--color-brand-gradient-kotak-mahindra-default-2);
 
   background-color: var(--footer-bg);
   font-size: var(--body-font-size-xs);
@@ -17,7 +17,7 @@ footer .footer p {
 }
 
 footer .footer a:any-link {
-  color: var(--text-color);
+  color: var(--color-text-primary-default-base);
 }
 
 /* brand banner */
@@ -25,11 +25,11 @@ footer .footer-brand .default-content-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: var(--spacing-3xl);
   max-width: 688px;
   margin: 0 auto 100px;
-  padding: 0 12px;
-  color: var(--inverse-color);
+  padding: 0 var(--spacing-lg);
+  color: var(--color-text-primary-inverse-base);
   text-align: center;
 }
 
@@ -41,7 +41,7 @@ footer .footer-brand img {
 
 footer .footer-brand h2 {
   margin: 0;
-  color: var(--inverse-color);
+  color: var(--color-text-primary-inverse-base);
   font-size: var(--type-display-size);
   line-height: var(--type-display-line);
   letter-spacing: var(--type-display-ls);
@@ -50,23 +50,23 @@ footer .footer-brand h2 {
 footer .footer-brand p {
   max-width: 492px;
   font-size: var(--body-font-size-s);
-  font-weight: 500;
+  font-weight: var(--type-body-b2-font-weight);
   line-height: 20px;
   letter-spacing: 0;
 }
 
 footer .footer-brand p:has(picture) {
-  margin-bottom: 16px;
+  margin-bottom: var(--spacing-xl);
 }
 
 /* white card */
 footer .footer-card {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  padding: 40px var(--footer-padding);
-  border-radius: 32px;
-  background-color: var(--background-color);
+  gap: var(--spacing-3xl);
+  padding: var(--spacing-5xl) var(--footer-padding);
+  border-radius: var(--radius-4xl);
+  background-color: var(--color-background-1-default-base);
 }
 
 footer .footer-card ul {
@@ -79,17 +79,17 @@ footer .footer-card ul {
 footer .footer-links .default-content-wrapper > ul {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--surface-color);
+  gap: var(--spacing-3xl);
+  padding-bottom: var(--spacing-3xl);
+  border-bottom: 1px solid var(--color-stroke-1-default);
 }
 
 /* typography: column headings, links, breadcrumb */
 footer .footer-links .footer-heading {
   display: block;
-  color: var(--muted-color);
+  color: var(--color-text-secondary-default-base);
   font-size: 12px;
-  font-weight: 500;
+  font-weight: var(--type-body-b1-font-weight);
   line-height: 16px;
   letter-spacing: 0.24px;
 }
@@ -98,26 +98,26 @@ footer .footer-other li,
 footer .footer-bottom li,
 footer .footer-links li li {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: var(--type-headline-h2-font-weight);
   line-height: 18px;
   letter-spacing: 0.24px;
 }
 
 footer .footer-links li ul {
-  margin-top: 8px;
+  margin-top: var(--spacing-md);
 }
 
 footer .footer-links li li {
-  padding: 8px 0;
+  padding: var(--spacing-md) 0;
 }
 
 /* other links */
 footer .footer-other .default-content-wrapper > ul {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--surface-color);
+  gap: var(--spacing-xs);
+  padding-bottom: var(--spacing-3xl);
+  border-bottom: 1px solid var(--color-stroke-1-default);
 }
 
 footer .footer-other .default-content-wrapper > ul > li {
@@ -134,7 +134,7 @@ footer .footer-other a:any-link {
 footer .footer-bottom .default-content-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--spacing-3xl);
 }
 
 footer .footer-bottom .default-content-wrapper > ul:first-child {
@@ -142,8 +142,8 @@ footer .footer-bottom .default-content-wrapper > ul:first-child {
   flex-direction: column;
   align-items: flex-start;
   gap: 0;
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--surface-color);
+  padding-bottom: var(--spacing-3xl);
+  border-bottom: 1px solid var(--color-stroke-1-default);
 }
 
 footer .footer-bottom .default-content-wrapper > ul:first-child > li {
@@ -154,11 +154,11 @@ footer .footer-bottom .default-content-wrapper > ul:first-child > li {
 
 footer .footer-bottom .default-content-wrapper > ul:first-child > li:first-child {
   min-height: unset;
-  margin-bottom: 24px;
+  margin-bottom: var(--spacing-3xl);
 }
 
 footer .footer-bottom .default-content-wrapper > ul:first-child > li:nth-child(n + 3) {
-  margin-top: 4px;
+  margin-top: var(--spacing-xs);
 }
 
 footer .footer-dropdown {
@@ -168,12 +168,12 @@ footer .footer-dropdown {
 footer .footer-dropdown summary {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 8px 12px;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md) var(--spacing-lg);
   border: 1px solid var(--border-color);
-  border-radius: 100px;
+  border-radius: var(--radius-full);
   font-size: var(--body-font-size-s);
-  font-weight: 600;
+  font-weight: var(--type-headline-h3-font-weight);
   line-height: 18px;
   list-style: none;
   cursor: pointer;
@@ -206,10 +206,10 @@ footer .footer-card .footer-bottom .footer-dropdown > ul {
   width: 327px;
   max-width: calc(100vw - 40px);
   margin: 0;
-  border: 1px solid var(--surface-color);
-  border-radius: 12px;
-  padding: 4px;
-  background-color: var(--background-color);
+  border: 1px solid var(--color-stroke-1-default);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xs);
+  background-color: var(--color-background-1-default-base);
   box-shadow: 0 1px 2px rgb(18 18 18 / 4%), 0 8px 24px rgb(18 18 18 / 8%);
   overflow: hidden;
 }
@@ -222,19 +222,19 @@ footer .footer-dropdown li a:any-link {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  border-radius: 8px;
-  padding: 8px 12px;
-  color: var(--text-color);
+  gap: var(--spacing-md);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  color: var(--color-text-primary-default-base);
   font-size: var(--body-font-size-s);
-  font-weight: 500;
+  font-weight: var(--type-body-b2-font-weight);
   line-height: 20px;
   letter-spacing: 0;
 }
 
 footer .footer-dropdown li a:any-link:hover,
 footer .footer-dropdown li a:any-link:focus-visible {
-  background-color: #e6e6e6;
+  background-color: var(--color-background-3-default-base);
   text-decoration: none;
 }
 
@@ -260,7 +260,7 @@ footer .footer-dropdown li a[target='_blank']:focus-visible::after {
 /* the first company is highlighted on desktop */
 
 :where(.desktop-view) footer .footer-dropdown li:first-child a:any-link {
-  background-color: #e6e6e6;
+  background-color: var(--color-background-3-default-base);
 }
 
 :where(.desktop-view) footer .footer-dropdown li:first-child a[target='_blank']::after {
@@ -268,7 +268,7 @@ footer .footer-dropdown li a[target='_blank']:focus-visible::after {
 }
 
 footer .footer-bottom .default-content-wrapper > p {
-  color: var(--muted-color);
+  color: var(--color-text-secondary-default-base);
   font-size: 10px;
   font-weight: 600;
   line-height: 16px;
@@ -282,7 +282,7 @@ footer .footer-bottom .default-content-wrapper > ul:last-child {
 
 footer .footer-bottom .default-content-wrapper > ul:last-child a {
   display: block;
-  padding: 8px;
+  padding: var(--spacing-md);
 }
 
 footer .footer-bottom .icon {
@@ -307,17 +307,17 @@ footer .footer-bottom .icon {
 }
 
 :where(.desktop-view) footer .footer-card {
-  gap: 24px;
+  gap: var(--spacing-3xl);
 
   /* the card content stays within the grid width on large screens */
-  padding: 80px max(var(--footer-padding), (100% - var(--grid-limit)) / 2) 40px;
+  padding: var(--spacing-8xl) max(var(--footer-padding), (100% - var(--grid-limit)) / 2) var(--spacing-5xl);
   border-radius: 60px;
 }
 
 :where(.desktop-view) footer .footer-links .default-content-wrapper > ul {
   flex-flow: row wrap;
-  gap: 12px;
-  padding-bottom: 24px;
+  gap: var(--spacing-lg);
+  padding-bottom: var(--spacing-3xl);
 }
 
 :where(.desktop-view) footer .footer-links .default-content-wrapper > ul > li {
@@ -325,7 +325,7 @@ footer .footer-bottom .icon {
 }
 
 :where(.desktop-view) footer .footer-links li ul {
-  margin-top: 12px;
+  margin-top: var(--spacing-lg);
 }
 
 :where(.desktop-view) footer .footer-links li li {
@@ -333,7 +333,7 @@ footer .footer-bottom .icon {
 }
 
 :where(.desktop-view) footer .footer-links li li + li {
-  margin-top: 12px;
+  margin-top: var(--spacing-lg);
 }
 
 :where(.desktop-view) footer .footer-links .footer-heading {
@@ -352,8 +352,8 @@ footer .footer-bottom .icon {
 
 :where(.desktop-view) footer .footer-other .default-content-wrapper > ul {
   flex-flow: row wrap;
-  gap: 20px;
-  padding-bottom: 24px;
+  gap: var(--spacing-2xl);
+  padding-bottom: var(--spacing-3xl);
 }
 
 :where(.desktop-view) footer .footer-other .default-content-wrapper > ul > li {
@@ -363,7 +363,7 @@ footer .footer-bottom .icon {
 /* desktop: "Kotak Group Companies" uses Body/B2 */
 :where(.desktop-view) footer .footer-dropdown summary {
   font-size: var(--body-font-size-m);
-  font-weight: 500;
+  font-weight: var(--type-body-b3-font-weight);
   line-height: 24px;
   letter-spacing: 0;
 }
@@ -372,14 +372,14 @@ footer .footer-bottom .icon {
   display: grid;
   grid-template-columns: auto 1fr;
   align-items: center;
-  gap: 24px 40px;
+  gap: var(--spacing-3xl) var(--spacing-5xl);
 }
 
 :where(.desktop-view) footer .footer-bottom .default-content-wrapper > ul:first-child {
   grid-column: 1 / -1;
   flex-direction: row;
   align-items: center;
-  gap: 24px;
+  gap: var(--spacing-3xl);
 }
 
 :where(.desktop-view) footer .footer-bottom .default-content-wrapper > ul:first-child > li,
@@ -406,20 +406,20 @@ footer .footer-bottom .icon {
 /* breadcrumb */
 footer .footer-breadcrumb {
   grid-column: 1 / -1;
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--surface-color);
+  padding-bottom: var(--spacing-3xl);
+  border-bottom: 1px solid var(--color-stroke-1-default);
 }
 
 footer .footer-breadcrumb ol {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: var(--spacing-md);
   margin: 0;
   padding: 0;
   list-style: none;
   font-size: var(--body-font-size-s);
-  font-weight: 600;
+  font-weight: var(--type-headline-h3-font-weight);
   line-height: 20px;
 }
 
@@ -438,11 +438,11 @@ footer .footer-breadcrumb li + li::before {
   display: inline-block;
   width: 16px;
   height: 16px;
-  margin-right: 8px;
+  margin-right: var(--spacing-md);
   vertical-align: -2px;
   background: url('../../icons/chevron-right.svg') center / contain no-repeat;
 }
 
 footer .footer-card .footer-breadcrumb li a:any-link {
-  color: var(--muted-color);
+  color: var(--color-text-secondary-default-base);
 }

@@ -1,11 +1,11 @@
 .branch-locator {
   box-sizing: border-box;
-  padding: 44px var(--fb-inset) 24px;
-  border-radius: 32px;
+  padding: 44px var(--fb-inset) var(--spacing-3xl);
+  border-radius: var(--radius-4xl);
   background:
     radial-gradient(circle at 85% 0%, rgb(238 156 147 / 80%) 0, transparent 45%),
     linear-gradient(180deg, #c33d33 0%, #f6e6cf 100%);
-  color: var(--inverse-color);
+  color: var(--color-text-primary-inverse-base);
 }
 
 .branch-locator .branch-locator-intro h1,
@@ -13,15 +13,15 @@
   margin: 0;
   color: inherit;
   font-size: var(--heading-font-size-xxl);
-  font-weight: 500;
+  font-weight: var(--type-display-medium-df-1-font-weight);
   line-height: 40px;
   letter-spacing: -0.8px;
 }
 
 .branch-locator .branch-locator-intro p {
-  margin: 12px 0 0;
+  margin: var(--spacing-lg) 0 0;
   font-size: var(--body-font-size-s);
-  font-weight: 500;
+  font-weight: var(--type-body-b2-font-weight);
   line-height: 20px;
 }
 
@@ -29,8 +29,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--grid-gutter);
-  margin-top: 32px;
-  color: var(--text-color);
+  margin-top: var(--spacing-4xl);
+  color: var(--color-text-primary-default-base);
 }
 
 .branch-locator .branch-locator-left {
@@ -45,7 +45,7 @@
 }
 
 .branch-locator .branch-locator-select .dropdown-field {
-  background-color: var(--background-color);
+  background-color: var(--color-background-1-default-base);
 }
 
 .branch-locator .branch-locator-select.is-filled .dropdown-label {
@@ -61,31 +61,31 @@
   display: inline-flex;
   align-items: center;
   align-self: flex-start;
-  gap: 8px;
+  gap: var(--spacing-md);
   order: 1;
   margin: 0;
   border: 0;
-  border-radius: 100px;
-  padding: 8px 14px 8px 10px;
+  border-radius: var(--radius-full);
+  padding: var(--spacing-md) 14px var(--spacing-md) 10px;
   background-color: rgb(252 252 252 / 85%);
-  color: var(--text-color);
+  color: var(--color-text-primary-default-base);
   font-size: var(--body-font-size-s);
-  font-weight: 600;
+  font-weight: var(--type-headline-h3-font-weight);
   line-height: 20px;
   cursor: pointer;
 }
 
 .branch-locator .branch-locator-locate:hover,
 .branch-locator .branch-locator-locate:focus-visible {
-  background-color: var(--background-color);
+  background-color: var(--color-background-1-default-base);
 }
 
 .branch-locator .branch-locator-status {
   order: 1;
   margin: 0;
-  color: var(--inverse-color);
+  color: var(--color-text-primary-inverse-base);
   font-size: var(--body-font-size-s);
-  font-weight: 500;
+  font-weight: var(--type-body-b2-font-weight);
   line-height: 20px;
 }
 
@@ -97,8 +97,8 @@
   order: 3;
   height: 240px;
   border: 4px solid rgb(252 252 252 / 60%);
-  border-radius: 16px;
-  background-color: var(--surface-color);
+  border-radius: var(--radius-xl);
+  background-color: var(--color-background-2-default-base);
   overflow: hidden;
 }
 
@@ -112,18 +112,18 @@
 .branch-locator .branch-locator-card {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--spacing-2xl);
   order: 2;
   margin: 0;
-  padding: 24px;
-  border-radius: 20px;
-  background-color: var(--background-color);
+  padding: var(--spacing-3xl);
+  border-radius: var(--radius-2xl);
+  background-color: var(--color-background-1-default-base);
 }
 
 .branch-locator .branch-locator-row {
   display: grid;
   grid-template-columns: 40px 1fr;
-  gap: 2px 24px;
+  gap: var(--spacing-xxs) var(--spacing-3xl);
   align-items: start;
 }
 
@@ -132,9 +132,9 @@
   box-sizing: border-box;
   width: 40px;
   height: 40px;
-  border: 1px solid #dedede;
-  border-radius: 8px;
-  background: var(--surface-color) center / 20px no-repeat;
+  border: 1px solid var(--color-stroke-2-default);
+  border-radius: var(--radius-md);
+  background: var(--color-background-2-default-base) center / 20px no-repeat;
 }
 
 .branch-locator .icon-location { background-image: url('../../icons/location.svg'); }
@@ -143,16 +143,16 @@
 .branch-locator .icon-mail { background-image: url('../../icons/mail.svg'); }
 
 .branch-locator .branch-locator-row dt {
-  color: var(--muted-color);
+  color: var(--color-text-secondary-default-base);
   font-size: var(--body-font-size-s);
-  font-weight: 500;
+  font-weight: var(--type-body-b2-font-weight);
   line-height: 18px;
 }
 
 .branch-locator .branch-locator-row dd {
   margin: 0;
   font-size: var(--body-font-size-m);
-  font-weight: 500;
+  font-weight: var(--type-body-b3-font-weight);
   line-height: 24px;
 }
 
@@ -170,7 +170,7 @@
 }
 
 :where(.desktop-view) .branch-locator {
-  padding: 48px var(--fb-inset);
+  padding: var(--spacing-6xl) var(--fb-inset);
   border-radius: 44px;
 }
 
@@ -185,7 +185,7 @@
 }
 
 :where(.desktop-view) .branch-locator .branch-locator-intro p {
-  margin-top: 24px;
+  margin-top: var(--spacing-3xl);
   font-size: var(--body-font-size-m);
   line-height: 24px;
 }
@@ -212,14 +212,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: var(--spacing-3xl);
   text-align: center;
 }
 
 dialog.modal .branch-locator-permission h2 {
   margin: 0;
   font-size: 24px;
-  font-weight: 600;
+  font-weight: var(--type-headline-h6-font-weight);
   line-height: 32px;
   letter-spacing: 0;
 }
@@ -227,21 +227,21 @@ dialog.modal .branch-locator-permission h2 {
 .branch-locator-permission .branch-locator-hint {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--spacing-lg);
   margin: 0;
-  border-radius: 12px;
-  padding: 14px 12px;
+  border-radius: var(--radius-lg);
+  padding: 14px var(--spacing-lg);
   background-color: var(--light-color);
-  color: var(--text-color);
+  color: var(--color-text-primary-default-base);
   font-size: var(--body-font-size-s);
-  font-weight: 500;
+  font-weight: var(--type-body-b2-font-weight);
   line-height: 20px;
   text-align: left;
 }
 
 .branch-locator-permission .branch-locator-permission-error {
   margin: 0;
-  color: #a32d2c;
+  color: var(--color-status-critical-primary-default-text-base);
   font-size: var(--body-font-size-s);
   line-height: 20px;
 }
@@ -249,7 +249,7 @@ dialog.modal .branch-locator-permission h2 {
 .branch-locator-permission .branch-locator-permission-actions {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--spacing-xl);
   width: 100%;
 }
 
@@ -276,8 +276,8 @@ dialog.modal .branch-locator-permission h2 {
 }
 
 .branch-locator-permission button.button.primary.is-loading:disabled {
-  border-color: var(--text-color);
-  background-color: var(--text-color);
+  border-color: var(--color-button-pills-stroke-default-stroke-base);
+  background-color: var(--color-button-pills-default-bg-base);
 }
 
 @keyframes branch-locator-spin {
@@ -287,11 +287,11 @@ dialog.modal .branch-locator-permission h2 {
 .branch-locator-permission .branch-locator-skip {
   margin: 0;
   border: 0;
-  padding: 4px;
+  padding: var(--spacing-xs);
   background: none;
-  color: var(--text-color);
+  color: var(--color-text-primary-default-base);
   font-size: var(--body-font-size-s);
-  font-weight: 600;
+  font-weight: var(--type-headline-h3-font-weight);
   line-height: 20px;
   cursor: pointer;
 }

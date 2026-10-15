@@ -5,7 +5,7 @@
 
 .hero {
   position: relative;
-  padding: 40px 24px;
+  padding: var(--spacing-5xl) var(--spacing-3xl);
   min-height: 300px;
 }
 
@@ -31,5 +31,5 @@
 }
 
 :where(.desktop-view) .hero {
-  padding: 40px 32px;
+  padding: var(--spacing-5xl) var(--spacing-4xl);
 }

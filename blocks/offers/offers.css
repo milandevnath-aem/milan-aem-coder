@@ -1,9 +1,9 @@
 .offers {
   --offers-radius: 52px;
   --offers-height: 628px;
-  --offers-padding: 80px 24px 32px;
-  --offers-text: var(--inverse-color);
-  --offers-cta-gap: 32px;
+  --offers-padding: var(--spacing-8xl) var(--spacing-3xl) var(--spacing-4xl);
+  --offers-text: var(--color-text-primary-inverse-base);
+  --offers-cta-gap: var(--spacing-4xl);
 }
 
 .offers > ul {
@@ -59,9 +59,9 @@
 }
 
 .offers .offers-content .offers-eyebrow {
-  margin-bottom: 8px;
+  margin-bottom: var(--spacing-md);
   font-size: var(--type-eyebrow-size);
-  font-weight: 600;
+  font-weight: var(--type-section-title-s-font-weight);
   line-height: var(--type-eyebrow-line);
   letter-spacing: var(--type-eyebrow-ls);
   text-transform: uppercase;
@@ -72,7 +72,7 @@
   margin: 0;
   color: inherit;
   font-size: var(--type-display-size);
-  font-weight: 500;
+  font-weight: var(--type-display-medium-df-1-font-weight);
   line-height: var(--type-display-line);
   letter-spacing: var(--type-display-ls);
 }
@@ -84,10 +84,10 @@
 /* pill CTA: 192px wide, 12px (mobile) / 14px (desktop) vertical padding */
 .offers .offers-content a.button {
   width: 192px;
-  padding: 12px 15px;
-  border-color: #fff;
-  background-color: #fff;
-  color: var(--text-color);
+  padding: var(--spacing-lg) 15px;
+  border-color: var(--color-button-pills-stroke-inverse-stroke-base);
+  background-color: var(--color-button-pills-inverse-bg-base);
+  color: var(--color-button-pills-stroke-default-text-base);
   font-size: var(--type-bt2-size);
   line-height: var(--type-bt2-line);
 }
@@ -96,27 +96,27 @@
 .offers .offers-content a.button:focus-visible {
   border-color: var(--light-color);
   background-color: var(--light-color);
-  color: var(--text-color);
+  color: var(--color-button-pills-stroke-default-text-base);
 }
 
 .offers .offers-disclaimer {
   margin: auto 0 0;
-  padding-top: 24px;
-  color: var(--inverse-color);
+  padding-top: var(--spacing-3xl);
+  color: var(--color-text-primary-inverse-base);
   font-size: var(--type-h2-size);
-  font-weight: 600;
+  font-weight: var(--type-headline-h2-font-weight);
   line-height: var(--type-h2-line);
 }
 
 .offers .offers-dark-text {
-  --offers-text: var(--text-color);
+  --offers-text: var(--color-text-primary-default-base);
 }
 
 :where(.desktop-view) .offers {
   --offers-radius: 40px;
   --offers-height: 768px;
-  --offers-padding: 124px 12px 44px;
-  --offers-cta-gap: 40px;
+  --offers-padding: 124px var(--spacing-lg) 44px;
+  --offers-cta-gap: var(--spacing-5xl);
 }
 
 :where(.desktop-view) .offers .offers-content a.button {
@@ -138,7 +138,7 @@
 /* compact band (e.g. "Need help?") */
 .offers .offers-short {
   --offers-height: 672px;
-  --offers-padding: 80px 24px;
+  --offers-padding: var(--spacing-8xl) var(--spacing-3xl);
 
   border-radius: 0;
 }
@@ -148,9 +148,9 @@
 }
 
 .offers .offers-content > p:not(.offers-eyebrow, .button-wrapper) {
-  margin-top: 12px;
+  margin-top: var(--spacing-lg);
   font-size: var(--type-b2-size);
-  font-weight: 500;
+  font-weight: var(--type-body-b2-font-weight);
   line-height: var(--type-b2-line);
   letter-spacing: 0;
 }
@@ -159,8 +159,8 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 12px;
-  margin-top: 32px;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-4xl);
 }
 
 .offers .offers-buttons .button-wrapper {
@@ -170,15 +170,15 @@
 .offers .offers-content .offers-buttons a.button {
   width: auto;
   border: 0;
-  padding: 12px;
+  padding: var(--spacing-lg);
   font-size: var(--body-font-size-s);
-  font-weight: 600;
+  font-weight: var(--type-button-bt-2-font-weight);
   line-height: 20px;
   letter-spacing: 0;
 }
 
 :where(.desktop-view) .offers .offers-content .offers-buttons a.button {
-  padding: 14px 12px;
+  padding: 14px var(--spacing-lg);
   font-size: var(--type-bt2-size);
   line-height: var(--type-bt2-line);
 }
@@ -189,7 +189,7 @@
 
 /* "Need help?" pill buttons: 12px + 14px inner padding (Figma) */
 .offers .offers-short .offers-content .offers-buttons a.button {
-  padding: 12px 26px;
+  padding: var(--spacing-lg) 26px;
 }
 
 :where(.desktop-view) .offers .offers-short .offers-content .offers-buttons a.button {
@@ -198,6 +198,6 @@
 
 :where(.desktop-view) .offers .offers-short {
   --offers-height: 672px;
-  --offers-padding: 124px 12px 44px;
+  --offers-padding: 124px var(--spacing-lg) 44px;
 }
 

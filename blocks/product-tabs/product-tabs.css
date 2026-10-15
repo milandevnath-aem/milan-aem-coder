@@ -1,14 +1,14 @@
 .product-tabs {
   --product-tabs-tab-bg: var(--light-color);
   --product-tabs-tab-active-bg: var(--text-color);
-  --product-tabs-card-bg: var(--surface-color);
+  --product-tabs-card-bg: var(--color-background-2-default-base);
 }
 
 /* tabs */
 .product-tabs .product-tabs-list {
   display: flex;
-  gap: 2px;
-  padding: 4px;
+  gap: var(--spacing-xxs);
+  padding: var(--spacing-xs);
   border-radius: 14px;
   background-color: var(--product-tabs-tab-bg);
   overflow-x: auto;
@@ -22,25 +22,25 @@
 .product-tabs .product-tabs-tab {
   flex: 0 0 auto;
   margin: 0;
-  padding: 12px 20px;
+  padding: var(--spacing-lg) var(--spacing-2xl);
   border: 0;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   background: transparent;
   color: var(--muted-color);
   font-size: var(--type-b2-size);
-  font-weight: 500;
+  font-weight: var(--type-body-b2-font-weight);
   line-height: var(--type-b2-line);
   white-space: nowrap;
   cursor: pointer;
 }
 
 .product-tabs .product-tabs-tab:hover {
-  color: var(--text-color);
+  color: var(--color-button-pills-stroke-default-text-base);
 }
 
 .product-tabs .product-tabs-tab[aria-selected='true'] {
   background-color: var(--product-tabs-tab-active-bg);
-  color: var(--inverse-color);
+  color: var(--color-text-primary-inverse-base);
 }
 
 .product-tabs .product-tabs-tab:focus-visible {
@@ -50,13 +50,13 @@
 
 /* panel */
 .product-tabs .product-tabs-panels {
-  margin-top: 32px;
+  margin-top: var(--spacing-4xl);
 }
 
 .product-tabs .product-tabs-panel {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--spacing-md);
 }
 
 .product-tabs .product-tabs-panel[hidden] {
@@ -67,7 +67,7 @@
   display: block;
   width: 100%;
   height: 200px;
-  border-radius: 20px;
+  border-radius: var(--radius-2xl);
   object-fit: cover;
   object-position: 80% center;
 }
@@ -75,7 +75,7 @@
 .product-tabs .product-tabs-cards {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--spacing-md);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -86,20 +86,20 @@
   grid-template:
     'title arrow' auto
     'text arrow' auto / 1fr auto;
-  gap: 4px 12px;
+  gap: var(--spacing-xs) var(--spacing-lg);
   align-items: center;
   height: 100%;
   box-sizing: border-box;
-  padding: 16px;
-  border-radius: 16px;
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-xl);
   background-color: var(--product-tabs-card-bg);
-  color: var(--text-color);
+  color: var(--color-text-primary-default-base);
   text-decoration: none;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .product-tabs a.product-tabs-card-link:hover {
-  color: var(--text-color);
+  color: var(--color-text-primary-default-base);
   text-decoration: none;
   box-shadow: 0 6px 20px rgb(0 0 0 / 8%);
 }
@@ -107,15 +107,15 @@
 .product-tabs .product-tabs-card-title {
   grid-area: title;
   font-size: var(--type-b2-size);
-  font-weight: 500;
+  font-weight: var(--type-body-b2-font-weight);
   line-height: var(--type-b2-line);
 }
 
 .product-tabs .product-tabs-card-text {
   grid-area: text;
-  color: var(--muted-color);
+  color: var(--color-text-secondary-default-base);
   font-size: var(--type-b1-size);
-  font-weight: 500;
+  font-weight: var(--type-body-b1-font-weight);
   line-height: var(--type-b1-line);
   letter-spacing: var(--type-b1-ls);
 }
@@ -139,19 +139,19 @@
 }
 
 :where(.desktop-view) .product-tabs .product-tabs-list {
-  gap: 12px;
+  gap: var(--spacing-lg);
 }
 
 :where(.desktop-view) .product-tabs .product-tabs-tab {
   flex: 1 1 0;
-  padding: 12px 32px;
+  padding: var(--spacing-lg) var(--spacing-4xl);
 }
 
 :where(.desktop-view) .product-tabs .product-tabs-panel {
   position: relative;
   display: block;
   min-height: 680px;
-  padding: 24px;
+  padding: var(--spacing-3xl);
   box-sizing: border-box;
   border-radius: 44px;
   background-color: #c4bab0;
@@ -183,11 +183,11 @@
       'title arrow' auto
       'text text' 1fr / 1fr auto;
   align-items: start;
-  gap: 16px;
+  gap: var(--spacing-xl);
   min-height: 150px;
-  padding: 20px;
-  border-radius: 24px;
-  background-color: var(--background-color);
+  padding: var(--spacing-2xl);
+  border-radius: var(--radius-3xl);
+  background-color: var(--color-background-1-default-base);
 }
 
 :where(.desktop-view) .product-tabs .product-tabs-card-text {
