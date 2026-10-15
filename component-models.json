@@ -1088,7 +1088,7 @@
       },
       {
         "component": "multiselectCaa",
-        "name": "classes",
+        "name": "card-classes",
         "label": "Add Classes",
         "valueType": "string",
         "options": [
