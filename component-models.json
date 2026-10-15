@@ -567,6 +567,10 @@
           {
             "name": "Info cards (label / value pairs)",
             "value": "info"
+          },
+          {
+            "name": "About Us info cards (company details)",
+            "value": "about-us"
           }
         ]
       },

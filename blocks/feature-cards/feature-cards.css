@@ -157,6 +157,47 @@
   border-bottom: 1px solid #dedede;
 }
 
+/* about-us: company detail cards (icon + label/value pairs) */
+.feature-cards.about-us .feature-cards-list {
+  gap: var(--grid-gutter);
+}
+
+.feature-cards.about-us .feature-cards-card {
+  justify-content: flex-start;
+  gap: 40px;
+  min-height: 0;
+  padding: 24px;
+}
+
+.feature-cards.about-us .feature-cards-icon img {
+  width: auto;
+  height: 56px;
+}
+
+.feature-cards.about-us .feature-cards-body p {
+  margin: 0;
+  color: var(--muted-color);
+  font-size: var(--body-font-size-xs);
+  font-weight: 500;
+  line-height: 16px;
+}
+
+.feature-cards.about-us .feature-cards-body p.feature-cards-value {
+  margin: 8px 0 0;
+  color: var(--text-color);
+  font-size: var(--body-font-size-m);
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: -0.4px;
+  overflow-wrap: anywhere;
+}
+
+.feature-cards.about-us .feature-cards-body p.feature-cards-value:not(:last-child) {
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #dedede;
+}
+
 /* split */
 .feature-cards.split {
   display: flex;
@@ -278,6 +319,35 @@
 }
 
 :where(.desktop-view) .feature-cards.info .feature-cards-body p.feature-cards-value {
+  font-size: var(--heading-font-size-m);
+  line-height: 28px;
+}
+
+/* about-us: two cards side by side, an odd last card (address) spans the row */
+:where(.desktop-view) .feature-cards.about-us .feature-cards-list {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+:where(.desktop-view) .feature-cards.about-us .feature-cards-card {
+  grid-column: span 1;
+  min-height: 0;
+  padding: 32px;
+}
+
+:where(.desktop-view) .feature-cards.about-us .feature-cards-card:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+:where(.desktop-view) .feature-cards.about-us .feature-cards-icon img {
+  height: 72px;
+}
+
+:where(.desktop-view) .feature-cards.about-us .feature-cards-body p {
+  font-size: var(--body-font-size-s);
+  line-height: 18px;
+}
+
+:where(.desktop-view) .feature-cards.about-us .feature-cards-body p.feature-cards-value {
   font-size: var(--heading-font-size-m);
   line-height: 28px;
 }
