@@ -86,34 +86,51 @@
     text-decoration: underline;
 }
 
-/* about-us website link: globe icon + URL */
+/* about-us website link: 40px icon box (16px globe) + underlined URL, 32px below the text */
 .columns.about-us p.columns-website {
-    margin: 0;
+    margin: 32px 0 0;
 }
 
 .columns.about-us p.columns-website a:any-link {
+    position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
     color: #003874;
-    font-size: var(--body-font-size-s);
-    font-weight: 600;
-    line-height: 20px;
-    text-decoration: none;
+    font-size: var(--body-font-size-m);
+    font-weight: 500;
+    line-height: 24px;
+    text-decoration: underline;
     overflow-wrap: anywhere;
 }
 
+/* icon box */
 .columns.about-us p.columns-website a:any-link::before {
     content: '';
     flex: none;
-    width: 20px;
-    height: 20px;
-    background-color: currentcolor;
-    mask: url('../../icons/globe.svg') center / contain no-repeat;
+    box-sizing: border-box;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #dedede;
+    border-radius: 8px;
+    background-color: var(--surface-color);
 }
 
-.columns.about-us p.columns-website a:any-link:hover {
-    text-decoration: underline;
+/* globe, centered in the box (12px padding) */
+.columns.about-us p.columns-website a:any-link::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    width: 16px;
+    height: 16px;
+    background-color: currentcolor;
+    mask: url('../../icons/globe.svg') center / contain no-repeat;
+    transform: translateY(-50%);
+}
+
+:where(.desktop-view) .columns.about-us p.columns-website a:any-link {
+    font-size: var(--heading-font-size-s);
 }
 
 :where(.desktop-view) .columns.columns-split > div {
