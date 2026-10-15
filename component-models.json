@@ -1087,10 +1087,9 @@
         ]
       },
       {
-        "component": "multiselectCaa",
+        "component": "multiselect",
         "name": "card-classes",
         "label": "Card Classes",
-        "valueType": "string",
         "options": [
           {
             "name": "Carousel Card",
