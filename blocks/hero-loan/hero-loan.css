@@ -110,7 +110,7 @@
 .hero-loan .hero-loan-dots {
   position: absolute;
   left: 50%;
-  bottom: 92px;
+  top: 212px; /* below the 2-line heading and 3-line text of the mobile layout */
   display: flex;
   align-items: center;
   gap: 0;
@@ -232,6 +232,7 @@
 
 :where(.desktop-view) .hero-loan .hero-loan-dots {
   left: var(--fb-inset);
+  top: auto;
   bottom: 48px;
   transform: none;
 }
