@@ -4,7 +4,6 @@ import { createDropdown } from '../../scripts/dropdown.js';
 import { MEDIA } from '../../scripts/viewport.js';
 
 const VISIBLE_CATEGORIES = 5;
-const SLIDE_INTERVAL = 6000;
 
 function cellText(row) {
   return row?.textContent.trim() || '';
@@ -168,7 +167,7 @@ function buildForm(config, isProduct) {
   return card;
 }
 
-function buildSlides(rows, block) {
+function buildSlides(rows) {
   const slides = document.createElement('ul');
   slides.className = 'hero-loan-slides';
   rows.forEach((row, i) => {
@@ -230,7 +229,6 @@ function buildSlides(rows, block) {
   const dots = document.createElement('div');
   dots.className = 'hero-loan-dots';
   let current = 0;
-  let timer;
   const show = (index) => {
     current = (index + rows.length) % rows.length;
     [...slides.children].forEach((slide, i) => {
@@ -247,37 +245,8 @@ function buildSlides(rows, block) {
     dot.addEventListener('click', () => show(i));
     dots.append(dot);
   });
+  // no autoplay: slides change only when the visitor selects a dot
   show(0);
-
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  // pause / play the slideshow (WCAG 2.2.2)
-  let paused = reduceMotion;
-  const toggle = document.createElement('button');
-  toggle.type = 'button';
-  toggle.className = 'hero-loan-pause';
-  const setPaused = (value) => {
-    paused = value;
-    toggle.setAttribute('aria-label', paused ? 'Play slideshow' : 'Pause slideshow');
-    toggle.classList.toggle('is-paused', paused);
-  };
-  setPaused(paused);
-  dots.append(toggle);
-  const start = () => {
-    if (paused) return;
-    clearInterval(timer);
-    timer = setInterval(() => show(current + 1), SLIDE_INTERVAL);
-  };
-  const stop = () => clearInterval(timer);
-  toggle.addEventListener('click', () => {
-    setPaused(!paused);
-    if (paused) stop();
-    else start();
-  });
-  block.addEventListener('mouseenter', stop);
-  block.addEventListener('mouseleave', start);
-  block.addEventListener('focusin', stop);
-  block.addEventListener('focusout', start);
-  start();
 
   slides.dots = dots;
   return slides;
@@ -337,7 +306,7 @@ export default function decorate(block) {
   const config = rows.filter((row) => row.children.length <= 1);
   const isProduct = block.classList.contains('product');
 
-  const slides = buildSlides(slideRows, block);
+  const slides = buildSlides(slideRows);
   const inner = document.createElement('div');
   inner.className = 'hero-loan-inner';
   if (slides.dots) inner.append(slides.dots);

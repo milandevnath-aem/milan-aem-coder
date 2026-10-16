@@ -30,12 +30,15 @@
               "amount_min": 100000,
               "amount_max": 10000000,
               "amount_default": 5000000,
+              "amount_step": 10000,
               "rate_min": 8,
               "rate_max": 24,
               "rate_default": 8,
+              "rate_step": 0.1,
               "tenure_min": 1,
               "tenure_max": 7,
-              "tenure_default": 5
+              "tenure_default": 5,
+              "tenure_step": 1
             }
           }
         }
@@ -97,55 +100,142 @@
           "component": "number",
           "valueType": "number",
           "name": "amount_min",
-          "label": "Minimum loan amount (₹)"
+          "label": "Minimum loan amount (₹)",
+          "required": true,
+          "validation": {
+            "numberMin": 1,
+            "customErrorMsg": "Enter a number of at least 1."
+          },
+          "description": "Must not be more than the maximum."
         },
         {
           "component": "number",
           "valueType": "number",
           "name": "amount_max",
-          "label": "Maximum loan amount (₹)"
+          "label": "Maximum loan amount (₹)",
+          "required": true,
+          "validation": {
+            "numberMin": 1,
+            "customErrorMsg": "Enter a number of at least 1."
+          },
+          "description": "Must not be less than the minimum."
         },
         {
           "component": "number",
           "valueType": "number",
           "name": "amount_default",
-          "label": "Default loan amount (₹)"
+          "label": "Default loan amount (₹)",
+          "required": true,
+          "validation": {
+            "numberMin": 1,
+            "customErrorMsg": "Enter a number of at least 1."
+          },
+          "description": "Starting value. Must be between the minimum and maximum, otherwise the nearest limit is used."
+        },
+        {
+          "component": "number",
+          "valueType": "number",
+          "name": "amount_step",
+          "label": "Slider step (₹)",
+          "description": "How much one slider move changes the value, e.g. 10,000. Must be more than 0 and no more than the range.",
+          "validation": {
+            "numberMin": 1,
+            "customErrorMsg": "Enter a step of at least 1."
+          }
         },
         {
           "component": "number",
           "valueType": "number",
           "name": "rate_min",
-          "label": "Minimum interest rate (%)"
+          "label": "Minimum interest rate (%)",
+          "required": true,
+          "validation": {
+            "numberMin": 0,
+            "customErrorMsg": "Enter a number of 0 or more."
+          },
+          "description": "Must not be more than the maximum."
         },
         {
           "component": "number",
           "valueType": "number",
           "name": "rate_max",
-          "label": "Maximum interest rate (%)"
+          "label": "Maximum interest rate (%)",
+          "required": true,
+          "validation": {
+            "numberMin": 0,
+            "customErrorMsg": "Enter a number of 0 or more."
+          },
+          "description": "Must not be less than the minimum."
         },
         {
           "component": "number",
           "valueType": "number",
           "name": "rate_default",
-          "label": "Default interest rate (%)"
+          "label": "Default interest rate (%)",
+          "required": true,
+          "validation": {
+            "numberMin": 0,
+            "customErrorMsg": "Enter a number of 0 or more."
+          },
+          "description": "Starting value. Must be between the minimum and maximum, otherwise the nearest limit is used."
+        },
+        {
+          "component": "number",
+          "valueType": "number",
+          "name": "rate_step",
+          "label": "Slider step (%)",
+          "description": "How much one slider move changes the value, e.g. 0.1. Must be more than 0 and no more than the range.",
+          "validation": {
+            "numberMin": 0.01,
+            "customErrorMsg": "Enter a step of at least 0.01."
+          }
         },
         {
           "component": "number",
           "valueType": "number",
           "name": "tenure_min",
-          "label": "Minimum tenure (years)"
+          "label": "Minimum tenure (years)",
+          "required": true,
+          "validation": {
+            "numberMin": 1,
+            "customErrorMsg": "Enter a number of at least 1."
+          },
+          "description": "Must not be more than the maximum."
         },
         {
           "component": "number",
           "valueType": "number",
           "name": "tenure_max",
-          "label": "Maximum tenure (years)"
+          "label": "Maximum tenure (years)",
+          "required": true,
+          "validation": {
+            "numberMin": 1,
+            "customErrorMsg": "Enter a number of at least 1."
+          },
+          "description": "Must not be less than the minimum."
         },
         {
           "component": "number",
           "valueType": "number",
           "name": "tenure_default",
-          "label": "Default tenure (years)"
+          "label": "Default tenure (years)",
+          "required": true,
+          "validation": {
+            "numberMin": 1,
+            "customErrorMsg": "Enter a number of at least 1."
+          },
+          "description": "Starting value. Must be between the minimum and maximum, otherwise the nearest limit is used."
+        },
+        {
+          "component": "number",
+          "valueType": "number",
+          "name": "tenure_step",
+          "label": "Slider step (years)",
+          "description": "How much one slider move changes the value, e.g. 1. Must be more than 0 and no more than the range.",
+          "validation": {
+            "numberMin": 1,
+            "customErrorMsg": "Enter a step of at least 1."
+          }
         }
       ]
     }

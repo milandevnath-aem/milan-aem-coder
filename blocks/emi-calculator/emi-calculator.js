@@ -3,30 +3,29 @@ import { createPicture } from '../../scripts/images.js';
 
 const inr = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 });
 
+// [min, max, default, slider step]
 const DEFAULTS = {
-  amount: [100000, 10000000, 5000000],
-  rate: [8, 24, 8],
-  tenure: [1, 7, 5],
+  amount: [100000, 10000000, 5000000, 10000],
+  rate: [8, 24, 8, 0.1],
+  tenure: [1, 7, 5, 1],
 };
+
+const NAMES = { amount: 'loan amount', rate: 'interest rate', tenure: 'tenure' };
 
 let idCounter = 0;
 
 /**
- * Reads the numbers of a grouped cell (min, max, default in any order).
- * @returns {number[]} [min, max, default]
+ * Reads the numbers of a grouped cell: one paragraph per field, in model order
+ * (minimum, maximum, default, step). A missing or empty field falls back to its default.
+ * @returns {number[]} [min, max, default, step]
  */
-function readRange(cell, [dMin, dMax, dValue]) {
-  if (!cell) return [dMin, dMax, dValue];
+function readRange(cell, defaults) {
+  if (!cell) return defaults;
   const parts = cell.children.length
     ? [...cell.children].map((el) => el.textContent)
     : cell.textContent.split(/[\s,;|]+/);
-  const values = parts
-    .map((t) => parseFloat(t.replace(/[^0-9.]/g, '')))
-    .filter(Number.isFinite)
-    .sort((a, b) => a - b);
-  if (values.length >= 3) return [values[0], values[values.length - 1], values[1]];
-  if (values.length === 2) return [values[0], values[1], values[0]];
-  return [dMin, dMax, dValue];
+  const values = parts.map((t) => parseFloat(t.replace(/[^0-9.]/g, '')));
+  return defaults.map((fallback, i) => (Number.isFinite(values[i]) ? values[i] : fallback));
 }
 
 function formatAmountShort(value) {
@@ -87,7 +86,7 @@ function sliderGroup(id, label) {
   return group;
 }
 
-function buildCalculator(types, link) {
+function buildCalculator(types, link, isAuthoring) {
   idCounter += 1;
   const uid = `emi-calculator-${idCounter}`;
   const card = document.createElement('div');
@@ -110,6 +109,13 @@ function buildCalculator(types, link) {
     tablist.append(tab);
   });
   if (types.length > 1) controls.append(tablist);
+
+  // Universal Editor only: what is wrong with the selected loan type's numbers
+  const authorNote = document.createElement('div');
+  authorNote.className = 'emi-calculator-author-note';
+  authorNote.setAttribute('role', 'status');
+  authorNote.hidden = true;
+  if (isAuthoring) controls.append(authorNote);
 
   const fields = {
     amount: sliderGroup(`${uid}-amount`, 'Loan requirement'),
@@ -155,6 +161,37 @@ function buildCalculator(types, link) {
     amount: formatAmountShort,
     rate: (v) => `${v}%`,
     tenure: years,
+  };
+
+  /**
+   * Keeps authored numbers usable: minimum not above maximum, default within
+   * them, a step that fits the range. Each fix comes with a message for authors.
+   */
+  const sanitize = (key, [rawMin, rawMax, rawValue, rawStep]) => {
+    const f = bounds[key];
+    const name = NAMES[key];
+    const notes = [];
+    let min = rawMin;
+    let max = rawMax;
+    if (min > max) {
+      notes.push(`Minimum ${name} (${f(min)}) is above the maximum (${f(max)}). The two are swapped.`);
+      [min, max] = [max, min];
+    }
+    const value = Math.min(max, Math.max(min, rawValue));
+    if (rawValue < min) {
+      notes.push(`Default ${name} (${f(rawValue)}) is below the minimum (${f(min)}). The calculator starts at ${f(min)}.`);
+    } else if (rawValue > max) {
+      notes.push(`Default ${name} (${f(rawValue)}) is above the maximum (${f(max)}). The calculator starts at ${f(max)}.`);
+    }
+    const fallback = DEFAULTS[key][3];
+    let step = rawStep;
+    if (!(step > 0) || (max > min && step > max - min)) {
+      notes.push(`Slider step for ${name} (${rawStep}) must be more than 0 and no more than the range (${max - min}). ${fallback} is used.`);
+      step = fallback;
+    }
+    return {
+      min, max, value, step, notes,
+    };
   };
 
   const update = () => {
@@ -270,19 +307,35 @@ function buildCalculator(types, link) {
       tab.setAttribute('aria-selected', i === index);
       tab.tabIndex = i === index ? 0 : -1;
     });
-    const steps = { amount: 10000, rate: 0.1, tenure: 1 };
+    const notes = [];
     Object.entries(fields).forEach(([key, group]) => {
-      const [min, max, value] = type[key];
+      const {
+        min, max, value, step, notes: fieldNotes,
+      } = sanitize(key, type[key]);
+      notes.push(...fieldNotes);
       const range = group.querySelector('.emi-calculator-range');
       range.min = min;
       range.max = max;
-      range.step = steps[key];
+      range.step = step;
       const [lo, hi] = group.querySelectorAll('.emi-calculator-bounds span');
       lo.textContent = bounds[key](min);
       hi.textContent = bounds[key](max);
       state[key] = value;
       setInvalid(group, false);
     });
+    authorNote.replaceChildren();
+    if (notes.length) {
+      const heading = document.createElement('p');
+      heading.textContent = `Check the settings of "${type.title}":`;
+      const list = document.createElement('ul');
+      notes.forEach((text) => {
+        const li = document.createElement('li');
+        li.textContent = text;
+        list.append(li);
+      });
+      authorNote.append(heading, list);
+    }
+    authorNote.hidden = !notes.length;
     update();
     // keep the selected tab in view when the tab row scrolls (small screens)
     const tab = tablist.children[index];
@@ -348,5 +401,7 @@ export default function decorate(block) {
     types.push(parseLoanType(fallback));
   }
 
-  block.replaceChildren(intro, buildCalculator(types, linkRow?.querySelector('a')));
+  // instrumented for the Universal Editor: authors see messages about invalid settings
+  const isAuthoring = block.hasAttribute('data-aue-resource');
+  block.replaceChildren(intro, buildCalculator(types, linkRow?.querySelector('a'), isAuthoring));
 }
