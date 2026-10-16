@@ -6,11 +6,12 @@
 
 .testimonials .testimonials-track {
   display: flex;
-  gap: var(--spacing-lg);
+  gap: var(--gb-offset); /* next card starts right at the screen edge, so it stays hidden */
   margin: 0;
-  padding: 0;
+  padding: 0 var(--gb-offset);
   list-style: none;
   overflow-x: auto;
+  scroll-padding: 0 var(--gb-offset);
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
 }
@@ -94,6 +95,7 @@
   justify-content: flex-end;
   gap: 12px;
   margin-top: 32px;
+  padding-right: var(--gb-offset);
 }
 
 .testimonials .testimonials-controls button {
@@ -130,7 +132,9 @@
   min-height: 260px;
 }
 
-/* the wrapper has no right padding in the desktop view: line the buttons up with the grid */
-:where(.desktop-view) .testimonials .testimonials-controls {
-  padding-right: var(--gb-offset);
+/* desktop view: the wrapper starts on the grid and the next cards peek in from the right */
+:where(.desktop-view) .testimonials .testimonials-track {
+  gap: var(--spacing-lg);
+  padding: 0;
+  scroll-padding: 0;
 }

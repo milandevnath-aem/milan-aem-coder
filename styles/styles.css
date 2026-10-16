@@ -598,15 +598,15 @@ main > .section.feature-banner-container + .section {
   margin-top: var(--section-spacing);
 }
 
-/* on the grid on small screens (one card at a time); desktop view scrolls off the right edge */
+/* full bleed on small screens so cards slide to the screen edge; the track pads itself onto the grid */
 main > .section > .testimonials-wrapper {
   max-width: none;
-  padding-right: var(--gb-offset);
-  padding-left: var(--gb-offset);
+  padding-right: 0;
+  padding-left: 0;
 }
 
 :where(.desktop-view) main > .section > .testimonials-wrapper {
-  padding-right: 0;
+  padding-left: var(--gb-offset);
 }
 
 /* offers continue straight on from the highlighted EMI section */
