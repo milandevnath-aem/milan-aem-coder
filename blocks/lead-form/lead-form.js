@@ -65,6 +65,32 @@ function errorMessage(label, kind) {
   return `Enter your ${label.toLowerCase().replace(/^your /, '')}`;
 }
 
+/**
+ * Keeps an input to digits only, up to a length: other typed characters are blocked,
+ * pasted, dropped or autofilled text is cleaned (the caret stays after the same digit).
+ * @param {HTMLInputElement} input
+ * @param {number} max maximum number of digits
+ */
+function digitsOnly(input, max) {
+  input.addEventListener('beforeinput', (e) => {
+    if (!e.data || !e.inputType.startsWith('insert')) return;
+    const room = max - (input.value.length - (input.selectionEnd - input.selectionStart));
+    // a typed non-digit, or digits with no room left; longer mixed text (a pasted
+    // "560 001") goes through and is cleaned below
+    if (/^\D$/.test(e.data) || (/^\d+$/.test(e.data) && e.data.length > room)) e.preventDefault();
+  });
+  // runs before the form's own input listener, so validation sees the cleaned value
+  input.addEventListener('input', () => {
+    const clean = input.value.replace(/\D/g, '').slice(0, max);
+    if (clean === input.value) return;
+    const caret = input.selectionStart ?? input.value.length;
+    const digitsBefore = input.value.slice(0, caret).replace(/\D/g, '').length;
+    input.value = clean;
+    const pos = Math.min(digitsBefore, clean.length);
+    input.setSelectionRange(pos, pos);
+  });
+}
+
 function textField(label, kind, required) {
   const field = document.createElement('label');
   field.className = `lead-form-input lead-form-${kind}`;
@@ -87,8 +113,9 @@ function textField(label, kind, required) {
     Object.assign(input, { type: 'email', autocomplete: 'email' });
   } else if (kind === 'zip') {
     Object.assign(input, {
-      type: 'text', inputMode: 'numeric', pattern: '[1-9][0-9]{5}', maxLength: 6, autocomplete: 'postal-code',
+      type: 'text', inputMode: 'numeric', pattern: '[1-9][0-9]{5}', autocomplete: 'postal-code',
     });
+    digitsOnly(input, 6);
   } else {
     input.type = 'text';
     // first and last name get their own autofill values, or the full name fills both
@@ -411,11 +438,15 @@ export default function decorate(block) {
   });
 
   // values carried over from another form (e.g. the hero call-back form)
+  // a value may also be a list of candidates (most specific first): a dropdown takes the
+  // first one that matches one of its options and is left unchanged when none does
   form.prefill = (data) => {
     const inputs = [...form.querySelectorAll('input[name]')].filter((i) => i.type !== 'hidden');
     const first = inputs.find((i) => i.autocomplete === 'given-name');
     const last = inputs.find((i) => i.autocomplete === 'family-name');
-    Object.entries(data).forEach(([key, value]) => {
+    Object.entries(data).forEach(([key, raw]) => {
+      const candidates = [].concat(raw).map((v) => String(v ?? '').trim()).filter(Boolean);
+      const [value] = candidates;
       if (!value) return;
       const name = key.replace(/^your-/, '');
       // one full name into separate first and last name fields: split at the first space
@@ -432,7 +463,8 @@ export default function decorate(block) {
         const n = d.querySelector('input[type="hidden"]').name;
         return n === name || n.endsWith(`-${name}`) || name.endsWith(`-${n}`);
       });
-      dropdown?.setValue(value);
+      const match = dropdown && candidates.find((c) => dropdown.hasOption(c));
+      if (match) dropdown.setValue(match);
     });
     refresh();
   };

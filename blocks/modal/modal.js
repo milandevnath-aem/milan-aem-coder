@@ -92,8 +92,11 @@ export async function createModal(contentNodes, { className = '', label = '' } =
 /**
  * Loads a fragment page and shows it in a modal.
  * @param {string} url link to the modal page
+ * @param {Object} [options]
+ * @param {Object} [options.prefill] values for a form in the modal (see lead-form prefill),
+ *   e.g. the loan category of the button that opened it
  */
-export async function openModal(url) {
+export async function openModal(url, { prefill } = {}) {
   const path = new URL(url, window.location).pathname;
   const fragment = await loadFragment(path);
   if (!fragment) return null;
@@ -102,6 +105,7 @@ export async function openModal(url) {
     className: fragment.querySelector('.block') ? '' : 'modal-details',
     label: fragment.querySelector('h1, h2')?.textContent.trim() || '',
   });
+  if (prefill) modal.dialog.querySelector('form')?.prefill?.(prefill);
   modal.showModal();
   return modal;
 }
