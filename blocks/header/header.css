@@ -838,6 +838,7 @@ header .nav-search-bar input {
   font-weight: 500;
   line-height: 20px;
   outline: none;
+  box-shadow: none;
   caret-color: var(--text-color);
 }
 

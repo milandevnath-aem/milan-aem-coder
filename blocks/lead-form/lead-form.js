@@ -96,14 +96,55 @@ function textField(label, kind, required) {
     input.rows = 4;
   } else {
     input.type = 'text';
-    if (/first name/i.test(label)) input.autocomplete = 'given-name';
-    else if (/last name/i.test(label)) input.autocomplete = 'family-name';
-    else if (/^(your )?name$/i.test(label)) input.autocomplete = 'name';
+    // first and last name get their own autofill values, or the full name fills both
+    if (/\b(first|given)\b.*name/i.test(label)) input.autocomplete = 'given-name';
+    else if (/\b(last|sur|family)\s*name/i.test(label)) input.autocomplete = 'family-name';
+    else if (/name/i.test(label)) input.autocomplete = 'name';
   }
   const control = document.createElement('span');
   control.className = 'lead-form-control';
   control.append(input, span);
   field.append(control);
+  return field;
+}
+
+/**
+ * Multi-line field with a character count ("125/150") under the text.
+ * @param {string} label field label
+ * @param {boolean} required
+ * @param {number} max character limit
+ */
+function textareaField(label, required, max) {
+  errorCount += 1;
+  const id = `lead-form-textarea-${errorCount}`;
+  // a div, not a label: the count and limit must not join the field's name
+  const field = document.createElement('div');
+  field.className = 'lead-form-input lead-form-textarea';
+  const textarea = document.createElement('textarea');
+  Object.assign(textarea, {
+    id, name: slug(label), placeholder: ' ', required, maxLength: max, rows: 3,
+  });
+  const name = document.createElement('label');
+  name.className = 'lead-form-label';
+  name.htmlFor = id;
+  name.textContent = label;
+  const control = document.createElement('span');
+  control.className = 'lead-form-control';
+  control.append(textarea, name);
+  // the count is visual only; screen readers hear the limit once instead of every keystroke
+  const count = document.createElement('span');
+  count.className = 'lead-form-count';
+  count.setAttribute('aria-hidden', 'true');
+  const hint = document.createElement('span');
+  hint.className = 'visually-hidden';
+  hint.id = `${id}-hint`;
+  hint.textContent = `Up to ${max} characters`;
+  textarea.setAttribute('aria-describedby', hint.id);
+  const update = () => { count.textContent = `${textarea.value.length}/${max}`; };
+  textarea.addEventListener('input', update);
+  update();
+  field.addEventListener('click', (e) => { if (e.target === field) textarea.focus(); });
+  field.append(control, count, hint);
   return field;
 }
 
@@ -247,13 +288,24 @@ export default function decorate(block) {
   let captcha;
 
   fieldRows.forEach((row) => {
-    const [labelCell, kindCell, optionsCell, requiredCell] = row.children;
+    const [labelCell, kindCell, optionsCell, requiredCell, halfCell] = row.children;
     const label = labelCell?.textContent.trim() || 'Field';
-    const kind = kindCell?.textContent.trim() || 'text';
+    let kind = kindCell?.textContent.trim() || 'text';
+    const optionsText = optionsCell?.textContent.trim() || '';
+    // fields left as plain text: a description is multi-line, a field with a list of
+    // options is a dropdown (searchable when the list is long)
+    if (kind === 'text' && /descri|message|comment|remark/i.test(label)) kind = 'textarea';
+    else if (kind === 'text' && optionsText.includes(',')) {
+      kind = optionsText.split(',').length > 6 ? 'search' : 'select';
+    }
     const required = requiredCell?.textContent.trim() !== 'false';
+    // each field and its error share one grid cell; half-width cells pair up on a line
+    const item = document.createElement('div');
+    item.className = 'lead-form-item';
+    if (halfCell?.textContent.trim() === 'true') item.classList.add('is-half');
     let field;
     if (kind === 'select' || kind === 'search') {
-      const { options, value } = parseOptions(optionsCell?.textContent || '');
+      const { options, value } = parseOptions(optionsText);
       field = createDropdown({
         label,
         name: slug(label),
@@ -269,13 +321,15 @@ export default function decorate(block) {
     } else if (kind === 'captcha') {
       field = captchaField(label);
       captcha = field;
+    } else if (kind === 'textarea') {
+      field = textareaField(label, required, parseInt(optionsText, 10) || 150);
     } else {
       field = textField(label, kind === 'text-half' ? 'text' : kind, required);
     }
     moveInstrumentation(row, field);
     // text error under each field: what is wrong and how to fix it
-    const control = field.querySelector('.dropdown-field')
-      || field.querySelector('input:not([type="hidden"]), textarea');
+    const control = field.querySelector('.dropdown-field') || field.querySelector('input:not([type="hidden"]), textarea');
+    item.append(field);
     if (control) {
       const error = fieldError(control, errorMessage(label, kind));
       const isDropdown = dropdowns.includes(field);
@@ -285,22 +339,26 @@ export default function decorate(block) {
       checks.push({
         field, control, error, valid,
       });
-      if (kind === 'text-half') {
-        // two half-width fields side by side on desktop (e.g. first and last name)
-        const col = document.createElement('div');
-        col.className = 'lead-form-col';
-        col.append(field, error.el);
-        const last = fields.lastElementChild;
-        if (last?.classList.contains('lead-form-row') && last.children.length === 1) last.append(col);
-        else {
-          const pair = document.createElement('div');
-          pair.className = 'lead-form-row';
-          pair.append(col);
-          fields.append(pair);
-        }
-      } else fields.append(field, error.el);
-    } else fields.append(field);
+      item.append(error.el);
+    }
+    fields.append(item);
   });
+  // two name fields in a row (Name + LName, First name + Last name) are first and last
+  // name: they share a line 50/50, Half width ticked or not
+  const items = [...fields.children];
+  const nameInput = (item) => [...item.querySelectorAll('.lead-form-text input')]
+    .find((input) => /name/.test(input.name));
+  for (let i = 0; i < items.length - 1; i += 1) {
+    const first = nameInput(items[i]);
+    const last = nameInput(items[i + 1]);
+    if (first && last) {
+      first.autocomplete = 'given-name';
+      last.autocomplete = 'family-name';
+      items[i].classList.add('is-half');
+      items[i + 1].classList.add('is-half');
+      i += 1;
+    }
+  }
   form.append(fields);
 
   const legal = document.createElement('div');
@@ -465,11 +523,21 @@ export default function decorate(block) {
 
   // values carried over from another form (e.g. the hero call-back form)
   form.prefill = (data) => {
+    const inputs = [...form.querySelectorAll('input[name]')].filter((i) => i.type !== 'hidden');
+    const first = inputs.find((i) => i.autocomplete === 'given-name');
+    const last = inputs.find((i) => i.autocomplete === 'family-name');
     Object.entries(data).forEach(([key, value]) => {
       if (!value) return;
       const name = key.replace(/^your-/, '');
-      const input = [...form.querySelectorAll('input[name]')]
-        .find((i) => i.type !== 'hidden' && (i.name === name || i.name.endsWith(`-${name}`) || name.endsWith(`-${i.name}`)));
+      // one full name into separate first and last name fields: split at the first space
+      if (name === 'name' && first && last) {
+        const [given, ...rest] = value.trim().split(/\s+/);
+        first.value = given;
+        last.value = rest.join(' ');
+        return;
+      }
+      const input = inputs
+        .find((i) => i.name === name || i.name.endsWith(`-${name}`) || name.endsWith(`-${i.name}`));
       if (input) input.value = value;
       const dropdown = dropdowns.find((d) => {
         const n = d.querySelector('input[type="hidden"]').name;

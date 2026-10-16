@@ -43,11 +43,13 @@ export function highlight(el, text, query) {
  * @param {string} [config.searchPlaceholder]
  * @param {boolean} [config.pinSelected] list the selected option first when reopened
  * @param {boolean} [config.required]
+ * @param {string} [config.boundary] selector of an ancestor (e.g. a banner) the open
+ *   panel must stay inside: the list is shortened and scrolls instead of overflowing it
  * @returns {HTMLDivElement} the dropdown; dispatches "change", exposes value/setValue()
  */
 export function createDropdown({
   label, name, options, value = '', search = false, searchPlaceholder = 'Search',
-  pinSelected = false, required = false,
+  pinSelected = false, required = false, boundary = '',
 }) {
   if (!cssLoaded) cssLoaded = loadCSS(`${window.hlx.codeBasePath}/styles/dropdown.css`);
   idCounter += 1;
@@ -161,8 +163,19 @@ export function createDropdown({
       empty.textContent = 'No results found';
       list.append(empty);
     }
-    panel.classList.toggle('is-scrollable', matches.length > 6);
     active = -1;
+  };
+
+  // shortens the list to keep the panel inside the boundary, flags it when it scrolls
+  const fitPanel = () => {
+    list.style.maxHeight = '';
+    const area = boundary && root.closest(boundary);
+    if (area) {
+      const limit = area.getBoundingClientRect().bottom - 24;
+      const overflow = panel.getBoundingClientRect().bottom - limit;
+      if (overflow > 0) list.style.maxHeight = `${Math.max(list.offsetHeight - overflow, 120)}px`;
+    }
+    panel.classList.toggle('is-scrollable', list.scrollHeight > list.clientHeight);
   };
 
   const close = (focusField = false) => {
@@ -179,6 +192,7 @@ export function createDropdown({
     panel.hidden = false;
     field.setAttribute('aria-expanded', 'true');
     root.classList.add('is-open');
+    fitPanel();
     const selectedIndex = visibleOptions().findIndex((li) => li.dataset.value === input.value);
     if (selectedIndex >= 0) setActive(selectedIndex);
     if (searchInput) {
@@ -234,6 +248,7 @@ export function createDropdown({
     searchInput.addEventListener('input', () => {
       searchInput.parentElement.querySelector('.dropdown-clear').hidden = !searchInput.value;
       render(searchInput.value);
+      fitPanel();
       if (searchInput.value) setActive(0);
     });
   }

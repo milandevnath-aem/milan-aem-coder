@@ -94,6 +94,7 @@
             { "name": "Mobile number (+91)", "value": "tel" },
             { "name": "Email", "value": "email" },
             { "name": "Postal code", "value": "zip" },
+            { "name": "Multi-line text", "value": "textarea" },
             { "name": "Dropdown", "value": "select" },
             { "name": "Dropdown with search", "value": "search" },
             { "name": "Captcha", "value": "captcha" }
@@ -104,7 +105,7 @@
           "valueType": "string",
           "name": "options",
           "label": "Options",
-          "description": "Dropdowns only: comma separated. Add a second line with a colon, e.g. Mumbai: Maharashtra.",
+          "description": "Dropdowns: comma separated. Add a second line with a colon, e.g. Mumbai: Maharashtra. Multi-line text: the character limit (default 150).",
           "value": ""
         },
         {
@@ -113,6 +114,14 @@
           "name": "required",
           "label": "Required",
           "value": true
+        },
+        {
+          "component": "boolean",
+          "valueType": "boolean",
+          "name": "halfWidth",
+          "label": "Half width",
+          "description": "Two half-width fields in a row share one line. First name and Last name do this automatically.",
+          "value": false
         }
       ]
     }

@@ -19,6 +19,7 @@ module.exports = {
     'linebreak-style': ['error', 'unix'], // enforce unix linebreaks
     'no-param-reassign': [2, { props: false }], // allow modifying properties of param
     // section properties render as key/value section metadata, not block cells
-    'xwalk/max-cells': ['error', { '*': 4, section: 5 }],
+    // lead form fields: label, type, options, required, half width
+    'xwalk/max-cells': ['error', { '*': 4, section: 5, 'lead-form-field': 5 }],
   },
 };
