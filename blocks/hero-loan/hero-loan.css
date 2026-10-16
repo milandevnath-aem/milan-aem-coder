@@ -113,17 +113,17 @@
   top: 212px; /* below the 2-line heading and 3-line text of the mobile layout */
   display: flex;
   align-items: center;
-  gap: 0;
+  gap: 4px;
   transform: translateX(-50%);
   pointer-events: auto;
 }
 
-/* 10px dots and a 26px active pill (Figma), inside a 24px tall hit area (WCAG 2.5.8) */
+/* 8x8 dots and a 20x8 active pill with a 4px gap (Figma) */
 .hero-loan .hero-loan-dots .hero-loan-dot {
   position: relative;
   box-sizing: border-box;
-  width: 16px;
-  height: 24px;
+  width: var(--spacing-md);
+  height: var(--spacing-md);
   margin: 0;
   border: 0;
   padding: 0;
@@ -137,20 +137,25 @@
   position: absolute;
   top: 50%;
   left: 0;
-  width: var(--spacing-md);
+  width: 100%;
   height: var(--spacing-md);
-  border-radius: 5px;
+  border-radius: var(--spacing-lg);
   background-color: var(--color-icon-secondary-default-disabled);
   transform: translateY(-50%);
-  transition: width 0.3s;
+}
+
+/* tap area: 24px tall (WCAG 2.5.8), reaches halfway into the 4px gap on both sides */
+.hero-loan .hero-loan-dots .hero-loan-dot::after {
+  content: '';
+  position: absolute;
+  inset: -8px -2px;
 }
 
 .hero-loan .hero-loan-dots .hero-loan-dot[aria-current='true'] {
-  width: var(--spacing-4xl);
+  width: var(--spacing-2xl);
 }
 
 .hero-loan .hero-loan-dots .hero-loan-dot[aria-current='true']::before {
-  width: var(--spacing-2xl);
   background-color: var(--color-icon-primary-inverse-base);
 }
 
