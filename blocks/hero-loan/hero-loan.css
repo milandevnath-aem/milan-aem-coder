@@ -294,6 +294,7 @@
   font-weight: inherit;
   line-height: inherit;
   outline: none;
+  box-shadow: none;
 }
 
 .hero-loan .hero-loan-input input::placeholder {

@@ -85,6 +85,7 @@
 
 .article-cards .article-cards-link:focus-visible {
   outline: none;
+  box-shadow: none;
 }
 
 .article-cards .article-cards-clickable:has(.article-cards-link:focus-visible) {

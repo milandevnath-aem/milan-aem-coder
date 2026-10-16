@@ -19,6 +19,19 @@ function loadModalCss() {
 }
 
 /**
+ * Plays the close animation (.modal-closing), then closes the dialog.
+ * Closes right away when there is no animation (e.g. reduced motion).
+ * @param {HTMLDialogElement} dialog
+ */
+function animateClose(dialog) {
+  if (!dialog.open || dialog.classList.contains('modal-closing')) return;
+  dialog.classList.add('modal-closing');
+  const animations = dialog.getAnimations?.() || [];
+  Promise.allSettled(animations.map((animation) => animation.finished))
+    .then(() => dialog.close());
+}
+
+/**
  * Creates a modal dialog around the given content.
  * @param {Node[]} contentNodes content to show in the dialog
  * @param {Object} options { className, label }
@@ -43,7 +56,7 @@ export async function createModal(contentNodes, { className = '', label = '' } =
   close.className = 'modal-close';
   close.setAttribute('aria-label', 'Close');
   close.innerHTML = `<img src="${window.hlx.codeBasePath}/icons/close.svg" alt="" width="24" height="24">`;
-  close.addEventListener('click', () => dialog.close());
+  close.addEventListener('click', () => animateClose(dialog));
 
   const content = document.createElement('div');
   content.className = 'modal-content';
@@ -52,7 +65,12 @@ export async function createModal(contentNodes, { className = '', label = '' } =
 
   // click on the backdrop (or the dialog area around the card) closes the dialog
   dialog.addEventListener('click', (e) => {
-    if (e.target === dialog) dialog.close();
+    if (e.target === dialog) animateClose(dialog);
+  });
+  // Esc / light dismiss: play the close animation first (if the browser lets us)
+  dialog.addEventListener('cancel', (e) => {
+    e.preventDefault();
+    animateClose(dialog);
   });
   dialog.addEventListener('close', () => {
     document.body.classList.remove('modal-open');
@@ -67,7 +85,7 @@ export async function createModal(contentNodes, { className = '', label = '' } =
       document.body.classList.add('modal-open');
       content.scrollTop = 0;
     },
-    close: () => dialog.close(),
+    close: () => animateClose(dialog),
   };
 }
 

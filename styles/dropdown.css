@@ -123,6 +123,7 @@
   font-weight: 500;
   line-height: 24px;
   outline: none;
+  box-shadow: none;
 }
 
 .dropdown-search input::placeholder {
@@ -162,6 +163,7 @@
   list-style: none;
   overflow-y: auto;
   outline: none;
+  box-shadow: none;
   scrollbar-width: thin;
   scrollbar-color: #bababa transparent;
 }

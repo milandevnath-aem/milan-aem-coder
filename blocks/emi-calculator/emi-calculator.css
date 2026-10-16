@@ -185,6 +185,7 @@
   letter-spacing: inherit;
   text-align: right;
   outline: none;
+  box-shadow: none;
 }
 
 .emi-calculator .emi-calculator-suffix:not(:empty) {
