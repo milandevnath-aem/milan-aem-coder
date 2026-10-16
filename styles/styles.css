@@ -635,6 +635,7 @@ main .default-content-wrapper > h2:first-child {
   font-weight: 500;
   line-height: var(--type-display-line);
   letter-spacing: var(--type-display-ls);
+  color:  var(--color-text-primary-default-base);
 }
 
 :where(.desktop-view) main .default-content-wrapper > h2:only-child {
