@@ -1,5 +1,5 @@
 .testimonials {
-  --testimonials-card-width: 330px;
+  --testimonials-card-width: 100%;
   --testimonials-card-padding: 24px;
   --testimonials-card-bg: var(--surface-color);
 }
@@ -94,9 +94,6 @@
   justify-content: flex-end;
   gap: 12px;
   margin-top: 32px;
-
-  /* the wrapper keeps the full bleed margin on the right: line the buttons up with the grid */
-  padding-right: calc(var(--gb-offset));
 }
 
 .testimonials .testimonials-controls button {
@@ -131,4 +128,9 @@
 
 :where(.desktop-view) .testimonials .testimonials-item {
   min-height: 260px;
+}
+
+/* the wrapper has no right padding in the desktop view: line the buttons up with the grid */
+:where(.desktop-view) .testimonials .testimonials-controls {
+  padding-right: var(--gb-offset);
 }

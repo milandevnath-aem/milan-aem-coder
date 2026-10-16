@@ -598,11 +598,15 @@ main > .section.feature-banner-container + .section {
   margin-top: var(--section-spacing);
 }
 
-/* starts on the grid, scrolls off the right edge */
+/* on the grid on small screens (one card at a time); desktop view scrolls off the right edge */
 main > .section > .testimonials-wrapper {
   max-width: none;
-  padding-right: 0;
+  padding-right: var(--gb-offset);
   padding-left: var(--gb-offset);
+}
+
+:where(.desktop-view) main > .section > .testimonials-wrapper {
+  padding-right: 0;
 }
 
 /* offers continue straight on from the highlighted EMI section */
