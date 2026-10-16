@@ -607,7 +607,11 @@ main > .section > .testimonials-wrapper {
 
 /* offers continue straight on from the highlighted EMI section */
 main > .section.highlight + .section.offers-container {
-  margin-top: 12px;
+  margin-top: var(--spacing-md);
+}
+
+:where(.desktop-view) main > .section.highlight + .section.offers-container {
+  margin-top: var(--spacing-lg);
 }
 
 /* eyebrow paragraph directly above a section heading (Body/B2) */
