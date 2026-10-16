@@ -87,7 +87,7 @@
     'title arrow' auto
     'text arrow' auto / 1fr auto;
   gap: 4px 12px;
-  align-items: center;
+  align-items: flex-start;
   height: 100%;
   box-sizing: border-box;
   padding: 16px;
