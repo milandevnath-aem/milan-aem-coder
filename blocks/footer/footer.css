@@ -26,11 +26,16 @@ footer .footer-brand .default-content-wrapper {
   flex-direction: column;
   align-items: center;
   gap: 24px;
-  max-width: 688px;
+  max-width: 289px;
   margin: 0 auto 100px;
   padding: 0 12px;
   color: var(--inverse-color);
   text-align: center;
+}
+
+:where(.desktop-view) footer .footer-brand .default-content-wrapper {
+  max-width: 688px;
+  margin-bottom: 140px;
 }
 
 footer .footer-brand img {
@@ -292,10 +297,6 @@ footer .footer-bottom .icon {
 
 :where(.desktop-view) footer .footer > div {
   padding-top: 140px;
-}
-
-:where(.desktop-view) footer .footer-brand .default-content-wrapper {
-  margin-bottom: 140px;
 }
 
 :where(.desktop-view) footer .footer-brand img {
