@@ -20,8 +20,8 @@
   gap: 24px;
   height: 100%;
   box-sizing: border-box;
-  padding: 24px;
-  border-radius: 24px;
+  padding: 28px var(--spacing-3xl);
+  border-radius: var(--spacing-4xl);
   background-color: var(--service-links-bg);
   color: var(--text-color);
   text-decoration: none;
@@ -40,9 +40,9 @@
 
 .service-links .service-links-title {
   position: relative;
-  font-size: 24px;
-  font-weight: 600;
-  line-height: 32px;
+  font-size: var(--type-body-b3-font-size);
+  line-height: var(--type-body-b3-line-height);
+  font-weight: var(--type-body-b3-font-weight);
 }
 
 .service-links-item.service-links-has-image .service-links-title {
@@ -52,8 +52,8 @@
 .service-links .service-links-arrow {
   position: relative;
   flex: 0 0 auto;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background-color: var(--text-color);
   transition: transform 0.2s;
