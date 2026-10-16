@@ -139,7 +139,7 @@ footer .footer-other a:any-link {
 footer .footer-bottom .default-content-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 0;
 }
 
 footer .footer-bottom .default-content-wrapper > ul:first-child {
@@ -279,11 +279,13 @@ footer .footer-bottom .default-content-wrapper > p {
   font-weight: 600;
   line-height: 16px;
   letter-spacing: 0;
+  padding-top: 24px;
 }
 
 footer .footer-bottom .default-content-wrapper > ul:last-child {
   display: flex;
   gap: 0;
+  padding-top: 22px;
 }
 
 footer .footer-bottom .default-content-wrapper > ul:last-child a {
@@ -395,6 +397,7 @@ footer .footer-bottom .icon {
   grid-column: 1;
   font-size: 12px;
   line-height: 18px;
+  padding-top: 0;
 }
 
 :where(.desktop-view) footer .footer-bottom .default-content-wrapper > ul:last-child {
