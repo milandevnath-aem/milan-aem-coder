@@ -174,7 +174,7 @@
   /* as wide as the value, so the symbol and suffix sit right next to it */
   field-sizing: content;
   width: auto;
-  min-width: 24px;
+  min-width: var(--spacing-3xl);
   max-width: 100%;
   cursor: text;
   padding: 0;
@@ -184,6 +184,7 @@
   font: inherit;
   letter-spacing: inherit;
   text-align: right;
+  margin-right: var(--spacing-xs);
   outline: none;
 }
 

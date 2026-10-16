@@ -35,8 +35,8 @@ footer .footer-brand .default-content-wrapper {
 
 footer .footer-brand img {
   display: block;
-  width: 160px;
-  height: auto;
+  width: 145px;
+  height: 35px;
 }
 
 footer .footer-brand h2 {
@@ -185,10 +185,11 @@ footer .footer-dropdown summary::-webkit-details-marker {
 
 footer .footer-dropdown summary::after {
   content: '';
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
   background: url('../../icons/chevron-down.svg') center / contain no-repeat;
   transition: transform 0.2s;
+  padding: 1.5px;
 }
 
 footer .footer-dropdown[open] summary::after {
@@ -299,6 +300,7 @@ footer .footer-bottom .icon {
 
 :where(.desktop-view) footer .footer-brand img {
   width: 193px;
+  height: 46.873px;
 }
 
 :where(.desktop-view) footer .footer-brand p {

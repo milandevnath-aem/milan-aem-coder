@@ -711,7 +711,7 @@ header nav .nav-tools .button-wrapper {
 
 header nav .nav-tools a.button {
   min-width: 106px;
-  padding: 11px;
+  padding: 12px;
   font-size: var(--body-font-size-s);
   line-height: 20px;
 }
