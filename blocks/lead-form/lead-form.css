@@ -30,6 +30,7 @@
   line-height: 24px;
 }
 
+.lead-form .lead-form-main,
 .lead-form .lead-form-form {
   display: flex;
   flex-direction: column;
@@ -39,7 +40,20 @@
 .lead-form .lead-form-fields {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
+}
+
+/* two half-width fields (e.g. first and last name): stacked on small screens */
+.lead-form .lead-form-row {
+  display: grid;
+  gap: 16px;
+}
+
+.lead-form .lead-form-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
 }
 
 /* text inputs: the label sits in the field and moves up once there is a value */
@@ -74,7 +88,7 @@
   min-width: 0;
 }
 
-.lead-form .lead-form-input input {
+.lead-form .lead-form-input :is(input, textarea) {
   width: 100%;
   border: 0;
   padding: 0;
@@ -94,7 +108,7 @@
   transition: font-size 0.15s;
 }
 
-.lead-form .lead-form-input input:placeholder-shown:not(:focus) + .lead-form-label {
+.lead-form .lead-form-input :is(input, textarea):placeholder-shown:not(:focus) + .lead-form-label {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -107,12 +121,37 @@
   color: var(--muted-color);
 }
 
+/* description: multi-line, label at the top */
+.lead-form .lead-form-textarea {
+  align-items: flex-start;
+  min-height: 160px;
+  padding: 20px;
+}
+
+.lead-form .lead-form-textarea .lead-form-control {
+  align-self: stretch;
+}
+
+.lead-form .lead-form-textarea textarea {
+  flex: 1 1 auto;
+  min-height: 72px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.lead-form .lead-form-textarea textarea:placeholder-shown:not(:focus) + .lead-form-label {
+  top: 0;
+  transform: none;
+}
+
 /* field errors: text under the field, not colour alone */
 .lead-form .lead-form-error {
   display: flex;
   align-items: center;
   gap: 4px;
-  margin: -4px 0 0;
+  margin: -8px 0 0;
+
+  /* no Figma design for field errors: AA contrast red */
   color: #c4161c;
   font-size: var(--body-font-size-xs);
   font-weight: 600;
@@ -140,18 +179,22 @@
   line-height: var(--lead-form-line);
 }
 
-/* captcha */
+/* captcha: small screens image and tools on one row, the code field below */
 .lead-form .lead-form-captcha {
   display: grid;
-  grid-template-columns: auto auto 1fr;
+  grid-template-columns: 1fr auto;
   align-items: center;
-  gap: 12px;
+  gap: 16px 12px;
 }
 
 .lead-form .lead-form-captcha canvas {
-  width: 124px;
-  height: 50px;
+  width: 100%;
+  height: 64px;
   border-radius: 12px;
+}
+
+.lead-form .lead-form-captcha .lead-form-input {
+  grid-column: 1 / -1;
 }
 
 .lead-form .lead-form-captcha-tools {
@@ -236,10 +279,323 @@
   width: 100%;
 }
 
-.lead-form button.button.primary.lead-form-submit[aria-disabled='true'] {
+.lead-form button.button.primary:is(.lead-form-submit, .lead-form-validate)[aria-disabled='true'] {
   border-color: #b2b2b2;
   background-color: #b2b2b2;
   color: var(--muted-color);
+}
+
+/* loading: spinner in place of the label */
+.lead-form button.button.primary.is-loading {
+  border-color: var(--text-color);
+  background-color: var(--text-color);
+  pointer-events: none;
+}
+
+.lead-form .lead-form-spinner {
+  display: inline-block;
+  box-sizing: border-box;
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgb(255 255 255 / 30%);
+  border-top-color: #fff;
+  border-radius: 50%;
+  vertical-align: middle;
+  animation: lead-form-spin 0.8s linear infinite;
+}
+
+@keyframes lead-form-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* sending the OTP on small screens: the form makes way for a full view spinner */
+.lead-form .lead-form-loading {
+  display: none;
+}
+
+.lead-form .lead-form-loading .lead-form-spinner {
+  width: 40px;
+  height: 40px;
+  border-width: 4px;
+  border-color: #e6e6e6;
+  border-top-color: var(--text-color);
+}
+
+:where(html:not(.desktop-view)) .lead-form.is-sending .lead-form-loading:not([hidden]) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100dvh - var(--modal-top, 0px) - 24px);
+}
+
+:where(html:not(.desktop-view)) .lead-form.is-sending :is(.lead-form-main, .lead-form-goback) {
+  display: none;
+}
+
+/* "Go back" (small screens, the form is a page below the header) */
+.lead-form .lead-form-goback {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 4px;
+  min-height: 24px;
+  margin: 40px 0 -12px;
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--text-color);
+  font-size: var(--body-font-size-m);
+  font-weight: 500;
+  line-height: 24px;
+  cursor: pointer;
+}
+
+.lead-form .lead-form-goback img {
+  width: 16px;
+  height: 16px;
+}
+
+:where(.desktop-view) .lead-form .lead-form-goback,
+.lead-form:is([data-step='otp'], [data-step='success']) .lead-form-goback {
+  display: none;
+}
+
+.lead-form .lead-form-step[hidden] {
+  display: none;
+}
+
+/* OTP step */
+.lead-form .lead-form-otp {
+  position: relative;
+  padding-top: 84px;
+}
+
+.lead-form .lead-form-back {
+  position: absolute;
+  top: 0;
+  left: -6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  border: 0;
+  border-radius: 8px;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.lead-form .lead-form-otp-body {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.lead-form .lead-form-otp-top {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.lead-form .lead-form-otp-title h2 {
+  margin: 0 0 8px;
+  color: var(--text-color);
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 40px;
+  letter-spacing: -0.8px;
+}
+
+.lead-form .lead-form-otp-title h2:focus {
+  outline: none;
+}
+
+.lead-form .lead-form-otp-title p {
+  margin: 0;
+  color: var(--muted-color);
+  font-size: var(--body-font-size-m);
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.lead-form .lead-form-otp-number {
+  white-space: nowrap;
+}
+
+.lead-form .lead-form-otp-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lead-form .lead-form-otp-boxes {
+  display: flex;
+  gap: 4px;
+}
+
+.lead-form .lead-form-otp-digit {
+  box-sizing: border-box;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 56px;
+  margin: 0;
+  border: 1px solid #dedede;
+  border-radius: 16px;
+  padding: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: inherit;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 32px;
+  text-align: center;
+  caret-color: var(--accent-color);
+}
+
+/* the design's focus state: blue box */
+.lead-form .lead-form-otp-digit:focus,
+.lead-form .lead-form-otp-digit:focus-visible {
+  border-color: var(--accent-color);
+  outline: none;
+  box-shadow: none;
+}
+
+.lead-form .lead-form-otp-boxes.is-invalid .lead-form-otp-digit {
+  border-color: #ff3938;
+}
+
+.lead-form .lead-form-otp-error {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  color: #ff3938;
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.lead-form .lead-form-otp-error[hidden] {
+  display: none;
+}
+
+.lead-form .lead-form-otp-error::before {
+  content: '';
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  background: url('../../icons/error-outline.svg') center / contain no-repeat;
+}
+
+.lead-form .lead-form-otp-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.lead-form .lead-form-validate {
+  width: 100%;
+  border: 0;
+  padding: 14px 12px;
+  font-size: var(--body-font-size-m);
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.lead-form .lead-form-resend {
+  margin: 0;
+  color: var(--muted-color);
+  font-size: var(--body-font-size-s);
+  font-weight: 600;
+  line-height: 20px;
+  text-align: center;
+}
+
+.lead-form .lead-form-resend-button {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--text-color);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.lead-form .lead-form-resend-button[aria-disabled='true'] {
+  color: #b2b2b2;
+  cursor: default;
+}
+
+/* success step */
+.lead-form .lead-form-success {
+  display: flex;
+  flex-direction: column;
+  gap: 72px;
+  min-height: calc(100dvh - var(--modal-top, 0px) - 24px);
+}
+
+.lead-form .lead-form-success-status {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.lead-form .lead-form-success-status img {
+  width: 48px;
+  height: 48px;
+}
+
+.lead-form .lead-form-success-status h2 {
+  margin: 0;
+  color: var(--text-color);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 36px;
+}
+
+.lead-form .lead-form-success-status h2:focus {
+  outline: none;
+}
+
+.lead-form .lead-form-success-status p {
+  margin: 0;
+  color: var(--muted-color);
+  font-size: var(--body-font-size-m);
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.lead-form .lead-form-success-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0 -8px;
+}
+
+.lead-form .lead-form-success-actions .button {
+  width: 100%;
+  margin: 0;
+  border: 0;
+  padding: 14px 12px;
+  font-size: var(--body-font-size-m);
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.lead-form .lead-form-success-actions a.button.secondary,
+.lead-form .lead-form-success-actions a.button.secondary:hover {
+  background-color: #eee;
+  color: var(--text-color);
+  text-decoration: none;
 }
 
 .lead-form .lead-form-thanks h3 {
@@ -265,8 +621,75 @@
   letter-spacing: -1px;
 }
 
+:where(.desktop-view) .lead-form .lead-form-main {
+  gap: 40px;
+}
+
 :where(.desktop-view) .lead-form .lead-form-input {
-  min-height: 72px;
+  min-height: 68px;
+}
+
+:where(.desktop-view) .lead-form .lead-form-row {
+  grid-template-columns: 1fr 1fr;
+}
+
+:where(.desktop-view) .lead-form .lead-form-textarea {
+  min-height: 136px;
+}
+
+/* captcha (desktop): image, tools and the code field on one row */
+:where(.desktop-view) .lead-form .lead-form-captcha {
+  grid-template-columns: auto auto 1fr;
+}
+
+:where(.desktop-view) .lead-form .lead-form-captcha canvas {
+  width: 168px;
+  height: 68px;
+}
+
+:where(.desktop-view) .lead-form .lead-form-captcha .lead-form-input {
+  grid-column: auto;
+}
+
+/* OTP and success (desktop): fixed card, content centred */
+:where(.desktop-view) .lead-form .lead-form-otp {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 526px;
+  padding-top: 0;
+}
+
+:where(.desktop-view) .lead-form .lead-form-back {
+  top: -24px;
+  left: -8px;
+  width: 40px;
+  height: 40px;
+}
+
+:where(.desktop-view) .lead-form .lead-form-otp-body {
+  gap: 48px;
+}
+
+:where(.desktop-view) .lead-form .lead-form-otp-title {
+  text-align: center;
+}
+
+:where(.desktop-view) .lead-form .lead-form-otp-boxes {
+  gap: 12px;
+}
+
+:where(.desktop-view) .lead-form .lead-form-otp-digit {
+  height: 64px;
+}
+
+:where(.desktop-view) .lead-form .lead-form-success {
+  min-height: 526px;
+}
+
+:where(.desktop-view) .lead-form .lead-form-success-actions {
+  margin: 0;
+  padding: 12px 20px 24px;
 }
 
 :where(.desktop-view) .lead-form .lead-form-label {

@@ -1,5 +1,8 @@
+import { getMetadata } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createDropdown } from '../../scripts/dropdown.js';
+import { sendOtp, submitLead } from './lead-api.js';
+import { createOtpStep, createSuccessStep, setLoading } from './lead-form-otp.js';
 
 const CAPTCHA_CHARS = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
@@ -68,7 +71,7 @@ function errorMessage(label, kind) {
 function textField(label, kind, required) {
   const field = document.createElement('label');
   field.className = `lead-form-input lead-form-${kind}`;
-  const input = document.createElement('input');
+  const input = document.createElement(kind === 'textarea' ? 'textarea' : 'input');
   input.name = slug(label);
   input.placeholder = ' ';
   input.required = required;
@@ -89,9 +92,13 @@ function textField(label, kind, required) {
     Object.assign(input, {
       type: 'text', inputMode: 'numeric', pattern: '[1-9][0-9]{5}', maxLength: 6, autocomplete: 'postal-code',
     });
+  } else if (kind === 'textarea') {
+    input.rows = 4;
   } else {
     input.type = 'text';
-    if (/name/i.test(label)) input.autocomplete = 'name';
+    if (/first name/i.test(label)) input.autocomplete = 'given-name';
+    else if (/last name/i.test(label)) input.autocomplete = 'family-name';
+    else if (/^(your )?name$/i.test(label)) input.autocomplete = 'name';
   }
   const control = document.createElement('span');
   control.className = 'lead-form-control';
@@ -192,6 +199,25 @@ function buildDisclaimer(cell) {
   return wrapper;
 }
 
+/** "Two-Wheeler Loans" and "two-wheeler loan" match */
+const normalize = (text) => text.toLowerCase().replace(/[^a-z]/g, '').replace(/loans?$/, '');
+
+/**
+ * The page's own product, so the form opens with it preselected: the hero category
+ * dropdown on product pages, else the page metadata "loan-category".
+ */
+function pageCategory() {
+  const hero = document.querySelector('main .hero-loan-select');
+  return hero?.value || getMetadata('loan-category') || '';
+}
+
+/** Site root next to the nav fragment (e.g. /content/kmpl locally, / when published) */
+function siteRoot() {
+  const nav = getMetadata('nav');
+  const path = nav ? new URL(nav, window.location).pathname : '/nav';
+  return path.replace(/\/(fragments\/)?nav$/, '');
+}
+
 /**
  * Lead form ("Start Your Loan Journey Today"). Block properties: heading, disclaimer,
  * note and button label; each item is a field (label, type, options, required).
@@ -238,16 +264,18 @@ export default function decorate(block) {
         searchPlaceholder: `Search ${label.toLowerCase()}`,
         pinSelected: true,
       });
+      field.optionValues = options.map((option) => option.value);
       dropdowns.push(field);
     } else if (kind === 'captcha') {
       field = captchaField(label);
       captcha = field;
     } else {
-      field = textField(label, kind, required);
+      field = textField(label, kind === 'text-half' ? 'text' : kind, required);
     }
     moveInstrumentation(row, field);
     // text error under each field: what is wrong and how to fix it
-    const control = field.querySelector('.dropdown-field') || field.querySelector('input:not([type="hidden"])');
+    const control = field.querySelector('.dropdown-field')
+      || field.querySelector('input:not([type="hidden"]), textarea');
     if (control) {
       const error = fieldError(control, errorMessage(label, kind));
       const isDropdown = dropdowns.includes(field);
@@ -257,7 +285,20 @@ export default function decorate(block) {
       checks.push({
         field, control, error, valid,
       });
-      fields.append(field, error.el);
+      if (kind === 'text-half') {
+        // two half-width fields side by side on desktop (e.g. first and last name)
+        const col = document.createElement('div');
+        col.className = 'lead-form-col';
+        col.append(field, error.el);
+        const last = fields.lastElementChild;
+        if (last?.classList.contains('lead-form-row') && last.children.length === 1) last.append(col);
+        else {
+          const pair = document.createElement('div');
+          pair.className = 'lead-form-row';
+          pair.append(col);
+          fields.append(pair);
+        }
+      } else fields.append(field, error.el);
     } else fields.append(field);
   });
   form.append(fields);
@@ -319,22 +360,108 @@ export default function decorate(block) {
     if (check) setState(check, false);
   }));
 
-  form.addEventListener('submit', (e) => {
+  // screen reader announcements for steps that have no visible status text
+  const status = document.createElement('p');
+  status.className = 'visually-hidden';
+  status.setAttribute('aria-live', 'polite');
+  const announce = (message) => {
+    status.textContent = '';
+    setTimeout(() => { status.textContent = message; }, 100);
+  };
+
+  // steps: form -> (sending) -> OTP -> success; the dialog is named after the visible step
+  const main = document.createElement('div');
+  main.className = 'lead-form-step lead-form-main';
+  const loading = document.createElement('div');
+  loading.className = 'lead-form-step lead-form-loading';
+  loading.hidden = true;
+  loading.innerHTML = '<span class="lead-form-spinner" aria-hidden="true"></span>';
+  const dialog = () => block.closest('dialog');
+  const nameDialog = (titleId) => dialog()?.setAttribute('aria-labelledby', titleId);
+  const close = () => {
+    const d = dialog();
+    if (d) d.close();
+    else window.history.back();
+  };
+  const showStep = (step) => {
+    [...block.children].forEach((child) => {
+      if (child.classList.contains('lead-form-step')) child.hidden = child !== step;
+    });
+    block.dataset.step = step.classList[1].replace('lead-form-', '');
+    dialog()?.querySelector('.modal-content')?.scrollTo(0, 0);
+  };
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    if (submit.classList.contains('is-loading')) return;
     if (!isValid()) {
       const invalid = checks.filter((check) => !check.valid());
       checks.forEach((check) => setState(check, invalid.includes(check)));
       invalid[0]?.control.focus();
       return;
     }
-    const thanks = document.createElement('div');
-    thanks.className = 'lead-form-thanks';
-    thanks.setAttribute('role', 'status');
-    thanks.innerHTML = '<h3>Thank you!</h3><p>Our loan expert will call you back shortly.</p>';
-    form.replaceWith(thanks);
-    thanks.tabIndex = -1;
-    thanks.focus();
+    const data = Object.fromEntries(new FormData(form));
+    const mobile = form.querySelector('input[type="tel"]')?.value || '';
+
+    // sending the OTP: button spinner (desktop), full view spinner (small screens)
+    setLoading(submit, true, 'Sending OTP');
+    block.classList.add('is-sending');
+    loading.hidden = false;
+    announce('Sending OTP');
+    await sendOtp({ mobile, category: data[Object.keys(data).find((k) => k.endsWith('category'))] });
+    setLoading(submit, false);
+    block.classList.remove('is-sending');
+    loading.hidden = true;
+
+    block.querySelector('.lead-form-otp')?.remove();
+    const otp = createOtpStep({
+      mobile,
+      announce,
+      onBack: () => {
+        otp.remove();
+        showStep(main);
+        nameDialog(intro.querySelector('h1, h2')?.id);
+        submit.focus();
+      },
+      onVerified: async () => {
+        await submitLead(data);
+        const success = createSuccessStep({
+          emiHref: document.querySelector('main .emi-calculator') ? '#emi-calculator' : `${siteRoot()}/home#emi-calculator`,
+          onDone: close,
+        });
+        success.querySelector('.lead-form-emi').addEventListener('click', (ev) => {
+          if (!ev.currentTarget.getAttribute('href').startsWith('#')) return;
+          ev.preventDefault();
+          close();
+          document.getElementById('emi-calculator')?.scrollIntoView();
+        });
+        otp.remove();
+        block.append(success);
+        showStep(success);
+        nameDialog(success.titleId);
+        success.focusTitle();
+      },
+    });
+    block.append(otp);
+    showStep(otp);
+    nameDialog(otp.titleId);
+    announce(`OTP sent to the number ending ${mobile.slice(-4)}`);
+    otp.focusFirst();
   });
+
+  // loan category: preselect the product of the page the form is opened from
+  const categoryDropdown = dropdowns
+    .find((d) => /category/i.test(d.querySelector('input[type="hidden"]').name));
+  const categoryOptions = categoryDropdown?.optionValues || [];
+  const selectCategory = (text) => {
+    if (!categoryDropdown || !text) return;
+    const key = normalize(text);
+    const match = categoryOptions.find((option) => normalize(option) === key)
+      || categoryOptions.find((option) => normalize(option).startsWith(key.slice(0, 6)));
+    if (match) categoryDropdown.setValue(match);
+  };
+  selectCategory(pageCategory());
+  refresh();
 
   // values carried over from another form (e.g. the hero call-back form)
   form.prefill = (data) => {
@@ -348,10 +475,21 @@ export default function decorate(block) {
         const n = d.querySelector('input[type="hidden"]').name;
         return n === name || n.endsWith(`-${name}`) || name.endsWith(`-${n}`);
       });
-      dropdown?.setValue(value);
+      if (dropdown === categoryDropdown) selectCategory(value);
+      else dropdown?.setValue(value);
     });
     refresh();
   };
 
-  block.replaceChildren(intro, form);
+  // small screens: the form is a page of its own below the header, with "Go back"
+  const goBack = document.createElement('button');
+  goBack.type = 'button';
+  goBack.className = 'lead-form-goback';
+  goBack.innerHTML = `<img src="${window.hlx.codeBasePath}/icons/chevron-left.svg" alt="" width="16" height="16"><span>Go back</span>`;
+  goBack.addEventListener('click', close);
+
+  const heading = intro.querySelector('h1, h2');
+  if (heading && !heading.id) heading.id = `lead-form-title-${Math.random().toString(36).slice(2, 8)}`;
+  main.append(intro, form);
+  block.replaceChildren(goBack, main, loading, status);
 }

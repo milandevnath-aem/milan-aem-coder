@@ -192,6 +192,27 @@ dialog.modal .default-content-wrapper p.button-wrapper:last-child .button {
   line-height: 24px;
 }
 
+/* lead forms, small screens: a page of its own below the header (Figma), "Go back" in the
+   form instead of the close button */
+:where(html:not(.desktop-view)) dialog.modal.modal-form {
+  inset: var(--modal-top, 0) 0 0;
+  height: auto;
+  max-height: none;
+  padding: 0;
+}
+
+:where(html:not(.desktop-view)) dialog.modal.modal-form::backdrop {
+  background-color: transparent;
+}
+
+:where(html:not(.desktop-view)) dialog.modal.modal-form .modal-close {
+  display: none;
+}
+
+:where(html:not(.desktop-view)) dialog.modal.modal-form .modal-content {
+  padding: 0 20px 24px;
+}
+
 /* "Read more" details: fixed size, only the content scrolls under a pinned CTA.
    Mobile: bottom sheet below a white close button on the backdrop. */
 dialog.modal.modal-details {
