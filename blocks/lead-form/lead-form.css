@@ -37,9 +37,22 @@
 }
 
 .lead-form .lead-form-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+/* a field and its error; full width unless marked half width */
+.lead-form .lead-form-item {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  grid-column: 1 / -1;
+  gap: 8px;
+  min-width: 0;
+}
+
+.lead-form .lead-form-item.is-half {
+  grid-column: auto;
 }
 
 /* text inputs: the label sits in the field and moves up once there is a value */
@@ -74,7 +87,8 @@
   min-width: 0;
 }
 
-.lead-form .lead-form-input input {
+.lead-form .lead-form-input input,
+.lead-form .lead-form-input textarea {
   width: 100%;
   border: 0;
   padding: 0;
@@ -84,6 +98,7 @@
   font-weight: 600;
   line-height: var(--lead-form-line);
   outline: none;
+  box-shadow: none;
 }
 
 .lead-form .lead-form-label {
@@ -94,13 +109,42 @@
   transition: font-size 0.15s;
 }
 
-.lead-form .lead-form-input input:placeholder-shown:not(:focus) + .lead-form-label {
+.lead-form .lead-form-input :is(input, textarea):placeholder-shown:not(:focus) + .lead-form-label {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   font-size: var(--lead-form-text);
   line-height: var(--lead-form-line);
   pointer-events: none;
+}
+
+/* multi-line text: grows with its content up to six lines, count below on the right */
+.lead-form .lead-form-textarea {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  padding-block: 12px;
+}
+
+.lead-form .lead-form-textarea textarea {
+  min-height: calc(var(--lead-form-line) * 3);
+  max-height: calc(var(--lead-form-line) * 6);
+  margin: 0;
+  resize: none;
+  field-sizing: content;
+}
+
+.lead-form .lead-form-textarea textarea:placeholder-shown:not(:focus) + .lead-form-label {
+  top: 0;
+  transform: none;
+}
+
+.lead-form .lead-form-count {
+  align-self: flex-end;
+  color: var(--muted-color);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
 }
 
 .lead-form .lead-form-zip input:placeholder-shown:not(:focus) + .lead-form-label {
@@ -112,7 +156,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  margin: -4px 0 0;
+  margin: 0;
   color: #c4161c;
   font-size: var(--body-font-size-xs);
   font-weight: 600;

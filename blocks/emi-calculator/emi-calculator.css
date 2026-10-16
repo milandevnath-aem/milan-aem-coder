@@ -186,6 +186,7 @@
   text-align: right;
   margin-right: var(--spacing-xs);
   outline: none;
+  box-shadow: none;
 }
 
 .emi-calculator .emi-calculator-suffix:not(:empty) {

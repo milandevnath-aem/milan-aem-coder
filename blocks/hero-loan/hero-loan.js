@@ -123,6 +123,7 @@ function buildForm(config, isProduct) {
       name: 'category',
       options: categories.map((c) => ({ value: c, label: c })),
       value: categories[0],
+      boundary: '.hero-loan',
     });
     select.classList.add('hero-loan-select');
     moveInstrumentation(optionsRow, select);
