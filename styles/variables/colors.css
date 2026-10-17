@@ -1,0 +1,371 @@
+/**
+ * Color tokens generated from Figma Design Language System (DLS).
+ * Kotak Web Design System 1.0
+ * Source: https://www.figma.com/design/JGkdkzPy5z3x35BxgEX24u
+ *
+ * Do not edit values by hand — regenerate from Figma when the DLS changes.
+ */
+
+:root {
+  /* Background 1 */
+  --color-background-1-default-base: #fcfcfc;
+  --color-background-1-default-pressed: #f5f5f5;
+  --color-background-1-default-selected: #f5f5f5;
+  --color-background-1-default-active: #f5f5f5;
+  --color-background-1-default-hover: #f5f5f5;
+  --color-background-1-inverse-base: #1a1a1a;
+  --color-background-1-inverse-pressed: #262626;
+  --color-background-1-inverse-selected: #262626;
+  --color-background-1-inverse-active: #262626;
+  --color-background-1-inverse-hover: #262626;
+
+  /* Background 2 */
+  --color-background-2-default-base: #eee;
+  --color-background-2-default-pressed: #e6e6e6;
+  --color-background-2-default-selected: #e6e6e6;
+  --color-background-2-default-active: #e6e6e6;
+  --color-background-2-default-hover: #e6e6e6;
+  --color-background-2-inverse-base: #121212;
+  --color-background-2-inverse-pressed: #1a1a1a;
+  --color-background-2-inverse-selected: #1a1a1a;
+  --color-background-2-inverse-active: #1a1a1a;
+  --color-background-2-inverse-hover: #1a1a1a;
+
+  /* Background 3 */
+  --color-background-3-default-base: #e6e6e6;
+  --color-background-3-default-pressed: #dedede;
+  --color-background-3-default-selected: #dedede;
+  --color-background-3-default-active: #dedede;
+  --color-background-3-default-hover: #dedede;
+  --color-background-3-inverse-base: #262626;
+  --color-background-3-inverse-pressed: #333;
+  --color-background-3-inverse-selected: #333;
+  --color-background-3-inverse-active: #333;
+  --color-background-3-inverse-hover: #333;
+
+  /* Button */
+  --color-button-primary-default-bg-disabled: #ced3ee;
+  --color-button-primary-default-bg-pressed: #3e55cf;
+  --color-button-primary-default-bg-base: #3857ff;
+  --color-button-primary-default-bg-hover: #3e55cf;
+  --color-button-primary-inverse-bg-base: #5c74f6;
+  --color-button-primary-inverse-bg-pressed: #7c8ef0;
+  --color-button-primary-inverse-bg-disabled: #1e1f20;
+  --color-button-primary-inverse-bg-hover: #7c8ef0;
+  --color-button-primary-default-text-pressed: #e6e6e6;
+  --color-button-primary-default-text-disabled: #9aa7ec;
+  --color-button-primary-default-text-base: #fff;
+  --color-button-primary-default-text-hover: #e6e6e6;
+  --color-button-primary-inverse-text-base: #fff;
+  --color-button-primary-inverse-text-pressed: #e6e6e6;
+  --color-button-primary-inverse-text-disabled: #3e487c;
+  --color-button-primary-inverse-text-hover: #e6e6e6;
+  --color-button-tertiary-default-text-base: #3857ff;
+  --color-button-tertiary-default-text-disabled: #9aa7ec;
+  --color-button-tertiary-default-text-pressed: #3e55cf;
+  --color-button-tertiary-default-text-hover: #3e55cf;
+  --color-button-tertiary-inverse-text-disabled: #3e487c;
+  --color-button-tertiary-inverse-text-base: #5c74f6;
+  --color-button-tertiary-inverse-text-pressed: #3857ff;
+  --color-button-tertiary-inverse-text-hover: #3857ff;
+  --color-button-secondary-default-bg-base: #eee;
+  --color-button-secondary-default-bg-pressed: #d6d6d6;
+  --color-button-secondary-default-bg-disabled: #eee;
+  --color-button-secondary-default-bg-hover: #d6d6d6;
+  --color-button-secondary-default-text-base: #121212;
+  --color-button-secondary-default-text-pressed: #121212;
+  --color-button-secondary-default-text-disabled: #999;
+  --color-button-secondary-default-text-hover: #121212;
+  --color-button-secondary-inverse-bg-base: #404040;
+  --color-button-secondary-inverse-bg-pressed: #333;
+  --color-button-secondary-inverse-bg-disabled: #2e2e2e;
+  --color-button-secondary-inverse-bg-hover: #333;
+  --color-button-secondary-inverse-text-base: #fcfcfc;
+  --color-button-secondary-inverse-text-pressed: #fcfcfc;
+  --color-button-secondary-inverse-text-disabled: #737373;
+  --color-button-secondary-inverse-text-hover: #fcfcfc;
+  --color-button-primary-default-icon-base: #fff;
+  --color-button-primary-default-icon-pressed: #e6e6e6;
+  --color-button-primary-default-icon-disabled: #9aa7ec;
+  --color-button-primary-default-icon-hover: #e6e6e6;
+  --color-button-primary-inverse-icon-base: #fff;
+  --color-button-primary-inverse-icon-pressed: #e6e6e6;
+  --color-button-primary-inverse-icon-disabled: #3e487c;
+  --color-button-primary-inverse-icon-hover: #e6e6e6;
+  --color-button-secondary-default-icon-base: #121212;
+  --color-button-secondary-default-icon-pressed: #121212;
+  --color-button-secondary-default-icon-disabled: #999;
+  --color-button-secondary-default-icon-hover: #121212;
+  --color-button-secondary-inverse-icon-base: #fcfcfc;
+  --color-button-secondary-inverse-icon-pressed: #fcfcfc;
+  --color-button-secondary-inverse-icon-disabled: #737373;
+  --color-button-secondary-inverse-icon-hover: #fcfcfc;
+  --color-button-tertiary-default-icon-base: #3857ff;
+  --color-button-tertiary-default-icon-disabled: #9aa7ec;
+  --color-button-tertiary-default-icon-pressed: #3e55cf;
+  --color-button-tertiary-default-icon-hover: #3e55cf;
+  --color-button-tertiary-inverse-icon-base: #5c74f6;
+  --color-button-tertiary-inverse-icon-disabled: #3e487c;
+  --color-button-tertiary-inverse-icon-pressed: #3857ff;
+  --color-button-tertiary-inverse-icon-hover: #3857ff;
+  --color-button-pills-default-bg-base: #121212;
+  --color-button-pills-default-bg-pressed: #262626;
+  --color-button-pills-default-bg-hover: #262626;
+  --color-button-pills-default-bg-disabled: #b2b2b2;
+  --color-button-pills-default-text-base: #fff;
+  --color-button-pills-default-text-pressed: #e6e6e6;
+  --color-button-pills-default-text-hover: #e6e6e6;
+  --color-button-pills-default-text-disabled: #666;
+  --color-button-pills-inverse-bg-base: #fff;
+  --color-button-pills-inverse-bg-pressed: #e6e6e6;
+  --color-button-pills-inverse-bg-hover: #e6e6e6;
+  --color-button-pills-inverse-bg-disabled: #2e2e2e;
+  --color-button-pills-inverse-text-base: #121212;
+  --color-button-pills-inverse-text-pressed: #262626;
+  --color-button-pills-inverse-text-hover: #262626;
+  --color-button-pills-inverse-text-disabled: #b2b2b2;
+  --color-button-pills-default-icon-base: #fff;
+  --color-button-pills-default-icon-pressed: #e6e6e6;
+  --color-button-pills-default-icon-hover: #e6e6e6;
+  --color-button-pills-default-icon-disabled: #666;
+  --color-button-pills-inverse-icon-base: #121212;
+  --color-button-pills-inverse-icon-pressed: #262626;
+  --color-button-pills-inverse-icon-hover: #262626;
+  --color-button-pills-inverse-icon-disabled: #b2b2b2;
+  --color-button-optional-tertiary-default-text-base: #121212;
+  --color-button-optional-tertiary-default-text-pressed: #404040;
+  --color-button-optional-tertiary-default-text-hover: #404040;
+  --color-button-optional-tertiary-default-text-disabled: #b2b2b2;
+  --color-button-optional-tertiary-inverse-text-base: #f5f5f5;
+  --color-button-optional-tertiary-inverse-text-pressed: #ccc;
+  --color-button-optional-tertiary-inverse-text-hover: #ccc;
+  --color-button-optional-tertiary-inverse-text-disabled: #666;
+  --color-button-optional-tertiary-inverse-icon-base: #f5f5f5;
+  --color-button-optional-tertiary-inverse-icon-pressed: #ccc;
+  --color-button-optional-tertiary-inverse-icon-hover: #ccc;
+  --color-button-optional-tertiary-inverse-icon-disabled: #666;
+  --color-button-optional-tertiary-default-icon-base: #121212;
+  --color-button-optional-tertiary-default-icon-pressed: #404040;
+  --color-button-optional-tertiary-default-icon-hover: #404040;
+  --color-button-optional-tertiary-default-icon-disabled: #b2b2b2;
+  --color-button-pills-stroke-default-stroke-base: #121212;
+  --color-button-pills-stroke-default-stroke-pressed: #262626;
+  --color-button-pills-stroke-default-stroke-hover: #262626;
+  --color-button-pills-stroke-default-stroke-disabled: #8c8c8c;
+  --color-button-pills-stroke-default-text-base: #121212;
+  --color-button-pills-stroke-default-text-pressed: #262626;
+  --color-button-pills-stroke-default-text-hover: #262626;
+  --color-button-pills-stroke-default-text-disabled: #8c8c8c;
+  --color-button-pills-stroke-default-icon-base: #121212;
+  --color-button-pills-stroke-default-icon-pressed: #262626;
+  --color-button-pills-stroke-default-icon-hover: #262626;
+  --color-button-pills-stroke-default-icon-disabled: #8c8c8c;
+  --color-button-pills-stroke-inverse-stroke-base: #fff;
+  --color-button-pills-stroke-inverse-stroke-pressed: #e6e6e6;
+  --color-button-pills-stroke-inverse-stroke-hover: #e6e6e6;
+  --color-button-pills-stroke-inverse-stroke-disabled: #8c8c8c;
+  --color-button-pills-stroke-inverse-text-base: #fff;
+  --color-button-pills-stroke-inverse-text-pressed: #e6e6e6;
+  --color-button-pills-stroke-inverse-text-hover: #e6e6e6;
+  --color-button-pills-stroke-inverse-text-disabled: #8c8c8c;
+  --color-button-pills-stroke-inverse-icon-base: #fff;
+  --color-button-pills-stroke-inverse-icon-pressed: #e6e6e6;
+  --color-button-pills-stroke-inverse-icon-hover: #e6e6e6;
+  --color-button-pills-stroke-inverse-icon-disabled: #8c8c8c;
+
+  /* Text */
+  --color-text-primary-inverse-disabled: #666;
+  --color-text-primary-inverse-base: #f5f5f5;
+  --color-text-primary-default-disabled: #b2b2b2;
+  --color-text-primary-default-base: #121212;
+  --color-text-secondary-inverse-disabled: #404040;
+  --color-text-secondary-inverse-base: #bababa;
+  --color-text-secondary-default-disabled: #b2b2b2;
+  --color-text-secondary-default-base: #666;
+  --color-text-tertiary-inverse-disabled: #404040;
+  --color-text-tertiary-inverse-base: #ababab;
+  --color-text-tertiary-default-base: #808080;
+  --color-text-tertiary-default-disabled: #d6d6d6;
+
+  /* Stroke 1 */
+  --color-stroke-1-default: #eee;
+  --color-stroke-1-inverse: #262626;
+
+  /* Icon */
+  --color-icon-primary-default-base: #121212;
+  --color-icon-primary-default-disabled: #b2b2b2;
+  --color-icon-primary-inverse-base: #f5f5f5;
+  --color-icon-primary-inverse-disabled: #404040;
+  --color-icon-secondary-default-base: #666;
+  --color-icon-secondary-default-disabled: #b2b2b2;
+  --color-icon-secondary-inverse-base: #bababa;
+  --color-icon-secondary-inverse-disabled: #404040;
+  --color-icon-tertiary-default-base: #808080;
+  --color-icon-tertiary-default-disabled: #d6d6d6;
+  --color-icon-tertiary-inverse-base: #ababab;
+  --color-icon-tertiary-inverse-disabled: #404040;
+
+  /* Status */
+  --color-status-success-secondary-default-text-base: #00ca78;
+  --color-status-success-secondary-default-bg-base: #f8fff7;
+  --color-status-success-secondary-inverse-bg-base: #153d2d;
+  --color-status-success-secondary-inverse-text-base: #00ca78;
+  --color-status-warning-secondary-default-bg-base: #fff1e5;
+  --color-status-warning-secondary-default-text-base: #ff6f00;
+  --color-status-warning-secondary-inverse-bg-base: #482b15;
+  --color-status-warning-secondary-inverse-text-base: #ff6f00;
+  --color-status-critical-secondary-default-bg-base: #fff6f6;
+  --color-status-critical-secondary-default-text-base: #ff3938;
+  --color-status-critical-secondary-inverse-bg-base: #482020;
+  --color-status-critical-secondary-inverse-text-base: #ff3938;
+  --color-status-info-secondary-default-bg-base: #eaf4fe;
+  --color-status-info-secondary-default-text-base: #308ef2;
+  --color-status-info-secondary-inverse-bg-base: #27303a;
+  --color-status-info-secondary-inverse-text-base: #308ef2;
+  --color-status-neutral-primary-default-bg-base: #bababa;
+  --color-status-neutral-primary-default-text-base: #4d4d4d;
+  --color-status-neutral-primary-inverse-bg-base: #333;
+  --color-status-neutral-primary-inverse-text-base: #ccc;
+  --color-status-critical-secondary-default-icon-base: #ff3938;
+  --color-status-success-secondary-default-icon-base: #00ca78;
+  --color-status-success-secondary-inverse-icon-base: #00ca78;
+  --color-status-warning-secondary-default-icon-base: #ff6f00;
+  --color-status-warning-secondary-inverse-icon-base: #ff6f00;
+  --color-status-critical-secondary-inverse-icon-base: #ff3938;
+  --color-status-info-secondary-default-icon-base: #308ef2;
+  --color-status-info-secondary-inverse-icon-base: #308ef2;
+  --color-status-neutral-primary-default-icon-base: #4d4d4d;
+  --color-status-neutral-primary-inverse-icon-base: #ccc;
+  --color-status-default-primary-default-bg-base: #1a1a1a;
+  --color-status-default-primary-default-text-base: #eee;
+  --color-status-default-primary-inverse-bg-base: #fcfcfc;
+  --color-status-default-primary-inverse-text-base: #262626;
+  --color-status-default-primary-default-icon-base: #eee;
+  --color-status-default-primary-inverse-icon-base: #262626;
+  --color-status-success-primary-default-bg-base: #99eac9;
+  --color-status-success-primary-default-text-base: #0a8452;
+  --color-status-success-primary-inverse-bg-base: #124f36;
+  --color-status-success-primary-inverse-text-base: #00ca78;
+  --color-status-success-primary-default-icon-base: #0a8452;
+  --color-status-success-primary-inverse-icon-base: #00ca78;
+  --color-status-warning-primary-default-bg-base: #ffc599;
+  --color-status-warning-primary-default-text-base: #a34d0a;
+  --color-status-warning-primary-inverse-bg-base: #482b15;
+  --color-status-warning-primary-inverse-text-base: #ff6f00;
+  --color-status-warning-primary-default-icon-base: #a34d0a;
+  --color-status-warning-primary-inverse-icon-base: #ff6f00;
+  --color-status-critical-primary-default-bg-base: #ffb0af;
+  --color-status-critical-primary-default-text-base: #a32d2c;
+  --color-status-critical-primary-inverse-bg-base: #482020;
+  --color-status-critical-primary-inverse-text-base: #ff3938;
+  --color-status-critical-primary-default-icon-base: #a32d2c;
+  --color-status-critical-primary-inverse-icon-base: #ff3938;
+  --color-status-info-primary-default-bg-base: #acd2fa;
+  --color-status-info-primary-default-text-base: #27609c;
+  --color-status-info-primary-inverse-bg-base: #27303a;
+  --color-status-info-primary-inverse-text-base: #308ef2;
+  --color-status-info-primary-default-icon-base: #27609c;
+  --color-status-info-primary-inverse-icon-base: #308ef2;
+  --color-status-neutral-secondary-default-bg-base: #dedede;
+  --color-status-neutral-secondary-default-text-base: #666;
+  --color-status-neutral-secondary-inverse-bg-base: #333;
+  --color-status-neutral-secondary-inverse-text-base: #eee;
+  --color-status-neutral-secondary-default-icon-base: #666;
+  --color-status-neutral-secondary-inverse-icon-base: #eee;
+  --color-status-default-secondary-default-bg-base: #1a1a1a;
+  --color-status-default-secondary-default-text-base: #f5f5f5;
+  --color-status-default-secondary-inverse-bg-base: #fcfcfc;
+  --color-status-default-secondary-inverse-text-base: #121212;
+  --color-status-default-secondary-default-icon-base: #f5f5f5;
+  --color-status-default-secondary-inverse-icon-base: #121212;
+
+  /* Stroke 2 */
+  --color-stroke-2-default: #dedede;
+  --color-stroke-2-inverse: #333;
+
+  /* Stroke 3 */
+  --color-stroke-3-default: #d6d6d6;
+  --color-stroke-3-inverse: #404040;
+
+  /* Shimmer */
+  --color-shimmer-bg-1-shimmer-default-1: #e6e6e6;
+  --color-shimmer-bg-1-shimmer-inverse-1: #1a1a1a;
+  --color-shimmer-bg-1-shimmer-default-2: #d6d6d6;
+  --color-shimmer-bg-1-shimmer-default-3: #e6e6e6;
+  --color-shimmer-bg-1-shimmer-inverse-2: #333;
+  --color-shimmer-bg-1-shimmer-inverse-3: #1a1a1a;
+  --color-shimmer-bg-2-shimmer-default-1: #f5f5f5;
+  --color-shimmer-bg-2-shimmer-default-2: #e6e6e6;
+  --color-shimmer-bg-2-shimmer-default-3: #f5f5f5;
+  --color-shimmer-bg-2-shimmer-inverse-1: #262626;
+  --color-shimmer-bg-2-shimmer-inverse-2: #404040;
+  --color-shimmer-bg-2-shimmer-inverse-3: #262626;
+  --color-shimmer-bg-3-shimmer-default-1: #dedede;
+  --color-shimmer-bg-3-shimmer-default-2: #ccc;
+  --color-shimmer-bg-3-shimmer-default-3: #dedede;
+  --color-shimmer-bg-3-shimmer-inverse-1: #333;
+  --color-shimmer-bg-3-shimmer-inverse-2: #404040;
+  --color-shimmer-bg-3-shimmer-inverse-3: #333;
+
+  /* Brand Gradient */
+  --color-brand-gradient-kotak-811-default-1: #ca0036;
+  --color-brand-gradient-kotak-811-default-2: #ff0049;
+  --color-brand-gradient-kotak-811-default-3: #eee;
+  --color-brand-gradient-kotak-mahindra-default-1: #b8071e;
+  --color-brand-gradient-kotak-mahindra-default-2: #db0d28;
+  --color-brand-gradient-kotak-mahindra-default-3: #ffe3e3;
+  --color-brand-gradient-kotak-blue-default-1: #002347;
+  --color-brand-gradient-kotak-blue-default-2: #003974;
+  --color-brand-gradient-kotak-blue-default-3: #d7e5f4;
+
+  /* Overlay */
+  --color-overlay-overlay-1: #000c;
+  --color-overlay-overlay-2: #00000080;
+  --color-overlay-overlay-3: #0003;
+
+  /* Decorative Colors */
+  --color-decorative-colors-deco-one-deco-one-20: #b8f4ff;
+  --color-decorative-colors-deco-one-deco-one-80: #234966;
+  --color-decorative-colors-deco-one-deco-one-90: #1a3147;
+  --color-decorative-colors-deco-one-deco-one-40: #61e2f3;
+  --color-decorative-colors-deco-two-deco-two-90: #631620;
+  --color-decorative-colors-deco-two-deco-two-80: #972231;
+  --color-decorative-colors-deco-two-deco-two-20: #fbbec6;
+  --color-decorative-colors-deco-two-deco-two-40: #ff6f80;
+  --color-decorative-colors-deco-three-deco-three-90: #3d3a5e;
+  --color-decorative-colors-deco-three-deco-three-40: #c4a7ff;
+  --color-decorative-colors-deco-three-deco-three-20: #f3f2ff;
+  --color-decorative-colors-deco-three-deco-three-80: #8662c5;
+  --color-decorative-colors-deco-four-deco-four-90: #a19a18;
+  --color-decorative-colors-deco-four-deco-four-40: #e2f193;
+  --color-decorative-colors-deco-four-deco-one-20: #ebf6d5;
+  --color-decorative-colors-deco-four-deco-four-80: #ccbd1d;
+  --color-decorative-colors-deco-five-deco-five-90: #0f172a;
+  --color-decorative-colors-deco-five-deco-five-40: #94a3b8;
+  --color-decorative-colors-deco-five-deco-one-20: #e2e8f0;
+  --color-decorative-colors-deco-five-deco-five-80: #1e293b;
+  --color-decorative-colors-deco-six-deco-six-90: #2f1f1a;
+  --color-decorative-colors-deco-six-deco-six-80: #463028;
+  --color-decorative-colors-deco-six-deco-six-20: #eaddd4;
+  --color-decorative-colors-deco-six-deco-six-40: #bfa08c;
+
+  /* Input Field Filled Color */
+  --color-input-field-filled-color-active: #f7f9ff;
+  --color-input-field-filled-color-default: #f5f5f5;
+  --color-input-field-filled-color-error: #fff6f6;
+  --color-input-field-filled-color-success: #f8fff7;
+
+  /* Brand Background */
+  --color-brand-background-solitare-default-1: #534ca1;
+  --color-brand-background-solitare-default-3: #2d2a58;
+  --color-brand-background-solitare-default-4: #251f45;
+  --color-brand-background-solitare-default-2: #353166;
+  --color-brand-background-privyplus-default-1: #666;
+  --color-brand-background-privyplus-default-2: #404040;
+  --color-brand-background-privyplus-default-3: #262626;
+  --color-brand-background-privyplus-default-4: #1a1a1a;
+
+  /* Stroke 4 */
+  --color-stroke-4-default: #878787;
+  --color-stroke-4-inverse: #878787;
+}

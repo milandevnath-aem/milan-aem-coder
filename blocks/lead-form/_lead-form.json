@@ -89,6 +89,8 @@
           "value": "text",
           "options": [
             { "name": "Text", "value": "text" },
+            { "name": "Text (half width, pairs side by side on desktop)", "value": "text-half" },
+            { "name": "Text area (multi-line)", "value": "textarea" },
             { "name": "Mobile number (+91)", "value": "tel" },
             { "name": "Email", "value": "email" },
             { "name": "Postal code", "value": "zip" },

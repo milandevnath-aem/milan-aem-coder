@@ -81,6 +81,10 @@ export async function createModal(contentNodes, { className = '', label = '' } =
   return {
     dialog,
     showModal: () => {
+      // forms on small screens open below the header (it stays visible, the page is inert)
+      const nav = document.querySelector('header nav');
+      const top = nav ? Math.max(0, Math.round(nav.getBoundingClientRect().bottom)) : 0;
+      dialog.style.setProperty('--modal-top', `${top}px`);
       dialog.showModal();
       document.body.classList.add('modal-open');
       content.scrollTop = 0;
@@ -102,7 +106,8 @@ export async function openModal(url, { prefill } = {}) {
   if (!fragment) return null;
   document.querySelectorAll('dialog.modal[open]').forEach((open) => open.close());
   const modal = await createModal([...fragment.childNodes], {
-    className: fragment.querySelector('.block') ? '' : 'modal-details',
+    className: (fragment.querySelector('.lead-form') && 'modal-form')
+      || (fragment.querySelector('.block') ? '' : 'modal-details'),
     label: fragment.querySelector('h1, h2')?.textContent.trim() || '',
   });
   if (prefill) modal.dialog.querySelector('form')?.prefill?.(prefill);

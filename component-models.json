@@ -918,6 +918,14 @@
             "value": "text"
           },
           {
+            "name": "Text (half width, pairs side by side on desktop)",
+            "value": "text-half"
+          },
+          {
+            "name": "Text area (multi-line)",
+            "value": "textarea"
+          },
+          {
             "name": "Mobile number (+91)",
             "value": "tel"
           },
@@ -1095,6 +1103,18 @@
           {
             "name": "Documents (title and checklist)",
             "value": "documents"
+          }
+        ]
+      },
+      {
+        "component": "multiselect",
+        "name": "classes_options",
+        "label": "Options",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Carousel card",
+            "value": "carousel-card"
           }
         ]
       },
