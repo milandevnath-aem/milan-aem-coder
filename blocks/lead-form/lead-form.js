@@ -110,8 +110,9 @@ function textField(label, kind, required) {
     prefix.textContent = '+91';
     field.append(prefix);
     Object.assign(input, {
-      type: 'tel', inputMode: 'numeric', pattern: '[6-9][0-9]{9}', maxLength: 10, autocomplete: 'tel-national',
+      type: 'tel', inputMode: 'numeric', pattern: '[6-9][0-9]{9}', autocomplete: 'tel-national',
     });
+    digitsOnly(input, 10);
   } else if (kind === 'email') {
     Object.assign(input, { type: 'email', autocomplete: 'email' });
   } else if (kind === 'zip') {
@@ -121,9 +122,11 @@ function textField(label, kind, required) {
     digitsOnly(input, 6);
   } else {
     input.type = 'text';
-    // first and last name get their own autofill values, or the full name fills both
+    // first and last name get their own autofill values, or the full name fills both;
+    // a company ("Account name") is not a person's name
     if (/\b(first|given)\b.*name/i.test(label)) input.autocomplete = 'given-name';
     else if (/\b(last|sur|family)\s*name/i.test(label)) input.autocomplete = 'family-name';
+    else if (/\b(account|company|business|organi[sz]ation)\b/i.test(label)) input.autocomplete = 'organization';
     else if (/name/i.test(label)) input.autocomplete = 'name';
   }
   const control = document.createElement('span');
@@ -277,6 +280,51 @@ function pageCategory() {
   return hero?.value || getMetadata('loan-category') || '';
 }
 
+// modal pages known not to exist (e.g. no own form for "New Car Finance")
+const missingForms = new Set();
+
+/**
+ * Opens the form of the picked product: a product with a form of its own has a modal
+ * page named after it next to the shared one ("Car Lease" -> apply-now-car-lease,
+ * "Loan Against Property" -> apply-now-loan-against-property); any other product uses
+ * the shared form (apply-now). What was entered so far is carried over.
+ * @param {string} path the open modal's page path
+ * @param {string} category the picked product
+ * @param {string[]} categories all products of the dropdown
+ * @param {HTMLFormElement} form the open form
+ */
+async function openFormFor(path, category, categories, form) {
+  const dir = path.slice(0, path.lastIndexOf('/') + 1);
+  const ext = path.match(/\.html$/)?.[0] || '';
+  const current = path.slice(dir.length).replace(/\.html$/, '');
+  const suffix = categories.map(slug).find((s) => current.endsWith(`-${s}`));
+  const base = suffix ? current.slice(0, -(suffix.length + 1)) : current;
+  const targets = [...new Set([`${base}-${slug(category)}`, base])];
+
+  const data = Object.fromEntries(new FormData(form));
+  delete data.captcha;
+  // first + last name become one name for a form that asks for it once
+  if (data['first-name'] || data['last-name']) {
+    data.name = [data['first-name'], data['last-name']].filter(Boolean).join(' ');
+  }
+  data.category = category;
+
+  const { openModal } = await import('../modal/modal.js');
+  for (let i = 0; i < targets.length; i += 1) {
+    const name = targets[i];
+    if (name === current) return; // already the right form
+    if (!missingForms.has(name)) {
+      // eslint-disable-next-line no-await-in-loop
+      const modal = await openModal(`${dir}${name}${ext}`, { prefill: data });
+      if (modal) {
+        modal.dialog.querySelector('.lead-form .dropdown-field')?.focus();
+        return;
+      }
+      missingForms.add(name);
+    }
+  }
+}
+
 /** Site root next to the nav fragment (e.g. /content/kmpl locally, / when published) */
 function siteRoot() {
   const nav = getMetadata('nav');
@@ -327,7 +375,8 @@ export default function decorate(block) {
     // each field and its error share one grid cell; half-width cells pair up on a line
     const item = document.createElement('div');
     item.className = 'lead-form-item';
-    if (halfCell?.textContent.trim() === 'true') item.classList.add('is-half');
+    // "Text (half width)" fields, or any field with Half width ticked, share a line (desktop)
+    if (kind === 'text-half' || halfCell?.textContent.trim() === 'true') item.classList.add('is-half');
     let field;
     if (kind === 'select' || kind === 'search') {
       const { options, value } = parseOptions(optionsText);
@@ -368,22 +417,6 @@ export default function decorate(block) {
     }
     fields.append(item);
   });
-  // two name fields in a row (Name + LName, First name + Last name) are first and last
-  // name: they share a line 50/50, Half width ticked or not
-  const items = [...fields.children];
-  const nameInput = (item) => [...item.querySelectorAll('.lead-form-text input')]
-    .find((input) => /name/.test(input.name));
-  for (let i = 0; i < items.length - 1; i += 1) {
-    const first = nameInput(items[i]);
-    const last = nameInput(items[i + 1]);
-    if (first && last) {
-      first.autocomplete = 'given-name';
-      last.autocomplete = 'family-name';
-      items[i].classList.add('is-half');
-      items[i + 1].classList.add('is-half');
-      i += 1;
-    }
-  }
   form.append(fields);
 
   const legal = document.createElement('div');
@@ -545,6 +578,12 @@ export default function decorate(block) {
   };
   selectCategory(pageCategory());
   refresh();
+  // picking another product in a modal opens that product's form
+  categoryDropdown?.addEventListener('change', (e) => {
+    const path = dialog()?.dataset.modalPath;
+    if (!e.detail?.byUser || !path || !categoryDropdown.value) return;
+    openFormFor(path, categoryDropdown.value, categoryOptions, form);
+  });
 
   // values carried over from another form (e.g. the hero call-back form)
   // a value may also be a list of candidates (most specific first): a dropdown takes the

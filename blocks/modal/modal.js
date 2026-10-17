@@ -105,11 +105,15 @@ export async function openModal(url, { prefill } = {}) {
   const fragment = await loadFragment(path);
   if (!fragment) return null;
   document.querySelectorAll('dialog.modal[open]').forEach((open) => open.close());
+  // each modal page gets its own class (e.g. "apply-now-car-lease-modal") for its layout
+  const name = path.split('/').pop().replace(/(\.plain)?\.html$/, '');
+  const type = (fragment.querySelector('.lead-form') && 'modal-form')
+    || (fragment.querySelector('.block') ? '' : 'modal-details');
   const modal = await createModal([...fragment.childNodes], {
-    className: (fragment.querySelector('.lead-form') && 'modal-form')
-      || (fragment.querySelector('.block') ? '' : 'modal-details'),
+    className: [type, name && `${name}-modal`].filter(Boolean).join(' '),
     label: fragment.querySelector('h1, h2')?.textContent.trim() || '',
   });
+  modal.dialog.dataset.modalPath = path;
   if (prefill) modal.dialog.querySelector('form')?.prefill?.(prefill);
   modal.showModal();
   return modal;

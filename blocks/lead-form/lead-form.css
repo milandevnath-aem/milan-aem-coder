@@ -1,15 +1,34 @@
+/* Figma type: values and placeholders 16/24 (desktop too), raised labels 12/16 with
+   0.24px letter spacing */
 .lead-form {
   --lead-form-text: 16px;
   --lead-form-line: 24px;
+  --lead-form-label-spacing: 0.24px;
 
   display: flex;
   flex-direction: column;
-  gap: 32px;
+
+  /* "Go back" to the heading (small screens) */
+  gap: 16px;
 }
 
 .lead-form .dropdown {
   --dropdown-value-size: var(--lead-form-text);
   --dropdown-value-line: var(--lead-form-line);
+}
+
+/* fields are 64px (68px desktop) tall: no border taking space, the error state is an
+   inset outline instead */
+.lead-form .dropdown-field {
+  border: 0;
+}
+
+.lead-form .dropdown.is-filled .dropdown-label {
+  letter-spacing: var(--lead-form-label-spacing);
+}
+
+.lead-form .dropdown.is-invalid .dropdown-field {
+  box-shadow: inset 0 0 0 1px #ff3938;
 }
 
 .lead-form .lead-form-intro h1,
@@ -22,38 +41,41 @@
   letter-spacing: -0.8px;
 }
 
+/* Figma Body/B2 on small screens */
 .lead-form .lead-form-intro p {
   margin: 0;
   color: var(--muted-color);
-  font-size: var(--body-font-size-m);
+  font-size: var(--body-font-size-s);
   font-weight: 500;
-  line-height: 24px;
+  line-height: 20px;
 }
 
+/* small screens: 20px from the intro to the fields, 24px from the fields to the
+   disclaimer; desktop 40px */
 .lead-form .lead-form-main,
 .lead-form .lead-form-form {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 20px;
+}
+
+.lead-form .lead-form-form {
+  gap: 24px;
 }
 
 .lead-form .lead-form-fields {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  gap: 16px;
 }
 
-/* a field and its error; full width unless marked half width */
+/* a field and its error; full width (half width fields pair up on desktop only) */
 .lead-form .lead-form-item {
   display: flex;
   flex-direction: column;
   grid-column: 1 / -1;
   gap: 8px;
   min-width: 0;
-}
-
-.lead-form .lead-form-item.is-half {
-  grid-column: auto;
 }
 
 /* text inputs: the label sits in the field and moves up once there is a value */
@@ -63,7 +85,6 @@
   align-items: center;
   gap: 12px;
   min-height: 64px;
-  border: 1px solid transparent;
   border-radius: 16px;
   padding: 10px 20px;
   background-color: var(--light-color);
@@ -76,15 +97,17 @@
 }
 
 .lead-form .lead-form-input.is-invalid {
-  border-color: #ff3938;
   background-color: #fff6f6;
+  box-shadow: inset 0 0 0 1px #ff3938;
 }
 
+/* raised label 4px above the value */
 .lead-form .lead-form-control {
   position: relative;
   display: flex;
   flex: 1 1 auto;
   flex-direction: column-reverse;
+  gap: 4px;
   min-width: 0;
 }
 
@@ -102,11 +125,18 @@
   box-shadow: none;
 }
 
+/* browser autofill: keep the field's own background (no tinted box inside the field) */
+.lead-form .lead-form-input input:autofill {
+  -webkit-text-fill-color: var(--text-color);
+  transition: background-color 0s 600000s, color 0s 600000s;
+}
+
 .lead-form .lead-form-label {
   color: var(--muted-color);
   font-size: 12px;
   font-weight: 500;
   line-height: 16px;
+  letter-spacing: var(--lead-form-label-spacing);
   transition: font-size 0.15s;
 }
 
@@ -116,22 +146,67 @@
   transform: translateY(-50%);
   font-size: var(--lead-form-text);
   line-height: var(--lead-form-line);
+  letter-spacing: 0;
   pointer-events: none;
 }
 
-/* multi-line text: grows with its content up to six lines, count below on the right */
+/* mobile number: "+91", 8px, divider, 8px, number; the raised label sits above both */
+.lead-form .lead-form-tel {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: center;
+  gap: 4px 8px;
+}
+
+.lead-form .lead-form-tel .lead-form-control {
+  display: contents;
+}
+
+.lead-form .lead-form-tel .lead-form-label {
+  grid-area: 1 / 1 / 2 / 3;
+}
+
+.lead-form .lead-form-tel .lead-form-prefix {
+  grid-area: 2 / 1;
+}
+
+.lead-form .lead-form-tel input {
+  grid-area: 2 / 2;
+  min-width: 0;
+}
+
+/* empty: the label is the placeholder next to "+91" */
+.lead-form .lead-form-tel:has(input:placeholder-shown:not(:focus)) {
+  row-gap: 0;
+}
+
+.lead-form .lead-form-tel input:placeholder-shown:not(:focus) + .lead-form-label {
+  position: static;
+  grid-area: 2 / 2;
+  transform: none;
+}
+
+/* description: multi-line, label at the top, grows with its content up to six lines,
+   count below on the right */
 .lead-form .lead-form-textarea {
   flex-direction: column;
-  align-items: stretch;
+  align-items: flex-start;
   gap: 4px;
-  padding-block: 12px;
+  min-height: 160px;
+  padding: 20px;
+}
+
+.lead-form .lead-form-textarea .lead-form-control {
+  align-self: stretch;
 }
 
 .lead-form .lead-form-textarea textarea {
-  min-height: calc(var(--lead-form-line) * 3);
+  flex: 1 1 auto;
+  min-height: 72px;
   max-height: calc(var(--lead-form-line) * 6);
   margin: 0;
-  resize: none;
+  font-family: inherit;
+  resize: vertical;
   field-sizing: content;
 }
 
@@ -152,39 +227,16 @@
   color: var(--muted-color);
 }
 
-/* description: multi-line, label at the top */
-.lead-form .lead-form-textarea {
-  align-items: flex-start;
-  min-height: 160px;
-  padding: 20px;
-}
-
-.lead-form .lead-form-textarea .lead-form-control {
-  align-self: stretch;
-}
-
-.lead-form .lead-form-textarea textarea {
-  flex: 1 1 auto;
-  min-height: 72px;
-  font-family: inherit;
-  resize: vertical;
-}
-
-.lead-form .lead-form-textarea textarea:placeholder-shown:not(:focus) + .lead-form-label {
-  top: 0;
-  transform: none;
-}
-
-/* field errors: text under the field, not colour alone */
+/* field errors: text under the field, not colour alone (Figma error text: Body/B2) */
 .lead-form .lead-form-error {
   display: flex;
   align-items: center;
   gap: 4px;
   margin: 0;
-  color: #c4161c;
-  font-size: var(--body-font-size-xs);
-  font-weight: 600;
-  line-height: 18px;
+  color: #ff3938;
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  line-height: 20px;
 }
 
 .lead-form .lead-form-error[hidden] {
@@ -201,7 +253,7 @@
 
 .lead-form .lead-form-prefix {
   border-right: 1px solid #dedede;
-  padding-right: 12px;
+  padding-right: 8px;
   color: var(--text-color);
   font-size: var(--lead-form-text);
   font-weight: 500;
@@ -213,7 +265,7 @@
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: center;
-  gap: 16px 12px;
+  gap: 16px 8px;
 }
 
 .lead-form .lead-form-captcha canvas {
@@ -226,25 +278,31 @@
   grid-column: 1 / -1;
 }
 
+/* refresh and listen: 28px buttons, 8px apart */
 .lead-form .lead-form-captcha-tools {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
 }
 
 .lead-form .lead-form-icon-button {
+  box-sizing: border-box;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
   margin: 0;
   border: 0;
   border-radius: 8px;
-  padding: 2px;
+  padding: 0;
   background: transparent;
   cursor: pointer;
 }
 
 .lead-form .lead-form-icon-button img {
-  width: 22px;
-  height: 22px;
+  width: 23.33px;
+  height: 23.33px;
 }
 
 /* disclaimer and submit */
@@ -254,20 +312,30 @@
   gap: 12px;
 }
 
+/* disclaimer (Figma Body/B1 on small screens: 12/16, 0.24px, #808080) */
 .lead-form .lead-form-disclaimer {
-  color: var(--muted-color);
+  --lead-form-disclaimer-line: 16px;
+
+  color: #808080;
   font-size: var(--body-font-size-xs);
   font-weight: 500;
-  line-height: 18px;
+  line-height: var(--lead-form-disclaimer-line);
+  letter-spacing: var(--lead-form-label-spacing);
 }
 
+/* the intro sentence is followed by a blank line before the list */
 .lead-form .lead-form-disclaimer p {
-  margin: 0 0 8px;
+  margin: 0 0 var(--lead-form-disclaimer-line);
 }
 
 .lead-form .lead-form-disclaimer-label {
   color: var(--accent-color);
   font-weight: 600;
+  letter-spacing: 0;
+}
+
+.lead-form .lead-form-disclaimer p.lead-form-disclaimer-label {
+  margin-bottom: 11px;
 }
 
 .lead-form .lead-form-disclaimer ol {
@@ -275,16 +343,12 @@
   padding-left: 20px;
 }
 
-.lead-form .lead-form-disclaimer li + li {
-  margin-top: 4px;
-}
-
 .lead-form .lead-form-disclaimer.is-collapsed li:nth-child(n + 2) {
   display: none;
 }
 
 .lead-form .lead-form-more {
-  margin: 8px 0 0;
+  margin: 9px 0 0;
   border: 0;
   padding: 0;
   background: none;
@@ -295,8 +359,9 @@
   cursor: pointer;
 }
 
+/* 29px below "Read More" (12px of it is the gap of .lead-form-legal) */
 .lead-form .lead-form-note {
-  margin: 20px 0 0;
+  margin: 17px 0 0;
   color: var(--muted-color);
   font-size: var(--body-font-size-xs);
   font-weight: 600;
@@ -368,14 +433,16 @@
   align-items: center;
   gap: 4px;
   min-height: 24px;
-  margin: 40px 0 -12px;
+  margin: 0;
   border: 0;
   padding: 0;
   background: none;
   color: var(--text-color);
-  font-size: var(--body-font-size-m);
-  font-weight: 500;
-  line-height: 24px;
+
+  /* Figma Link Button/L-2 */
+  font-size: var(--body-font-size-s);
+  font-weight: 600;
+  line-height: 20px;
   cursor: pointer;
 }
 
@@ -637,10 +704,21 @@
 }
 
 :where(.desktop-view) .lead-form {
-  --lead-form-text: 20px;
-  --lead-form-line: 28px;
-
   gap: 40px;
+}
+
+:where(.desktop-view) .lead-form .lead-form-intro p {
+  font-size: var(--body-font-size-m);
+  line-height: 24px;
+}
+
+:where(.desktop-view) .lead-form .lead-form-form {
+  gap: 40px;
+}
+
+/* desktop: half width fields (e.g. First name, Last name) share a line */
+:where(.desktop-view) .lead-form .lead-form-item.is-half {
+  grid-column: auto;
 }
 
 :where(.desktop-view) .lead-form .lead-form-intro h1,
@@ -654,7 +732,7 @@
   gap: 40px;
 }
 
-:where(.desktop-view) .lead-form .lead-form-input {
+:where(.desktop-view) .lead-form :is(.lead-form-input, .dropdown-field) {
   min-height: 68px;
 }
 
@@ -666,9 +744,13 @@
   min-height: 136px;
 }
 
-/* captcha (desktop): image, tools and the code field on one row */
+/* captcha (desktop): image, 8px, tools, 16px, the code field on one row */
 :where(.desktop-view) .lead-form .lead-form-captcha {
   grid-template-columns: auto auto 1fr;
+}
+
+:where(.desktop-view) .lead-form .lead-form-captcha-tools {
+  margin-right: 8px;
 }
 
 :where(.desktop-view) .lead-form .lead-form-captcha canvas {
@@ -721,14 +803,27 @@
   padding: 12px 20px 24px;
 }
 
-:where(.desktop-view) .lead-form .lead-form-label {
-  font-size: var(--body-font-size-s);
-  line-height: 18px;
-}
-
 :where(.desktop-view) .lead-form .lead-form-disclaimer,
 :where(.desktop-view) .lead-form .lead-form-more,
 :where(.desktop-view) .lead-form .lead-form-note {
   font-size: var(--body-font-size-s);
   line-height: 20px;
+}
+
+:where(.desktop-view) .lead-form .lead-form-disclaimer {
+  --lead-form-disclaimer-line: 20px;
+
+  letter-spacing: 0;
+}
+
+:where(.desktop-view) .lead-form .lead-form-disclaimer p.lead-form-disclaimer-label {
+  margin-bottom: 10px;
+}
+
+:where(.desktop-view) .lead-form .lead-form-more {
+  margin-top: 8px;
+}
+
+:where(.desktop-view) .lead-form .lead-form-note {
+  margin-top: 20px;
 }

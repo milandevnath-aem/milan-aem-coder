@@ -45,7 +45,8 @@ export function highlight(el, text, query) {
  * @param {boolean} [config.required]
  * @param {string} [config.boundary] selector of an ancestor (e.g. a banner) the open
  *   panel must stay inside: the list is shortened and scrolls instead of overflowing it
- * @returns {HTMLDivElement} the dropdown; dispatches "change", exposes value/setValue()/hasOption()
+ * @returns {HTMLDivElement} the dropdown; dispatches "change" (detail.byUser: picked by the
+ *   visitor), exposes value/setValue()/hasOption()
  */
 export function createDropdown({
   label, name, options, value = '', search = false, searchPlaceholder = 'Search',
@@ -217,18 +218,19 @@ export function createDropdown({
       }));
   };
 
-  const setValue = (newValue, notify = true) => {
+  // the "change" event's detail.byUser tells a visitor's pick from a value set by code
+  const setValue = (newValue, notify = true, byUser = false) => {
     const option = findOption(newValue);
     input.value = option ? option.value : '';
     root.value = input.value;
     field.querySelector('.dropdown-value').textContent = option ? option.label : '';
     root.classList.toggle('is-filled', !!option);
-    if (notify) root.dispatchEvent(new Event('change', { bubbles: true }));
+    if (notify) root.dispatchEvent(new CustomEvent('change', { bubbles: true, detail: { byUser } }));
   };
 
   const choose = (li) => {
     if (!li?.dataset.value) return;
-    setValue(li.dataset.value);
+    setValue(li.dataset.value, true, true);
     close(true);
   };
 
