@@ -23,6 +23,7 @@
   overflow: hidden;
   background-color: var(--background-color);
   color: var(--feature-banner-text);
+  height: 672px;
 }
 
 .feature-banner .feature-banner-item.light-text {
@@ -106,7 +107,7 @@
 }
 
 .feature-banner .feature-banner-content .button-wrapper {
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 .feature-banner .feature-banner-content a.button {
@@ -234,9 +235,10 @@
 }
 
 /* product pages: 12px between heading and text, Figma pill buttons (12px + 14px inner) */
-:where(.desktop-view) main:has(.hero-loan.product) .feature-banner .feature-banner-content p {
+
+/* :where(.desktop-view) main:has(.hero-loan.product) .feature-banner .feature-banner-content p {
   margin-top: 12px;
-}
+} */
 
 main:has(.hero-loan.product) .feature-banner .feature-banner-content a.button {
   padding: 14px 12px;
