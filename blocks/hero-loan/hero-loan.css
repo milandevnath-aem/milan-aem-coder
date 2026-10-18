@@ -304,6 +304,13 @@
   opacity: 1;
 }
 
+/* browser autofill: no tinted box inside the field (the field keeps its own background) */
+.hero-loan .hero-loan-input input:autofill {
+  background-clip: text;
+  -webkit-text-fill-color: var(--dark-color);
+  transition: background-color 0s 600000s, color 0s 600000s;
+}
+
 .hero-loan .hero-loan-prefix {
   padding-right: 8px;
   border-right: 1px solid #dedede;

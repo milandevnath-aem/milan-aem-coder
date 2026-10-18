@@ -127,6 +127,7 @@
 
 /* browser autofill: keep the field's own background (no tinted box inside the field) */
 .lead-form .lead-form-input input:autofill {
+  background-clip: text;
   -webkit-text-fill-color: var(--text-color);
   transition: background-color 0s 600000s, color 0s 600000s;
 }

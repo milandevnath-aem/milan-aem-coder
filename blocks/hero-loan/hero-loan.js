@@ -2,6 +2,9 @@ import { moveInstrumentation, isModalLink } from '../../scripts/scripts.js';
 import { createPicture } from '../../scripts/images.js';
 import { createDropdown } from '../../scripts/dropdown.js';
 import { MEDIA } from '../../scripts/viewport.js';
+import {
+  authoredForm, readForms, rememberForms, resolveForm,
+} from '../../scripts/category-forms.js';
 
 // chips shown in the row; the rest are listed under "More"
 const VISIBLE_CATEGORIES = 4;
@@ -113,16 +116,41 @@ function buildMore(chips, overflow) {
   return wrap;
 }
 
-function confirmOnSubmit(form, modalHref) {
+/**
+ * Apply now opens the form of the selected category (scripts/category-forms.js): its
+ * page in "Category forms", else a page named after it next to the Form submit URL, else
+ * that URL. The button's data-modal follows the selection.
+ * @param {HTMLFormElement} form
+ * @param {string} modalHref the Form submit URL when it is a modal page
+ * @param {string[]} forms authored "Category forms"
+ * @param {string[]} categories
+ */
+function confirmOnSubmit(form, modalHref, forms = [], categories = []) {
+  const button = form.querySelector('button[type="submit"]');
+  const selected = () => String(new FormData(form).get('category') || '');
+  const show = (target) => {
+    if (target) button.dataset.modal = target;
+    else delete button.dataset.modal;
+    return target;
+  };
+  const update = async () => show(await resolveForm(selected(), {
+    forms, fallback: modalHref, categories,
+  }));
+  // on load without looking pages up; a change of category resolves its form
+  show(authoredForm(selected(), forms) || modalHref);
+  form.addEventListener('change', update);
+
   form.addEventListener('submit', async (e) => {
     if (form.getAttribute('action')) return;
     e.preventDefault();
-    if (modalHref) {
+    const target = await update();
+    if (target) {
       // continue in the full application form, carrying over what was entered
       const data = Object.fromEntries(new FormData(form));
       const { openModal } = await import('../modal/modal.js');
-      const modal = await openModal(modalHref);
-      modal?.dialog.querySelector('form')?.prefill?.(data);
+      const modal = await openModal(target, { prefill: data });
+      // the form keeps this mapping when another category is picked in it
+      if (modal) rememberForms(modal.dialog, { forms, shared: modalHref });
       return;
     }
     // no endpoint configured: confirm locally instead of reloading the page
@@ -165,8 +193,9 @@ function buildField(label, index) {
 }
 
 function buildForm(config, isProduct) {
-  // rows in model order: heading, options (categories + fields), submit link
-  const [headingRow, optionsRow, actionRow] = config;
+  // rows in model order: heading, options (categories + fields), submit link, category forms
+  const [headingRow, optionsRow, actionRow, formsRow] = config;
+  const forms = readForms(formsRow);
   const options = [...(optionsRow?.querySelectorAll('p') || [])].map((p) => p.textContent.trim());
   if (!options.length && cellText(optionsRow)) options.push(cellText(optionsRow));
   const [categoriesText = '', fieldsText = ''] = options;
@@ -218,7 +247,7 @@ function buildForm(config, isProduct) {
     moveInstrumentation(optionsRow, select);
     form.querySelector('.hero-loan-categories').remove();
     form.prepend(select);
-    confirmOnSubmit(form, modalHref);
+    confirmOnSubmit(form, modalHref, forms, categories);
     if (actionRow) moveInstrumentation(actionRow, form.querySelector('button[type="submit"]'));
     card.append(form);
     return card;
@@ -236,7 +265,7 @@ function buildForm(config, isProduct) {
   moveInstrumentation(optionsRow, form.querySelector('.hero-loan-categories'));
   if (actionRow) moveInstrumentation(actionRow, form.querySelector('button[type="submit"]'));
 
-  confirmOnSubmit(form, modalHref);
+  confirmOnSubmit(form, modalHref, forms, categories);
 
   card.append(form);
   return card;

@@ -3,12 +3,11 @@ import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createDropdown } from '../../scripts/dropdown.js';
 import { sendOtp, submitLead } from './lead-api.js';
 import { createOtpStep, createSuccessStep, setLoading } from './lead-form-otp.js';
+import {
+  readForms, rememberForms, rememberedForms, resolveForm, sharedForm, slug,
+} from '../../scripts/category-forms.js';
 
 const CAPTCHA_CHARS = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-
-function slug(text) {
-  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-}
 
 function iconButton(name, label) {
   const button = document.createElement('button');
@@ -280,26 +279,25 @@ function pageCategory() {
   return hero?.value || getMetadata('loan-category') || '';
 }
 
-// modal pages known not to exist (e.g. no own form for "New Car Finance")
-const missingForms = new Set();
-
 /**
- * Opens the form of the picked product: a product with a form of its own has a modal
- * page named after it next to the shared one ("Car Lease" -> apply-now-car-lease,
- * "Loan Against Property" -> apply-now-loan-against-property); any other product uses
- * the shared form (apply-now). What was entered so far is carried over.
- * @param {string} path the open modal's page path
+ * Opens the form of the picked product (see scripts/category-forms.js: the block's
+ * "Category forms", else a modal page named after the product, else the shared form).
+ * What was entered so far is carried over. A form opened for a category (from the hero or
+ * another form) keeps the mapping it was opened with when it has none of its own.
+ * @param {HTMLDialogElement} dialog the open modal
  * @param {string} category the picked product
  * @param {string[]} categories all products of the dropdown
+ * @param {string[]} ownForms this form's authored "Category forms"
  * @param {HTMLFormElement} form the open form
  */
-async function openFormFor(path, category, categories, form) {
-  const dir = path.slice(0, path.lastIndexOf('/') + 1);
-  const ext = path.match(/\.html$/)?.[0] || '';
-  const current = path.slice(dir.length).replace(/\.html$/, '');
-  const suffix = categories.map(slug).find((s) => current.endsWith(`-${s}`));
-  const base = suffix ? current.slice(0, -(suffix.length + 1)) : current;
-  const targets = [...new Set([`${base}-${slug(category)}`, base])];
+async function openFormFor(dialog, category, categories, ownForms, form) {
+  const path = dialog.dataset.modalPath;
+  const remembered = rememberedForms(dialog);
+  const forms = ownForms.length ? ownForms : remembered.forms;
+  const shared = remembered.shared || sharedForm(path, categories);
+  const target = await resolveForm(category, { forms, fallback: shared, categories });
+  const page = (p) => p.replace(/(\.plain)?\.html$/, '');
+  if (!target || page(target) === page(path)) return; // already the right form
 
   const data = Object.fromEntries(new FormData(form));
   delete data.captcha;
@@ -310,19 +308,10 @@ async function openFormFor(path, category, categories, form) {
   data.category = category;
 
   const { openModal } = await import('../modal/modal.js');
-  for (let i = 0; i < targets.length; i += 1) {
-    const name = targets[i];
-    if (name === current) return; // already the right form
-    if (!missingForms.has(name)) {
-      // eslint-disable-next-line no-await-in-loop
-      const modal = await openModal(`${dir}${name}${ext}`, { prefill: data });
-      if (modal) {
-        modal.dialog.querySelector('.lead-form .dropdown-field')?.focus();
-        return;
-      }
-      missingForms.add(name);
-    }
-  }
+  const modal = await openModal(target, { prefill: data });
+  if (!modal) return;
+  rememberForms(modal.dialog, { forms, shared });
+  modal.dialog.querySelector('.lead-form .dropdown-field')?.focus();
 }
 
 /** Site root next to the nav fragment (e.g. /content/kmpl locally, / when published) */
@@ -341,7 +330,9 @@ export default function decorate(block) {
   const rows = [...block.children];
   const config = rows.filter((row) => row.children.length <= 1);
   const fieldRows = rows.filter((row) => row.children.length > 1);
-  const [textRow, disclaimerRow, noteRow, submitRow] = config;
+  const [textRow, disclaimerRow, noteRow, submitRow, formsRow] = config;
+  // "Category forms": the form (modal page) of each category that has one of its own
+  const forms = readForms(formsRow);
 
   const intro = document.createElement('div');
   intro.className = 'lead-form-intro';
@@ -580,9 +571,9 @@ export default function decorate(block) {
   refresh();
   // picking another product in a modal opens that product's form
   categoryDropdown?.addEventListener('change', (e) => {
-    const path = dialog()?.dataset.modalPath;
-    if (!e.detail?.byUser || !path || !categoryDropdown.value) return;
-    openFormFor(path, categoryDropdown.value, categoryOptions, form);
+    const d = dialog();
+    if (!e.detail?.byUser || !d?.dataset.modalPath || !categoryDropdown.value) return;
+    openFormFor(d, categoryDropdown.value, categoryOptions, forms, form);
   });
 
   // values carried over from another form (e.g. the hero call-back form)
