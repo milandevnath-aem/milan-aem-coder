@@ -125,10 +125,7 @@
           "valueType": "string",
           "name": "amount_defaultError",
           "label": "⚠ Error: default loan amount must be between the minimum and maximum",
-          "required": true,
-          "validation": {
-            "customErrorMsg": "Change the default, minimum or maximum. Until this is fixed, the calculator starts at the nearest limit."
-          },
+          "description": "Change the default, minimum or maximum. Until this is fixed, the calculator starts at the nearest limit.",
           "readOnly": true,
           "condition": {
             "or": [
@@ -207,10 +204,7 @@
           "valueType": "string",
           "name": "rate_defaultError",
           "label": "⚠ Error: default interest rate must be between the minimum and maximum",
-          "required": true,
-          "validation": {
-            "customErrorMsg": "Change the default, minimum or maximum. Until this is fixed, the calculator starts at the nearest limit."
-          },
+          "description": "Change the default, minimum or maximum. Until this is fixed, the calculator starts at the nearest limit.",
           "readOnly": true,
           "condition": {
             "or": [
@@ -289,10 +283,7 @@
           "valueType": "string",
           "name": "tenure_defaultError",
           "label": "⚠ Error: default tenure must be between the minimum and maximum",
-          "required": true,
-          "validation": {
-            "customErrorMsg": "Change the default, minimum or maximum. Until this is fixed, the calculator starts at the nearest limit."
-          },
+          "description": "Change the default, minimum or maximum. Until this is fixed, the calculator starts at the nearest limit.",
           "readOnly": true,
           "condition": {
             "or": [
