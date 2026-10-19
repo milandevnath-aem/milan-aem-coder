@@ -1,7 +1,7 @@
 
-.feature-cards-container h2#key-features{
+/* .feature-cards-container h2#key-features{
   padding-block: 44px;
-}
+} */
 
 :where(.desktop-view) .feature-cards-container h2#key-features{
   padding-block: 0;
@@ -55,24 +55,30 @@
 .feature-cards .feature-cards-body h3,
 .feature-cards .feature-cards-body h4 {
     margin: 0;
-    font-size: 14px;
-    line-height: 20px;
+    font-size: var(--body-font-size-m);
+    line-height: var(--type-b3-line);
     font-weight: 600;
+    color: var(--color-text-primary-default-base);
 }
 
 .feature-cards .feature-cards-body p{
   margin: 8px 0 0;
   color: var(--muted-color);
   font-weight: 500;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: var(--type-a1-size);
+  line-height: var(--type-bt2-line);
   letter-spacing: 0.24px;
+}
+
+.feature-cards .feature-cards-icon {
+    height: 32px;
+    width: 32px;
 }
 
 .feature-cards .feature-cards-icon img {
     display: block;
-    width: 32px;
-    height: 32px;
+    max-width: 32px;
+    max-height: 32px;
     object-fit: contain;
 }
 
