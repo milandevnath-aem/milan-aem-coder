@@ -8,7 +8,6 @@ import {
 
 // chips shown in the row; the rest are listed under "More"
 const VISIBLE_CATEGORIES = 4;
-const SLIDE_INTERVAL = 6000;
 
 function cellText(row) {
   return row?.textContent.trim() || '';
