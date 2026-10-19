@@ -803,7 +803,7 @@
         "name": "categoryForms",
         "label": "Category forms",
         "multi": true,
-        "description": "Optional: the form (modal page) of each category that has its own, e.g. /modals/apply-now-car-lease for Car Lease. A page belongs to the category its name ends with. Apply now opens the selected category's form; other categories open the Form submit URL."
+        "description": "Optional: one form (modal page) per category, in the same order as the categories: the 1st page opens for the 1st category, the 2nd for the 2nd, and so on. Use the Form submit URL page for a category that has no form of its own. Categories beyond the last page open the Form submit URL."
       }
     ]
   },
@@ -906,7 +906,7 @@
         "name": "forms",
         "label": "Category forms",
         "multi": true,
-        "description": "Optional: the form (modal page) of each loan category that has its own, e.g. /modals/apply-now-loan-against-property. A page belongs to the category its name ends with. Picking that category in \"Select loan category\" opens its form; other categories open the shared form."
+        "description": "Optional: one form (modal page) per loan category, in the same order as the options of \"Select loan category\": the 1st page opens for the 1st option, the 2nd for the 2nd, and so on. Options beyond the last page open the shared form."
       }
     ]
   },

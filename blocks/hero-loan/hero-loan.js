@@ -117,9 +117,9 @@ function buildMore(chips, overflow) {
 }
 
 /**
- * Apply now opens the form of the selected category (scripts/category-forms.js): its
- * page in "Category forms", else a page named after it next to the Form submit URL, else
- * that URL. The button's data-modal follows the selection.
+ * Apply now opens the form of the selected category (scripts/category-forms.js): the page
+ * at its position in "Category forms" (1st page = 1st category, ...), else the Form submit
+ * URL. The button's data-modal follows the selection.
  * @param {HTMLFormElement} form
  * @param {string} modalHref the Form submit URL when it is a modal page
  * @param {string[]} forms authored "Category forms"
@@ -137,7 +137,7 @@ function confirmOnSubmit(form, modalHref, forms = [], categories = []) {
     forms, fallback: modalHref, categories,
   }));
   // on load without looking pages up; a change of category resolves its form
-  show(authoredForm(selected(), forms) || modalHref);
+  show(authoredForm(selected(), forms, categories) || modalHref);
   form.addEventListener('change', update);
 
   form.addEventListener('submit', async (e) => {
@@ -150,7 +150,7 @@ function confirmOnSubmit(form, modalHref, forms = [], categories = []) {
       const { openModal } = await import('../modal/modal.js');
       const modal = await openModal(target, { prefill: data });
       // the form keeps this mapping when another category is picked in it
-      if (modal) rememberForms(modal.dialog, { forms, shared: modalHref });
+      if (modal) rememberForms(modal.dialog, { forms, categories, shared: modalHref });
       return;
     }
     // no endpoint configured: confirm locally instead of reloading the page

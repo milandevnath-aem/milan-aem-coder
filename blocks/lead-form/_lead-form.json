@@ -74,7 +74,7 @@
           "name": "forms",
           "label": "Category forms",
           "multi": true,
-          "description": "Optional: the form (modal page) of each loan category that has its own, e.g. /modals/apply-now-loan-against-property. A page belongs to the category its name ends with. Picking that category in \"Select loan category\" opens its form; other categories open the shared form."
+          "description": "Optional: one form (modal page) per loan category, in the same order as the options of \"Select loan category\": the 1st page opens for the 1st option, the 2nd for the 2nd, and so on. Options beyond the last page open the shared form."
         }
       ]
     },
