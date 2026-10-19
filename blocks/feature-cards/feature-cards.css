@@ -13,6 +13,10 @@
     --feature-cards-radius: 24px;
 }
 
+.feature-cards.numbered {
+    margin-top: 32px;
+}
+
 .feature-cards .feature-cards-list {
     display: grid;
     grid-template-columns: 1fr;
@@ -132,11 +136,11 @@
     font-weight: 600;
     line-height: 24px;
     letter-spacing: 0;
+    color: var(--muted-color);
 }
 
 /* numbered */
 :where(.desktop-view) .feature-cards.numbered .feature-cards-number {
-    color: var(--muted-color);
     font-size: var(--heading-font-size-m);
     line-height: 28px;
     letter-spacing: -0.4px;
