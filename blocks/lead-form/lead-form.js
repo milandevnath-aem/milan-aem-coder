@@ -4,7 +4,7 @@ import { createDropdown } from '../../scripts/dropdown.js';
 import { sendOtp, submitLead } from './lead-api.js';
 import { createOtpStep, createSuccessStep, setLoading } from './lead-form-otp.js';
 import {
-  readForms, rememberForms, rememberedForms, resolveForm, sharedForm, slug,
+  readForms, rememberForms, rememberedForms, resolveForm, slug,
 } from '../../scripts/category-forms.js';
 
 const CAPTCHA_CHARS = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -280,8 +280,8 @@ function pageCategory() {
 }
 
 /**
- * Opens the form of the picked product (see scripts/category-forms.js: the block's
- * "Category forms", else a modal page named after the product, else the shared form).
+ * Opens the form of the picked product (see scripts/category-forms.js: the page at the
+ * product's position in the block's "Category forms", else the shared form).
  * What was entered so far is carried over. A form opened for a category (from the hero or
  * another form) keeps the mapping it was opened with when it has none of its own.
  * @param {HTMLDialogElement} dialog the open modal
@@ -293,9 +293,13 @@ function pageCategory() {
 async function openFormFor(dialog, category, categories, ownForms, form) {
   const path = dialog.dataset.modalPath;
   const remembered = rememberedForms(dialog);
-  const forms = ownForms.length ? ownForms : remembered.forms;
-  const shared = remembered.shared || sharedForm(path, categories);
-  const target = await resolveForm(category, { forms, fallback: shared, categories });
+  const own = ownForms.length > 0;
+  const forms = own ? ownForms : remembered.forms;
+  // the forms are listed in the order of the categories of the block that has them
+  const order = own ? categories : remembered.categories;
+  // a form opened without its opener is taken as the shared one unless it is a category's own
+  const shared = remembered.shared || (forms.includes(path) ? '' : path);
+  const target = await resolveForm(category, { forms, fallback: shared, categories: order });
   const page = (p) => p.replace(/(\.plain)?\.html$/, '');
   if (!target || page(target) === page(path)) return; // already the right form
 
@@ -310,7 +314,7 @@ async function openFormFor(dialog, category, categories, ownForms, form) {
   const { openModal } = await import('../modal/modal.js');
   const modal = await openModal(target, { prefill: data });
   if (!modal) return;
-  rememberForms(modal.dialog, { forms, shared });
+  rememberForms(modal.dialog, { forms, categories: order, shared });
   modal.dialog.querySelector('.lead-form .dropdown-field')?.focus();
 }
 

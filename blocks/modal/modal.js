@@ -73,8 +73,9 @@ export async function createModal(contentNodes, { className = '', label = '' } =
     animateClose(dialog);
   });
   dialog.addEventListener('close', () => {
-    document.body.classList.remove('modal-open');
     dialog.remove();
+    // a modal swapped in for this one keeps the page locked
+    if (!document.querySelector('dialog.modal[open]')) document.body.classList.remove('modal-open');
   });
 
   document.body.append(dialog);
@@ -104,17 +105,28 @@ export async function openModal(url, { prefill } = {}) {
   const path = new URL(url, window.location).pathname;
   const fragment = await loadFragment(path);
   if (!fragment) return null;
-  document.querySelectorAll('dialog.modal[open]').forEach((open) => open.close());
+  const previous = [...document.querySelectorAll('dialog.modal[open]')];
   // each modal page gets its own class (e.g. "apply-now-car-lease-modal") for its layout
   const name = path.split('/').pop().replace(/(\.plain)?\.html$/, '');
   const type = (fragment.querySelector('.lead-form') && 'modal-form')
     || (fragment.querySelector('.block') ? '' : 'modal-details');
+  // opened over another modal (e.g. another category's form): swapped without the entry animation
+  const swap = previous.length ? 'modal-swap' : '';
   const modal = await createModal([...fragment.childNodes], {
-    className: [type, name && `${name}-modal`].filter(Boolean).join(' '),
+    className: [type, name && `${name}-modal`, swap].filter(Boolean).join(' '),
     label: fragment.querySelector('h1, h2')?.textContent.trim() || '',
   });
   modal.dialog.dataset.modalPath = path;
   if (prefill) modal.dialog.querySelector('form')?.prefill?.(prefill);
-  modal.showModal();
+  // the old one goes only once the new one is on screen, so there is no empty frame
+  const show = () => {
+    modal.showModal();
+    previous.forEach((open) => open.close());
+  };
+  const smooth = swap && document.startViewTransition
+    && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // a swapped form cross-fades into the next one instead of blinking
+  if (smooth) await document.startViewTransition(show).updateCallbackDone;
+  else show();
   return modal;
 }
