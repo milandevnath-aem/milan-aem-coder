@@ -110,12 +110,6 @@ function buildCalculator(types, link, isAuthoring) {
   });
   if (types.length > 1) controls.append(tablist);
 
-  // Universal Editor only (shown in edit mode by CSS): default value outside the range
-  const authorNote = document.createElement('div');
-  authorNote.className = 'emi-calculator-author-note';
-  authorNote.setAttribute('role', 'status');
-  if (isAuthoring) controls.append(authorNote);
-
   const fields = {
     amount: sliderGroup(`${uid}-amount`, 'Loan requirement'),
     rate: sliderGroup(`${uid}-rate`, 'Interest rate'),
@@ -124,6 +118,16 @@ function buildCalculator(types, link, isAuthoring) {
   fields.amount.querySelector('.emi-calculator-prefix').textContent = '₹';
   fields.rate.querySelector('.emi-calculator-suffix').textContent = '%';
   fields.tenure.querySelector('.emi-calculator-suffix').textContent = 'Years';
+  // Universal Editor only (shown in edit mode by CSS): each field says when its
+  // default value is outside the authored range
+  if (isAuthoring) {
+    Object.values(fields).forEach((group) => {
+      const note = document.createElement('p');
+      note.className = 'emi-calculator-author-note';
+      note.setAttribute('role', 'status');
+      group.querySelector('.emi-calculator-field-head').after(note);
+    });
+  }
   const fieldList = document.createElement('div');
   fieldList.className = 'emi-calculator-fields';
   fieldList.append(fields.amount, fields.rate, fields.tenure);
@@ -169,21 +173,20 @@ function buildCalculator(types, link, isAuthoring) {
    */
   const sanitize = (key, [rawMin, rawMax, rawValue, rawStep]) => {
     const f = bounds[key];
-    const name = NAMES[key];
-    const notes = [];
     let min = rawMin;
     let max = rawMax;
     if (min > max) [min, max] = [max, min];
     const value = Math.min(max, Math.max(min, rawValue));
+    let note = '';
     if (rawValue < min) {
-      notes.push(`Default ${name} (${f(rawValue)}) is below the minimum (${f(min)}). The calculator starts at ${f(min)}.`);
+      note = `Default ${NAMES[key]} (${f(rawValue)}) is below the minimum (${f(min)}). The calculator starts at ${f(min)}.`;
     } else if (rawValue > max) {
-      notes.push(`Default ${name} (${f(rawValue)}) is above the maximum (${f(max)}). The calculator starts at ${f(max)}.`);
+      note = `Default ${NAMES[key]} (${f(rawValue)}) is above the maximum (${f(max)}). The calculator starts at ${f(max)}.`;
     }
     let step = rawStep;
     if (!(step > 0) || (max > min && step > max - min)) [, , , step] = DEFAULTS[key];
     return {
-      min, max, value, step, notes,
+      min, max, value, step, note,
     };
   };
 
@@ -302,12 +305,13 @@ function buildCalculator(types, link, isAuthoring) {
       tab.setAttribute('aria-selected', i === index);
       tab.tabIndex = i === index ? 0 : -1;
     });
-    const notes = [];
     Object.entries(fields).forEach(([key, group]) => {
       const {
-        min, max, value, step, notes: fieldNotes,
+        min, max, value, step, note,
       } = sanitize(key, type[key]);
-      notes.push(...fieldNotes);
+      const authorNote = group.querySelector('.emi-calculator-author-note');
+      if (authorNote) authorNote.textContent = note;
+      group.classList.toggle('has-author-note', !!(authorNote && note));
       const range = group.querySelector('.emi-calculator-range');
       range.min = min;
       range.max = max;
@@ -318,18 +322,6 @@ function buildCalculator(types, link, isAuthoring) {
       state[key] = value;
       setInvalid(group, false);
     });
-    authorNote.replaceChildren();
-    if (notes.length) {
-      const heading = document.createElement('p');
-      heading.textContent = `Check the settings of "${type.title}":`;
-      const list = document.createElement('ul');
-      notes.forEach((text) => {
-        const li = document.createElement('li');
-        li.textContent = text;
-        list.append(li);
-      });
-      authorNote.append(heading, list);
-    }
     update();
     // keep the selected tab in view when the tab row scrolls (small screens)
     const tab = tablist.children[index];
