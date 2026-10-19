@@ -89,29 +89,6 @@
   gap: 24px;
 }
 
-/* Universal Editor edit mode only: default value outside the authored range */
-.emi-calculator .emi-calculator-author-note {
-  display: none;
-}
-
-html.adobe-ue-edit .emi-calculator .emi-calculator-author-note:not(:empty) {
-  display: block;
-  margin: 0;
-  color: #c4161c;
-  font-size: var(--body-font-size-xs);
-  font-weight: 600;
-  line-height: 18px;
-}
-
-html.adobe-ue-edit .emi-calculator .emi-calculator-field.has-author-note .emi-calculator-value {
-  border-color: #ff3938;
-  background-color: #fff6f6;
-}
-
-html.adobe-ue-edit .emi-calculator .emi-calculator-field.has-author-note .emi-calculator-error-icon {
-  display: block;
-}
-
 .emi-calculator .emi-calculator-field {
   display: flex;
   flex-direction: column;

@@ -472,6 +472,54 @@
       {
         "component": "text",
         "valueType": "string",
+        "name": "amount_defaultError",
+        "label": "⚠ Error: default loan amount must be between the minimum and maximum",
+        "description": "Change the default, minimum or maximum. Until this is fixed, the calculator starts at the nearest limit.",
+        "readOnly": true,
+        "condition": {
+          "or": [
+            {
+              "<": [
+                {
+                  "+": [
+                    {
+                      "var": "amount_default"
+                    }
+                  ]
+                },
+                {
+                  "+": [
+                    {
+                      "var": "amount_min"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              ">": [
+                {
+                  "+": [
+                    {
+                      "var": "amount_default"
+                    }
+                  ]
+                },
+                {
+                  "+": [
+                    {
+                      "var": "amount_max"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "component": "text",
+        "valueType": "string",
         "name": "amount_step",
         "label": "Slider step (₹)",
         "description": "How much one slider move changes the value, e.g. 10000. Must be more than 0 and no more than the range."
@@ -503,6 +551,54 @@
       {
         "component": "text",
         "valueType": "string",
+        "name": "rate_defaultError",
+        "label": "⚠ Error: default interest rate must be between the minimum and maximum",
+        "description": "Change the default, minimum or maximum. Until this is fixed, the calculator starts at the nearest limit.",
+        "readOnly": true,
+        "condition": {
+          "or": [
+            {
+              "<": [
+                {
+                  "+": [
+                    {
+                      "var": "rate_default"
+                    }
+                  ]
+                },
+                {
+                  "+": [
+                    {
+                      "var": "rate_min"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              ">": [
+                {
+                  "+": [
+                    {
+                      "var": "rate_default"
+                    }
+                  ]
+                },
+                {
+                  "+": [
+                    {
+                      "var": "rate_max"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "component": "text",
+        "valueType": "string",
         "name": "rate_step",
         "label": "Slider step (%)",
         "description": "How much one slider move changes the value, e.g. 0.1. Must be more than 0 and no more than the range."
@@ -530,6 +626,54 @@
         "label": "Default tenure (years)",
         "required": true,
         "description": "Starting value. Must be between the minimum and maximum, otherwise the nearest limit is used."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "tenure_defaultError",
+        "label": "⚠ Error: default tenure must be between the minimum and maximum",
+        "description": "Change the default, minimum or maximum. Until this is fixed, the calculator starts at the nearest limit.",
+        "readOnly": true,
+        "condition": {
+          "or": [
+            {
+              "<": [
+                {
+                  "+": [
+                    {
+                      "var": "tenure_default"
+                    }
+                  ]
+                },
+                {
+                  "+": [
+                    {
+                      "var": "tenure_min"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              ">": [
+                {
+                  "+": [
+                    {
+                      "var": "tenure_default"
+                    }
+                  ]
+                },
+                {
+                  "+": [
+                    {
+                      "var": "tenure_max"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
       },
       {
         "component": "text",

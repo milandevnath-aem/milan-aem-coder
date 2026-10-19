@@ -10,8 +10,6 @@ const DEFAULTS = {
   tenure: [1, 7, 5, 1],
 };
 
-const NAMES = { amount: 'loan amount', rate: 'interest rate', tenure: 'tenure' };
-
 let idCounter = 0;
 
 /**
@@ -86,7 +84,7 @@ function sliderGroup(id, label) {
   return group;
 }
 
-function buildCalculator(types, link, isAuthoring) {
+function buildCalculator(types, link) {
   idCounter += 1;
   const uid = `emi-calculator-${idCounter}`;
   const card = document.createElement('div');
@@ -118,16 +116,6 @@ function buildCalculator(types, link, isAuthoring) {
   fields.amount.querySelector('.emi-calculator-prefix').textContent = '₹';
   fields.rate.querySelector('.emi-calculator-suffix').textContent = '%';
   fields.tenure.querySelector('.emi-calculator-suffix').textContent = 'Years';
-  // Universal Editor only (shown in edit mode by CSS): each field says when its
-  // default value is outside the authored range
-  if (isAuthoring) {
-    Object.values(fields).forEach((group) => {
-      const note = document.createElement('p');
-      note.className = 'emi-calculator-author-note';
-      note.setAttribute('role', 'status');
-      group.querySelector('.emi-calculator-field-head').after(note);
-    });
-  }
   const fieldList = document.createElement('div');
   fieldList.className = 'emi-calculator-fields';
   fieldList.append(fields.amount, fields.rate, fields.tenure);
@@ -168,25 +156,17 @@ function buildCalculator(types, link, isAuthoring) {
 
   /**
    * Keeps authored numbers usable: minimum not above maximum, default within
-   * them, a step that fits the range. A default outside the range comes with
-   * a message for authors.
+   * them, a step that fits the range.
    */
   const sanitize = (key, [rawMin, rawMax, rawValue, rawStep]) => {
-    const f = bounds[key];
     let min = rawMin;
     let max = rawMax;
     if (min > max) [min, max] = [max, min];
     const value = Math.min(max, Math.max(min, rawValue));
-    let note = '';
-    if (rawValue < min) {
-      note = `Default ${NAMES[key]} (${f(rawValue)}) is below the minimum (${f(min)}). The calculator starts at ${f(min)}.`;
-    } else if (rawValue > max) {
-      note = `Default ${NAMES[key]} (${f(rawValue)}) is above the maximum (${f(max)}). The calculator starts at ${f(max)}.`;
-    }
     let step = rawStep;
     if (!(step > 0) || (max > min && step > max - min)) [, , , step] = DEFAULTS[key];
     return {
-      min, max, value, step, note,
+      min, max, value, step,
     };
   };
 
@@ -307,11 +287,8 @@ function buildCalculator(types, link, isAuthoring) {
     });
     Object.entries(fields).forEach(([key, group]) => {
       const {
-        min, max, value, step, note,
+        min, max, value, step,
       } = sanitize(key, type[key]);
-      const authorNote = group.querySelector('.emi-calculator-author-note');
-      if (authorNote) authorNote.textContent = note;
-      group.classList.toggle('has-author-note', !!(authorNote && note));
       const range = group.querySelector('.emi-calculator-range');
       range.min = min;
       range.max = max;
@@ -387,7 +364,5 @@ export default function decorate(block) {
     types.push(parseLoanType(fallback));
   }
 
-  // instrumented for the Universal Editor: authors see messages about invalid defaults
-  const isAuthoring = block.hasAttribute('data-aue-resource');
-  block.replaceChildren(intro, buildCalculator(types, linkRow?.querySelector('a'), isAuthoring));
+  block.replaceChildren(intro, buildCalculator(types, linkRow?.querySelector('a')));
 }
