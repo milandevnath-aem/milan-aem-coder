@@ -118,8 +118,15 @@ export async function openModal(url, { prefill } = {}) {
   });
   modal.dialog.dataset.modalPath = path;
   if (prefill) modal.dialog.querySelector('form')?.prefill?.(prefill);
-  modal.showModal();
   // the old one goes only once the new one is on screen, so there is no empty frame
-  previous.forEach((open) => open.close());
+  const show = () => {
+    modal.showModal();
+    previous.forEach((open) => open.close());
+  };
+  const smooth = swap && document.startViewTransition
+    && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // a swapped form cross-fades into the next one instead of blinking
+  if (smooth) await document.startViewTransition(show).updateCallbackDone;
+  else show();
   return modal;
 }

@@ -132,14 +132,15 @@ dialog.modal .modal-content::-webkit-scrollbar-thumb:hover {
     animation: modal-fade-out 400ms ease-in forwards;
   }
 
-  /* form swapped for another one: the card and backdrop stay put, only the content fades in */
+  /* form swapped for another one: card and backdrop stay put (modal.js cross-fades the
+     swap with a view transition) */
   dialog.modal.modal-swap[open],
   dialog.modal.modal-swap[open]::backdrop {
     animation: none;
   }
 
-  dialog.modal.modal-swap[open] .modal-content {
-    animation: modal-fade-in 250ms ease-out;
+  ::view-transition-group(root) {
+    animation-duration: 280ms;
   }
 }
 
