@@ -446,94 +446,94 @@
         "value": ""
       },
       {
-        "component": "number",
-        "valueType": "number",
+        "component": "text",
+        "valueType": "string",
         "name": "amount_min",
         "label": "Minimum loan amount (₹)",
         "required": true,
-        "description": "Must not be more than the maximum."
+        "description": "Numbers only, e.g. 100000. Must not be more than the maximum."
       },
       {
-        "component": "number",
-        "valueType": "number",
+        "component": "text",
+        "valueType": "string",
         "name": "amount_max",
         "label": "Maximum loan amount (₹)",
         "required": true,
-        "description": "Must not be less than the minimum."
+        "description": "Numbers only, e.g. 10000000. Must not be less than the minimum."
       },
       {
-        "component": "number",
-        "valueType": "number",
+        "component": "text",
+        "valueType": "string",
         "name": "amount_default",
         "label": "Default loan amount (₹)",
         "required": true,
         "description": "Starting value. Must be between the minimum and maximum, otherwise the nearest limit is used."
       },
       {
-        "component": "number",
-        "valueType": "number",
+        "component": "text",
+        "valueType": "string",
         "name": "amount_step",
         "label": "Slider step (₹)",
-        "description": "How much one slider move changes the value, e.g. 10,000. Must be more than 0 and no more than the range."
+        "description": "How much one slider move changes the value, e.g. 10000. Must be more than 0 and no more than the range."
       },
       {
-        "component": "number",
-        "valueType": "number",
+        "component": "text",
+        "valueType": "string",
         "name": "rate_min",
         "label": "Minimum interest rate (%)",
         "required": true,
-        "description": "Must not be more than the maximum."
+        "description": "Numbers only, e.g. 8. Must not be more than the maximum."
       },
       {
-        "component": "number",
-        "valueType": "number",
+        "component": "text",
+        "valueType": "string",
         "name": "rate_max",
         "label": "Maximum interest rate (%)",
         "required": true,
-        "description": "Must not be less than the minimum."
+        "description": "Numbers only, e.g. 24. Must not be less than the minimum."
       },
       {
-        "component": "number",
-        "valueType": "number",
+        "component": "text",
+        "valueType": "string",
         "name": "rate_default",
         "label": "Default interest rate (%)",
         "required": true,
         "description": "Starting value. Must be between the minimum and maximum, otherwise the nearest limit is used."
       },
       {
-        "component": "number",
-        "valueType": "number",
+        "component": "text",
+        "valueType": "string",
         "name": "rate_step",
         "label": "Slider step (%)",
         "description": "How much one slider move changes the value, e.g. 0.1. Must be more than 0 and no more than the range."
       },
       {
-        "component": "number",
-        "valueType": "number",
+        "component": "text",
+        "valueType": "string",
         "name": "tenure_min",
         "label": "Minimum tenure (years)",
         "required": true,
-        "description": "Must not be more than the maximum."
+        "description": "Numbers only, e.g. 1. Must not be more than the maximum."
       },
       {
-        "component": "number",
-        "valueType": "number",
+        "component": "text",
+        "valueType": "string",
         "name": "tenure_max",
         "label": "Maximum tenure (years)",
         "required": true,
-        "description": "Must not be less than the minimum."
+        "description": "Numbers only, e.g. 7. Must not be less than the minimum."
       },
       {
-        "component": "number",
-        "valueType": "number",
+        "component": "text",
+        "valueType": "string",
         "name": "tenure_default",
         "label": "Default tenure (years)",
         "required": true,
         "description": "Starting value. Must be between the minimum and maximum, otherwise the nearest limit is used."
       },
       {
-        "component": "number",
-        "valueType": "number",
+        "component": "text",
+        "valueType": "string",
         "name": "tenure_step",
         "label": "Slider step (years)",
         "description": "How much one slider move changes the value, e.g. 1. Must be more than 0 and no more than the range."

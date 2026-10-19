@@ -215,18 +215,18 @@
                 "template": {
                   "name": "Loan Type",
                   "model": "emi-loan-type",
-                  "amount_min": 100000,
-                  "amount_max": 10000000,
-                  "amount_default": 5000000,
-                  "amount_step": 10000,
-                  "rate_min": 8,
-                  "rate_max": 24,
-                  "rate_default": 8,
-                  "rate_step": 0.1,
-                  "tenure_min": 1,
-                  "tenure_max": 7,
-                  "tenure_default": 5,
-                  "tenure_step": 1
+                  "amount_min": "100000",
+                  "amount_max": "10000000",
+                  "amount_default": "5000000",
+                  "amount_step": "10000",
+                  "rate_min": "8",
+                  "rate_max": "24",
+                  "rate_default": "8",
+                  "rate_step": "0.1",
+                  "tenure_min": "1",
+                  "tenure_max": "7",
+                  "tenure_default": "5",
+                  "tenure_step": "1"
                 }
               }
             }
