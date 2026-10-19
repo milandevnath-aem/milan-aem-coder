@@ -205,27 +205,39 @@ const CITIES = [
   ['Pune', 'Maharashtra', '18.5204, 73.8567'],
 ];
 const field = (label, kind, options = '', required = true) => `<div><div>${esc(label)}</div><div>${kind}</div><div>${esc(options)}</div><div>${required}</div></div>`;
-write('modals/apply-now.plain.html', `
-<div><div class="lead-form">
-<div><div><h2>Start Your Loan Journey Today</h2><p>Get a call back from our loan expert.</p></div></div>
-<div><div><p><strong>Disclaimer</strong></p><p>I/ we hereby acknowledge and agree to the following terms and conditions.</p><ol>
+// lead forms (Figma 4492-*): standard, Loan Against Property and Car Lease variants;
+// the loan category is preselected at runtime with the product of the page
+const LEAD_CATEGORIES = '*New Car Finance, Used Car & Re-finance, Two-Wheeler Loan, Top-Up Loan, Car Lease, Dealer Finance, Loan Against Property';
+const LEAD_DISCLAIMER = `<div><div><p><strong>Disclaimer</strong></p><p>I/ we hereby acknowledge and agree to the following terms and conditions.</p><ol>
 <li>Loan offer is from Kotak Mahindra Prime Limited (KMPL), a subsidiary of Kotak Mahindra Bank limited. Loan sanction and disbursement will be subject to complete documentation and credit approval at sole discretion of KMPL and subject to guidelines issued by RBI from time to time</li>
 <li>By filling up this form and sharing your mobile number with KMPL, you are hereby giving your consent to KMPL to extract your information from the Credit Bureau.</li>
 <li>KMPL may engage the services of marketing agents for the purpose of sourcing loan assets. Available at select locations.</li>
 <li>By sending an SMS/ calling us / clicking on the links mentioned, you are hereby giving your consent to receive call/communication from Kotak Mahindra Prime Ltd and other Kotak Group Companies for marketing purposes through telephone/Mobile/SMS/Email for the selected financial product (Car Finance / Two-Wheeler Loan / Loan Against Property) and that such consent shall prevail over any current or subsequent registration of your number in the National Do Not Call Registry.</li>
 <li>Schemes like Balloon EMI/ Step-Up EMI / Bullet EMI / Subvention scheme (if applicable) are for a limited period only and KMPL may withdraw/suspend/revoke these schemes anytime without any advance notice.</li>
 <li>Subvention scheme (if applicable) is a limited period offer based on subventions offered by select car dealerships or OEMs and KMPL is not responsible or liable for products and services offered by the dealer or OEM . Only available for select vehicle models.</li>
-</ol></div></div>
+</ol></div></div>`;
+const leadForm = (subtitle, nameFields) => `
+<div><div class="lead-form">
+<div><div><h2>Start Your<br>Loan Journey Today</h2><p>${esc(subtitle)}</p></div></div>
+${LEAD_DISCLAIMER}
 <div><div>By clicking on Apply now, I agree to the above terms</div></div>
 <div><div>Apply now</div></div>
-${field('Loan Category', 'select', '*New Car, Used Car & Re-finance, Two-Wheeler, Top-Up Loan, Car Lease, Dealer Finance, Loan Against Property')}
-${field('Name', 'text')}
-${field('Mobile number', 'tel')}
-${field('Email', 'email')}
+${field('Select loan category', 'select', LEAD_CATEGORIES)}
+${nameFields}
 ${field('City', 'search', CITIES.map(([c, r]) => `${c}: ${r}`).join(', '))}
 ${field('Zip / Postal code', 'zip', '', false)}
 ${field('Enter the code', 'captcha')}
-</div></div>`);
+</div></div>`;
+write('modals/apply-now.plain.html', leadForm('Get a call back from our loan expert.', [
+  field('Your name', 'text'), field('Mobile number', 'tel'), field('Email', 'email'),
+].join('\n')));
+write('modals/apply-now-loan-against-property.plain.html', leadForm('Receive a call from our loan expert and get the best offer for you.', [
+  field('First name', 'text-half'), field('Last name', 'text-half'), field('Mobile number', 'tel'),
+  field('Email', 'email'), field('Description', 'textarea', '', false),
+].join('\n')));
+write('modals/apply-now-car-lease.plain.html', leadForm('Receive a call from our loan expert and get the best offer for you.', [
+  field('Your name', 'text'), field('Account name', 'text'), field('Mobile number', 'tel'), field('Email', 'email'),
+].join('\n')));
 
 /* ---------- read more modals ---------- */
 const READ_MORE = {
@@ -422,6 +434,13 @@ ${paragraphs.map((p) => `  <p>${esc(p)}</p>`).join('\n')}
   });
   // the hero form continues in the full application form
   body.querySelectorAll('.hero-loan > div:nth-child(3) a[href="#"]').forEach((a) => a.setAttribute('href', APPLY));
+  // Loan Against Property and Car Lease open their own lead form variant
+  const leadVariant = { 'loan-against-property': 'apply-now-loan-against-property', 'car-lease': 'apply-now-car-lease' }[slug];
+  if (leadVariant) {
+    body.querySelectorAll('a[href$="/modals/apply-now"]').forEach((a) => {
+      a.setAttribute('href', a.getAttribute('href').replace(/apply-now$/, leadVariant));
+    });
+  }
 
   // documents: one chip per employment / loan type
   const docs = DOCUMENTS[slug];

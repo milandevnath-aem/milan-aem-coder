@@ -45,7 +45,8 @@ export function highlight(el, text, query) {
  * @param {boolean} [config.required]
  * @param {string} [config.boundary] selector of an ancestor (e.g. a banner) the open
  *   panel must stay inside: the list is shortened and scrolls instead of overflowing it
- * @returns {HTMLDivElement} the dropdown; dispatches "change", exposes value/setValue()
+ * @returns {HTMLDivElement} the dropdown; dispatches "change" (detail.byUser: picked by the
+ *   visitor), exposes value/setValue()/hasOption()
  */
 export function createDropdown({
   label, name, options, value = '', search = false, searchPlaceholder = 'Search',
@@ -205,27 +206,41 @@ export function createDropdown({
     }
   };
 
-  const setValue = (newValue, notify = true) => {
-    const wanted = String(newValue || '').toLowerCase();
-    const option = options.find((o) => o.value === newValue || o.label === newValue)
+  // exact value or label first, then a loose match ignoring case, spaces and punctuation
+  // ("Two wheeler loan" finds "Two-Wheeler", "Top up loans" finds "Top-Up Loan")
+  const normalize = (text) => String(text || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const findOption = (wantedValue) => {
+    const wanted = normalize(wantedValue);
+    return options.find((o) => o.value === wantedValue || o.label === wantedValue)
       || (wanted && options.find((o) => {
-        const l = o.label.toLowerCase();
-        return l.startsWith(wanted) || wanted.startsWith(l);
+        const l = normalize(o.label);
+        return l && (l.startsWith(wanted) || wanted.startsWith(l));
       }));
+  };
+
+  // the "change" event's detail.byUser tells a visitor's pick from a value set by code
+  const setValue = (newValue, notify = true, byUser = false) => {
+    const option = findOption(newValue);
     input.value = option ? option.value : '';
     root.value = input.value;
     field.querySelector('.dropdown-value').textContent = option ? option.label : '';
     root.classList.toggle('is-filled', !!option);
-    if (notify) root.dispatchEvent(new Event('change', { bubbles: true }));
+    if (notify) root.dispatchEvent(new CustomEvent('change', { bubbles: true, detail: { byUser } }));
   };
 
   const choose = (li) => {
     if (!li?.dataset.value) return;
-    setValue(li.dataset.value);
+    setValue(li.dataset.value, true, true);
     close(true);
   };
 
   field.addEventListener('click', () => (panel.hidden ? open() : close()));
+  // pressing on an option must not move focus: in a dialog focus would jump to the dialog,
+  // "focus left the dropdown" closes the panel and the click never reaches the option.
+  // The search box keeps its own mouse handling (caret, selection).
+  panel.addEventListener('mousedown', (e) => {
+    if (e.target !== searchInput) e.preventDefault();
+  });
   list.addEventListener('click', (e) => choose(e.target.closest('[role="option"]')));
   list.addEventListener('mousemove', (e) => {
     const li = e.target.closest('[role="option"]');
@@ -261,6 +276,7 @@ export function createDropdown({
   });
 
   root.setValue = (v) => setValue(v);
+  root.hasOption = (v) => Boolean(findOption(v));
   root.focus = () => field.focus();
   setValue(value, false);
   return root;
