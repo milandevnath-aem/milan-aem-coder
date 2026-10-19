@@ -165,7 +165,8 @@ function buildCalculator(types, link, isAuthoring) {
 
   /**
    * Keeps authored numbers usable: minimum not above maximum, default within
-   * them, a step that fits the range. Each fix comes with a message for authors.
+   * them, a step that fits the range. Only a default below the minimum is reported
+   * to authors (in the Universal Editor); the other fixes are silent.
    */
   const sanitize = (key, [rawMin, rawMax, rawValue, rawStep]) => {
     const f = bounds[key];
@@ -173,22 +174,13 @@ function buildCalculator(types, link, isAuthoring) {
     const notes = [];
     let min = rawMin;
     let max = rawMax;
-    if (min > max) {
-      notes.push(`Minimum ${name} (${f(min)}) is above the maximum (${f(max)}). The two are swapped.`);
-      [min, max] = [max, min];
-    }
+    if (min > max) [min, max] = [max, min];
     const value = Math.min(max, Math.max(min, rawValue));
     if (rawValue < min) {
       notes.push(`Default ${name} (${f(rawValue)}) is below the minimum (${f(min)}). The calculator starts at ${f(min)}.`);
-    } else if (rawValue > max) {
-      notes.push(`Default ${name} (${f(rawValue)}) is above the maximum (${f(max)}). The calculator starts at ${f(max)}.`);
     }
-    const fallback = DEFAULTS[key][3];
     let step = rawStep;
-    if (!(step > 0) || (max > min && step > max - min)) {
-      notes.push(`Slider step for ${name} (${rawStep}) must be more than 0 and no more than the range (${max - min}). ${fallback} is used.`);
-      step = fallback;
-    }
+    if (!(step > 0) || (max > min && step > max - min)) [, , , step] = DEFAULTS[key];
     return {
       min, max, value, step, notes,
     };
