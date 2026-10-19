@@ -3,30 +3,27 @@ import { createPicture } from '../../scripts/images.js';
 
 const inr = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 });
 
+// [min, max, default, slider step]
 const DEFAULTS = {
-  amount: [100000, 10000000, 5000000],
-  rate: [8, 24, 8],
-  tenure: [1, 7, 5],
+  amount: [100000, 10000000, 5000000, 10000],
+  rate: [8, 24, 8, 0.1],
+  tenure: [1, 7, 5, 1],
 };
 
 let idCounter = 0;
 
 /**
- * Reads the numbers of a grouped cell (min, max, default in any order).
- * @returns {number[]} [min, max, default]
+ * Reads the numbers of a grouped cell: one paragraph per field, in model order
+ * (minimum, maximum, default, step). A missing or empty field falls back to its default.
+ * @returns {number[]} [min, max, default, step]
  */
-function readRange(cell, [dMin, dMax, dValue]) {
-  if (!cell) return [dMin, dMax, dValue];
+function readRange(cell, defaults) {
+  if (!cell) return defaults;
   const parts = cell.children.length
     ? [...cell.children].map((el) => el.textContent)
     : cell.textContent.split(/[\s,;|]+/);
-  const values = parts
-    .map((t) => parseFloat(t.replace(/[^0-9.]/g, '')))
-    .filter(Number.isFinite)
-    .sort((a, b) => a - b);
-  if (values.length >= 3) return [values[0], values[values.length - 1], values[1]];
-  if (values.length === 2) return [values[0], values[1], values[0]];
-  return [dMin, dMax, dValue];
+  const values = parts.map((t) => parseFloat(t.replace(/[^0-9.]/g, '')));
+  return defaults.map((fallback, i) => (Number.isFinite(values[i]) ? values[i] : fallback));
 }
 
 function formatAmountShort(value) {
@@ -157,6 +154,22 @@ function buildCalculator(types, link) {
     tenure: years,
   };
 
+  /**
+   * Keeps authored numbers usable: minimum not above maximum, default within
+   * them, a step that fits the range.
+   */
+  const sanitize = (key, [rawMin, rawMax, rawValue, rawStep]) => {
+    let min = rawMin;
+    let max = rawMax;
+    if (min > max) [min, max] = [max, min];
+    const value = Math.min(max, Math.max(min, rawValue));
+    let step = rawStep;
+    if (!(step > 0) || (max > min && step > max - min)) [, , , step] = DEFAULTS[key];
+    return {
+      min, max, value, step,
+    };
+  };
+
   const update = () => {
     const emi = Math.round(calculateEmi(state.amount, state.rate, state.tenure));
     const total = emi * state.tenure * 12;
@@ -272,13 +285,14 @@ function buildCalculator(types, link) {
       tab.setAttribute('aria-selected', i === index);
       tab.tabIndex = i === index ? 0 : -1;
     });
-    const steps = { amount: 10000, rate: 0.1, tenure: 1 };
     Object.entries(fields).forEach(([key, group]) => {
-      const [min, max, value] = type[key];
+      const {
+        min, max, value, step,
+      } = sanitize(key, type[key]);
       const range = group.querySelector('.emi-calculator-range');
       range.min = min;
       range.max = max;
-      range.step = steps[key];
+      range.step = step;
       const [lo, hi] = group.querySelectorAll('.emi-calculator-bounds span');
       lo.textContent = bounds[key](min);
       hi.textContent = bounds[key](max);

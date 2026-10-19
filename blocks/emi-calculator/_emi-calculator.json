@@ -27,15 +27,18 @@
             "template": {
               "name": "Loan Type",
               "model": "emi-loan-type",
-              "amount_min": 100000,
-              "amount_max": 10000000,
-              "amount_default": 5000000,
-              "rate_min": 8,
-              "rate_max": 24,
-              "rate_default": 8,
-              "tenure_min": 1,
-              "tenure_max": 7,
-              "tenure_default": 5
+              "amount_min": "100000",
+              "amount_max": "10000000",
+              "amount_default": "5000000",
+              "amount_step": "10000",
+              "rate_min": "8",
+              "rate_max": "24",
+              "rate_default": "8",
+              "rate_step": "0.1",
+              "tenure_min": "1",
+              "tenure_max": "7",
+              "tenure_default": "5",
+              "tenure_step": "1"
             }
           }
         }
@@ -94,58 +97,241 @@
           "value": ""
         },
         {
-          "component": "number",
-          "valueType": "number",
+          "component": "text",
+          "valueType": "string",
           "name": "amount_min",
-          "label": "Minimum loan amount (₹)"
+          "label": "Minimum loan amount (₹)",
+          "required": true,
+          "description": "Numbers only, e.g. 100000. Must not be more than the maximum."
         },
         {
-          "component": "number",
-          "valueType": "number",
+          "component": "text",
+          "valueType": "string",
           "name": "amount_max",
-          "label": "Maximum loan amount (₹)"
+          "label": "Maximum loan amount (₹)",
+          "required": true,
+          "description": "Numbers only, e.g. 10000000. Must not be less than the minimum."
         },
         {
-          "component": "number",
-          "valueType": "number",
+          "component": "text",
+          "valueType": "string",
           "name": "amount_default",
-          "label": "Default loan amount (₹)"
+          "label": "Default loan amount (₹)",
+          "required": true,
+          "description": "Starting value. Must be between the minimum and maximum, otherwise the nearest limit is used."
         },
         {
-          "component": "number",
-          "valueType": "number",
+          "component": "text",
+          "valueType": "string",
+          "name": "amount_defaultError",
+          "label": "⚠ Error: default loan amount must be between the minimum and maximum",
+          "description": "Change the default, minimum or maximum. Until this is fixed, the calculator starts at the nearest limit.",
+          "readOnly": true,
+          "condition": {
+            "or": [
+              {
+                "<": [
+                  {
+                    "+": [
+                      {
+                        "var": "amount_default"
+                      }
+                    ]
+                  },
+                  {
+                    "+": [
+                      {
+                        "var": "amount_min"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                ">": [
+                  {
+                    "+": [
+                      {
+                        "var": "amount_default"
+                      }
+                    ]
+                  },
+                  {
+                    "+": [
+                      {
+                        "var": "amount_max"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "amount_step",
+          "label": "Slider step (₹)",
+          "description": "How much one slider move changes the value, e.g. 10000. Must be more than 0 and no more than the range."
+        },
+        {
+          "component": "text",
+          "valueType": "string",
           "name": "rate_min",
-          "label": "Minimum interest rate (%)"
+          "label": "Minimum interest rate (%)",
+          "required": true,
+          "description": "Numbers only, e.g. 8. Must not be more than the maximum."
         },
         {
-          "component": "number",
-          "valueType": "number",
+          "component": "text",
+          "valueType": "string",
           "name": "rate_max",
-          "label": "Maximum interest rate (%)"
+          "label": "Maximum interest rate (%)",
+          "required": true,
+          "description": "Numbers only, e.g. 24. Must not be less than the minimum."
         },
         {
-          "component": "number",
-          "valueType": "number",
+          "component": "text",
+          "valueType": "string",
           "name": "rate_default",
-          "label": "Default interest rate (%)"
+          "label": "Default interest rate (%)",
+          "required": true,
+          "description": "Starting value. Must be between the minimum and maximum, otherwise the nearest limit is used."
         },
         {
-          "component": "number",
-          "valueType": "number",
+          "component": "text",
+          "valueType": "string",
+          "name": "rate_defaultError",
+          "label": "⚠ Error: default interest rate must be between the minimum and maximum",
+          "description": "Change the default, minimum or maximum. Until this is fixed, the calculator starts at the nearest limit.",
+          "readOnly": true,
+          "condition": {
+            "or": [
+              {
+                "<": [
+                  {
+                    "+": [
+                      {
+                        "var": "rate_default"
+                      }
+                    ]
+                  },
+                  {
+                    "+": [
+                      {
+                        "var": "rate_min"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                ">": [
+                  {
+                    "+": [
+                      {
+                        "var": "rate_default"
+                      }
+                    ]
+                  },
+                  {
+                    "+": [
+                      {
+                        "var": "rate_max"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "rate_step",
+          "label": "Slider step (%)",
+          "description": "How much one slider move changes the value, e.g. 0.1. Must be more than 0 and no more than the range."
+        },
+        {
+          "component": "text",
+          "valueType": "string",
           "name": "tenure_min",
-          "label": "Minimum tenure (years)"
+          "label": "Minimum tenure (years)",
+          "required": true,
+          "description": "Numbers only, e.g. 1. Must not be more than the maximum."
         },
         {
-          "component": "number",
-          "valueType": "number",
+          "component": "text",
+          "valueType": "string",
           "name": "tenure_max",
-          "label": "Maximum tenure (years)"
+          "label": "Maximum tenure (years)",
+          "required": true,
+          "description": "Numbers only, e.g. 7. Must not be less than the minimum."
         },
         {
-          "component": "number",
-          "valueType": "number",
+          "component": "text",
+          "valueType": "string",
           "name": "tenure_default",
-          "label": "Default tenure (years)"
+          "label": "Default tenure (years)",
+          "required": true,
+          "description": "Starting value. Must be between the minimum and maximum, otherwise the nearest limit is used."
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "tenure_defaultError",
+          "label": "⚠ Error: default tenure must be between the minimum and maximum",
+          "description": "Change the default, minimum or maximum. Until this is fixed, the calculator starts at the nearest limit.",
+          "readOnly": true,
+          "condition": {
+            "or": [
+              {
+                "<": [
+                  {
+                    "+": [
+                      {
+                        "var": "tenure_default"
+                      }
+                    ]
+                  },
+                  {
+                    "+": [
+                      {
+                        "var": "tenure_min"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                ">": [
+                  {
+                    "+": [
+                      {
+                        "var": "tenure_default"
+                      }
+                    ]
+                  },
+                  {
+                    "+": [
+                      {
+                        "var": "tenure_max"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "tenure_step",
+          "label": "Slider step (years)",
+          "description": "How much one slider move changes the value, e.g. 1. Must be more than 0 and no more than the range."
         }
       ]
     }
