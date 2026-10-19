@@ -3,11 +3,11 @@
   lead form's category dropdown, so "Car Lease" opens the Car Lease form wherever it is
   picked.
 
-  1. Authored: the block's "Category forms" field lists modal pages; a page belongs to the
-     category its name ends with (apply-now-car-lease -> "Car Lease").
-  2. Convention: a page next to the default form named after the category
-     (apply-now -> apply-now-loan-against-property), used when it exists.
-  3. Otherwise the default (shared) form.
+  1. Authored: the block's "Category forms" field lists modal pages in the order of the
+     categories (chips / dropdown options): the first page is the form of the first
+     category, the second page of the second one, and so on. A category without a page
+     (or whose page is not published yet) opens the default form.
+  2. Otherwise the default (shared) form.
 */
 
 const exists = new Map();
@@ -19,10 +19,6 @@ export function slug(text) {
 /** "Two-Wheeler Loans", "two wheeler loan" and "two-wheeler" compare equal */
 function key(text) {
   return String(text || '').toLowerCase().replace(/[^a-z0-9]/g, '').replace(/(loans?|finance)$/, '');
-}
-
-function pageName(path) {
-  return path.split('/').pop().replace(/(\.plain)?\.html$/, '');
 }
 
 /**
@@ -39,15 +35,17 @@ export function readForms(cell) {
 }
 
 /**
- * The authored form of a category: the listed page whose name ends with the category.
+ * The authored form of a category: the listed page at the category's position.
  * @param {string} category
- * @param {string[]} forms
+ * @param {string[]} forms authored "Category forms", in the order of the categories
+ * @param {string[]} categories all categories of the block, in authored order
  * @returns {string} page path, or '' when none is listed for it
  */
-export function authoredForm(category, forms) {
+export function authoredForm(category, forms, categories = []) {
   const wanted = key(category);
   if (!wanted) return '';
-  return forms.find((path) => key(pageName(path)).endsWith(wanted)) || '';
+  const index = categories.findIndex((c) => key(c) === wanted);
+  return (index >= 0 && forms[index]) || '';
 }
 
 async function pageExists(path) {
@@ -59,60 +57,42 @@ async function pageExists(path) {
 }
 
 /**
- * The shared form a form belongs to: a category's own form named after it sits next to
- * the shared one (apply-now-car-lease -> apply-now); any other form is the shared one.
- * @param {string} path a form's page path
- * @param {string[]} [categories] all categories
- * @returns {string}
- */
-export function sharedForm(path, categories = []) {
-  const dir = path.slice(0, path.lastIndexOf('/') + 1);
-  const ext = path.match(/\.html$/)?.[0] || '';
-  const name = pageName(path);
-  const suffix = categories.map(slug).filter(Boolean).find((s) => name.endsWith(`-${s}`));
-  return `${dir}${suffix ? name.slice(0, -(suffix.length + 1)) : name}${ext}`;
-}
-
-/**
  * The form to open for a category.
  * @param {string} category picked loan category
  * @param {Object} options
  * @param {string[]} [options.forms] authored "Category forms"
- * @param {string} [options.fallback] the shared form, or the form open now
- * @param {string[]} [options.categories] all categories (to find the shared form's name
- *   when the fallback is a category's own form, e.g. apply-now-car-lease -> apply-now)
+ * @param {string[]} [options.categories] the categories the forms are listed for, in order
+ * @param {string} [options.fallback] the shared form
  * @returns {Promise<string>} page path ('' when there is none)
  */
 export async function resolveForm(category, { forms = [], fallback = '', categories = [] } = {}) {
-  const authored = authoredForm(category, forms);
-  if (authored || !fallback) return authored;
-  const base = sharedForm(fallback, [...categories, category]);
-  const ext = base.match(/\.html$/)?.[0] || '';
-  const own = `${base.replace(/\.html$/, '')}-${slug(category)}${ext}`;
-  if (own === fallback) return fallback;
-  if (slug(category) && await pageExists(own)) return own;
-  return base;
+  const authored = authoredForm(category, forms, categories);
+  // an authored page that is not previewed/published yet cannot open: use the shared form
+  if (authored && (authored === fallback || await pageExists(authored))) return authored;
+  return fallback;
 }
 
 /**
  * Keeps the opener's mapping with a form opened for a category, so picking another
  * category there still finds the right forms (and the way back to the shared form).
  * @param {HTMLDialogElement} dialog the opened modal
- * @param {{ forms: string[], shared: string }} context
+ * @param {{ forms: string[], categories: string[], shared: string }} context
  */
-export function rememberForms(dialog, { forms = [], shared = '' }) {
-  if (dialog) dialog.dataset.categoryForms = JSON.stringify({ forms, shared });
+export function rememberForms(dialog, { forms = [], categories = [], shared = '' }) {
+  if (dialog) dialog.dataset.categoryForms = JSON.stringify({ forms, categories, shared });
 }
 
 /**
  * The mapping a modal was opened with (see rememberForms).
  * @param {HTMLDialogElement} [dialog]
- * @returns {{ forms: string[], shared: string }}
+ * @returns {{ forms: string[], categories: string[], shared: string }}
  */
 export function rememberedForms(dialog) {
   try {
-    return { forms: [], shared: '', ...JSON.parse(dialog?.dataset.categoryForms || '{}') };
+    return {
+      forms: [], categories: [], shared: '', ...JSON.parse(dialog?.dataset.categoryForms || '{}'),
+    };
   } catch {
-    return { forms: [], shared: '' };
+    return { forms: [], categories: [], shared: '' };
   }
 }
