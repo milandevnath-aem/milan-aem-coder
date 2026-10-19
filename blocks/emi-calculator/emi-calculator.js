@@ -10,6 +10,8 @@ const DEFAULTS = {
   tenure: [1, 7, 5, 1],
 };
 
+const NAMES = { amount: 'loan amount', rate: 'interest rate', tenure: 'tenure' };
+
 let idCounter = 0;
 
 /**
@@ -84,7 +86,7 @@ function sliderGroup(id, label) {
   return group;
 }
 
-function buildCalculator(types, link) {
+function buildCalculator(types, link, isAuthoring) {
   idCounter += 1;
   const uid = `emi-calculator-${idCounter}`;
   const card = document.createElement('div');
@@ -107,6 +109,12 @@ function buildCalculator(types, link) {
     tablist.append(tab);
   });
   if (types.length > 1) controls.append(tablist);
+
+  // Universal Editor only (shown in edit mode by CSS): default value outside the range
+  const authorNote = document.createElement('div');
+  authorNote.className = 'emi-calculator-author-note';
+  authorNote.setAttribute('role', 'status');
+  if (isAuthoring) controls.append(authorNote);
 
   const fields = {
     amount: sliderGroup(`${uid}-amount`, 'Loan requirement'),
@@ -156,17 +164,26 @@ function buildCalculator(types, link) {
 
   /**
    * Keeps authored numbers usable: minimum not above maximum, default within
-   * them, a step that fits the range.
+   * them, a step that fits the range. A default outside the range comes with
+   * a message for authors.
    */
   const sanitize = (key, [rawMin, rawMax, rawValue, rawStep]) => {
+    const f = bounds[key];
+    const name = NAMES[key];
+    const notes = [];
     let min = rawMin;
     let max = rawMax;
     if (min > max) [min, max] = [max, min];
     const value = Math.min(max, Math.max(min, rawValue));
+    if (rawValue < min) {
+      notes.push(`Default ${name} (${f(rawValue)}) is below the minimum (${f(min)}). The calculator starts at ${f(min)}.`);
+    } else if (rawValue > max) {
+      notes.push(`Default ${name} (${f(rawValue)}) is above the maximum (${f(max)}). The calculator starts at ${f(max)}.`);
+    }
     let step = rawStep;
     if (!(step > 0) || (max > min && step > max - min)) [, , , step] = DEFAULTS[key];
     return {
-      min, max, value, step,
+      min, max, value, step, notes,
     };
   };
 
@@ -285,10 +302,12 @@ function buildCalculator(types, link) {
       tab.setAttribute('aria-selected', i === index);
       tab.tabIndex = i === index ? 0 : -1;
     });
+    const notes = [];
     Object.entries(fields).forEach(([key, group]) => {
       const {
-        min, max, value, step,
+        min, max, value, step, notes: fieldNotes,
       } = sanitize(key, type[key]);
+      notes.push(...fieldNotes);
       const range = group.querySelector('.emi-calculator-range');
       range.min = min;
       range.max = max;
@@ -299,6 +318,18 @@ function buildCalculator(types, link) {
       state[key] = value;
       setInvalid(group, false);
     });
+    authorNote.replaceChildren();
+    if (notes.length) {
+      const heading = document.createElement('p');
+      heading.textContent = `Check the settings of "${type.title}":`;
+      const list = document.createElement('ul');
+      notes.forEach((text) => {
+        const li = document.createElement('li');
+        li.textContent = text;
+        list.append(li);
+      });
+      authorNote.append(heading, list);
+    }
     update();
     // keep the selected tab in view when the tab row scrolls (small screens)
     const tab = tablist.children[index];
@@ -364,5 +395,7 @@ export default function decorate(block) {
     types.push(parseLoanType(fallback));
   }
 
-  block.replaceChildren(intro, buildCalculator(types, linkRow?.querySelector('a')));
+  // instrumented for the Universal Editor: authors see messages about invalid defaults
+  const isAuthoring = block.hasAttribute('data-aue-resource');
+  block.replaceChildren(intro, buildCalculator(types, linkRow?.querySelector('a'), isAuthoring));
 }
