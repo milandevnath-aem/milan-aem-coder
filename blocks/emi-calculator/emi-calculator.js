@@ -303,6 +303,8 @@ function buildCalculator(types, link, isAuthoring) {
 
   const selectType = (index) => {
     const type = types[index];
+    // the apply link opens the form for the selected loan type
+    cta.dataset.loanCategory = type.title;
     [...tablist.children].forEach((tab, i) => {
       tab.setAttribute('aria-selected', i === index);
       tab.tabIndex = i === index ? 0 : -1;

@@ -143,7 +143,7 @@
   --hero-loan-min-height: 553px;
   --hero-loan-padding: 48px var(--fb-inset);
   
-  padding-bottom: var(--spacing-3xl);
+  margin-bottom: var(--spacing-3xl);
 }
 
 :where(.desktop-view) .hero-loan .hero-loan-image img {
@@ -271,6 +271,13 @@
   opacity: 1;
 }
 
+/* browser autofill: no tinted box inside the field (the field keeps its own background) */
+.hero-loan .hero-loan-input input:autofill {
+  background-clip: text;
+  -webkit-text-fill-color: var(--dark-color);
+  transition: background-color 0s 600000s, color 0s 600000s;
+}
+
 .hero-loan .hero-loan-prefix {
   padding-right: 8px;
   border-right: 1px solid #dedede;
@@ -356,8 +363,71 @@
   background: url('../../icons/chevron-down.svg') center / contain no-repeat;
 }
 
-.hero-loan .hero-loan-more[aria-expanded='true']::after {
-  transform: rotate(180deg);
+/* "More": a menu of the remaining categories; the chip shows the one picked there */
+.hero-loan .hero-loan-more-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.hero-loan .hero-loan-more:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.hero-loan .hero-loan-more.is-selected {
+  border-color: var(--text-color);
+  background-color: var(--text-color);
+  color: var(--inverse-color);
+}
+
+.hero-loan .hero-loan-more.is-selected::after {
+  filter: invert(1);
+}
+
+.hero-loan .hero-loan-more-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 3;
+  min-width: 100%;
+  margin: 0;
+  padding: 4px;
+  border: 1px solid #ededed;
+  border-radius: 12px;
+  background-color: var(--background-color);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
+  list-style: none;
+}
+
+.hero-loan .hero-loan-more-menu[hidden] {
+  display: none;
+}
+
+.hero-loan .hero-loan-more-menu button {
+  display: block;
+  width: 100%;
+  margin: 0;
+  border: 0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: transparent;
+  color: var(--text-color);
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  line-height: 20px;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.hero-loan .hero-loan-more-menu button:hover,
+.hero-loan .hero-loan-more-menu button[aria-pressed='true'] {
+  background-color: var(--light-color);
+}
+
+.hero-loan .hero-loan-more-menu button:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: -2px;
 }
 
 .hero-loan .hero-loan-form button[type='submit'] {
