@@ -91,6 +91,20 @@ export function isModalLink(href) {
  * Opens links to /modals/ pages in a dialog instead of navigating.
  * @param {Document} doc The document
  */
+/**
+ * Loan category a modal link stands for, most specific first: "?category=" on the link,
+ * the block item it sits in (data-loan-category, e.g. an offer card or the EMI calculator
+ * tab), then the product page's hero. The modal's form uses the first one it offers.
+ * @param {HTMLAnchorElement} link
+ * @returns {string[]}
+ */
+function loanCategories(link) {
+  const fromUrl = new URL(link.href, window.location).searchParams.get('category');
+  const fromBlock = link.closest('[data-loan-category]')?.dataset.loanCategory;
+  const fromPage = document.querySelector('.hero-loan.product input[name="category"]')?.value;
+  return [fromUrl, fromBlock, fromPage].filter(Boolean);
+}
+
 function autolinkModals(doc) {
   doc.addEventListener('click', async (e) => {
     const link = e.target.closest('a[href]');
@@ -98,7 +112,8 @@ function autolinkModals(doc) {
     if (!isModalLink(link.href)) return;
     e.preventDefault();
     const { openModal } = await import(`${window.hlx.codeBasePath}/blocks/modal/modal.js`);
-    openModal(link.href);
+    const category = loanCategories(link);
+    openModal(link.href, category.length ? { prefill: { category } } : {});
   });
 }
 

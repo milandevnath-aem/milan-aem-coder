@@ -1,11 +1,13 @@
+import { getMetadata } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createDropdown } from '../../scripts/dropdown.js';
+import { sendOtp, submitLead } from './lead-api.js';
+import { createOtpStep, createSuccessStep, setLoading } from './lead-form-otp.js';
+import {
+  readForms, rememberForms, rememberedForms, resolveForm, sharedForm, slug,
+} from '../../scripts/category-forms.js';
 
 const CAPTCHA_CHARS = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-
-function slug(text) {
-  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-}
 
 function iconButton(name, label) {
   const button = document.createElement('button');
@@ -65,10 +67,36 @@ function errorMessage(label, kind) {
   return `Enter your ${label.toLowerCase().replace(/^your /, '')}`;
 }
 
+/**
+ * Keeps an input to digits only, up to a length: other typed characters are blocked,
+ * pasted, dropped or autofilled text is cleaned (the caret stays after the same digit).
+ * @param {HTMLInputElement} input
+ * @param {number} max maximum number of digits
+ */
+function digitsOnly(input, max) {
+  input.addEventListener('beforeinput', (e) => {
+    if (!e.data || !e.inputType.startsWith('insert')) return;
+    const room = max - (input.value.length - (input.selectionEnd - input.selectionStart));
+    // a typed non-digit, or digits with no room left; longer mixed text (a pasted
+    // "560 001") goes through and is cleaned below
+    if (/^\D$/.test(e.data) || (/^\d+$/.test(e.data) && e.data.length > room)) e.preventDefault();
+  });
+  // runs before the form's own input listener, so validation sees the cleaned value
+  input.addEventListener('input', () => {
+    const clean = input.value.replace(/\D/g, '').slice(0, max);
+    if (clean === input.value) return;
+    const caret = input.selectionStart ?? input.value.length;
+    const digitsBefore = input.value.slice(0, caret).replace(/\D/g, '').length;
+    input.value = clean;
+    const pos = Math.min(digitsBefore, clean.length);
+    input.setSelectionRange(pos, pos);
+  });
+}
+
 function textField(label, kind, required) {
   const field = document.createElement('label');
   field.className = `lead-form-input lead-form-${kind}`;
-  const input = document.createElement('input');
+  const input = document.createElement(kind === 'textarea' ? 'textarea' : 'input');
   input.name = slug(label);
   input.placeholder = ' ';
   input.required = required;
@@ -81,19 +109,23 @@ function textField(label, kind, required) {
     prefix.textContent = '+91';
     field.append(prefix);
     Object.assign(input, {
-      type: 'tel', inputMode: 'numeric', pattern: '[6-9][0-9]{9}', maxLength: 10, autocomplete: 'tel-national',
+      type: 'tel', inputMode: 'numeric', pattern: '[6-9][0-9]{9}', autocomplete: 'tel-national',
     });
+    digitsOnly(input, 10);
   } else if (kind === 'email') {
     Object.assign(input, { type: 'email', autocomplete: 'email' });
   } else if (kind === 'zip') {
     Object.assign(input, {
-      type: 'text', inputMode: 'numeric', pattern: '[1-9][0-9]{5}', maxLength: 6, autocomplete: 'postal-code',
+      type: 'text', inputMode: 'numeric', pattern: '[1-9][0-9]{5}', autocomplete: 'postal-code',
     });
+    digitsOnly(input, 6);
   } else {
     input.type = 'text';
-    // first and last name get their own autofill values, or the full name fills both
+    // first and last name get their own autofill values, or the full name fills both;
+    // a company ("Account name") is not a person's name
     if (/\b(first|given)\b.*name/i.test(label)) input.autocomplete = 'given-name';
     else if (/\b(last|sur|family)\s*name/i.test(label)) input.autocomplete = 'family-name';
+    else if (/\b(account|company|business|organi[sz]ation)\b/i.test(label)) input.autocomplete = 'organization';
     else if (/name/i.test(label)) input.autocomplete = 'name';
   }
   const control = document.createElement('span');
@@ -235,6 +267,60 @@ function buildDisclaimer(cell) {
   return wrapper;
 }
 
+/** "Two-Wheeler Loans" and "two-wheeler loan" match */
+const normalize = (text) => text.toLowerCase().replace(/[^a-z]/g, '').replace(/loans?$/, '');
+
+/**
+ * The page's own product, so the form opens with it preselected: the hero category
+ * dropdown on product pages, else the page metadata "loan-category".
+ */
+function pageCategory() {
+  const hero = document.querySelector('main .hero-loan-select');
+  return hero?.value || getMetadata('loan-category') || '';
+}
+
+/**
+ * Opens the form of the picked product (see scripts/category-forms.js: the block's
+ * "Category forms", else a modal page named after the product, else the shared form).
+ * What was entered so far is carried over. A form opened for a category (from the hero or
+ * another form) keeps the mapping it was opened with when it has none of its own.
+ * @param {HTMLDialogElement} dialog the open modal
+ * @param {string} category the picked product
+ * @param {string[]} categories all products of the dropdown
+ * @param {string[]} ownForms this form's authored "Category forms"
+ * @param {HTMLFormElement} form the open form
+ */
+async function openFormFor(dialog, category, categories, ownForms, form) {
+  const path = dialog.dataset.modalPath;
+  const remembered = rememberedForms(dialog);
+  const forms = ownForms.length ? ownForms : remembered.forms;
+  const shared = remembered.shared || sharedForm(path, categories);
+  const target = await resolveForm(category, { forms, fallback: shared, categories });
+  const page = (p) => p.replace(/(\.plain)?\.html$/, '');
+  if (!target || page(target) === page(path)) return; // already the right form
+
+  const data = Object.fromEntries(new FormData(form));
+  delete data.captcha;
+  // first + last name become one name for a form that asks for it once
+  if (data['first-name'] || data['last-name']) {
+    data.name = [data['first-name'], data['last-name']].filter(Boolean).join(' ');
+  }
+  data.category = category;
+
+  const { openModal } = await import('../modal/modal.js');
+  const modal = await openModal(target, { prefill: data });
+  if (!modal) return;
+  rememberForms(modal.dialog, { forms, shared });
+  modal.dialog.querySelector('.lead-form .dropdown-field')?.focus();
+}
+
+/** Site root next to the nav fragment (e.g. /content/kmpl locally, / when published) */
+function siteRoot() {
+  const nav = getMetadata('nav');
+  const path = nav ? new URL(nav, window.location).pathname : '/nav';
+  return path.replace(/\/(fragments\/)?nav$/, '');
+}
+
 /**
  * Lead form ("Start Your Loan Journey Today"). Block properties: heading, disclaimer,
  * note and button label; each item is a field (label, type, options, required).
@@ -244,7 +330,9 @@ export default function decorate(block) {
   const rows = [...block.children];
   const config = rows.filter((row) => row.children.length <= 1);
   const fieldRows = rows.filter((row) => row.children.length > 1);
-  const [textRow, disclaimerRow, noteRow, submitRow] = config;
+  const [textRow, disclaimerRow, noteRow, submitRow, formsRow] = config;
+  // "Category forms": the form (modal page) of each category that has one of its own
+  const forms = readForms(formsRow);
 
   const intro = document.createElement('div');
   intro.className = 'lead-form-intro';
@@ -278,7 +366,8 @@ export default function decorate(block) {
     // each field and its error share one grid cell; half-width cells pair up on a line
     const item = document.createElement('div');
     item.className = 'lead-form-item';
-    if (halfCell?.textContent.trim() === 'true') item.classList.add('is-half');
+    // "Text (half width)" fields, or any field with Half width ticked, share a line (desktop)
+    if (kind === 'text-half' || halfCell?.textContent.trim() === 'true') item.classList.add('is-half');
     let field;
     if (kind === 'select' || kind === 'search') {
       const { options, value } = parseOptions(optionsText);
@@ -292,6 +381,7 @@ export default function decorate(block) {
         searchPlaceholder: `Search ${label.toLowerCase()}`,
         pinSelected: true,
       });
+      field.optionValues = options.map((option) => option.value);
       dropdowns.push(field);
     } else if (kind === 'captcha') {
       field = captchaField(label);
@@ -299,7 +389,7 @@ export default function decorate(block) {
     } else if (kind === 'textarea') {
       field = textareaField(label, required, parseInt(optionsText, 10) || 150);
     } else {
-      field = textField(label, kind, required);
+      field = textField(label, kind === 'text-half' ? 'text' : kind, required);
     }
     moveInstrumentation(row, field);
     // text error under each field: what is wrong and how to fix it
@@ -318,22 +408,6 @@ export default function decorate(block) {
     }
     fields.append(item);
   });
-  // two name fields in a row (Name + LName, First name + Last name) are first and last
-  // name: they share a line 50/50, Half width ticked or not
-  const items = [...fields.children];
-  const nameInput = (item) => [...item.querySelectorAll('.lead-form-text input')]
-    .find((input) => /name/.test(input.name));
-  for (let i = 0; i < items.length - 1; i += 1) {
-    const first = nameInput(items[i]);
-    const last = nameInput(items[i + 1]);
-    if (first && last) {
-      first.autocomplete = 'given-name';
-      last.autocomplete = 'family-name';
-      items[i].classList.add('is-half');
-      items[i + 1].classList.add('is-half');
-      i += 1;
-    }
-  }
   form.append(fields);
 
   const legal = document.createElement('div');
@@ -393,29 +467,125 @@ export default function decorate(block) {
     if (check) setState(check, false);
   }));
 
-  form.addEventListener('submit', (e) => {
+  // screen reader announcements for steps that have no visible status text
+  const status = document.createElement('p');
+  status.className = 'visually-hidden';
+  status.setAttribute('aria-live', 'polite');
+  const announce = (message) => {
+    status.textContent = '';
+    setTimeout(() => { status.textContent = message; }, 100);
+  };
+
+  // steps: form -> (sending) -> OTP -> success; the dialog is named after the visible step
+  const main = document.createElement('div');
+  main.className = 'lead-form-step lead-form-main';
+  const loading = document.createElement('div');
+  loading.className = 'lead-form-step lead-form-loading';
+  loading.hidden = true;
+  loading.innerHTML = '<span class="lead-form-spinner" aria-hidden="true"></span>';
+  const dialog = () => block.closest('dialog');
+  const nameDialog = (titleId) => dialog()?.setAttribute('aria-labelledby', titleId);
+  const close = () => {
+    const d = dialog();
+    if (d) d.close();
+    else window.history.back();
+  };
+  const showStep = (step) => {
+    [...block.children].forEach((child) => {
+      if (child.classList.contains('lead-form-step')) child.hidden = child !== step;
+    });
+    block.dataset.step = step.classList[1].replace('lead-form-', '');
+    dialog()?.querySelector('.modal-content')?.scrollTo(0, 0);
+  };
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    if (submit.classList.contains('is-loading')) return;
     if (!isValid()) {
       const invalid = checks.filter((check) => !check.valid());
       checks.forEach((check) => setState(check, invalid.includes(check)));
       invalid[0]?.control.focus();
       return;
     }
-    const thanks = document.createElement('div');
-    thanks.className = 'lead-form-thanks';
-    thanks.setAttribute('role', 'status');
-    thanks.innerHTML = '<h3>Thank you!</h3><p>Our loan expert will call you back shortly.</p>';
-    form.replaceWith(thanks);
-    thanks.tabIndex = -1;
-    thanks.focus();
+    const data = Object.fromEntries(new FormData(form));
+    const mobile = form.querySelector('input[type="tel"]')?.value || '';
+
+    // sending the OTP: button spinner (desktop), full view spinner (small screens)
+    setLoading(submit, true, 'Sending OTP');
+    block.classList.add('is-sending');
+    loading.hidden = false;
+    announce('Sending OTP');
+    await sendOtp({ mobile, category: data[Object.keys(data).find((k) => k.endsWith('category'))] });
+    setLoading(submit, false);
+    block.classList.remove('is-sending');
+    loading.hidden = true;
+
+    block.querySelector('.lead-form-otp')?.remove();
+    const otp = createOtpStep({
+      mobile,
+      announce,
+      onBack: () => {
+        otp.remove();
+        showStep(main);
+        nameDialog(intro.querySelector('h1, h2')?.id);
+        submit.focus();
+      },
+      onVerified: async () => {
+        await submitLead(data);
+        const success = createSuccessStep({
+          emiHref: document.querySelector('main .emi-calculator') ? '#emi-calculator' : `${siteRoot()}/home#emi-calculator`,
+          onDone: close,
+        });
+        success.querySelector('.lead-form-emi').addEventListener('click', (ev) => {
+          if (!ev.currentTarget.getAttribute('href').startsWith('#')) return;
+          ev.preventDefault();
+          close();
+          document.getElementById('emi-calculator')?.scrollIntoView();
+        });
+        otp.remove();
+        block.append(success);
+        showStep(success);
+        nameDialog(success.titleId);
+        success.focusTitle();
+      },
+    });
+    block.append(otp);
+    showStep(otp);
+    nameDialog(otp.titleId);
+    announce(`OTP sent to the number ending ${mobile.slice(-4)}`);
+    otp.focusFirst();
+  });
+
+  // loan category: preselect the product of the page the form is opened from
+  const categoryDropdown = dropdowns
+    .find((d) => /category/i.test(d.querySelector('input[type="hidden"]').name));
+  const categoryOptions = categoryDropdown?.optionValues || [];
+  const selectCategory = (text) => {
+    if (!categoryDropdown || !text) return;
+    const key = normalize(text);
+    const match = categoryOptions.find((option) => normalize(option) === key)
+      || categoryOptions.find((option) => normalize(option).startsWith(key.slice(0, 6)));
+    if (match) categoryDropdown.setValue(match);
+  };
+  selectCategory(pageCategory());
+  refresh();
+  // picking another product in a modal opens that product's form
+  categoryDropdown?.addEventListener('change', (e) => {
+    const d = dialog();
+    if (!e.detail?.byUser || !d?.dataset.modalPath || !categoryDropdown.value) return;
+    openFormFor(d, categoryDropdown.value, categoryOptions, forms, form);
   });
 
   // values carried over from another form (e.g. the hero call-back form)
+  // a value may also be a list of candidates (most specific first): a dropdown takes the
+  // first one that matches one of its options and is left unchanged when none does
   form.prefill = (data) => {
     const inputs = [...form.querySelectorAll('input[name]')].filter((i) => i.type !== 'hidden');
     const first = inputs.find((i) => i.autocomplete === 'given-name');
     const last = inputs.find((i) => i.autocomplete === 'family-name');
-    Object.entries(data).forEach(([key, value]) => {
+    Object.entries(data).forEach(([key, raw]) => {
+      const candidates = [].concat(raw).map((v) => String(v ?? '').trim()).filter(Boolean);
+      const [value] = candidates;
       if (!value) return;
       const name = key.replace(/^your-/, '');
       // one full name into separate first and last name fields: split at the first space
@@ -432,10 +602,21 @@ export default function decorate(block) {
         const n = d.querySelector('input[type="hidden"]').name;
         return n === name || n.endsWith(`-${name}`) || name.endsWith(`-${n}`);
       });
-      dropdown?.setValue(value);
+      const match = dropdown && candidates.find((c) => dropdown.hasOption(c));
+      if (match) dropdown.setValue(match);
     });
     refresh();
   };
 
-  block.replaceChildren(intro, form);
+  // small screens: the form is a page of its own below the header, with "Go back"
+  const goBack = document.createElement('button');
+  goBack.type = 'button';
+  goBack.className = 'lead-form-goback';
+  goBack.innerHTML = `<img src="${window.hlx.codeBasePath}/icons/chevron-left.svg" alt="" width="16" height="16"><span>Go back</span>`;
+  goBack.addEventListener('click', close);
+
+  const heading = intro.querySelector('h1, h2');
+  if (heading && !heading.id) heading.id = `lead-form-title-${Math.random().toString(36).slice(2, 8)}`;
+  main.append(intro, form);
+  block.replaceChildren(goBack, main, loading, status);
 }

@@ -81,6 +81,10 @@ export async function createModal(contentNodes, { className = '', label = '' } =
   return {
     dialog,
     showModal: () => {
+      // forms on small screens open below the header (it stays visible, the page is inert)
+      const nav = document.querySelector('header nav');
+      const top = nav ? Math.max(0, Math.round(nav.getBoundingClientRect().bottom)) : 0;
+      dialog.style.setProperty('--modal-top', `${top}px`);
       dialog.showModal();
       document.body.classList.add('modal-open');
       content.scrollTop = 0;
@@ -92,16 +96,25 @@ export async function createModal(contentNodes, { className = '', label = '' } =
 /**
  * Loads a fragment page and shows it in a modal.
  * @param {string} url link to the modal page
+ * @param {Object} [options]
+ * @param {Object} [options.prefill] values for a form in the modal (see lead-form prefill),
+ *   e.g. the loan category of the button that opened it
  */
-export async function openModal(url) {
+export async function openModal(url, { prefill } = {}) {
   const path = new URL(url, window.location).pathname;
   const fragment = await loadFragment(path);
   if (!fragment) return null;
   document.querySelectorAll('dialog.modal[open]').forEach((open) => open.close());
+  // each modal page gets its own class (e.g. "apply-now-car-lease-modal") for its layout
+  const name = path.split('/').pop().replace(/(\.plain)?\.html$/, '');
+  const type = (fragment.querySelector('.lead-form') && 'modal-form')
+    || (fragment.querySelector('.block') ? '' : 'modal-details');
   const modal = await createModal([...fragment.childNodes], {
-    className: fragment.querySelector('.block') ? '' : 'modal-details',
+    className: [type, name && `${name}-modal`].filter(Boolean).join(' '),
     label: fragment.querySelector('h1, h2')?.textContent.trim() || '',
   });
+  modal.dialog.dataset.modalPath = path;
+  if (prefill) modal.dialog.querySelector('form')?.prefill?.(prefill);
   modal.showModal();
   return modal;
 }

@@ -68,6 +68,13 @@
           "name": "submitLabel",
           "label": "Button label",
           "value": ""
+        },
+        {
+          "component": "aem-content",
+          "name": "forms",
+          "label": "Category forms",
+          "multi": true,
+          "description": "Optional: the form (modal page) of each loan category that has its own, e.g. /modals/apply-now-loan-against-property. A page belongs to the category its name ends with. Picking that category in \"Select loan category\" opens its form; other categories open the shared form."
         }
       ]
     },
@@ -89,6 +96,8 @@
           "value": "text",
           "options": [
             { "name": "Text", "value": "text" },
+            { "name": "Text (half width, pairs side by side on desktop)", "value": "text-half" },
+            { "name": "Text area (multi-line)", "value": "textarea" },
             { "name": "Mobile number (+91)", "value": "tel" },
             { "name": "Email", "value": "email" },
             { "name": "Postal code", "value": "zip" },
