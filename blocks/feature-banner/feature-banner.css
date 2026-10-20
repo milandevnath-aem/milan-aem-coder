@@ -83,10 +83,10 @@
 .feature-banner .feature-banner-content h3 {
   margin: 0;
   color: inherit;
-  font-size: 28px;
-  font-weight: 600;
-  line-height: 36px;
-  letter-spacing: -0.56px;
+  font-size: var(--type-display-medium-df-1-font-size);
+  font-weight: var(--type-display-medium-df-1-font-weight);
+  line-height: var(--type-display-medium-df-1-line-height);
+  letter-spacing: -0.8px;
 }
 
 .feature-banner .feature-banner-content h2 strong,
@@ -188,10 +188,10 @@
 
 :where(.desktop-view) .feature-banner .feature-banner-content h2,
 :where(.desktop-view) .feature-banner .feature-banner-content h3 {
-  font-size: 32px;
-  font-weight: 600;
-  line-height: 40px;
-  letter-spacing: -0.8px;
+  /* font-size: var(--type-display-medium-df-1-font-size);
+  font-weight: var(--type-display-medium-df-1-font-weight);
+  line-height: var(--type-display-medium-df-1-line-height); */
+  letter-spacing: -1px;
 }
 
 :where(.desktop-view) .feature-banner .feature-banner-content p {
