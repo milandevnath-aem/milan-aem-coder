@@ -40,6 +40,12 @@
     color: #121212;
 }
 
+.columns.about-us.columns.columns-split > div > div:first-child h2,
+.columns.about-us.columns.columns-split > div > div:first-child h3{
+     line-height: 40px;
+}
+
+
 :where(.desktop-view) .columns.columns-split > div > div:first-child h2,
 :where(.desktop-view) .columns.columns-split > div > div:first-child h3 {
     font-size: var(--heading-font-size-xxl);
