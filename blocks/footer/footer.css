@@ -28,7 +28,7 @@ footer .footer-brand .default-content-wrapper {
   gap: 24px;
   max-width: 289px;
   margin: 0 auto 100px;
-  padding: 0 12px;
+  padding: 0;
   color: var(--inverse-color);
   text-align: center;
 }
