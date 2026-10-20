@@ -532,6 +532,10 @@ main > .section > .feature-banner-wrapper {
   padding: 0 var(--fb-margin);
 }
 
+main > .section > .feature-banner-wrapper{
+  padding: 0;
+}
+
 :where(.desktop-view) main > .section > .offers-wrapper{
   padding-bottom: var(--spacing-lg);
 }
