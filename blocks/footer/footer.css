@@ -40,7 +40,7 @@ footer .footer-brand .default-content-wrapper {
 
 footer .footer-brand img {
   display: block;
-  width: 145px;
+  width: auto;
   height: 35px;
 }
 
