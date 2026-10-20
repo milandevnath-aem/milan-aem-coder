@@ -266,6 +266,10 @@
   cursor: default;
 }
 
+:where(.desktop-view) .requirements-wrapper:has(.requirements.eligibility):has(li:nth-child(4)) {
+  padding-right: 0;
+}
+
 :where(.desktop-view) .requirements-container:has(.carousel-card) .requirements-wrapper {
   padding: 0 0 0 var(--gb-margin);
 }
@@ -298,6 +302,12 @@
   scrollbar-width: none;
 }
 
+:where(.desktop-view) .requirements.eligibility .requirements-cards.carousel {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
 :where(.desktop-view) .requirements.eligibility .requirements-cards::-webkit-scrollbar {
   display: none;
 }
@@ -313,8 +323,12 @@
 }
 
 /* more than three cards: three and a half in view, so the half card shows there is more */
-:where(.desktop-view) .requirements.eligibility .requirements-cards:has(> .requirements-card:nth-child(4)) > .requirements-card {
+:where(.desktop-view) .requirements.eligibility .requirements-cards.carousel > .requirements-card {
   flex-basis: calc((100% - 3 * var(--grid-gutter)) / 3.5);
+}
+
+:where(.desktop-view) .requirements .requirements-card picture.requirements-icon {
+  padding-bottom: 32px;
 }
 
 :where(.desktop-view) .requirements .requirements-icon img {
