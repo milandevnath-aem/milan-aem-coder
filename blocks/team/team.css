@@ -20,7 +20,6 @@
 .team .team-photo img {
   display: block;
   width: 100%;
-  aspect-ratio: 163 / 163;
   border-radius: 32px;
   object-fit: cover;
   background-color: var(--surface-color);
