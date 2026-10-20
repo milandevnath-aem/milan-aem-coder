@@ -90,6 +90,14 @@
   padding: 8px;
   background-color: var(--background-color);
   box-shadow: 0 20px 40px rgb(0 0 0 / 14%), 0 2px 6px rgb(0 0 0 / 6%);
+  overflow: hidden;
+  max-height: 250px;
+}
+
+/* the list takes the height the panel leaves and scrolls inside it, so its last option stays reachable */
+.dropdown-panel:not([hidden]) {
+  display: flex;
+  flex-direction: column;
 }
 
 .dropdown-panel[hidden] {
@@ -123,6 +131,7 @@
   font-weight: 500;
   line-height: 24px;
   outline: none;
+  box-shadow: none;
 }
 
 .dropdown-search input::placeholder {
@@ -153,26 +162,36 @@
 }
 
 .dropdown-list {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-height: 0;
   max-height: 340px;
   margin: 0;
   padding: 0;
   list-style: none;
   overflow-y: auto;
   outline: none;
+  box-shadow: none;
   scrollbar-width: thin;
   scrollbar-color: #bababa transparent;
+}
+
+/* the scrollbar gets its own gutter instead of covering the options, and the last option
+   scrolls clear of the fade below */
+.dropdown-panel.is-scrollable .dropdown-list {
+  padding-bottom: 32px;
+  scrollbar-gutter: stable;
 }
 
 .dropdown-panel.is-scrollable::after {
   content: '';
   position: absolute;
   left: 8px;
-  right: 8px;
+  right: 16px;
   bottom: 8px;
-  height: 40px;
+  height: 32px;
   border-radius: 0 0 12px 12px;
   background: linear-gradient(180deg, rgb(252 252 252 / 0%) 0%, var(--background-color) 100%);
   pointer-events: none;

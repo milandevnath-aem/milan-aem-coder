@@ -1,6 +1,6 @@
 import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createPicture } from '../../scripts/images.js';
-import { MEDIA } from '../../scripts/viewport.js';
+import { MEDIA, isDesktop } from '../../scripts/viewport.js';
 
 function styleTokens(cell) {
   if (!cell) return [];
@@ -57,10 +57,14 @@ function revealText(item) {
   let frame;
   const update = () => {
     frame = null;
-    const { top } = content.getBoundingClientRect();
+    // measured from the first text line: on small screens the content box starts with
+    // 80px of padding above the heading
+    const { top } = texts[0].getBoundingClientRect();
     const vh = window.innerHeight;
-    // starts when the text enters the lower part of the viewport, done in the upper third
-    const progress = Math.min(1, Math.max(0, (vh * 0.85 - top) / (vh * 0.5)));
+    // desktop: starts in the lower part of the viewport, done in the upper third; small
+    // screens (text at the top of the banner): 75% to 25%, so it lights up while read
+    const [start, end] = isDesktop.matches ? [0.85, 0.35] : [0.75, 0.25];
+    const progress = Math.min(1, Math.max(0, (vh * start - top) / (vh * (start - end))));
     const lit = progress * words.length;
     words.forEach((word, i) => {
       const amount = Math.min(1, Math.max(0, lit - i));
@@ -120,6 +124,16 @@ export default function decorate(block) {
     if (textCell) {
       textCell.className = 'feature-banner-content';
       item.append(textCell);
+      // mobile crops keep the subject in the lower half: the banner grows with a long text
+      // so the text stays in the upper half (see --feature-banner-text-end in the CSS)
+      if (item.classList.contains('has-mobile-image')) {
+        new ResizeObserver(() => {
+          const last = textCell.lastElementChild;
+          if (!last) return;
+          const end = last.getBoundingClientRect().bottom - item.getBoundingClientRect().top;
+          item.style.setProperty('--feature-banner-text-end', `${Math.round(end)}px`);
+        }).observe(textCell);
+      }
     }
     if (animate) revealText(item);
     list.append(item);

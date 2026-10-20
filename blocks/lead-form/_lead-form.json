@@ -68,6 +68,13 @@
           "name": "submitLabel",
           "label": "Button label",
           "value": ""
+        },
+        {
+          "component": "aem-content",
+          "name": "forms",
+          "label": "Category forms",
+          "multi": true,
+          "description": "Optional: one form (modal page) per loan category, in the same order as the options of \"Select loan category\": the 1st page opens for the 1st option, the 2nd for the 2nd, and so on. Options beyond the last page open the shared form."
         }
       ]
     },
@@ -89,9 +96,12 @@
           "value": "text",
           "options": [
             { "name": "Text", "value": "text" },
+            { "name": "Text (half width, pairs side by side on desktop)", "value": "text-half" },
+            { "name": "Text area (multi-line)", "value": "textarea" },
             { "name": "Mobile number (+91)", "value": "tel" },
             { "name": "Email", "value": "email" },
             { "name": "Postal code", "value": "zip" },
+            { "name": "Multi-line text", "value": "textarea" },
             { "name": "Dropdown", "value": "select" },
             { "name": "Dropdown with search", "value": "search" },
             { "name": "Captcha", "value": "captcha" }
@@ -102,7 +112,7 @@
           "valueType": "string",
           "name": "options",
           "label": "Options",
-          "description": "Dropdowns only: comma separated. Add a second line with a colon, e.g. Mumbai: Maharashtra.",
+          "description": "Dropdowns: comma separated. Add a second line with a colon, e.g. Mumbai: Maharashtra. Multi-line text: the character limit (default 150).",
           "value": ""
         },
         {
@@ -111,6 +121,14 @@
           "name": "required",
           "label": "Required",
           "value": true
+        },
+        {
+          "component": "boolean",
+          "valueType": "boolean",
+          "name": "halfWidth",
+          "label": "Half width",
+          "description": "Two half-width fields in a row share one line. First name and Last name do this automatically.",
+          "value": false
         }
       ]
     }

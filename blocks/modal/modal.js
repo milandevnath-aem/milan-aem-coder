@@ -19,6 +19,19 @@ function loadModalCss() {
 }
 
 /**
+ * Plays the close animation (.modal-closing), then closes the dialog.
+ * Closes right away when there is no animation (e.g. reduced motion).
+ * @param {HTMLDialogElement} dialog
+ */
+function animateClose(dialog) {
+  if (!dialog.open || dialog.classList.contains('modal-closing')) return;
+  dialog.classList.add('modal-closing');
+  const animations = dialog.getAnimations?.() || [];
+  Promise.allSettled(animations.map((animation) => animation.finished))
+    .then(() => dialog.close());
+}
+
+/**
  * Creates a modal dialog around the given content.
  * @param {Node[]} contentNodes content to show in the dialog
  * @param {Object} options { className, label }
@@ -43,7 +56,7 @@ export async function createModal(contentNodes, { className = '', label = '' } =
   close.className = 'modal-close';
   close.setAttribute('aria-label', 'Close');
   close.innerHTML = `<img src="${window.hlx.codeBasePath}/icons/close.svg" alt="" width="24" height="24">`;
-  close.addEventListener('click', () => dialog.close());
+  close.addEventListener('click', () => animateClose(dialog));
 
   const content = document.createElement('div');
   content.className = 'modal-content';
@@ -52,38 +65,68 @@ export async function createModal(contentNodes, { className = '', label = '' } =
 
   // click on the backdrop (or the dialog area around the card) closes the dialog
   dialog.addEventListener('click', (e) => {
-    if (e.target === dialog) dialog.close();
+    if (e.target === dialog) animateClose(dialog);
+  });
+  // Esc / light dismiss: play the close animation first (if the browser lets us)
+  dialog.addEventListener('cancel', (e) => {
+    e.preventDefault();
+    animateClose(dialog);
   });
   dialog.addEventListener('close', () => {
-    document.body.classList.remove('modal-open');
     dialog.remove();
+    // a modal swapped in for this one keeps the page locked
+    if (!document.querySelector('dialog.modal[open]')) document.body.classList.remove('modal-open');
   });
 
   document.body.append(dialog);
   return {
     dialog,
     showModal: () => {
+      // forms on small screens open below the header (it stays visible, the page is inert)
+      const nav = document.querySelector('header nav');
+      const top = nav ? Math.max(0, Math.round(nav.getBoundingClientRect().bottom)) : 0;
+      dialog.style.setProperty('--modal-top', `${top}px`);
       dialog.showModal();
       document.body.classList.add('modal-open');
       content.scrollTop = 0;
     },
-    close: () => dialog.close(),
+    close: () => animateClose(dialog),
   };
 }
 
 /**
  * Loads a fragment page and shows it in a modal.
  * @param {string} url link to the modal page
+ * @param {Object} [options]
+ * @param {Object} [options.prefill] values for a form in the modal (see lead-form prefill),
+ *   e.g. the loan category of the button that opened it
  */
-export async function openModal(url) {
+export async function openModal(url, { prefill } = {}) {
   const path = new URL(url, window.location).pathname;
   const fragment = await loadFragment(path);
   if (!fragment) return null;
-  document.querySelectorAll('dialog.modal[open]').forEach((open) => open.close());
+  const previous = [...document.querySelectorAll('dialog.modal[open]')];
+  // each modal page gets its own class (e.g. "apply-now-car-lease-modal") for its layout
+  const name = path.split('/').pop().replace(/(\.plain)?\.html$/, '');
+  const type = (fragment.querySelector('.lead-form') && 'modal-form')
+    || (fragment.querySelector('.block') ? '' : 'modal-details');
+  // opened over another modal (e.g. another category's form): swapped without the entry animation
+  const swap = previous.length ? 'modal-swap' : '';
   const modal = await createModal([...fragment.childNodes], {
-    className: fragment.querySelector('.block') ? '' : 'modal-details',
+    className: [type, name && `${name}-modal`, swap].filter(Boolean).join(' '),
     label: fragment.querySelector('h1, h2')?.textContent.trim() || '',
   });
-  modal.showModal();
+  modal.dialog.dataset.modalPath = path;
+  if (prefill) modal.dialog.querySelector('form')?.prefill?.(prefill);
+  // the old one goes only once the new one is on screen, so there is no empty frame
+  const show = () => {
+    modal.showModal();
+    previous.forEach((open) => open.close());
+  };
+  const smooth = swap && document.startViewTransition
+    && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // a swapped form cross-fades into the next one instead of blinking
+  if (smooth) await document.startViewTransition(show).updateCallbackDone;
+  else show();
   return modal;
 }

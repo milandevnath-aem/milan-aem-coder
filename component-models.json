@@ -165,8 +165,47 @@
           {
             "name": "Animate text (banner text lights up on scroll)",
             "value": "animate-text"
+          },
+          {
+            "name": "Padding top (124px desktop / 80px mobile)",
+            "value": "padding-top"
+          },
+          {
+            "name": "Padding bottom (124px desktop / 80px mobile)",
+            "value": "padding-bottom"
+          },
+          {
+            "name": "No margin top",
+            "value": "no-margin-top"
+          },
+          {
+            "name": "No margin bottom",
+            "value": "no-margin-bottom"
+          },
+          {
+            "name": "No margin top (mobile only)",
+            "value": "no-margin-top-mobile"
+          },
+          {
+            "name": "No margin top (desktop only)",
+            "value": "no-margin-top-desktop"
+          },
+          {
+            "name": "No margin bottom (mobile only)",
+            "value": "no-margin-bottom-mobile"
+          },
+          {
+            "name": "No margin bottom (desktop only)",
+            "value": "no-margin-bottom-desktop"
           }
         ]
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "backgroundColor",
+        "label": "Background color",
+        "description": "Optional. A CSS color such as #eeeeee or rgb(238 238 238). Fills the whole section."
       },
       {
         "component": "reference",
@@ -336,6 +375,23 @@
         "name": "rows",
         "value": "",
         "label": "Rows"
+      },
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Variant",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "About Us (sticky heading, website link with icon)",
+            "value": "about-us"
+          }
+        ]
       }
     ]
   },
@@ -390,58 +446,241 @@
         "value": ""
       },
       {
-        "component": "number",
-        "valueType": "number",
+        "component": "text",
+        "valueType": "string",
         "name": "amount_min",
-        "label": "Minimum loan amount (₹)"
+        "label": "Minimum loan amount (₹)",
+        "required": true,
+        "description": "Numbers only, e.g. 100000. Must not be more than the maximum."
       },
       {
-        "component": "number",
-        "valueType": "number",
+        "component": "text",
+        "valueType": "string",
         "name": "amount_max",
-        "label": "Maximum loan amount (₹)"
+        "label": "Maximum loan amount (₹)",
+        "required": true,
+        "description": "Numbers only, e.g. 10000000. Must not be less than the minimum."
       },
       {
-        "component": "number",
-        "valueType": "number",
+        "component": "text",
+        "valueType": "string",
         "name": "amount_default",
-        "label": "Default loan amount (₹)"
+        "label": "Default loan amount (₹)",
+        "required": true,
+        "description": "Starting value. Must be between the minimum and maximum, otherwise the nearest limit is used."
       },
       {
-        "component": "number",
-        "valueType": "number",
+        "component": "text",
+        "valueType": "string",
+        "name": "amount_defaultError",
+        "label": "⚠ Error: default loan amount must be between the minimum and maximum",
+        "description": "Change the default, minimum or maximum. Until this is fixed, the calculator starts at the nearest limit.",
+        "readOnly": true,
+        "condition": {
+          "or": [
+            {
+              "<": [
+                {
+                  "+": [
+                    {
+                      "var": "amount_default"
+                    }
+                  ]
+                },
+                {
+                  "+": [
+                    {
+                      "var": "amount_min"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              ">": [
+                {
+                  "+": [
+                    {
+                      "var": "amount_default"
+                    }
+                  ]
+                },
+                {
+                  "+": [
+                    {
+                      "var": "amount_max"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "amount_step",
+        "label": "Slider step (₹)",
+        "description": "How much one slider move changes the value, e.g. 10000. Must be more than 0 and no more than the range."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
         "name": "rate_min",
-        "label": "Minimum interest rate (%)"
+        "label": "Minimum interest rate (%)",
+        "required": true,
+        "description": "Numbers only, e.g. 8. Must not be more than the maximum."
       },
       {
-        "component": "number",
-        "valueType": "number",
+        "component": "text",
+        "valueType": "string",
         "name": "rate_max",
-        "label": "Maximum interest rate (%)"
+        "label": "Maximum interest rate (%)",
+        "required": true,
+        "description": "Numbers only, e.g. 24. Must not be less than the minimum."
       },
       {
-        "component": "number",
-        "valueType": "number",
+        "component": "text",
+        "valueType": "string",
         "name": "rate_default",
-        "label": "Default interest rate (%)"
+        "label": "Default interest rate (%)",
+        "required": true,
+        "description": "Starting value. Must be between the minimum and maximum, otherwise the nearest limit is used."
       },
       {
-        "component": "number",
-        "valueType": "number",
+        "component": "text",
+        "valueType": "string",
+        "name": "rate_defaultError",
+        "label": "⚠ Error: default interest rate must be between the minimum and maximum",
+        "description": "Change the default, minimum or maximum. Until this is fixed, the calculator starts at the nearest limit.",
+        "readOnly": true,
+        "condition": {
+          "or": [
+            {
+              "<": [
+                {
+                  "+": [
+                    {
+                      "var": "rate_default"
+                    }
+                  ]
+                },
+                {
+                  "+": [
+                    {
+                      "var": "rate_min"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              ">": [
+                {
+                  "+": [
+                    {
+                      "var": "rate_default"
+                    }
+                  ]
+                },
+                {
+                  "+": [
+                    {
+                      "var": "rate_max"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "rate_step",
+        "label": "Slider step (%)",
+        "description": "How much one slider move changes the value, e.g. 0.1. Must be more than 0 and no more than the range."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
         "name": "tenure_min",
-        "label": "Minimum tenure (years)"
+        "label": "Minimum tenure (years)",
+        "required": true,
+        "description": "Numbers only, e.g. 1. Must not be more than the maximum."
       },
       {
-        "component": "number",
-        "valueType": "number",
+        "component": "text",
+        "valueType": "string",
         "name": "tenure_max",
-        "label": "Maximum tenure (years)"
+        "label": "Maximum tenure (years)",
+        "required": true,
+        "description": "Numbers only, e.g. 7. Must not be less than the minimum."
       },
       {
-        "component": "number",
-        "valueType": "number",
+        "component": "text",
+        "valueType": "string",
         "name": "tenure_default",
-        "label": "Default tenure (years)"
+        "label": "Default tenure (years)",
+        "required": true,
+        "description": "Starting value. Must be between the minimum and maximum, otherwise the nearest limit is used."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "tenure_defaultError",
+        "label": "⚠ Error: default tenure must be between the minimum and maximum",
+        "description": "Change the default, minimum or maximum. Until this is fixed, the calculator starts at the nearest limit.",
+        "readOnly": true,
+        "condition": {
+          "or": [
+            {
+              "<": [
+                {
+                  "+": [
+                    {
+                      "var": "tenure_default"
+                    }
+                  ]
+                },
+                {
+                  "+": [
+                    {
+                      "var": "tenure_min"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              ">": [
+                {
+                  "+": [
+                    {
+                      "var": "tenure_default"
+                    }
+                  ]
+                },
+                {
+                  "+": [
+                    {
+                      "var": "tenure_max"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "tenure_step",
+        "label": "Slider step (years)",
+        "description": "How much one slider move changes the value, e.g. 1. Must be more than 0 and no more than the range."
       }
     ]
   },
@@ -473,6 +712,28 @@
         "value": "",
         "label": "Answer",
         "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "feature-banner",
+    "fields": [
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Variant",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Edge to edge (full width, no side padding)",
+            "value": "edge-to-edge"
+          }
+        ]
       }
     ]
   },
@@ -587,6 +848,10 @@
           {
             "name": "Info cards (label / value pairs)",
             "value": "info"
+          },
+          {
+            "name": "About Us info cards (company details)",
+            "value": "about-us"
           }
         ]
       },
@@ -692,7 +957,7 @@
         "valueType": "string",
         "name": "formOptions_categories",
         "label": "Loan categories",
-        "description": "Comma-separated list. The first five are shown, the rest appear under \"More\".",
+        "description": "Comma-separated list. The first four are shown, the rest appear under \"More\".",
         "value": ""
       },
       {
@@ -715,6 +980,13 @@
         "name": "formActionText",
         "label": "Submit button label",
         "value": ""
+      },
+      {
+        "component": "aem-content",
+        "name": "categoryForms",
+        "label": "Category forms",
+        "multi": true,
+        "description": "Optional: one form (modal page) per category, in the same order as the categories: the 1st page opens for the 1st category, the 2nd for the 2nd, and so on. Use the Form submit URL page for a category that has no form of its own. Categories beyond the last page open the Form submit URL."
       }
     ]
   },
@@ -811,6 +1083,13 @@
         "name": "submitLabel",
         "label": "Button label",
         "value": ""
+      },
+      {
+        "component": "aem-content",
+        "name": "forms",
+        "label": "Category forms",
+        "multi": true,
+        "description": "Optional: one form (modal page) per loan category, in the same order as the options of \"Select loan category\": the 1st page opens for the 1st option, the 2nd for the 2nd, and so on. Options beyond the last page open the shared form."
       }
     ]
   },
@@ -836,6 +1115,14 @@
             "value": "text"
           },
           {
+            "name": "Text (half width, pairs side by side on desktop)",
+            "value": "text-half"
+          },
+          {
+            "name": "Text area (multi-line)",
+            "value": "textarea"
+          },
+          {
             "name": "Mobile number (+91)",
             "value": "tel"
           },
@@ -846,6 +1133,10 @@
           {
             "name": "Postal code",
             "value": "zip"
+          },
+          {
+            "name": "Multi-line text",
+            "value": "textarea"
           },
           {
             "name": "Dropdown",
@@ -866,7 +1157,7 @@
         "valueType": "string",
         "name": "options",
         "label": "Options",
-        "description": "Dropdowns only: comma separated. Add a second line with a colon, e.g. Mumbai: Maharashtra.",
+        "description": "Dropdowns: comma separated. Add a second line with a colon, e.g. Mumbai: Maharashtra. Multi-line text: the character limit (default 150).",
         "value": ""
       },
       {
@@ -875,6 +1166,14 @@
         "name": "required",
         "label": "Required",
         "value": true
+      },
+      {
+        "component": "boolean",
+        "valueType": "boolean",
+        "name": "halfWidth",
+        "label": "Half width",
+        "description": "Two half-width fields in a row share one line. First name and Last name do this automatically.",
+        "value": false
       }
     ]
   },
@@ -1001,6 +1300,18 @@
           {
             "name": "Documents (title and checklist)",
             "value": "documents"
+          }
+        ]
+      },
+      {
+        "component": "multiselect",
+        "name": "classes_options",
+        "label": "Options",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Carousel card",
+            "value": "carousel-card"
           }
         ]
       },

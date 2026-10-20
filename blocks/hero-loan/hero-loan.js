@@ -2,9 +2,12 @@ import { moveInstrumentation, isModalLink } from '../../scripts/scripts.js';
 import { createPicture } from '../../scripts/images.js';
 import { createDropdown } from '../../scripts/dropdown.js';
 import { MEDIA } from '../../scripts/viewport.js';
+import {
+  authoredForm, readForms, rememberForms, resolveForm,
+} from '../../scripts/category-forms.js';
 
-const VISIBLE_CATEGORIES = 5;
-const SLIDE_INTERVAL = 6000;
+// chips shown in the row; the rest are listed under "More"
+const VISIBLE_CATEGORIES = 4;
 
 function cellText(row) {
   return row?.textContent.trim() || '';
@@ -24,16 +27,129 @@ function buildChip(label, index) {
   return chip;
 }
 
-function confirmOnSubmit(form, modalHref) {
+let moreCount = 0;
+
+/**
+ * "More" chip with a menu of the remaining categories. The categories stay radio
+ * inputs (hidden chips) so the form value does not change; the chip shows the picked
+ * one ("Loan Against Property") until a visible chip is chosen again.
+ * @param {HTMLElement} chips the chip row
+ * @param {HTMLElement[]} overflow chips listed in the menu instead of the row
+ */
+function buildMore(chips, overflow) {
+  moreCount += 1;
+  const wrap = document.createElement('div');
+  wrap.className = 'hero-loan-more-wrap';
+  const more = document.createElement('button');
+  more.type = 'button';
+  more.className = 'hero-loan-chip hero-loan-more';
+  more.setAttribute('aria-expanded', 'false');
+  const menu = document.createElement('ul');
+  menu.className = 'hero-loan-more-menu';
+  menu.id = `hero-loan-more-${moreCount}`;
+  menu.hidden = true;
+  more.setAttribute('aria-controls', menu.id);
+
+  const inputs = overflow.map((chip) => chip.querySelector('input'));
+  const items = inputs.map((input) => {
+    const item = document.createElement('button');
+    item.type = 'button';
+    item.textContent = input.value;
+    const li = document.createElement('li');
+    li.append(item);
+    menu.append(li);
+    return item;
+  });
+
+  const sync = () => {
+    const selected = inputs.find((input) => input.checked);
+    more.textContent = selected ? selected.value : 'More';
+    more.classList.toggle('is-selected', Boolean(selected));
+    if (selected) more.setAttribute('aria-label', `${selected.value}, more loan categories`);
+    else more.removeAttribute('aria-label');
+    items.forEach((item, i) => item.setAttribute('aria-pressed', inputs[i].checked));
+  };
+  const close = (focusMore = false) => {
+    if (menu.hidden) return;
+    menu.hidden = true;
+    more.setAttribute('aria-expanded', 'false');
+    if (focusMore) more.focus();
+  };
+  const open = (focusItem) => {
+    menu.hidden = false;
+    more.setAttribute('aria-expanded', 'true');
+    if (focusItem) (items.find((item) => item.getAttribute('aria-pressed') === 'true') || items[0]).focus();
+  };
+
+  // e.detail is 0 when the button is activated from the keyboard
+  more.addEventListener('click', (e) => (menu.hidden ? open(e.detail === 0) : close()));
+  items.forEach((item, i) => item.addEventListener('click', () => {
+    inputs[i].checked = true;
+    inputs[i].dispatchEvent(new Event('change', { bubbles: true }));
+    close(true);
+  }));
+  wrap.addEventListener('keydown', (e) => {
+    if (menu.hidden) return;
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      close(true);
+    }
+    const index = items.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      const step = e.key === 'ArrowDown' ? 1 : -1;
+      items[(index + step + items.length) % items.length].focus();
+    }
+  });
+  document.addEventListener('click', (e) => {
+    if (!wrap.contains(e.target)) close();
+  });
+  wrap.addEventListener('focusout', (e) => {
+    if (e.relatedTarget && !wrap.contains(e.relatedTarget)) close();
+  });
+  // any category change (a visible chip too) updates what the More chip shows
+  chips.addEventListener('change', sync);
+  sync();
+
+  wrap.append(more, menu);
+  return wrap;
+}
+
+/**
+ * Apply now opens the form of the selected category (scripts/category-forms.js): the page
+ * at its position in "Category forms" (1st page = 1st category, ...), else the Form submit
+ * URL. The button's data-modal follows the selection.
+ * @param {HTMLFormElement} form
+ * @param {string} modalHref the Form submit URL when it is a modal page
+ * @param {string[]} forms authored "Category forms"
+ * @param {string[]} categories
+ */
+function confirmOnSubmit(form, modalHref, forms = [], categories = []) {
+  const button = form.querySelector('button[type="submit"]');
+  const selected = () => String(new FormData(form).get('category') || '');
+  const show = (target) => {
+    if (target) button.dataset.modal = target;
+    else delete button.dataset.modal;
+    return target;
+  };
+  const update = async () => show(await resolveForm(selected(), {
+    forms, fallback: modalHref, categories,
+  }));
+  // on load without looking pages up; a change of category resolves its form
+  show(authoredForm(selected(), forms, categories) || modalHref);
+  form.addEventListener('change', update);
+
   form.addEventListener('submit', async (e) => {
     if (form.getAttribute('action')) return;
     e.preventDefault();
-    if (modalHref) {
+    const target = await update();
+    if (target) {
       // continue in the full application form, carrying over what was entered
       const data = Object.fromEntries(new FormData(form));
       const { openModal } = await import('../modal/modal.js');
-      const modal = await openModal(modalHref);
-      modal?.dialog.querySelector('form')?.prefill?.(data);
+      const modal = await openModal(target, { prefill: data });
+      // the form keeps this mapping when another category is picked in it
+      if (modal) rememberForms(modal.dialog, { forms, categories, shared: modalHref });
       return;
     }
     // no endpoint configured: confirm locally instead of reloading the page
@@ -76,8 +192,9 @@ function buildField(label, index) {
 }
 
 function buildForm(config, isProduct) {
-  // rows in model order: heading, options (categories + fields), submit link
-  const [headingRow, optionsRow, actionRow] = config;
+  // rows in model order: heading, options (categories + fields), submit link, category forms
+  const [headingRow, optionsRow, actionRow, formsRow] = config;
+  const forms = readForms(formsRow);
   const options = [...(optionsRow?.querySelectorAll('p') || [])].map((p) => p.textContent.trim());
   if (!options.length && cellText(optionsRow)) options.push(cellText(optionsRow));
   const [categoriesText = '', fieldsText = ''] = options;
@@ -123,51 +240,37 @@ function buildForm(config, isProduct) {
       name: 'category',
       options: categories.map((c) => ({ value: c, label: c })),
       value: categories[0],
+      boundary: '.hero-loan',
     });
     select.classList.add('hero-loan-select');
     moveInstrumentation(optionsRow, select);
     form.querySelector('.hero-loan-categories').remove();
     form.prepend(select);
-    confirmOnSubmit(form, modalHref);
+    confirmOnSubmit(form, modalHref, forms, categories);
     if (actionRow) moveInstrumentation(actionRow, form.querySelector('button[type="submit"]'));
     card.append(form);
     return card;
   }
 
   const chips = form.querySelector('.hero-loan-chips');
-  categories.forEach((label, i) => {
-    const chip = buildChip(label, i);
-    if (i >= VISIBLE_CATEGORIES) chip.hidden = true;
-    chips.append(chip);
-  });
-  if (categories.length > VISIBLE_CATEGORIES) {
-    const more = document.createElement('button');
-    more.type = 'button';
-    more.className = 'hero-loan-chip hero-loan-more';
-    more.setAttribute('aria-expanded', 'false');
-    more.textContent = 'More';
-    more.addEventListener('click', () => {
-      const expanded = more.getAttribute('aria-expanded') === 'true';
-      more.setAttribute('aria-expanded', !expanded);
-      more.textContent = expanded ? 'More' : 'Less';
-      [...chips.children].slice(VISIBLE_CATEGORIES).forEach((chip) => {
-        if (chip !== more) chip.hidden = expanded;
-      });
-    });
-    chips.append(more);
-  }
+  const chipList = categories.map((label, i) => buildChip(label, i));
+  const overflow = chipList.slice(VISIBLE_CATEGORIES);
+  // overflow chips keep their radio inputs (form value) but are picked from the menu
+  overflow.forEach((chip) => { chip.hidden = true; });
+  chips.append(...chipList);
+  if (overflow.length) chips.append(buildMore(chips, overflow));
   if (!categories.length) form.querySelector('.hero-loan-categories').remove();
 
   moveInstrumentation(optionsRow, form.querySelector('.hero-loan-categories'));
   if (actionRow) moveInstrumentation(actionRow, form.querySelector('button[type="submit"]'));
 
-  confirmOnSubmit(form, modalHref);
+  confirmOnSubmit(form, modalHref, forms, categories);
 
   card.append(form);
   return card;
 }
 
-function buildSlides(rows, block) {
+function buildSlides(rows) {
   const slides = document.createElement('ul');
   slides.className = 'hero-loan-slides';
   rows.forEach((row, i) => {
@@ -229,7 +332,6 @@ function buildSlides(rows, block) {
   const dots = document.createElement('div');
   dots.className = 'hero-loan-dots';
   let current = 0;
-  let timer;
   const show = (index) => {
     current = (index + rows.length) % rows.length;
     [...slides.children].forEach((slide, i) => {
@@ -246,37 +348,8 @@ function buildSlides(rows, block) {
     dot.addEventListener('click', () => show(i));
     dots.append(dot);
   });
+  // no autoplay: slides change only when the visitor selects a dot
   show(0);
-
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  // pause / play the slideshow (WCAG 2.2.2)
-  let paused = reduceMotion;
-  const toggle = document.createElement('button');
-  toggle.type = 'button';
-  toggle.className = 'hero-loan-pause';
-  const setPaused = (value) => {
-    paused = value;
-    toggle.setAttribute('aria-label', paused ? 'Play slideshow' : 'Pause slideshow');
-    toggle.classList.toggle('is-paused', paused);
-  };
-  setPaused(paused);
-  dots.append(toggle);
-  const start = () => {
-    if (paused) return;
-    clearInterval(timer);
-    timer = setInterval(() => show(current + 1), SLIDE_INTERVAL);
-  };
-  const stop = () => clearInterval(timer);
-  toggle.addEventListener('click', () => {
-    setPaused(!paused);
-    if (paused) stop();
-    else start();
-  });
-  block.addEventListener('mouseenter', stop);
-  block.addEventListener('mouseleave', start);
-  block.addEventListener('focusin', stop);
-  block.addEventListener('focusout', start);
-  start();
 
   slides.dots = dots;
   return slides;
@@ -336,7 +409,7 @@ export default function decorate(block) {
   const config = rows.filter((row) => row.children.length <= 1);
   const isProduct = block.classList.contains('product');
 
-  const slides = buildSlides(slideRows, block);
+  const slides = buildSlides(slideRows);
   const inner = document.createElement('div');
   inner.className = 'hero-loan-inner';
   if (slides.dots) inner.append(slides.dots);

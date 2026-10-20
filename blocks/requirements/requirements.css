@@ -266,13 +266,21 @@
   cursor: default;
 }
 
+:where(.desktop-view) .requirements-wrapper:has(.requirements.eligibility):has(li:nth-child(4)) {
+  padding-right: 0;
+}
+
+:where(.desktop-view) .requirements-container:has(.carousel-card) .requirements-wrapper {
+  padding: 0 0 0 var(--gb-margin);
+}
+
 :where(.desktop-view) .requirements .requirements-tabs {
   margin-bottom: 32px;
 }
 
 :where(.desktop-view) .requirements .requirements-tabs button {
   padding: 8px 15px; /* 9px 16px with the border */
-  font-size: var(--body-font-size-s);
+  font-size: var(--body-font-size-m);
   line-height: 24px;
   letter-spacing: 0;
 }
@@ -294,6 +302,12 @@
   scrollbar-width: none;
 }
 
+:where(.desktop-view) .requirements.eligibility .requirements-cards.carousel {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
 :where(.desktop-view) .requirements.eligibility .requirements-cards::-webkit-scrollbar {
   display: none;
 }
@@ -302,14 +316,19 @@
   flex: 0 0 calc((100% - 2 * var(--grid-gutter)) / 3);
   justify-content: flex-start;
   min-height: 272px;
+  max-width: 386px;
   padding: 32px;
   border-radius: 32px;
   scroll-snap-align: start;
 }
 
 /* more than three cards: three and a half in view, so the half card shows there is more */
-:where(.desktop-view) .requirements.eligibility .requirements-cards:has(> .requirements-card:nth-child(4)) > .requirements-card {
+:where(.desktop-view) .requirements.eligibility .requirements-cards.carousel > .requirements-card {
   flex-basis: calc((100% - 3 * var(--grid-gutter)) / 3.5);
+}
+
+:where(.desktop-view) .requirements .requirements-card picture.requirements-icon {
+  padding-bottom: 32px;
 }
 
 :where(.desktop-view) .requirements .requirements-icon img {
@@ -336,6 +355,7 @@
   justify-content: flex-end;
   gap: 12px;
   margin-top: 32px;
+  padding-right: calc(var(--gb-offset));
 }
 
 :where(.desktop-view) .requirements .requirements-nav[hidden] {

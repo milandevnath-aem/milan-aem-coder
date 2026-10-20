@@ -43,11 +43,14 @@ export function highlight(el, text, query) {
  * @param {string} [config.searchPlaceholder]
  * @param {boolean} [config.pinSelected] list the selected option first when reopened
  * @param {boolean} [config.required]
- * @returns {HTMLDivElement} the dropdown; dispatches "change", exposes value/setValue()
+ * @param {string} [config.boundary] selector of an ancestor (e.g. a banner) the open
+ *   panel must stay inside: the list is shortened and scrolls instead of overflowing it
+ * @returns {HTMLDivElement} the dropdown; dispatches "change" (detail.byUser: picked by the
+ *   visitor), exposes value/setValue()/hasOption()
  */
 export function createDropdown({
   label, name, options, value = '', search = false, searchPlaceholder = 'Search',
-  pinSelected = false, required = false,
+  pinSelected = false, required = false, boundary = '',
 }) {
   if (!cssLoaded) cssLoaded = loadCSS(`${window.hlx.codeBasePath}/styles/dropdown.css`);
   idCounter += 1;
@@ -161,8 +164,19 @@ export function createDropdown({
       empty.textContent = 'No results found';
       list.append(empty);
     }
-    panel.classList.toggle('is-scrollable', matches.length > 6);
     active = -1;
+  };
+
+  // shortens the list to keep the panel inside the boundary, flags it when it scrolls
+  const fitPanel = () => {
+    list.style.maxHeight = '';
+    const area = boundary && root.closest(boundary);
+    if (area) {
+      const limit = area.getBoundingClientRect().bottom - 24;
+      const overflow = panel.getBoundingClientRect().bottom - limit;
+      if (overflow > 0) list.style.maxHeight = `${Math.max(list.offsetHeight - overflow, 120)}px`;
+    }
+    panel.classList.toggle('is-scrollable', list.scrollHeight > list.clientHeight);
   };
 
   const close = (focusField = false) => {
@@ -179,6 +193,7 @@ export function createDropdown({
     panel.hidden = false;
     field.setAttribute('aria-expanded', 'true');
     root.classList.add('is-open');
+    fitPanel();
     const selectedIndex = visibleOptions().findIndex((li) => li.dataset.value === input.value);
     if (selectedIndex >= 0) setActive(selectedIndex);
     if (searchInput) {
@@ -191,27 +206,41 @@ export function createDropdown({
     }
   };
 
-  const setValue = (newValue, notify = true) => {
-    const wanted = String(newValue || '').toLowerCase();
-    const option = options.find((o) => o.value === newValue || o.label === newValue)
+  // exact value or label first, then a loose match ignoring case, spaces and punctuation
+  // ("Two wheeler loan" finds "Two-Wheeler", "Top up loans" finds "Top-Up Loan")
+  const normalize = (text) => String(text || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const findOption = (wantedValue) => {
+    const wanted = normalize(wantedValue);
+    return options.find((o) => o.value === wantedValue || o.label === wantedValue)
       || (wanted && options.find((o) => {
-        const l = o.label.toLowerCase();
-        return l.startsWith(wanted) || wanted.startsWith(l);
+        const l = normalize(o.label);
+        return l && (l.startsWith(wanted) || wanted.startsWith(l));
       }));
+  };
+
+  // the "change" event's detail.byUser tells a visitor's pick from a value set by code
+  const setValue = (newValue, notify = true, byUser = false) => {
+    const option = findOption(newValue);
     input.value = option ? option.value : '';
     root.value = input.value;
     field.querySelector('.dropdown-value').textContent = option ? option.label : '';
     root.classList.toggle('is-filled', !!option);
-    if (notify) root.dispatchEvent(new Event('change', { bubbles: true }));
+    if (notify) root.dispatchEvent(new CustomEvent('change', { bubbles: true, detail: { byUser } }));
   };
 
   const choose = (li) => {
     if (!li?.dataset.value) return;
-    setValue(li.dataset.value);
+    setValue(li.dataset.value, true, true);
     close(true);
   };
 
   field.addEventListener('click', () => (panel.hidden ? open() : close()));
+  // pressing on an option must not move focus: in a dialog focus would jump to the dialog,
+  // "focus left the dropdown" closes the panel and the click never reaches the option.
+  // The search box keeps its own mouse handling (caret, selection).
+  panel.addEventListener('mousedown', (e) => {
+    if (e.target !== searchInput) e.preventDefault();
+  });
   list.addEventListener('click', (e) => choose(e.target.closest('[role="option"]')));
   list.addEventListener('mousemove', (e) => {
     const li = e.target.closest('[role="option"]');
@@ -234,6 +263,7 @@ export function createDropdown({
     searchInput.addEventListener('input', () => {
       searchInput.parentElement.querySelector('.dropdown-clear').hidden = !searchInput.value;
       render(searchInput.value);
+      fitPanel();
       if (searchInput.value) setActive(0);
     });
   }
@@ -246,6 +276,7 @@ export function createDropdown({
   });
 
   root.setValue = (v) => setValue(v);
+  root.hasOption = (v) => Boolean(findOption(v));
   root.focus = () => field.focus();
   setValue(value, false);
   return root;

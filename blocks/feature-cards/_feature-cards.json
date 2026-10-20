@@ -47,7 +47,8 @@
             { "name": "Feature grid (image and icon cards)", "value": "" },
             { "name": "Numbered cards", "value": "numbered" },
             { "name": "Split (heading and image left, cards right)", "value": "split" },
-            { "name": "Info cards (label / value pairs)", "value": "info" }
+            { "name": "Info cards (label / value pairs)", "value": "info" },
+            { "name": "About Us info cards (company details)", "value": "about-us" }
           ]
         },
         {

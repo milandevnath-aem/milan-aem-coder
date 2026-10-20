@@ -36,7 +36,11 @@ export default function decorate(block) {
     if (textCell) {
       textCell.className = 'offers-content';
       const eyebrow = textCell.querySelector('p:first-child:not(.button-wrapper)');
-      if (eyebrow && eyebrow.nextElementSibling?.matches('h1, h2, h3, h4')) eyebrow.classList.add('offers-eyebrow');
+      if (eyebrow && eyebrow.nextElementSibling?.matches('h1, h2, h3, h4')) {
+        eyebrow.classList.add('offers-eyebrow');
+        // the card's product ("Two-wheeler loan"): its apply link opens the form for it
+        item.dataset.loanCategory = eyebrow.textContent.trim();
+      }
       // several call-to-action paragraphs sit side by side
       const buttons = [...textCell.querySelectorAll(':scope > .button-wrapper')];
       if (buttons.length > 1) {

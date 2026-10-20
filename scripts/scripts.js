@@ -91,6 +91,20 @@ export function isModalLink(href) {
  * Opens links to /modals/ pages in a dialog instead of navigating.
  * @param {Document} doc The document
  */
+/**
+ * Loan category a modal link stands for, most specific first: "?category=" on the link,
+ * the block item it sits in (data-loan-category, e.g. an offer card or the EMI calculator
+ * tab), then the product page's hero. The modal's form uses the first one it offers.
+ * @param {HTMLAnchorElement} link
+ * @returns {string[]}
+ */
+function loanCategories(link) {
+  const fromUrl = new URL(link.href, window.location).searchParams.get('category');
+  const fromBlock = link.closest('[data-loan-category]')?.dataset.loanCategory;
+  const fromPage = document.querySelector('.hero-loan.product input[name="category"]')?.value;
+  return [fromUrl, fromBlock, fromPage].filter(Boolean);
+}
+
 function autolinkModals(doc) {
   doc.addEventListener('click', async (e) => {
     const link = e.target.closest('a[href]');
@@ -98,7 +112,8 @@ function autolinkModals(doc) {
     if (!isModalLink(link.href)) return;
     e.preventDefault();
     const { openModal } = await import(`${window.hlx.codeBasePath}/blocks/modal/modal.js`);
-    openModal(link.href);
+    const category = loanCategories(link);
+    openModal(link.href, category.length ? { prefill: { category } } : {});
   });
 }
 
@@ -142,12 +157,33 @@ export function decorateButtons(main) {
 }
 
 /**
- * Sections with background images (section properties "background" and
- * "backgroundMobile"): a decorative picture covering the section behind its content.
+ * Reads the "backgroundColor" section property as a valid CSS color.
+ * @param {Element} section The section element
+ * @returns {string} The color, or '' when missing or invalid
+ */
+function readSectionColor(section) {
+  let value = (section.dataset.backgroundcolor || section.dataset.backgroundColor || '').trim();
+  // AEM renders a value starting with "#" as a link: ".../page#eee" -> "#eee"
+  if (value.includes('#')) value = `#${value.split('#').pop()}`;
+  // allow hex without the leading "#": "eeeeee" -> "#eeeeee"
+  if (/^([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(value)) value = `#${value}`;
+  return value && CSS.supports('background-color', value) ? value : '';
+}
+
+/**
+ * Sections with a background color (section property "backgroundColor") and/or
+ * background images ("background" and "backgroundMobile"): the color fills the section,
+ * a decorative picture covers it behind its content.
  * @param {Element} main The main element
  */
 function decorateSectionBackgrounds(main) {
   main.querySelectorAll(':scope > .section').forEach((section) => {
+    const color = readSectionColor(section);
+    if (color) {
+      section.style.setProperty('--section-bg-color', color);
+      section.classList.add('has-bg-color');
+    }
+
     const { background } = section.dataset;
     const mobile = section.dataset.backgroundmobile || section.dataset.backgroundMobile;
     if (!background && !mobile) return;

@@ -72,7 +72,7 @@
           "valueType": "string",
           "name": "formOptions_categories",
           "label": "Loan categories",
-          "description": "Comma-separated list. The first five are shown, the rest appear under \"More\".",
+          "description": "Comma-separated list. The first four are shown, the rest appear under \"More\".",
           "value": ""
         },
         {
@@ -95,6 +95,13 @@
           "name": "formActionText",
           "label": "Submit button label",
           "value": ""
+        },
+        {
+          "component": "aem-content",
+          "name": "categoryForms",
+          "label": "Category forms",
+          "multi": true,
+          "description": "Optional: one form (modal page) per category, in the same order as the categories: the 1st page opens for the 1st category, the 2nd for the 2nd, and so on. Use the Form submit URL page for a category that has no form of its own. Categories beyond the last page open the Form submit URL."
         }
       ]
     },
