@@ -1,7 +1,7 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createDropdown } from '../../scripts/dropdown.js';
-import { sendOtp, submitLead } from './lead-api.js';
+import { sendOtp } from './lead-api.js';
 import { createOtpStep, createSuccessStep, setLoading } from './lead-form-otp.js';
 import {
   readForms, rememberForms, rememberedForms, resolveForm, slug,
@@ -435,7 +435,11 @@ export default function decorate(block) {
   submit.className = 'button primary lead-form-submit';
   submit.textContent = submitRow?.textContent.trim() || 'Apply now';
   if (submitRow) moveInstrumentation(submitRow, submit);
-  legal.append(submit);
+  const sendError = document.createElement('p');
+  sendError.className = 'lead-form-error lead-form-send-error';
+  sendError.setAttribute('role', 'alert');
+  sendError.hidden = true;
+  legal.append(sendError, submit);
   form.append(legal);
 
   const isValid = () => form.checkValidity()
@@ -513,20 +517,30 @@ export default function decorate(block) {
     }
     const data = Object.fromEntries(new FormData(form));
     const mobile = form.querySelector('input[type="tel"]')?.value || '';
+    const categoryKey = Object.keys(data).find((k) => k.endsWith('category'));
+    const category = (categoryKey && data[categoryKey]) || pageCategory();
 
     // sending the OTP: button spinner (desktop), full view spinner (small screens)
+    sendError.hidden = true;
     setLoading(submit, true, 'Sending OTP');
     block.classList.add('is-sending');
     loading.hidden = false;
     announce('Sending OTP');
-    await sendOtp({ mobile, category: data[Object.keys(data).find((k) => k.endsWith('category'))] });
+    const sent = await sendOtp({ mobile, category });
     setLoading(submit, false);
     block.classList.remove('is-sending');
     loading.hidden = true;
+    if (!sent.ok) {
+      sendError.textContent = sent.message;
+      sendError.hidden = false;
+      return;
+    }
 
     block.querySelector('.lead-form-otp')?.remove();
     const otp = createOtpStep({
       mobile,
+      category,
+      data,
       announce,
       onBack: () => {
         otp.remove();
@@ -534,8 +548,7 @@ export default function decorate(block) {
         nameDialog(intro.querySelector('h1, h2')?.id);
         submit.focus();
       },
-      onVerified: async () => {
-        await submitLead(data);
+      onVerified: () => {
         const success = createSuccessStep({
           emiHref: document.querySelector('main .emi-calculator') ? '#emi-calculator' : `${siteRoot()}/home#emi-calculator`,
           onDone: close,

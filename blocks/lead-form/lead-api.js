@@ -1,47 +1,92 @@
 /*
-  Lead form services: send the OTP, verify it, submit the lead.
+  Lead form services: send the OTP, then verify it and create the lead in one call.
 
-  The services are not connected yet. Until they are, the form runs in demo mode so every
-  step can be tested: sending always works, the OTP 123456 is accepted and any other code
-  shows the "Incorrect OTP" state. To connect the real services, replace the bodies of the
-  three functions below (keep the return shape { ok: boolean }).
+  Each product has its own service (see lead-config.js). Until a product's endpoints are
+  filled in, its form runs in demo mode so every step can be tested: sending always works,
+  the OTP 123456 is accepted and any other code shows the "Incorrect OTP" state.
+
+  Flow of a live service:
+  1. POST generateOtpUrl { mobile } -> data.transactionId + data.token, kept encrypted
+     (lead-session.js)
+  2. POST verifyOtpUrl { transactionId, otp, token, lead } -> data.Result, data.LeadNumber
 */
+
+import LEAD_SERVICES from './lead-config.js';
+import { saveOtpSession, loadOtpSession, clearOtpSession } from './lead-session.js';
 
 export const OTP_LENGTH = 6;
 export const RESEND_SECONDS = 30;
 
 const DEMO_OTP = '123456';
+const GENERIC_ERROR = 'Something went wrong. Please try again.';
 const wait = (ms) => new Promise((resolve) => { setTimeout(resolve, ms); });
+
+/** The service of a loan category, live only when both its endpoints are set. */
+function serviceFor(category) {
+  const service = LEAD_SERVICES.find((s) => s.match.test(category || ''));
+  return service?.generateOtpUrl && service?.verifyOtpUrl ? service : null;
+}
+
+async function post(url, body) {
+  try {
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(body),
+    });
+    return await resp.json().catch(() => ({}));
+  } catch {
+    return {};
+  }
+}
 
 /**
  * Sends a one-time password to the mobile number.
  * @param {{ mobile: string, category?: string }} request
- * @returns {Promise<{ ok: boolean }>}
+ * @returns {Promise<{ ok: boolean, message?: string }>}
  */
-export async function sendOtp(request) { // eslint-disable-line no-unused-vars
-  // TODO: call the OTP service, e.g. fetch('/api/otp/send', { method: 'POST', body: ... })
-  await wait(1200);
+export async function sendOtp({ mobile, category }) {
+  const service = serviceFor(category);
+  if (!service) {
+    await wait(1200);
+    return { ok: true };
+  }
+  const json = await post(service.generateOtpUrl, { mobile });
+  const { transactionId, token } = json.data || {};
+  if (json.status !== 'success' || !transactionId || !token) {
+    clearOtpSession();
+    return { ok: false, message: json.message || GENERIC_ERROR };
+  }
+  await saveOtpSession({ mobile, transactionId, token });
   return { ok: true };
 }
 
 /**
- * Checks the OTP the user entered.
- * @param {{ mobile: string, otp: string }} request
- * @returns {Promise<{ ok: boolean }>}
+ * Checks the OTP the user entered and creates the lead.
+ * @param {Object} request
+ * @param {string} request.mobile
+ * @param {string} request.otp
+ * @param {string} [request.category]
+ * @param {Object<string, string>} [request.data] form values
+ * @returns {Promise<{ ok: boolean, message?: string, lead?: Object }>}
  */
-export async function verifyOtp({ otp }) {
-  // TODO: call the OTP service, e.g. fetch('/api/otp/verify', { method: 'POST', body: ... })
-  await wait(1200);
-  return { ok: otp === DEMO_OTP };
-}
-
-/**
- * Submits the lead once the mobile number is verified.
- * @param {Object<string, string>} data form values
- * @returns {Promise<{ ok: boolean }>}
- */
-export async function submitLead(data) { // eslint-disable-line no-unused-vars
-  // TODO: call the lead service, e.g. fetch('/api/leads', { method: 'POST', body: ... })
-  await wait(300);
-  return { ok: true };
+export async function verifyOtp({
+  mobile, otp, category, data = {},
+}) {
+  const service = serviceFor(category);
+  if (!service) {
+    await wait(1200);
+    return { ok: otp === DEMO_OTP };
+  }
+  const session = await loadOtpSession(mobile);
+  if (!session) return { ok: false, message: 'Your OTP has expired. Please request a new one.' };
+  const json = await post(service.verifyOtpUrl, {
+    transactionId: session.transactionId,
+    otp,
+    token: session.token,
+    lead: service.toLead(data),
+  });
+  if (json.status !== 'success') return { ok: false, message: json.message || GENERIC_ERROR };
+  clearOtpSession();
+  return { ok: true, lead: json.data };
 }

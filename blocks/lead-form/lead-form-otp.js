@@ -45,13 +45,15 @@ export function setLoading(button, loading, busyLabel = 'Please wait') {
  * OTP step: six one-digit boxes, Validate, resend timer, wrong OTP state.
  * @param {Object} options
  * @param {string} options.mobile ten-digit mobile number
+ * @param {string} [options.category] loan category, picks the lead service
+ * @param {Object<string, string>} [options.data] form values sent with the OTP
  * @param {Function} options.onBack back to the form
- * @param {Function} options.onVerified called once the OTP is accepted
+ * @param {Function} options.onVerified called with the lead result once the OTP is accepted
  * @param {Function} options.announce polite screen reader message
  * @returns {HTMLDivElement & { focusFirst: Function, titleId: string, stop: Function }}
  */
 export function createOtpStep({
-  mobile, onBack, onVerified, announce,
+  mobile, category, data, onBack, onVerified, announce,
 }) {
   uid += 1;
   const id = `lead-form-otp-${uid}`;
@@ -186,7 +188,12 @@ export function createOtpStep({
     if (seconds > 0 || busy) return;
     resend.setAttribute('aria-disabled', 'true');
     announce('Sending a new OTP');
-    await sendOtp({ mobile });
+    const result = await sendOtp({ mobile, category });
+    if (!result.ok) {
+      renderResend();
+      setError(result.message);
+      return;
+    }
     inputs.forEach((input) => { input.value = ''; });
     setError('');
     refresh();
@@ -205,16 +212,18 @@ export function createOtpStep({
     inputs.forEach((input) => { input.readOnly = true; });
     setLoading(validate, true, 'Validating OTP');
     refresh();
-    const result = await verifyOtp({ mobile, otp: code() });
+    const result = await verifyOtp({
+      mobile, otp: code(), category, data,
+    });
     busy = false;
     inputs.forEach((input) => { input.readOnly = false; });
     setLoading(validate, false);
     refresh();
     if (result.ok) {
       clearInterval(timer);
-      onVerified();
+      onVerified(result.lead);
     } else {
-      setError('Incorrect OTP. Please try again.');
+      setError(result.message || 'Incorrect OTP. Please try again.');
       inputs[0].focus();
     }
   });
