@@ -1,237 +1,292 @@
 .feature-banner {
-  --feature-banner-height: 600px;
-  --feature-banner-text: var(--text-color);
-  --feature-banner-muted: var(--muted-color);
+    --feature-banner-height: 600px;
+    --feature-banner-text: var(--text-color);
+    --feature-banner-muted: var(--muted-color);
 
-  /* text reveal start colours, AA contrast on the banner background */
-  --feature-banner-heading-from: #666;
-  --feature-banner-text-from: #707070;
+    /* text reveal start colours, AA contrast on the banner background */
+    --feature-banner-heading-from: #666;
+    --feature-banner-text-from: #707070;
 }
 
 .feature-banner > ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 .feature-banner .feature-banner-item {
-  position: relative;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  min-height: var(--feature-banner-height);
-  overflow: hidden;
-  background-color: var(--background-color);
-  color: var(--feature-banner-text);
-  height: 672px;
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    min-height: var(--feature-banner-height);
+    overflow: hidden;
+    background-color: var(--background-color);
+    color: var(--feature-banner-text);
+    height: 672px;
 }
 
 .feature-banner .feature-banner-item.light-text {
-  --feature-banner-text: var(--inverse-color);
-  --feature-banner-muted: #d6d6d6;
-  --feature-banner-heading-from: #949494;
-  --feature-banner-text-from: #8f8f8f;
+    --feature-banner-text: var(--inverse-color);
+    --feature-banner-muted: #d6d6d6;
+    --feature-banner-heading-from: #949494;
+    --feature-banner-text-from: #8f8f8f;
 
-  background-color: #1a1a1a;
+    background-color: #1a1a1a;
 }
 
 .feature-banner .feature-banner-image,
 .feature-banner .feature-banner-image img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .feature-banner .feature-banner-image img {
-  object-fit: cover;
+    object-fit: cover;
 }
 
 /* without a dedicated mobile crop keep the subject (opposite the text) in view */
 .feature-banner .text-left:not(.has-mobile-image) .feature-banner-image img {
-  object-position: 75% bottom;
+    object-position: 75% bottom;
 }
 
 .feature-banner .text-right:not(.has-mobile-image) .feature-banner-image img {
-  object-position: 25% bottom;
+    object-position: 25% bottom;
 }
 
 /* small screens with a mobile crop (subject in its lower half): a long text grows the
    banner, so the text ends in the upper half and stays clear of the subject */
-:where(html:not(.desktop-view)) .feature-banner .feature-banner-item.has-mobile-image:not(.side-image) {
-  min-height: max(var(--feature-banner-height), 2 * var(--feature-banner-text-end, 0px));
+:where(html:not(.desktop-view))
+    .feature-banner
+    .feature-banner-item.has-mobile-image:not(.side-image) {
+    min-height: max(
+        var(--feature-banner-height),
+        2 * var(--feature-banner-text-end, 0px)
+    );
 }
 
 /* small screens without a mobile crop: the desktop picture would sit under the text, so
    it follows the text instead and fills the rest of the banner edge to edge, cropped
    around the subject (like the mobile crops: text on top, image below) */
-:where(html:not(.desktop-view)) .feature-banner .feature-banner-item:not(.has-mobile-image, .side-image) .feature-banner-image {
-  position: relative;
-  order: 2;
-  flex: 1 0 300px;
-  height: auto;
+:where(html:not(.desktop-view))
+    .feature-banner
+    .feature-banner-item:not(.has-mobile-image, .side-image)
+    .feature-banner-image {
+    position: relative;
+    order: 2;
+    flex: 1 0 300px;
+    height: auto;
 }
 
 .feature-banner .feature-banner-content {
-  position: relative;
-  box-sizing: border-box;
-  width: 100%;
-  padding: 80px 24px 40px;
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 80px 24px 40px;
 }
 
 .feature-banner .feature-banner-content h2,
 .feature-banner .feature-banner-content h3 {
-  margin: 0;
-  color: inherit;
-  font-size: var(--type-display-medium-df-1-font-size);
-  font-weight: var(--type-display-medium-df-1-font-weight);
-  line-height: var(--type-display-medium-df-1-line-height);
-  letter-spacing: -0.8px;
+    margin: 0;
+    color: inherit;
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 36px;
+    letter-spacing: -0.56px;
 }
 
 .feature-banner .feature-banner-content h2 strong,
 .feature-banner .feature-banner-content h3 strong {
-  font-weight: 700;
+    font-weight: 700;
 }
 
 .feature-banner .feature-banner-content p {
-  margin: 20px 0 0;
-  color: var(--feature-banner-muted);
-  font-size: var(--body-font-size-m);
-  font-weight: 500;
-  line-height: 24px;
+    margin: 20px 0 0;
+    color: var(--feature-banner-muted);
+    font-size: var(--body-font-size-m);
+    font-weight: 500;
+    line-height: 24px;
 }
 
 .feature-banner .feature-banner-content p strong {
-  color: var(--feature-banner-text);
+    color: var(--feature-banner-text);
 }
 
 .feature-banner .feature-banner-content .button-wrapper {
-  margin-top: 20px;
+    margin-top: 20px;
 }
 
 .feature-banner .feature-banner-content a.button {
-  border: 0;
-  padding: 12px;
-  background-color: var(--text-color);
-  color: #fff;
-  font-size: var(--body-font-size-s);
-  font-weight: 600;
-  line-height: 20px;
-  letter-spacing: 0;
+    border: 0;
+    padding: 12px;
+    background-color: var(--text-color);
+    color: #fff;
+    font-size: var(--body-font-size-s);
+    font-weight: 600;
+    line-height: 20px;
+    letter-spacing: 0;
 }
 
 .feature-banner .light-text .feature-banner-content a.button {
-  border-color: #fff;
-  background-color: #fff;
-  color: var(--text-color);
+    border-color: #fff;
+    background-color: #fff;
+    color: var(--text-color);
 }
 
 /* side image: the picture sits in its own half instead of filling the band */
 .feature-banner .side-image {
-  background-color: var(--background-color);
+    background-color: var(--background-color);
 }
 
 .feature-banner .side-image .feature-banner-image {
-  position: relative;
-  order: 2;
-  width: 130%;
-  height: auto;
+    position: relative;
+    order: 2;
+    width: 130%;
+    height: auto;
 
-  /* the covered car is wider than the screen and runs off the left edge */
-  margin: auto 0 0 -30%;
+    /* the covered car is wider than the screen and runs off the left edge */
+    margin: auto 0 0 -30%;
 }
 
 .feature-banner .feature-banner-item.side-image .feature-banner-image img {
-  position: static;
-  height: auto;
+    position: static;
+    height: auto;
 }
-
 
 /* scroll-linked text reveal (section style "animate-text"): each word blends from the
    start colour to its final colour as --reveal goes from 0 to 1 */
-.feature-banner .feature-banner-reveal .feature-banner-content :is(h1, h2, h3) .feature-banner-word {
-  color: color-mix(in srgb, var(--feature-banner-text) calc(var(--reveal, 0) * 100%), var(--feature-banner-heading-from));
+.feature-banner
+    .feature-banner-reveal
+    .feature-banner-content
+    :is(h1, h2, h3)
+    .feature-banner-word {
+    color: color-mix(
+        in srgb,
+        var(--feature-banner-text) calc(var(--reveal, 0) * 100%),
+        var(--feature-banner-heading-from)
+    );
 }
 
-.feature-banner .feature-banner-reveal .feature-banner-content p .feature-banner-word {
-  color: color-mix(in srgb, var(--feature-banner-muted) calc(var(--reveal, 0) * 100%), var(--feature-banner-text-from));
+.feature-banner
+    .feature-banner-reveal
+    .feature-banner-content
+    p
+    .feature-banner-word {
+    color: color-mix(
+        in srgb,
+        var(--feature-banner-muted) calc(var(--reveal, 0) * 100%),
+        var(--feature-banner-text-from)
+    );
 }
 
-.feature-banner .feature-banner-reveal .feature-banner-content p strong .feature-banner-word {
-  color: color-mix(in srgb, var(--feature-banner-text) calc(var(--reveal, 0) * 100%), var(--feature-banner-text-from));
+.feature-banner
+    .feature-banner-reveal
+    .feature-banner-content
+    p
+    strong
+    .feature-banner-word {
+    color: color-mix(
+        in srgb,
+        var(--feature-banner-text) calc(var(--reveal, 0) * 100%),
+        var(--feature-banner-text-from)
+    );
 }
 
 :where(.desktop-view) .feature-banner {
-  --feature-banner-height: 672px;
+    --feature-banner-height: 672px;
 }
 
 :where(.desktop-view) .feature-banner .feature-banner-item {
-  flex-direction: row;
-  align-items: center;
-  padding: 92px var(--fb-inset);
+    flex-direction: row;
+    align-items: center;
+    padding: 92px var(--fb-inset);
 }
 
 :where(.desktop-view) .feature-banner .text-right {
-  justify-content: flex-end;
+    justify-content: flex-end;
 }
 
-:where(.desktop-view) .feature-banner .text-left:not(.has-mobile-image) .feature-banner-image img,
-:where(.desktop-view) .feature-banner .text-right:not(.has-mobile-image) .feature-banner-image img {
-  object-position: center;
+:where(.desktop-view)
+    .feature-banner
+    .text-left:not(.has-mobile-image)
+    .feature-banner-image
+    img,
+:where(.desktop-view)
+    .feature-banner
+    .text-right:not(.has-mobile-image)
+    .feature-banner-image
+    img {
+    object-position: center;
 }
 
 :where(.desktop-view) .feature-banner .feature-banner-content {
-  max-width: 500px;
-  padding: 0;
+    max-width: 500px;
+    padding: 0;
 }
 
 :where(.desktop-view) .feature-banner .feature-banner-content h2,
 :where(.desktop-view) .feature-banner .feature-banner-content h3 {
-  /* font-size: var(--type-display-medium-df-1-font-size);
-  font-weight: var(--type-display-medium-df-1-font-weight);
-  line-height: var(--type-display-medium-df-1-line-height); */
-  letter-spacing: -1px;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 40px;
+    letter-spacing: -0.8px;
 }
 
 :where(.desktop-view) .feature-banner .feature-banner-content p {
-  font-size: var(--heading-font-size-m);
-  line-height: 28px;
+    font-size: var(--heading-font-size-m);
+    line-height: 28px;
 }
 
 :where(.desktop-view) .feature-banner .feature-banner-content .button-wrapper {
-  margin-top: 44px;
+    margin-top: 44px;
 }
 
 :where(.desktop-view) .feature-banner .feature-banner-content a.button {
-  padding: 14px 12px;
-  font-size: var(--body-font-size-m);
-  line-height: 24px;
+    padding: 14px 12px;
+    font-size: var(--body-font-size-m);
+    line-height: 24px;
 }
-
 
 /* product pages, small screens: side image banner 672px high, the car drawn large with
    its rear 15px from the right edge and the front running off the left (Figma) */
-:where(html:not(.desktop-view)) main:has(.hero-loan.product) .feature-banner .side-image {
-  min-height: 672px;
+:where(html:not(.desktop-view))
+    main:has(.hero-loan.product)
+    .feature-banner
+    .side-image {
+    min-height: 672px;
 }
 
-:where(html:not(.desktop-view)) main:has(.hero-loan.product) .feature-banner .side-image .feature-banner-content {
-  z-index: 1;
+:where(html:not(.desktop-view))
+    main:has(.hero-loan.product)
+    .feature-banner
+    .side-image
+    .feature-banner-content {
+    z-index: 1;
 }
 
-:where(html:not(.desktop-view)) main:has(.hero-loan.product) .feature-banner .side-image .feature-banner-image {
-  position: absolute;
-  inset: auto -8px 21px auto;
-  width: auto;
-  height: 321px;
-  margin: 0;
+:where(html:not(.desktop-view))
+    main:has(.hero-loan.product)
+    .feature-banner
+    .side-image
+    .feature-banner-image {
+    position: absolute;
+    inset: auto -8px 21px auto;
+    width: auto;
+    height: 321px;
+    margin: 0;
 }
 
-:where(html:not(.desktop-view)) main:has(.hero-loan.product) .feature-banner .feature-banner-item.side-image .feature-banner-image img {
-  width: auto;
-  max-width: none;
-  height: 100%;
+:where(html:not(.desktop-view))
+    main:has(.hero-loan.product)
+    .feature-banner
+    .feature-banner-item.side-image
+    .feature-banner-image
+    img {
+    width: auto;
+    max-width: none;
+    height: 100%;
 }
 
 /* product pages: 12px between heading and text, Figma pill buttons (12px + 14px inner) */
@@ -241,28 +296,39 @@
 } */
 
 main:has(.hero-loan.product) .feature-banner .feature-banner-content a.button {
-  padding: 14px 12px;
-  min-width: 134px;
+    padding: 14px 12px;
+    min-width: 134px;
 }
 
-:where(.desktop-view) main:has(.hero-loan.product) .feature-banner .feature-banner-content a.button {
-  padding: 14px 26px;
+:where(.desktop-view)
+    main:has(.hero-loan.product)
+    .feature-banner
+    .feature-banner-content
+    a.button {
+    padding: 14px 26px;
 }
 
 :where(.desktop-view) .feature-banner .side-image .feature-banner-image {
-  position: absolute;
-  inset: 0 auto 0 0;
-  margin: 0;
-  order: 0;
-  display: flex;
-  align-items: center;
-  width: 51.3%;
+    position: absolute;
+    inset: 0 auto 0 0;
+    margin: 0;
+    order: 0;
+    display: flex;
+    align-items: center;
+    width: 51.3%;
 }
 
-:where(.desktop-view) .feature-banner .side-image.text-left .feature-banner-image {
-  inset: 0 0 0 auto;
+:where(.desktop-view)
+    .feature-banner
+    .side-image.text-left
+    .feature-banner-image {
+    inset: 0 0 0 auto;
 }
 
-:where(.desktop-view) .feature-banner .feature-banner-item.side-image .feature-banner-image img {
-  width: 100%;
+:where(.desktop-view)
+    .feature-banner
+    .feature-banner-item.side-image
+    .feature-banner-image
+    img {
+    width: 100%;
 }
