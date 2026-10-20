@@ -41,9 +41,9 @@
   display: inline-block;
   margin-bottom: 8px;
   color: var(--muted-color);
-  font-size: var(--body-font-size-xs);
-  font-weight: 500;
-  line-height: 16px;
+  font-size: var(--type-body-b1-font-size);
+  font-weight: var(--type-body-b1-font-weight);
+  line-height: var(--type-body-b1-line-height);
   letter-spacing: 0.24px;
 }
 
@@ -61,8 +61,6 @@
 }
 
 :where(.desktop-view) .team .team-details .team-badge{
-  font-size: var(--type-b2-size);
-  line-height: 18px;
   letter-spacing: 0;
 }
 
