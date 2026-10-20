@@ -550,12 +550,6 @@ main > .section > .feature-banner-wrapper:has(> .feature-banner.edge-to-edge) {
   padding: 0;
 }
 
-/* plain hero (About us): 24px below the banner before the section spacing (Figma); padding,
-   since a margin would collapse into the section margin */
-:where(.desktop-view) main > .section > .hero-loan-wrapper:has(> .hero-loan.plain) {
-  padding-bottom: 24px;
-}
-
 /* "Need help?" band: edge to edge, no rounded corners */
 main > .section > .offers-wrapper:has(.offers-short) {
   padding: 0;
