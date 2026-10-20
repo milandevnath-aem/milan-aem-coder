@@ -25,6 +25,10 @@
   background-color: var(--surface-color);
 }
 
+.team .team-details{
+  padding: 20px;
+}
+
 .team .team-details p {
   margin: 0;
   color: var(--muted-color);
@@ -45,9 +49,10 @@
 
 .team .team-details h3 {
   margin: 0 0 8px;
-  font-size: var(--heading-font-size-l);
+  font-size: var(--heading-font-size-xl);
   font-weight: 600;
-  line-height: 32px;
+  line-height: 36px;
+  letter-spacing: -0.56px;
   color: #121212;
 }
 
