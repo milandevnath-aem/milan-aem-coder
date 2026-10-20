@@ -25,7 +25,7 @@
     padding: var(--offers-padding);
     border-radius: var(--offers-radius);
     background-color: #000;
-    color: var(--offers-text);
+    color: #fff;
     text-align: center;
     overflow: hidden;
 }
