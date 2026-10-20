@@ -40,6 +40,13 @@
     color: #121212;
 }
 
+.columns.about-us.columns.columns-split > div > div:first-child h2,
+.columns.about-us.columns.columns-split > div > div:first-child h3{
+     line-height: 40px;
+     letter-spacing: -0.8px;
+}
+
+
 :where(.desktop-view) .columns.columns-split > div > div:first-child h2,
 :where(.desktop-view) .columns.columns-split > div > div:first-child h3 {
     font-size: var(--heading-font-size-xxl);
@@ -97,9 +104,9 @@
     align-items: center;
     gap: 12px;
     color: #003874;
-    font-size: var(--body-font-size-m);
-    font-weight: 500;
-    line-height: 24px;
+    font-size: var(--body-font-size-s);
+    font-weight: 600;
+    line-height: 20px;
     text-decoration: underline;
     overflow-wrap: anywhere;
 }
