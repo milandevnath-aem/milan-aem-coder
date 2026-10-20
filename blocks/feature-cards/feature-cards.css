@@ -86,20 +86,15 @@
 }
 
 .feature-cards .feature-cards-icon {
-    height: 32px;
-    width: 32px;
+    height: auto;
+    width: auto;
 }
 
 .feature-cards .feature-cards-icon img {
     display: block;
-    max-width: 32px;
-    max-height: 32px;
+    width: 83px;
+    height: 72px;
     object-fit: contain;
-}
-
-.feature-cards.split.top-up-loan-cards .feature-cards-icon img {
-    max-width: 40px;
-    max-height: 40px;
 }
 
 /* media card: picture fills the card, text sits at the bottom */
@@ -195,12 +190,6 @@
 :where(.desktop-view) .feature-cards.numbered .feature-cards-body p {
     font-size: var(--body-font-size-m);
     line-height: 24px;
-}
-
-/* info: icon + label/value pairs */
-.feature-cards.info .feature-cards-icon img {
-    width: 56px;
-    height: 56px;
 }
 
 .feature-cards.info .feature-cards-card {
@@ -351,11 +340,6 @@
     min-height: 350px;
 }
 
-:where(.desktop-view) .feature-cards .feature-cards-icon img {
-    width: 40px;
-    height: 40px;
-}
-
 :where(.desktop-view) .feature-cards .feature-cards-body h3,
 :where(.desktop-view) .feature-cards .feature-cards-body h4 {
     font-size: var(--heading-font-size-m);
@@ -408,10 +392,10 @@
     grid-column: 1 / -1;
 }
 
-:where(.desktop-view) .feature-cards.info .feature-cards-icon img {
+/* :where(.desktop-view) .feature-cards.info .feature-cards-icon img {
     width: 72px;
     height: 72px;
-}
+} */
 
 :where(.desktop-view)
     .feature-cards.info
