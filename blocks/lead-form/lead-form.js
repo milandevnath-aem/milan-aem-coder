@@ -533,7 +533,7 @@ export default function decorate(block) {
     const categoryKey = Object.keys(data).find((k) => k.endsWith('category'));
     const category = (categoryKey && data[categoryKey]) || pageCategory();
     // the selected option's authored identifier ("Option identifiers"), else the one
-    // authored on the opener (hero "Option identifiers"), else its text
+    // authored on the opener (hero "Loan category identifiers"), else its text
     const coded = dropdowns.find((d) => d.optionCodes[category]);
     const product = coded?.optionCodes[category]
       || categoryCode(category, rememberedForms(dialog()).codes) || category;

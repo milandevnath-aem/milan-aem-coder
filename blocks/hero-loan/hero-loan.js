@@ -14,7 +14,7 @@ function cellText(row) {
 }
 
 /**
- * "Option identifiers": "a-code, , c-code" -> category label -> identifier, in the order
+ * "Loan category identifiers": "a-code, , c-code" -> category label -> identifier, in the order
  * of the categories; categories without one are sent as their label.
  * @param {Element} [row]
  * @param {string[]} categories
@@ -209,9 +209,11 @@ function buildField(label, index) {
 }
 
 function buildForm(config, isProduct) {
-  // rows in model order: heading, options (categories + fields), submit link, category forms,
-  // option identifiers
-  const [headingRow, optionsRow, actionRow, formsRow, codesRow] = config;
+  // rows in model order: heading, options (categories + fields), category identifiers,
+  // submit link, category forms; pages published before the identifiers field existed
+  // have no identifiers row (4 rows instead of 5)
+  const [headingRow, optionsRow, ...rest] = config;
+  const [codesRow, actionRow, formsRow] = config.length > 4 ? rest : [null, ...rest];
   const forms = readForms(formsRow);
   const options = [...(optionsRow?.querySelectorAll('p') || [])].map((p) => p.textContent.trim());
   if (!options.length && cellText(optionsRow)) options.push(cellText(optionsRow));
@@ -417,7 +419,7 @@ function addStickyCta(block) {
 /**
  * Hero with loan slides and a call-back lead form.
  * Block properties come first as single-cell rows (form heading, options = categories + fields,
- * submit link); every following multi-cell row is a slide
+ * category identifiers, submit link, category forms); every following multi-cell row is a slide
  * (image, optional mobile image, text). Variant "product" uses a category dropdown,
  * "plain" hides the form.
  * @param {Element} block The block element
