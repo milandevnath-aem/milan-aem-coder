@@ -45,7 +45,7 @@ export function setLoading(button, loading, busyLabel = 'Please wait') {
  * OTP step: six one-digit boxes, Validate, resend timer, wrong OTP state.
  * @param {Object} options
  * @param {string} options.mobile ten-digit mobile number
- * @param {string} [options.category] loan category, picks the lead service
+ * @param {string} [options.product] identifier of the selected category, sent with the lead
  * @param {Object<string, string>} [options.data] form values sent with the OTP
  * @param {Function} options.onBack back to the form
  * @param {Function} options.onVerified called with the lead result once the OTP is accepted
@@ -53,7 +53,7 @@ export function setLoading(button, loading, busyLabel = 'Please wait') {
  * @returns {HTMLDivElement & { focusFirst: Function, titleId: string, stop: Function }}
  */
 export function createOtpStep({
-  mobile, category, data, onBack, onVerified, announce,
+  mobile, product, data, onBack, onVerified, announce,
 }) {
   uid += 1;
   const id = `lead-form-otp-${uid}`;
@@ -188,7 +188,7 @@ export function createOtpStep({
     if (seconds > 0 || busy) return;
     resend.setAttribute('aria-disabled', 'true');
     announce('Sending a new OTP');
-    const result = await sendOtp({ mobile, category });
+    const result = await sendOtp({ mobile });
     if (!result.ok) {
       renderResend();
       setError(result.message);
@@ -213,7 +213,7 @@ export function createOtpStep({
     setLoading(validate, true, 'Validating OTP');
     refresh();
     const result = await verifyOtp({
-      mobile, otp: code(), category, data,
+      mobile, otp: code(), product, data,
     });
     busy = false;
     inputs.forEach((input) => { input.readOnly = false; });

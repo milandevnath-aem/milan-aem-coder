@@ -1,30 +1,32 @@
 /*
-  Lead services, one per product. A form picks its service from its loan category
-  (the category field, else the page's category). To add a product, add an entry here.
+  Lead form settings shared by every product form (loan against property, new car loan,
+  two-wheeler, ...). The identifier of the selected loan category is sent to the verify
+  service as lead.product, so one pair of endpoints serves all forms.
 
-  - match: tested against the category text
-  - generateOtpUrl / verifyOtpUrl: the product's OTP endpoints (fill in per environment).
-    While one is empty the form stays in demo mode (see lead-api.js).
-  - toLead: maps the form values (keys are the slugged field labels) to the "lead" object
-    the verify service expects.
+  - GENERATE_OTP_URL / VERIFY_OTP_URL: the OTP services (fill in per environment).
+    While one is empty the forms stay in demo mode (see lead-api.js).
+  - toLead: maps the form values (keys are the slugged field labels) and the selected
+    category to the "lead" object the verify service expects.
 */
+
+export const GENERATE_OTP_URL = '';
+export const VERIFY_OTP_URL = '';
 
 const pick = (data, pattern) => {
   const key = Object.keys(data).find((k) => pattern.test(k));
   return key ? String(data[key] ?? '').trim() : '';
 };
 
-export default [
-  {
-    id: 'loan-against-property',
-    match: /property|lap/i,
-    generateOtpUrl: '',
-    verifyOtpUrl: '',
-    toLead: (data) => ({
-      FirstName: pick(data, /first-?name/),
-      LastName: pick(data, /last-?name/),
-      Email: pick(data, /e-?mail/),
-      Location: pick(data, /location|city/),
-    }),
-  },
-];
+/**
+ * @param {Object<string, string>} data form values
+ * @param {string} category the selected loan category
+ */
+export function toLead(data, category) {
+  return {
+    FirstName: pick(data, /first-?name/),
+    LastName: pick(data, /last-?name/),
+    Email: pick(data, /e-?mail/),
+    Location: pick(data, /location|city/),
+    product: String(category || '').trim(),
+  };
+}

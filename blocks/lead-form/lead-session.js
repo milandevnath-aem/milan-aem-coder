@@ -43,7 +43,8 @@ export async function saveOtpSession(session) {
     const cipher = new Uint8Array(
       await window.crypto.subtle.encrypt({ name: 'AES-GCM', iv }, await getKey(), data),
     );
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ iv: toBase64(iv), data: toBase64(cipher) }));
+    const stored = { iv: toBase64(iv), data: toBase64(cipher) };
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
   } catch {
     clearOtpSession();
     memory = value;

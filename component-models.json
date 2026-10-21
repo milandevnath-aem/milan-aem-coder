@@ -1174,6 +1174,14 @@
         "label": "Half width",
         "description": "Two half-width fields in a row share one line. First name and Last name do this automatically.",
         "value": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "identifiers",
+        "label": "Option identifiers",
+        "description": "Loan category dropdown only: the value sent to the lead service for each option, comma separated in the same order as Options (1st identifier for the 1st option, and so on). An option without one is sent as its text.",
+        "value": ""
       }
     ]
   },

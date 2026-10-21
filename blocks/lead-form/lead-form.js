@@ -20,17 +20,22 @@ function iconButton(name, label) {
 
 /**
  * "A, B: description, *C" -> options; a leading * marks the default.
+ * identifiers: "a-code, b-code" -> codes (label -> identifier) in the order of the options;
+ * options without one are sent as their label.
  */
-function parseOptions(text) {
+function parseOptions(text, identifiers = '') {
   let value = '';
-  const options = text.split(',').map((part) => part.trim()).filter(Boolean).map((part) => {
+  const codes = {};
+  const ids = identifiers.split(',').map((id) => id.trim());
+  const options = text.split(',').map((part) => part.trim()).filter(Boolean).map((part, i) => {
     const isDefault = part.startsWith('*');
     const [label, ...rest] = part.replace(/^\*\s*/, '').split(':');
     const option = { value: label.trim(), label: label.trim(), description: rest.join(':').trim() };
+    if (ids[i]) codes[option.value] = ids[i];
     if (isDefault) value = option.value;
     return option;
   });
-  return { options, value };
+  return { options, value, codes };
 }
 
 let errorCount = 0;
@@ -356,7 +361,9 @@ export default function decorate(block) {
   let captcha;
 
   fieldRows.forEach((row) => {
-    const [labelCell, kindCell, optionsCell, requiredCell, halfCell] = row.children;
+    const [
+      labelCell, kindCell, optionsCell, requiredCell, halfCell, identifiersCell,
+    ] = row.children;
     const label = labelCell?.textContent.trim() || 'Field';
     let kind = kindCell?.textContent.trim() || 'text';
     const optionsText = optionsCell?.textContent.trim() || '';
@@ -374,7 +381,10 @@ export default function decorate(block) {
     if (kind === 'text-half' || halfCell?.textContent.trim() === 'true') item.classList.add('is-half');
     let field;
     if (kind === 'select' || kind === 'search') {
-      const { options, value } = parseOptions(optionsText);
+      const { options, value, codes } = parseOptions(
+        optionsText,
+        identifiersCell?.textContent.trim(),
+      );
       field = createDropdown({
         label,
         name: slug(label),
@@ -386,6 +396,7 @@ export default function decorate(block) {
         pinSelected: true,
       });
       field.optionValues = options.map((option) => option.value);
+      field.optionCodes = codes;
       dropdowns.push(field);
     } else if (kind === 'captcha') {
       field = captchaField(label);
@@ -519,6 +530,9 @@ export default function decorate(block) {
     const mobile = form.querySelector('input[type="tel"]')?.value || '';
     const categoryKey = Object.keys(data).find((k) => k.endsWith('category'));
     const category = (categoryKey && data[categoryKey]) || pageCategory();
+    // the option's authored identifier ("Label = code"), else the category as shown
+    const coded = dropdowns.find((d) => d.optionCodes[category]);
+    const product = coded?.optionCodes[category] || category;
 
     // sending the OTP: button spinner (desktop), full view spinner (small screens)
     sendError.hidden = true;
@@ -526,7 +540,7 @@ export default function decorate(block) {
     block.classList.add('is-sending');
     loading.hidden = false;
     announce('Sending OTP');
-    const sent = await sendOtp({ mobile, category });
+    const sent = await sendOtp({ mobile });
     setLoading(submit, false);
     block.classList.remove('is-sending');
     loading.hidden = true;
@@ -539,7 +553,7 @@ export default function decorate(block) {
     block.querySelector('.lead-form-otp')?.remove();
     const otp = createOtpStep({
       mobile,
-      category,
+      product,
       data,
       announce,
       onBack: () => {
