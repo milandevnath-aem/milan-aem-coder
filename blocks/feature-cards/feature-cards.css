@@ -41,7 +41,7 @@
 }
 
 .feature-cards .feature-cards-card.is-icon{
-  flex-direction: row;
+  flex-direction: column;
   gap: 12px;
   justify-content: flex-start;
 }
@@ -86,20 +86,15 @@
 }
 
 .feature-cards .feature-cards-icon {
-    height: 32px;
-    width: 32px;
+    height: auto;
+    width: auto;
 }
 
 .feature-cards .feature-cards-icon img {
     display: block;
-    max-width: 32px;
-    max-height: 32px;
+    width: 83px;
+    height: 72px;
     object-fit: contain;
-}
-
-.feature-cards.split.top-up-loan-cards .feature-cards-icon img {
-    max-width: 40px;
-    max-height: 40px;
 }
 
 /* media card: picture fills the card, text sits at the bottom */
@@ -197,12 +192,6 @@
     line-height: 24px;
 }
 
-/* info: icon + label/value pairs */
-.feature-cards.info .feature-cards-icon img {
-    width: 56px;
-    height: 56px;
-}
-
 .feature-cards.info .feature-cards-card {
     justify-content: flex-start;
     min-height: 0;
@@ -214,12 +203,13 @@
     line-height: 18px;
 }
 
-.feature-cards.info .feature-cards-body p.feature-cards-value {
+.feature-cards.info .feature-cards-body p.feature-cards-value,
+.feature-cards.info .feature-cards-body p.feature-cards-value strong {
     margin: 6px 0 0;
     color: var(--text-color);
-    font-size: var(--body-font-size-m);
-    font-weight: 600;
-    line-height: 24px;
+    font-size: var(--type-headline-h4-font-size);
+    line-height: var(--type-headline-h4-line-height);
+    font-weight: var(--type-headline-h4-font-weight);
     letter-spacing: -0.4px;
 }
 
@@ -351,11 +341,6 @@
     min-height: 350px;
 }
 
-:where(.desktop-view) .feature-cards .feature-cards-icon img {
-    max-width: 40px;
-    max-height: 40px;
-}
-
 :where(.desktop-view) .feature-cards .feature-cards-body h3,
 :where(.desktop-view) .feature-cards .feature-cards-body h4 {
     font-size: var(--heading-font-size-m);
@@ -406,19 +391,6 @@
     .feature-cards.info
     .feature-cards-card:last-child:nth-child(odd) {
     grid-column: 1 / -1;
-}
-
-:where(.desktop-view) .feature-cards.info .feature-cards-icon img {
-    width: 72px;
-    height: 72px;
-}
-
-:where(.desktop-view)
-    .feature-cards.info
-    .feature-cards-body
-    p.feature-cards-value {
-    font-size: var(--heading-font-size-m);
-    line-height: 28px;
 }
 
 /* about-us: two cards side by side, an odd last card (address) spans the row */

@@ -104,8 +104,12 @@
     padding-top: 24px;
     color: var(--inverse-color);
     font-size: var(--type-h2-size);
-    font-weight: 600;
+    font-weight: 500;
     line-height: var(--type-h2-line);
+}
+
+:where(.desktop-view) .offers .offers-disclaimer {
+    font-weight: 600;
 }
 
 .offers .offers-dark-text {

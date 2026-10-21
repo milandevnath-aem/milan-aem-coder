@@ -1,16 +1,17 @@
 .testimonials {
-  --testimonials-card-width: 330px;
+  --testimonials-card-width: 100%;
   --testimonials-card-padding: 24px;
   --testimonials-card-bg: var(--surface-color);
 }
 
 .testimonials .testimonials-track {
   display: flex;
-  gap: var(--spacing-lg);
+  gap: var(--gb-offset); /* next card starts right at the screen edge, so it stays hidden */
   margin: 0;
-  padding: 0;
+  padding: 0 var(--gb-offset);
   list-style: none;
   overflow-x: auto;
+  scroll-padding: 0 var(--gb-offset);
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
 }
@@ -94,9 +95,7 @@
   justify-content: flex-end;
   gap: 12px;
   margin-top: 32px;
-
-  /* the wrapper keeps the full bleed margin on the right: line the buttons up with the grid */
-  padding-right: calc(var(--gb-offset));
+  padding-right: var(--gb-offset);
 }
 
 .testimonials .testimonials-controls button {
@@ -131,4 +130,11 @@
 
 :where(.desktop-view) .testimonials .testimonials-item {
   min-height: 260px;
+}
+
+/* desktop view: the wrapper starts on the grid and the next cards peek in from the right */
+:where(.desktop-view) .testimonials .testimonials-track {
+  gap: var(--spacing-lg);
+  padding: 0;
+  scroll-padding: 0;
 }
