@@ -19,14 +19,22 @@ const pick = (data, pattern) => {
 
 /**
  * @param {Object<string, string>} data form values
- * @param {string} category the selected loan category
+ * @param {string} product identifier of the selected loan category
  */
-export function toLead(data, category) {
+export function toLead(data, product) {
+  let FirstName = pick(data, /first-?name/);
+  let LastName = pick(data, /last-?name/);
+  // a form with one "Name" field: split at the first space
+  if (!FirstName && !LastName) {
+    const [given = '', ...rest] = pick(data, /(^|-)name$/).split(/\s+/);
+    FirstName = given;
+    LastName = rest.join(' ');
+  }
   return {
-    FirstName: pick(data, /first-?name/),
-    LastName: pick(data, /last-?name/),
+    FirstName,
+    LastName,
     Email: pick(data, /e-?mail/),
     Location: pick(data, /location|city/),
-    product: String(category || '').trim(),
+    product: String(product || '').trim(),
   };
 }

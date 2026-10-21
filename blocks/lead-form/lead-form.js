@@ -530,7 +530,7 @@ export default function decorate(block) {
     const mobile = form.querySelector('input[type="tel"]')?.value || '';
     const categoryKey = Object.keys(data).find((k) => k.endsWith('category'));
     const category = (categoryKey && data[categoryKey]) || pageCategory();
-    // the option's authored identifier ("Label = code"), else the category as shown
+    // the selected option's authored identifier ("Option identifiers"), else its text
     const coded = dropdowns.find((d) => d.optionCodes[category]);
     const product = coded?.optionCodes[category] || category;
 

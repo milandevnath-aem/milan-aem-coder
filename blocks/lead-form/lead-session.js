@@ -35,9 +35,9 @@ export function clearOtpSession() {
  */
 export async function saveOtpSession(session) {
   const value = { ...session, savedAt: Date.now() };
-  memory = value;
-  if (!canEncrypt()) return;
+  memory = null;
   try {
+    if (!canEncrypt()) throw new Error('no Web Crypto');
     const iv = window.crypto.getRandomValues(new Uint8Array(12));
     const data = new TextEncoder().encode(JSON.stringify(value));
     const cipher = new Uint8Array(
@@ -46,7 +46,7 @@ export async function saveOtpSession(session) {
     const stored = { iv: toBase64(iv), data: toBase64(cipher) };
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
   } catch {
-    clearOtpSession();
+    // encrypted storage is not possible here: keep the values in memory only
     memory = value;
   }
 }
@@ -58,7 +58,7 @@ export async function saveOtpSession(session) {
  */
 export async function loadOtpSession(mobile) {
   let value = memory;
-  if (!value && canEncrypt()) {
+  if (!value) {
     try {
       const stored = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || 'null');
       if (stored) {
