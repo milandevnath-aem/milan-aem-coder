@@ -30,6 +30,28 @@ function groupAnswerContent(container) {
   }
 }
 
+// description paragraph, info chip (paragraph with an icon) and heading + list note card
+function decorateIntro(intro) {
+  const children = [...intro.children];
+  let hasDescription = false;
+  children.forEach((el, i) => {
+    if (el.tagName === 'P' && el.querySelector('.icon')) {
+      el.classList.add('faq-intro-info');
+    } else if (el.tagName === 'P' && !hasDescription) {
+      el.classList.add('faq-intro-description');
+      hasDescription = true;
+    } else if (el.tagName === 'H3' && children[i + 1]?.tagName === 'UL') {
+      const list = children[i + 1];
+      const note = document.createElement('div');
+      note.className = 'faq-intro-note';
+      el.className = 'faq-intro-note-title';
+      list.className = 'faq-intro-note-list';
+      el.before(note);
+      note.append(el, list);
+    }
+  });
+}
+
 /**
  * FAQ accordion with the heading beside it on desktop.
  * Optional first single-cell row: heading. Other rows: question, answer.
@@ -44,6 +66,7 @@ export default function decorate(block) {
     const intro = headingRow.firstElementChild;
     intro.className = 'faq-intro';
     moveInstrumentation(headingRow, intro);
+    decorateIntro(intro);
     content.push(intro);
   }
 
