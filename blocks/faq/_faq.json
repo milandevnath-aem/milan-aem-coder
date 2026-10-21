@@ -44,8 +44,9 @@
           "value": "",
           "options": [
             { "name": "Open State", "value": "open-state" },
-            { "name": "Grouped content faq", "value": "grouped-content" },
-            { "name": "Item count", "value": "item-count" }
+            { "name": "Grouped content FAQ", "value": "grouped-content" },
+            { "name": "Item count", "value": "item-count" },
+            { "name": "Table grouped FAQ", "value": "grouped-table" }
           ]
         },
         {

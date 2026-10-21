@@ -699,12 +699,16 @@
             "value": "open-state"
           },
           {
-            "name": "Grouped content faq",
+            "name": "Grouped content FAQ",
             "value": "grouped-content"
           },
           {
             "name": "Item count",
             "value": "item-count"
+          },
+          {
+            "name": "Table grouped FAQ",
+            "value": "grouped-table"
           }
         ]
       },
