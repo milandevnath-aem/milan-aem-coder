@@ -218,3 +218,48 @@
 :where(.desktop-view) .faq.grouped-content .faq-group-title {
     padding: 14px var(--spacing-2xl);
 }
+
+/* grouped-table: each group becomes a column, rows align across columns */
+.faq.grouped-table .faq-answer {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(var(--faq-table-rows, 1), auto);
+    gap: 0;
+    border: 1px solid var(--color-stroke-2-default);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-background-1-default-base);
+    overflow: hidden;
+}
+
+.faq.grouped-table .faq-group {
+    display: grid;
+    grid-row: 1 / span var(--faq-table-rows, 1);
+    grid-template-rows: subgrid;
+    border: none;
+    border-radius: 0;
+    overflow: visible;
+}
+
+.faq.grouped-table .faq-group + .faq-group {
+    border-left: 1px solid var(--color-stroke-2-default);
+}
+
+.faq.grouped-table .faq-group-list {
+    display: contents;
+}
+
+.faq.grouped-table .faq-group-title {
+    padding: 14px var(--spacing-2xl);
+    background-color: var(--color-background-2-default-base);
+    color: var(--color-text-secondary-default-base);
+}
+
+.faq.grouped-table .faq-group-list li {
+    padding: 18px var(--spacing-2xl);
+    color: var(--color-text-primary-default-base);
+    font-size: var(--type-body-b2-font-size);
+    font-weight: var(--type-body-b2-font-weight);
+    line-height: var(--type-body-b2-line-height);
+    letter-spacing: var(--type-body-b2-letter-spacing);
+    overflow-wrap: anywhere;
+}

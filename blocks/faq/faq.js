@@ -71,7 +71,14 @@ export default function decorate(block) {
       count.classList.add('faq-item-count');
       summary.append(count);
     }
-    if (block.classList.contains('grouped-content')) groupAnswerContent(answer);
+    const isTable = block.classList.contains('grouped-table');
+    if (isTable || block.classList.contains('grouped-content')) groupAnswerContent(answer);
+    if (isTable) {
+      // header row + longest column, so groups share row tracks via subgrid
+      const lists = [...answer.querySelectorAll('.faq-group-list')];
+      const rowCount = 1 + Math.max(0, ...lists.map((ul) => ul.children.length));
+      answer.style.setProperty('--faq-table-rows', rowCount);
+    }
     details.append(summary, answer);
     list.append(details);
   });
