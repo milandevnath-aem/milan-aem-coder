@@ -197,7 +197,7 @@
   margin: 0;
 }
 
-:where(.desktop-view) .hero-loan .hero-loan-content a.button {
+:where(.desktop-view) .hero-loan:has(.hero-loan-form) .hero-loan-content a.button {
   display: none;
 }
 
@@ -554,7 +554,7 @@
   line-height: 20px;
 }
 
-:where(.desktop-view) .hero-loan.product .hero-loan-content .button-wrapper {
+:where(.desktop-view) .hero-loan:has(.hero-loan-form) .button-wrapper {
   display: none;
 }
 

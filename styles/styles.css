@@ -763,6 +763,10 @@ main .section.brand {
   text-align: center;
 }
 
+main .section.bg-grey {
+  background-color: var(--surface-color);
+}
+
 main .section.brand.has-background {
   margin: 16px 0 0 ;
 }

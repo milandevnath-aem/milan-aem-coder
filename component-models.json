@@ -163,6 +163,10 @@
             "value": "brand"
           },
           {
+            "name": "Brand (grey, centered text)",
+            "value": "bg-grey"
+          },
+          {
             "name": "Animate text (banner text lights up on scroll)",
             "value": "animate-text"
           },
