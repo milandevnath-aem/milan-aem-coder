@@ -37,6 +37,19 @@
       "id": "faq",
       "fields": [
         {
+          "component": "select",
+          "name": "classes",
+          "label": "Variant",
+          "valueType": "string",
+          "value": "",
+          "options": [
+            { "name": "Open State", "value": "open-state" },
+            { "name": "Grouped content faq", "value": "grouped-content" },
+            { "name": "Item count", "value": "item-count" },
+            { "name": "Sticky heading", "value": "sticky-heading" }
+          ]
+        },
+        {
           "component": "richtext",
           "name": "text",
           "value": "",
