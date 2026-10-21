@@ -22,8 +22,8 @@ module.exports = {
       '*': 4,
       // section properties render as key/value section metadata, not block cells
       section: 5,
-      // lead form fields: label, type, options, required, half width
-      'lead-form-field': 5,
+      // lead form fields: label, type, options, required, half width, option identifiers
+      'lead-form-field': 6,
       // lead form: heading, disclaimer, note, button label, category forms
       'lead-form': 5,
       // hero: heading, options, submit link, link text, category forms
