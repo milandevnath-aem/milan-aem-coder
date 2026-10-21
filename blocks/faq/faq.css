@@ -218,10 +218,3 @@
 :where(.desktop-view) .faq.grouped-content .faq-group-title {
     padding: 14px var(--spacing-2xl);
 }
-
-/* sticky-heading: keep the heading in view beside the list while scrolling */
-:where(.desktop-view) .faq.sticky-heading .faq-intro {
-    position: sticky;
-    top: var(--spacing-3xl);
-    align-self: flex-start;
-}

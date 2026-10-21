@@ -705,10 +705,6 @@
           {
             "name": "Item count",
             "value": "item-count"
-          },
-          {
-            "name": "Sticky heading",
-            "value": "sticky-heading"
           }
         ]
       },
