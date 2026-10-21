@@ -102,6 +102,14 @@
           "label": "Category forms",
           "multi": true,
           "description": "Optional: one form (modal page) per category, in the same order as the categories: the 1st page opens for the 1st category, the 2nd for the 2nd, and so on. Use the Form submit URL page for a category that has no form of its own. Categories beyond the last page open the Form submit URL."
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "formIdentifiers",
+          "label": "Option identifiers",
+          "description": "Optional: the value sent to the lead service for each loan category, comma separated in the same order as Loan categories (1st identifier for the 1st category, and so on). A category without one is sent as its text. Identifiers set on the form's own category dropdown take precedence.",
+          "value": ""
         }
       ]
     },

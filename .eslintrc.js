@@ -26,8 +26,8 @@ module.exports = {
       'lead-form-field': 6,
       // lead form: heading, disclaimer, note, button label, category forms
       'lead-form': 5,
-      // hero: heading, options, submit link, link text, category forms
-      'hero-loan': 5,
+      // hero: heading, options, submit link, link text, category forms, option identifiers
+      'hero-loan': 6,
     }],
   },
 };

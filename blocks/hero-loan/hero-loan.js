@@ -13,6 +13,17 @@ function cellText(row) {
   return row?.textContent.trim() || '';
 }
 
+/**
+ * "Option identifiers": "a-code, , c-code" -> category label -> identifier, in the order
+ * of the categories; categories without one are sent as their label.
+ * @param {Element} [row]
+ * @param {string[]} categories
+ */
+function readCodes(row, categories) {
+  const ids = cellText(row).split(',').map((id) => id.trim());
+  return Object.fromEntries(categories.map((c, i) => [c, ids[i]]).filter(([, id]) => id));
+}
+
 function buildChip(label, index) {
   const chip = document.createElement('label');
   chip.className = 'hero-loan-chip';
@@ -123,8 +134,9 @@ function buildMore(chips, overflow) {
  * @param {string} modalHref the Form submit URL when it is a modal page
  * @param {string[]} forms authored "Category forms"
  * @param {string[]} categories
+ * @param {Object<string, string>} codes authored "Option identifiers" (label -> identifier)
  */
-function confirmOnSubmit(form, modalHref, forms = [], categories = []) {
+function confirmOnSubmit(form, modalHref, forms = [], categories = [], codes = {}) {
   const button = form.querySelector('button[type="submit"]');
   const selected = () => String(new FormData(form).get('category') || '');
   const show = (target) => {
@@ -148,8 +160,13 @@ function confirmOnSubmit(form, modalHref, forms = [], categories = []) {
       const data = Object.fromEntries(new FormData(form));
       const { openModal } = await import('../modal/modal.js');
       const modal = await openModal(target, { prefill: data });
-      // the form keeps this mapping when another category is picked in it
-      if (modal) rememberForms(modal.dialog, { forms, categories, shared: modalHref });
+      // the form keeps this mapping when another category is picked in it, and sends
+      // the category's identifier with the lead
+      if (modal) {
+        rememberForms(modal.dialog, {
+          forms, categories, shared: modalHref, codes,
+        });
+      }
       return;
     }
     // no endpoint configured: confirm locally instead of reloading the page
@@ -192,8 +209,9 @@ function buildField(label, index) {
 }
 
 function buildForm(config, isProduct) {
-  // rows in model order: heading, options (categories + fields), submit link, category forms
-  const [headingRow, optionsRow, actionRow, formsRow] = config;
+  // rows in model order: heading, options (categories + fields), submit link, category forms,
+  // option identifiers
+  const [headingRow, optionsRow, actionRow, formsRow, codesRow] = config;
   const forms = readForms(formsRow);
   const options = [...(optionsRow?.querySelectorAll('p') || [])].map((p) => p.textContent.trim());
   if (!options.length && cellText(optionsRow)) options.push(cellText(optionsRow));
@@ -233,6 +251,7 @@ function buildForm(config, isProduct) {
   labels.forEach((label, i) => fields.append(buildField(label, i)));
 
   const categories = categoriesText.split(',').map((c) => c.trim()).filter(Boolean);
+  const codes = readCodes(codesRow, categories);
   if (isProduct && categories.length) {
     // product pages: compact dropdown, first category preselected
     const select = createDropdown({
@@ -246,7 +265,7 @@ function buildForm(config, isProduct) {
     moveInstrumentation(optionsRow, select);
     form.querySelector('.hero-loan-categories').remove();
     form.prepend(select);
-    confirmOnSubmit(form, modalHref, forms, categories);
+    confirmOnSubmit(form, modalHref, forms, categories, codes);
     if (actionRow) moveInstrumentation(actionRow, form.querySelector('button[type="submit"]'));
     card.append(form);
     return card;
@@ -264,7 +283,7 @@ function buildForm(config, isProduct) {
   moveInstrumentation(optionsRow, form.querySelector('.hero-loan-categories'));
   if (actionRow) moveInstrumentation(actionRow, form.querySelector('button[type="submit"]'));
 
-  confirmOnSubmit(form, modalHref, forms, categories);
+  confirmOnSubmit(form, modalHref, forms, categories, codes);
 
   card.append(form);
   return card;

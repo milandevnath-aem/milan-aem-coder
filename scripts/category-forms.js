@@ -73,26 +73,49 @@ export async function resolveForm(category, { forms = [], fallback = '', categor
 }
 
 /**
- * Keeps the opener's mapping with a form opened for a category, so picking another
- * category there still finds the right forms (and the way back to the shared form).
- * @param {HTMLDialogElement} dialog the opened modal
- * @param {{ forms: string[], categories: string[], shared: string }} context
+ * The identifier authored for a category ("Option identifiers"), matched like the forms.
+ * @param {string} category
+ * @param {Object<string, string>} codes category label -> identifier
+ * @returns {string} identifier, or '' when none is authored for it
  */
-export function rememberForms(dialog, { forms = [], categories = [], shared = '' }) {
-  if (dialog) dialog.dataset.categoryForms = JSON.stringify({ forms, categories, shared });
+export function categoryCode(category, codes = {}) {
+  const wanted = key(category);
+  if (!wanted) return '';
+  const label = Object.keys(codes).find((c) => key(c) === wanted);
+  return (label && codes[label]) || '';
+}
+
+/**
+ * Keeps the opener's mapping with a form opened for a category, so picking another
+ * category there still finds the right forms (and the way back to the shared form),
+ * and the lead still gets the opener's category identifiers.
+ * @param {HTMLDialogElement} dialog the opened modal
+ * @param {{ forms: string[], categories: string[], shared: string,
+ *   codes: Object<string, string> }} context
+ */
+export function rememberForms(dialog, {
+  forms = [], categories = [], shared = '', codes = {},
+}) {
+  if (dialog) {
+    dialog.dataset.categoryForms = JSON.stringify({
+      forms, categories, shared, codes,
+    });
+  }
 }
 
 /**
  * The mapping a modal was opened with (see rememberForms).
  * @param {HTMLDialogElement} [dialog]
- * @returns {{ forms: string[], categories: string[], shared: string }}
+ * @returns {{ forms: string[], categories: string[], shared: string,
+ *   codes: Object<string, string> }}
  */
 export function rememberedForms(dialog) {
+  const empty = {
+    forms: [], categories: [], shared: '', codes: {},
+  };
   try {
-    return {
-      forms: [], categories: [], shared: '', ...JSON.parse(dialog?.dataset.categoryForms || '{}'),
-    };
+    return { ...empty, ...JSON.parse(dialog?.dataset.categoryForms || '{}') };
   } catch {
-    return { forms: [], categories: [], shared: '' };
+    return empty;
   }
 }

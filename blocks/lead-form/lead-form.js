@@ -4,7 +4,7 @@ import { createDropdown } from '../../scripts/dropdown.js';
 import { sendOtp } from './lead-api.js';
 import { createOtpStep, createSuccessStep, setLoading } from './lead-form-otp.js';
 import {
-  readForms, rememberForms, rememberedForms, resolveForm, slug,
+  categoryCode, readForms, rememberForms, rememberedForms, resolveForm, slug,
 } from '../../scripts/category-forms.js';
 
 const CAPTCHA_CHARS = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -319,7 +319,9 @@ async function openFormFor(dialog, category, categories, ownForms, form) {
   const { openModal } = await import('../modal/modal.js');
   const modal = await openModal(target, { prefill: data });
   if (!modal) return;
-  rememberForms(modal.dialog, { forms, categories: order, shared });
+  rememberForms(modal.dialog, {
+    forms, categories: order, shared, codes: remembered.codes,
+  });
   modal.dialog.querySelector('.lead-form .dropdown-field')?.focus();
 }
 
@@ -530,9 +532,11 @@ export default function decorate(block) {
     const mobile = form.querySelector('input[type="tel"]')?.value || '';
     const categoryKey = Object.keys(data).find((k) => k.endsWith('category'));
     const category = (categoryKey && data[categoryKey]) || pageCategory();
-    // the selected option's authored identifier ("Option identifiers"), else its text
+    // the selected option's authored identifier ("Option identifiers"), else the one
+    // authored on the opener (hero "Option identifiers"), else its text
     const coded = dropdowns.find((d) => d.optionCodes[category]);
-    const product = coded?.optionCodes[category] || category;
+    const product = coded?.optionCodes[category]
+      || categoryCode(category, rememberedForms(dialog()).codes) || category;
 
     // sending the OTP: button spinner (desktop), full view spinner (small screens)
     sendError.hidden = true;
