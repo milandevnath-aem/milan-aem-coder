@@ -688,6 +688,31 @@
     "id": "faq",
     "fields": [
       {
+        "component": "multiselect",
+        "name": "classes",
+        "label": "Variant",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Open State",
+            "value": "open-state"
+          },
+          {
+            "name": "Grouped content FAQ",
+            "value": "grouped-content"
+          },
+          {
+            "name": "Item count",
+            "value": "item-count"
+          },
+          {
+            "name": "Table grouped FAQ",
+            "value": "grouped-table"
+          }
+        ]
+      },
+      {
         "component": "richtext",
         "name": "text",
         "value": "",
