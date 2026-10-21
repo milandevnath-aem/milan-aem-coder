@@ -111,7 +111,7 @@
 
   /* nav height: announcement bar + nav bar */
   --topbar-height: 32px;
-  --nav-height: 100px;
+  --nav-height: 92px;
 }
 
 /* tablet portrait: 600px up to the desktop view */
@@ -533,6 +533,10 @@ main > .section > .feature-banner-wrapper {
   padding: 0 var(--fb-margin);
 }
 
+main > .section > .feature-banner-wrapper{
+  padding: 0;
+}
+
 :where(.desktop-view) main > .section > .offers-wrapper{
   padding-bottom: var(--spacing-lg);
 }
@@ -549,12 +553,6 @@ main > .section > .feature-banner-wrapper:has(> .feature-banner.edge-to-edge) {
   --fb-inset: var(--gb-offset);
 
   padding: 0;
-}
-
-/* plain hero (About us): 24px below the banner before the section spacing (Figma); padding,
-   since a margin would collapse into the section margin */
-:where(.desktop-view) main > .section > .hero-loan-wrapper:has(> .hero-loan.plain) {
-  padding-bottom: 24px;
 }
 
 /* "Need help?" band: edge to edge, no rounded corners */
@@ -609,10 +607,14 @@ main > .section.feature-banner-container + .section {
   margin-top: var(--section-spacing);
 }
 
-/* starts on the grid, scrolls off the right edge */
+/* full bleed on small screens so cards slide to the screen edge; the track pads itself onto the grid */
 main > .section > .testimonials-wrapper {
   max-width: none;
   padding-right: 0;
+  padding-left: 0;
+}
+
+:where(.desktop-view) main > .section > .testimonials-wrapper {
   padding-left: var(--gb-offset);
 }
 

@@ -1,6 +1,6 @@
 /* header and nav layout */
 header .nav-wrapper {
-  --nav-bar-height: 68px;
+  --nav-bar-height: 60px;
 
   position: relative;
   width: 100%;
@@ -64,6 +64,10 @@ header nav[aria-expanded='true'] {
 body.nav-open,
 body.nav-search-open {
   overflow: hidden;
+}
+
+:where(.desktop-view) header .nav-wrapper {
+  --nav-bar-height: 68px;
 }
 
 :where(.desktop-view) header nav,
