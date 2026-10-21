@@ -1,7 +1,16 @@
 .faq {
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: 0;
+}
+
+/* mobile: intro children are flex items of .faq so the note can follow the list */
+.faq .faq-intro {
+    display: contents;
+}
+
+.faq .faq-intro + .faq-list {
+    margin-top: 32px;
 }
 
 .faq .faq-intro h2 {
@@ -53,10 +62,11 @@
 
 /* note card: h3 + ul group */
 .faq .faq-intro .faq-intro-note {
-    margin-top: var(--spacing-5xl);
-    padding: var(--spacing-4xl);
+    order: 1;
+    margin-top: var(--spacing-xl);
+    padding: var(--spacing-4xl) var(--spacing-3xl);
     border: 1px solid var(--color-stroke-2-default);
-    border-radius: var(--radius-3xl);
+    border-radius: var(--radius-lg);
     background-color: var(--color-background-1-default-base);
 }
 
@@ -74,7 +84,7 @@
 .faq .faq-intro .faq-intro-note-list {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-3xl);
+    gap: var(--spacing-2xl);
     margin: var(--spacing-4xl) 0 0;
     padding: 0;
     list-style: none;
@@ -82,7 +92,7 @@
 
 .faq .faq-intro .faq-intro-note-list li {
     position: relative;
-    padding-left: 28px;
+    padding-left: 25px;
     color: var(--color-text-secondary-default-base);
     font-size: var(--type-body-b2-font-size);
     font-weight: var(--type-body-b2-font-weight);
@@ -96,11 +106,12 @@
     position: absolute;
     top: 2px;
     left: 0;
-    width: 17px;
-    height: 17px;
+    width: 16.667px;
+    height: 16.667px;
     border-radius: 50%;
     background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 17 17' fill='none'%3E%3Cpath d='M15.083 8.33333C15.083 4.60541 12.0613 1.58366 8.33333 1.58366C4.60541 1.58366 1.58366 4.60541 1.58366 8.33333C1.58366 12.0613 4.60541 15.083 8.33333 15.083C12.0613 15.083 15.083 12.0613 15.083 8.33333ZM16.5837 8.33333C16.5837 12.8897 12.8897 16.5837 8.33333 16.5837C3.77698 16.5837 0.0830078 12.8897 0.0830078 8.33333C0.0830078 3.77698 3.77698 0.0830078 8.33333 0.0830078C12.8897 0.0830078 16.5837 3.77698 16.5837 8.33333Z' fill='%23666666'/%3E%3Cpath d='M10.7544 5.92855C11.04 5.62857 11.5148 5.61621 11.8148 5.90169C12.1147 6.18721 12.1262 6.66205 11.8408 6.96208L7.76449 11.2451C7.62292 11.3938 7.42618 11.4779 7.22087 11.4779C7.01555 11.4779 6.81881 11.3938 6.67725 11.2451L4.82422 9.2985C4.53874 8.99848 4.5511 8.52367 4.85107 8.23812C5.1511 7.95265 5.62591 7.96419 5.91146 8.26416L7.22087 9.63949L10.7544 5.92855Z' fill='%23666666'/%3E%3C/svg%3E") center / contain no-repeat;
-}
+    padding: 1.667px;
+  }
 
 .faq .faq-intro .faq-intro-note-list a {
     color: var(--color-brand-gradient-kotak-blue-default-2);
@@ -174,7 +185,18 @@
 }
 
 :where(.desktop-view) .faq .faq-intro {
+    display: block;
     flex: 0 1 442px;
+}
+
+:where(.desktop-view) .faq .faq-intro + .faq-list {
+    margin-top: 0;
+}
+
+:where(.desktop-view) .faq .faq-intro .faq-intro-note {
+    margin-top: var(--spacing-5xl);
+    padding: var(--spacing-4xl);
+    border-radius: var(--radius-3xl);
 }
 
 :where(.desktop-view) .faq .faq-list {
