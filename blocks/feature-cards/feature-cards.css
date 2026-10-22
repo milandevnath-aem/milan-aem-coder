@@ -41,7 +41,7 @@
 }
 
 .feature-cards .feature-cards-card.is-icon{
-  flex-direction: column;
+  flex-direction: row;
   gap: 12px;
   justify-content: flex-start;
 }
@@ -92,8 +92,11 @@
 
 .feature-cards .feature-cards-icon img {
     display: block;
-    width: 83px;
-    height: 72px;
+    max-width: 32px;
+    max-height: 32px;
+
+    /* width: 83px;
+    height: 72px; */
     object-fit: contain;
 }
 
@@ -334,6 +337,11 @@
     grid-column: span 2;
     min-height: 272px;
     padding: 32px;
+}
+
+:where(.desktop-view) .feature-cards .feature-cards-icon img {
+    width: 40px;
+    height: 40px;
 }
 
 :where(.desktop-view) .feature-cards .feature-cards-card.is-media {
