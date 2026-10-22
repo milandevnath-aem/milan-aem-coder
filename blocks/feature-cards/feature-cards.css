@@ -333,6 +333,10 @@
     gap: 12px;
 }
 
+:where(.desktop-view) .feature-cards.expand-card-width .feature-cards-list {
+    grid-template-columns: repeat(4, 1fr);
+}
+
 :where(.desktop-view) .feature-cards .feature-cards-card {
     grid-column: span 2;
     min-height: 272px;

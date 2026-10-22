@@ -875,6 +875,10 @@
             "value": "numbered"
           },
           {
+            "name": "Expand Card Width",
+            "value": "expand-card-width"
+          },
+          {
             "name": "Split (heading and image left, cards right)",
             "value": "split"
           },

@@ -46,6 +46,7 @@
           "options": [
             { "name": "Feature grid (image and icon cards)", "value": "" },
             { "name": "Numbered cards", "value": "numbered" },
+            { "name": "Expand Card Width", "value": "expand-card-width" },
             { "name": "Split (heading and image left, cards right)", "value": "split" },
             { "name": "Split with subtitle (heading, subtitle and image left, cards right)", "value": "split-culture" },
             { "name": "Split with numbered cards (heading on top, image left, numbered cards right)", "value": "split-insurance" },
