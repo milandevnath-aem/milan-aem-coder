@@ -1,7 +1,8 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createDropdown } from '../../scripts/dropdown.js';
-import { sendOtp, submitLead } from './lead-api.js';
+import { createLeadSession, errorMessage as apiErrorMessage } from './lead-api.js';
+import { buildLead, productFor } from './lead-payload.js';
 import { createOtpStep, createSuccessStep, setLoading } from './lead-form-otp.js';
 import {
   readForms, rememberForms, rememberedForms, resolveForm, slug,
@@ -435,7 +436,16 @@ export default function decorate(block) {
   submit.className = 'button primary lead-form-submit';
   submit.textContent = submitRow?.textContent.trim() || 'Apply now';
   if (submitRow) moveInstrumentation(submitRow, submit);
-  legal.append(submit);
+  // a failed request (OTP not sent) is shown above the button
+  const submitError = document.createElement('p');
+  submitError.className = 'lead-form-error lead-form-submit-error';
+  submitError.setAttribute('role', 'alert');
+  submitError.hidden = true;
+  const showSubmitError = (message) => {
+    submitError.textContent = message;
+    submitError.hidden = !message;
+  };
+  legal.append(submitError, submit);
   form.append(legal);
 
   const isValid = () => form.checkValidity()
@@ -463,6 +473,7 @@ export default function decorate(block) {
     setState(check, !check.valid());
   });
   form.addEventListener('input', (e) => {
+    showSubmitError('');
     const check = checks.find((c) => c.control === e.target);
     if (check) setState(check, false);
   });
@@ -513,29 +524,43 @@ export default function decorate(block) {
     }
     const data = Object.fromEntries(new FormData(form));
     const mobile = form.querySelector('input[type="tel"]')?.value || '';
+    // the category picks the API product (lead-api-config.js); none = demo flow
+    const category = data[Object.keys(data).find((k) => k.endsWith('category'))] || pageCategory();
+    const product = productFor(category);
+    const session = createLeadSession({ mobile, product, lead: buildLead(form, product) });
 
     // sending the OTP: button spinner (desktop), full view spinner (small screens)
+    showSubmitError('');
     setLoading(submit, true, 'Sending OTP');
     block.classList.add('is-sending');
     loading.hidden = false;
     announce('Sending OTP');
-    await sendOtp({ mobile, category: data[Object.keys(data).find((k) => k.endsWith('category'))] });
-    setLoading(submit, false);
-    block.classList.remove('is-sending');
-    loading.hidden = true;
+    try {
+      await session.sendOtp();
+    } catch (error) {
+      showSubmitError(apiErrorMessage(error, 'send'));
+      return;
+    } finally {
+      setLoading(submit, false);
+      block.classList.remove('is-sending');
+      loading.hidden = true;
+    }
 
     block.querySelector('.lead-form-otp')?.remove();
     const otp = createOtpStep({
       mobile,
+      sendOtp: session.sendOtp,
+      verifyOtp: session.verifyOtp,
       announce,
       onBack: () => {
+        session.cancel();
         otp.remove();
         showStep(main);
         nameDialog(intro.querySelector('h1, h2')?.id);
         submit.focus();
       },
-      onVerified: async () => {
-        await submitLead(data);
+      // the lead is created by verifyOtp
+      onVerified: () => {
         const success = createSuccessStep({
           emiHref: document.querySelector('main .emi-calculator') ? '#emi-calculator' : `${siteRoot()}/home#emi-calculator`,
           onDone: close,

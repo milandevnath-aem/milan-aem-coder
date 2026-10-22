@@ -1,6 +1,4 @@
-import {
-  OTP_LENGTH, RESEND_SECONDS, sendOtp, verifyOtp,
-} from './lead-api.js';
+import { OTP_LENGTH, RESEND_SECONDS, errorMessage } from './lead-api.js';
 
 let uid = 0;
 
@@ -45,13 +43,15 @@ export function setLoading(button, loading, busyLabel = 'Please wait') {
  * OTP step: six one-digit boxes, Validate, resend timer, wrong OTP state.
  * @param {Object} options
  * @param {string} options.mobile ten-digit mobile number
+ * @param {Function} options.sendOtp sends a new OTP (session.sendOtp, see lead-api.js)
+ * @param {Function} options.verifyOtp checks the OTP, resolves with the lead (session.verifyOtp)
  * @param {Function} options.onBack back to the form
- * @param {Function} options.onVerified called once the OTP is accepted
+ * @param {Function} options.onVerified called with the verifyOtp result once the OTP is accepted
  * @param {Function} options.announce polite screen reader message
  * @returns {HTMLDivElement & { focusFirst: Function, titleId: string, stop: Function }}
  */
 export function createOtpStep({
-  mobile, onBack, onVerified, announce,
+  mobile, sendOtp, verifyOtp, onBack, onVerified, announce,
 }) {
   uid += 1;
   const id = `lead-form-otp-${uid}`;
@@ -184,9 +184,19 @@ export function createOtpStep({
   };
   resend.addEventListener('click', async () => {
     if (seconds > 0 || busy) return;
+    busy = true;
     resend.setAttribute('aria-disabled', 'true');
     announce('Sending a new OTP');
-    await sendOtp({ mobile });
+    try {
+      await sendOtp();
+    } catch (e) {
+      const message = errorMessage(e, 'send');
+      if (message) setError(message);
+      resend.setAttribute('aria-disabled', 'false');
+      return;
+    } finally {
+      busy = false;
+    }
     inputs.forEach((input) => { input.value = ''; });
     setError('');
     refresh();
@@ -205,16 +215,22 @@ export function createOtpStep({
     inputs.forEach((input) => { input.readOnly = true; });
     setLoading(validate, true, 'Validating OTP');
     refresh();
-    const result = await verifyOtp({ mobile, otp: code() });
+    let result;
+    let message = '';
+    try {
+      result = await verifyOtp(code());
+    } catch (e) {
+      message = errorMessage(e, 'verify');
+    }
     busy = false;
     inputs.forEach((input) => { input.readOnly = false; });
     setLoading(validate, false);
     refresh();
-    if (result.ok) {
+    if (result) {
       clearInterval(timer);
-      onVerified();
-    } else {
-      setError('Incorrect OTP. Please try again.');
+      onVerified(result);
+    } else if (message) {
+      setError(message);
       inputs[0].focus();
     }
   });
