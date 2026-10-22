@@ -21,6 +21,7 @@ export default function decorate(block) {
     item.classList.add(`offers-${layout}`);
     if (/\bshort\b/i.test(style)) item.classList.add('offers-short');
     if (/\bdark\b/i.test(style)) item.classList.add('offers-dark-text');
+    if (/\bno-bg-color\b/i.test(style)) item.classList.add('no-bg-color');
 
     const img = imageCell?.querySelector('img');
     if (img) {
@@ -35,6 +36,15 @@ export default function decorate(block) {
 
     if (textCell) {
       textCell.className = 'offers-content';
+      // plain (non-bold) links are not buttonised globally; they render as white CTAs here
+      textCell.querySelectorAll(':scope > p').forEach((p) => {
+        const [a] = p.children;
+        if (p.children.length === 1 && a.matches('a[href]:not(.button)')
+          && p.textContent.trim() === a.textContent.trim()) {
+          p.className = 'button-wrapper';
+          a.className = 'button';
+        }
+      });
       const eyebrow = textCell.querySelector('p:first-child:not(.button-wrapper)');
       if (eyebrow && eyebrow.nextElementSibling?.matches('h1, h2, h3, h4')) {
         eyebrow.classList.add('offers-eyebrow');
