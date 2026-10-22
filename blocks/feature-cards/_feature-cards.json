@@ -47,6 +47,8 @@
             { "name": "Feature grid (image and icon cards)", "value": "" },
             { "name": "Numbered cards", "value": "numbered" },
             { "name": "Split (heading and image left, cards right)", "value": "split" },
+            { "name": "Split with subtitle (heading, subtitle and image left, cards right)", "value": "split-culture" },
+            { "name": "Split with numbered cards (heading on top, image left, numbered cards right)", "value": "split-insurance" },
             { "name": "Info cards (label / value pairs)", "value": "info" },
             { "name": "About Us info cards (company details)", "value": "about-us" }
           ]
@@ -56,7 +58,7 @@
           "name": "text",
           "value": "",
           "label": "Intro",
-          "description": "Optional. Heading; for the split variant also a bold link (button) and a short note.",
+          "description": "Optional. Heading; for the split variants also a subtitle or description, a bold link (button) and a short note after it.",
           "valueType": "string"
         }
       ]
@@ -83,7 +85,7 @@
           "name": "text",
           "value": "",
           "label": "Text",
-          "description": "Title (heading 3) and description. For info cards: a label paragraph followed by a bold value paragraph, repeated.",
+          "description": "Title (heading 3) and description. For info cards: a label paragraph followed by a bold value paragraph, repeated. For numbered split cards: a bulleted list shows as ticks and makes the card taller.",
           "valueType": "string"
         },
         {
