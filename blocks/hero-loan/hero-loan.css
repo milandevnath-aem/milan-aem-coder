@@ -193,7 +193,8 @@
 }
 
 :where(.desktop-view) .hero-loan .hero-loan-content .button-wrapper {
-  width: auto;
+  width: 100%;
+  max-width: 220px;
   margin: 0;
 }
 
