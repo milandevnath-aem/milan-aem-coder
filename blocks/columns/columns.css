@@ -34,9 +34,9 @@
 .columns.columns-split > div > div:first-child h2,
 .columns.columns-split > div > div:first-child h3 {
     margin: 0 0 32px;
-    font-size: var(--heading-font-size-xxl);
-    line-height: 48px;
-    letter-spacing: -0.1px;
+    font-size: var(--type-display-medium-df-1-font-size);
+    line-height: var(--type-display-medium-df-1-line-height);
+    letter-spacing: -0.8px;
     color: #121212;
 }
 
@@ -49,9 +49,7 @@
 
 :where(.desktop-view) .columns.columns-split > div > div:first-child h2,
 :where(.desktop-view) .columns.columns-split > div > div:first-child h3 {
-    font-size: var(--heading-font-size-xxl);
-    line-height: 48px;
-    letter-spacing: -0.8px;
+    letter-spacing: -0.1px;
 }
 
 .feature-cards-container .columns.columns-split > div > div:first-child h2{
