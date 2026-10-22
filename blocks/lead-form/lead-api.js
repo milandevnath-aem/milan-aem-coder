@@ -4,8 +4,8 @@
 
   Usage (see the submit handler in lead-form.js):
 
-    const product = productFor('Loan Against Property'); // 'LAP'
-    const lead = buildLead(form, product);               // every form field, see lead-payload.js
+    const product = productFor('New Car Finance');       // 'NewCarFinance'
+    const lead = buildLead(form, 'New Car Finance');     // every form field + Product__c 'New CAR'
     const session = createLeadSession({ mobile: '8097475810', product, lead });
     try {
       await session.sendOtp();                           // texts the OTP

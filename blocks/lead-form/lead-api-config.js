@@ -35,17 +35,20 @@ export const OTP_LENGTH = 6;
 export const RESEND_SECONDS = 30;
 
 /**
- * Loan category (as shown in "Select loan category") -> product the backend routes on.
+ * Loan category (as shown in "Select loan category") -> fields added to `lead` for it.
+ * - product: the API the backend calls (NewCarFinance, TWL, LAP)
+ * - Product__c: New Car Finance API only, which of its products the lead is for
+ * Every key of an entry is sent as is, so another category specific value is one more key.
  * Matching ignores case, spaces and punctuation ("Two-Wheeler Loans" = "two wheeler loan").
  * A category that is not listed keeps the demo flow: Car Lease and Dealer Finance until
  * their API is decided. To connect one, add a line here; no other change is needed.
  */
 export const PRODUCT_BY_CATEGORY = {
-  'New Car Finance': 'NewCarFinance',
-  'Used Car & Re-finance': 'NewCarFinance',
-  'Top-Up Loan': 'NewCarFinance',
-  'Two-Wheeler Loan': 'TWL',
-  'Loan Against Property': 'LAP',
+  'New Car Finance': { product: 'NewCarFinance', Product__c: 'New CAR' },
+  'Used Car & Re-finance': { product: 'NewCarFinance', Product__c: 'Used Car' },
+  'Top-Up Loan': { product: 'NewCarFinance', Product__c: 'PL/KPTR' },
+  'Two-Wheeler Loan': { product: 'TWL' },
+  'Loan Against Property': { product: 'LAP' },
 };
 
 /**

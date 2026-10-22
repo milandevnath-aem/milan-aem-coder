@@ -12,15 +12,25 @@ import { EXCLUDED_FIELDS, LEAD_FIELD_KEYS, PRODUCT_BY_CATEGORY } from './lead-ap
 const normalize = (text) => String(text || '').toLowerCase().replace(/[^a-z0-9]/g, '').replace(/loans$/, 'loan');
 
 /**
+ * The lead fields of a loan category (PRODUCT_BY_CATEGORY).
+ * @param {string} category e.g. "New Car Finance"
+ * @returns {Object<string, string>} e.g. { product: "NewCarFinance", Product__c: "New CAR" };
+ *   {} when the category has no API yet (Car Lease, Dealer Finance)
+ */
+export function categoryFields(category) {
+  const wanted = normalize(category);
+  if (!wanted) return {};
+  const label = Object.keys(PRODUCT_BY_CATEGORY).find((l) => normalize(l) === wanted);
+  return label ? PRODUCT_BY_CATEGORY[label] : {};
+}
+
+/**
  * The backend product of a loan category.
  * @param {string} category e.g. "Loan Against Property"
  * @returns {string} e.g. "LAP"; '' when the category has no API yet (Car Lease, Dealer Finance)
  */
 export function productFor(category) {
-  const wanted = normalize(category);
-  if (!wanted) return '';
-  const label = Object.keys(PRODUCT_BY_CATEGORY).find((l) => normalize(l) === wanted);
-  return label ? PRODUCT_BY_CATEGORY[label] : '';
+  return categoryFields(category).product || '';
 }
 
 /**
@@ -51,10 +61,11 @@ export function splitName(fullName) {
  * "First name" = given-name, "Last name" = family-name, "Your name" = name. An "Account name"
  * is a company (organization), so it is sent as a field of its own.
  * @param {HTMLFormElement} form
- * @param {string} product backend product, see productFor
- * @returns {Object<string, string>} e.g. { FirstName, LastName, Email, Location, ..., product }
+ * @param {string} category the picked loan category, adds its fields (see categoryFields)
+ * @returns {Object<string, string>} e.g. { FirstName, LastName, Email, Location, ...,
+ *   product: "NewCarFinance", Product__c: "New CAR" }
  */
-export function buildLead(form, product) {
+export function buildLead(form, category) {
   const fields = {};
   const name = { given: '', family: '', full: '' };
   [...form.elements].forEach((el) => {
@@ -70,6 +81,6 @@ export function buildLead(form, product) {
   const names = name.given || name.family
     ? { FirstName: name.given, LastName: name.family }
     : splitName(name.full);
-  // product last, so no form field can override it
-  return { ...fields, ...names, product };
+  // the category's fields (product, Product__c) last, so no form field can override them
+  return { ...fields, ...names, ...categoryFields(category) };
 }
