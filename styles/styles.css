@@ -600,7 +600,8 @@ main > .section.feature-banner-container {
 
 :where(.desktop-view) main > .section.hero-loan-container:has(+ .feature-banner-container),
 :where(.desktop-view) main > .section.hero-loan-container:has(+ .brand) {
-  margin-bottom: 24px;
+  /* margin-bottom: 24px; */
+
 }
 
 main > .section.feature-banner-container + .section {
@@ -765,6 +766,10 @@ main .section.brand {
 
 main .section.brand.has-background {
   margin: 16px 0 0 ;
+}
+
+:where(.desktop-view) main .section.brand.has-background {
+  margin: initial;
 }
 
 main .section.brand .default-content-wrapper {
