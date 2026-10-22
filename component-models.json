@@ -875,10 +875,6 @@
             "value": "numbered"
           },
           {
-            "name": "Expand Card Width",
-            "value": "expand-card-width"
-          },
-          {
             "name": "Split (heading and image left, cards right)",
             "value": "split"
           },
@@ -897,6 +893,18 @@
           {
             "name": "About Us info cards (company details)",
             "value": "about-us"
+          }
+        ]
+      },
+      {
+        "component": "multiselect",
+        "name": "classes_style",
+        "label": "Card style",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Expand Card Width",
+            "value": "expand-card-width"
           }
         ]
       },
