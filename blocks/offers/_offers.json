@@ -103,6 +103,18 @@
               "value": "dark"
             }
           ]
+        },
+        {
+          "component": "select",
+          "name": "style_bg",
+          "label": "Section Background",
+          "valueType": "string",
+          "options": [
+            {
+              "name": "No Background Color",
+              "value": "no-bg-color"
+            }
+          ]
         }
       ]
     }

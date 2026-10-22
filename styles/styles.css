@@ -792,6 +792,10 @@ main .section.bg-grey .default-content-wrapper {
   max-width: calc(680px + 2 * var(--gb-margin));
 }
 
+main .section.bg-grey.bggrey-remove-space {
+  margin: 124px 0 0;
+}
+
 main .section.brand p {
   margin: 0;
   font-size: var(--body-font-size-s);

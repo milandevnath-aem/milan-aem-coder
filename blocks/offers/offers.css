@@ -25,9 +25,13 @@
     padding: var(--offers-padding);
     border-radius: var(--offers-radius);
     background-color: #000;
-    color: #fff;
+    color: var(--color-button-primary-default-text-base);
     text-align: center;
     overflow: hidden;
+}
+
+.offers .offers-item.no-bg-color {
+    background-color: var(--color-button-primary-default-text-base);
 }
 
 .offers .offers-image,
@@ -85,8 +89,8 @@
 .offers .offers-content a.button {
     width: 192px;
     padding: 12px 15px;
-    border-color: #fff;
-    background-color: #fff;
+    border-color: var(--color-button-primary-default-text-base);
+    background-color: var(--color-button-primary-default-text-base);
     color: var(--text-color);
     font-size: var(--type-bt2-size);
     line-height: var(--type-bt2-line);
@@ -149,7 +153,7 @@
 }
 
 .offers .offers-short .offers-content h2 {
-    color: #fff;
+    color: var(--color-button-primary-default-text-base);
 }
 
 .offers .offers-content > p:not(.offers-eyebrow, .button-wrapper) {

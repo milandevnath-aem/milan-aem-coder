@@ -43,6 +43,10 @@
               "value": "bg-grey"
             },
             {
+              "name": "Remove bottom space of bg grey",
+              "value": "bggrey-remove-space"
+            },
+            {
               "name": "Animate text (banner text lights up on scroll)",
               "value": "animate-text"
             },

@@ -167,6 +167,10 @@
             "value": "bg-grey"
           },
           {
+            "name": "Remove bottom space of bg grey",
+            "value": "bggrey-remove-space"
+          },
+          {
             "name": "Animate text (banner text lights up on scroll)",
             "value": "animate-text"
           },
@@ -1273,6 +1277,18 @@
           {
             "name": "Dark text (for light images)",
             "value": "dark"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "style_bg",
+        "label": "Section Background",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "No Background Color",
+            "value": "no-bg-color"
           }
         ]
       }
