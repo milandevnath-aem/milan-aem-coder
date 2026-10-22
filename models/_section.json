@@ -73,6 +73,10 @@
             {
               "name": "No margin bottom (desktop only)",
               "value": "no-margin-bottom-desktop"
+            },
+            {
+              "name": "Background grey",
+              "value": "bg-grey"
             }
           ]
         },
