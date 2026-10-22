@@ -790,3 +790,8 @@ main .section.brand p {
 main > .section.branch-locator-container:last-of-type {
   margin-bottom: 24px;
 }
+
+/* bg-color grey */
+main > .section.bg-grey {
+  background-color: var(--color-background-2-default-base);
+}
