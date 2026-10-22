@@ -338,7 +338,7 @@ footer .footer-bottom .icon {
 }
 
 :where(.desktop-view) footer .footer-links li li + li {
-  margin-top: 12px;
+  margin-top: 14px;
 }
 
 :where(.desktop-view) footer .footer-links .footer-heading {
