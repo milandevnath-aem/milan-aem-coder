@@ -825,7 +825,7 @@
         "name": "style_theme",
         "label": "Text colour",
         "valueType": "string",
-        "value": "dark",
+        "value": "",
         "options": [
           {
             "name": "Dark text (light images)",

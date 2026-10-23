@@ -98,6 +98,7 @@ export default function decorate(block) {
     const tokens = styleTokens(styleCell);
     item.classList.add(tokens.includes('left') ? 'text-left' : 'text-right');
     if (tokens.includes('light')) item.classList.add('light-text');
+    if (tokens.includes('dark')) item.classList.add('dark-text');
     if (tokens.includes('side')) item.classList.add('side-image');
 
     const img = imageCell?.querySelector('img');
