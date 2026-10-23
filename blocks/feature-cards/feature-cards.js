@@ -1,14 +1,11 @@
 import { moveInstrumentation } from '../../scripts/scripts.js';
-import { createPicture } from '../../scripts/images.js';
 
 // split-culture / split-insurance are listed first: they also get the split class at runtime
 const VARIANTS = ['split-culture', 'split-insurance', 'numbered', 'split', 'info', 'about-us'];
 const SPLIT_VARIANTS = ['split', 'split-culture', 'split-insurance'];
 
-const formatNumber = (index) => String(index + 1).padStart(2, '0');
-
-function buildCard(row, index) {
-  const [imageCell, textCell, layoutCell] = row.children;
+function buildCard(row) {
+  const [imageCell, textCell, layoutCell, numberCell] = row.children;
   const card = document.createElement('li');
   card.className = 'feature-cards-card';
   moveInstrumentation(row, card);
@@ -19,18 +16,22 @@ function buildCard(row, index) {
   card.classList.add(isMedia ? 'is-media' : 'is-icon');
 
   if (img) {
-    const picture = createPicture(img.src, img.alt, false, [{ width: isMedia ? '1200' : '160' }]);
-    moveInstrumentation(img, picture.querySelector('img'));
+    // keep the authored picture so the image stays editable in the Universal Editor
+    const picture = img.closest('picture') || img;
     picture.classList.add(isMedia ? 'feature-cards-image' : 'feature-cards-icon');
     card.append(picture);
   }
 
   const body = document.createElement('div');
   body.className = 'feature-cards-body';
-  const number = document.createElement('span');
-  number.className = 'feature-cards-number';
-  number.textContent = formatNumber(index);
-  body.append(number);
+  const numberText = numberCell?.textContent.trim();
+  if (numberText) {
+    const number = document.createElement('span');
+    number.className = 'feature-cards-number';
+    number.textContent = numberText;
+    moveInstrumentation(numberCell, number);
+    body.append(number);
+  }
   if (textCell) {
     moveInstrumentation(textCell, body);
     while (textCell.firstChild) body.append(textCell.firstChild);
@@ -100,11 +101,6 @@ function decorateSplit(block, variant, intro, list) {
     media.remove();
     aside.append(card);
   }
-  // number the cards left in the list from 01, without the media card
-  list.querySelectorAll('.feature-cards-number').forEach((number, i) => {
-    number.textContent = formatNumber(i);
-  });
-
   const main = document.createElement('div');
   main.className = 'feature-cards-main';
   main.append(list);
