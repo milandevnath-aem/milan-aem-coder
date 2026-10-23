@@ -602,6 +602,10 @@ main > .section.feature-banner-container + .section {
   margin-top: var(--section-spacing);
 }
 
+main > .section.feature-banner-container + .section.feature-banner-container{
+  margin-top: 0;
+}
+
 /* full bleed on small screens so cards slide to the screen edge; the track pads itself onto the grid */
 main > .section > .testimonials-wrapper {
   max-width: none;
