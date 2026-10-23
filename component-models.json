@@ -885,6 +885,10 @@
           {
             "name": "About Us info cards (company details)",
             "value": "about-us"
+          },
+          {
+            "name": "Icon with border",
+            "value": "icon-border"
           }
         ]
       },
