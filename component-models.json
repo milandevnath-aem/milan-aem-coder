@@ -860,7 +860,7 @@
     "id": "feature-cards",
     "fields": [
       {
-        "component": "select",
+        "component": "multiselect",
         "name": "classes",
         "label": "Variant",
         "valueType": "string",
