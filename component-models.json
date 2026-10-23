@@ -889,6 +889,10 @@
           {
             "name": "Icon with border",
             "value": "icon-border"
+          },
+          {
+            "name": "Feature cards card alignment in row",
+            "value": "direction-row"
           }
         ]
       },

@@ -49,7 +49,8 @@
             { "name": "Split (heading and image left, cards right)", "value": "split" },
             { "name": "Info cards (label / value pairs)", "value": "info" },
             { "name": "About Us info cards (company details)", "value": "about-us" },
-            { "name": "Icon with border", "value": "icon-border" }
+            { "name": "Icon with border", "value": "icon-border" },
+            { "name": "Feature cards card alignment in row", "value": "direction-row" }
           ]
         },
         {
