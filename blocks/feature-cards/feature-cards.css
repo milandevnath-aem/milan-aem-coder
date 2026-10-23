@@ -20,7 +20,7 @@
 .feature-cards .feature-cards-list {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--grid-gutter);
+    gap: var(--spacing-xl);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -49,7 +49,7 @@
 :where(.desktop-view) .feature-cards .feature-cards-card.is-icon{
   flex-direction: column;
   justify-content: space-between;
-  gap: 24px;
+  gap: var(--spacing-5xl);
 }
 
 .feature-cards .feature-cards-number {
@@ -202,13 +202,15 @@
 
 .feature-cards.info .feature-cards-body p {
     margin: 0;
-    font-size: var(--body-font-size-s);
-    line-height: 18px;
+    font-size: var(--type-body-b1-font-size);
+    line-height: var(--type-body-b1-line-height);
+    font-weight: var(--type-body-b1-font-weight);
+    letter-spacing: var(--type-body-b1-letter-spacing);
 }
 
 .feature-cards.info .feature-cards-body p.feature-cards-value,
 .feature-cards.info .feature-cards-body p.feature-cards-value strong {
-    margin: 6px 0 0;
+    margin: 8px 0 0;
     color: var(--text-color);
     font-size: var(--type-headline-h4-font-size);
     line-height: var(--type-headline-h4-line-height);
@@ -217,8 +219,8 @@
 }
 
 .feature-cards.info .feature-cards-body p.feature-cards-value:not(:last-child) {
-    margin-bottom: 16px;
-    padding-bottom: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 24px;
     border-bottom: 1px solid #dedede;
 }
 
@@ -329,7 +331,7 @@
 
 :where(.desktop-view) .feature-cards .feature-cards-list {
     grid-template-columns: repeat(6, 1fr);
-    gap: 12px;
+    gap: var(--spacing-lg);
 }
 
 :where(.desktop-view) .feature-cards.expand-card-width .feature-cards-list {
