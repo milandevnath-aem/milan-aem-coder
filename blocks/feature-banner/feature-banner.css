@@ -35,6 +35,10 @@
     background-color: #1a1a1a;
 }
 
+.feature-banner .feature-banner-item.light-text p{
+    color: var(--color-text-primary-inverse-base);
+}
+
 .feature-banner .feature-banner-image,
 .feature-banner .feature-banner-image img {
     position: absolute;
