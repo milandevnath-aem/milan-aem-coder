@@ -829,11 +829,11 @@
         "options": [
           {
             "name": "Dark text (light images)",
-            "value": "dark"
+            "value": "dark-text"
           },
           {
             "name": "Light text (dark images)",
-            "value": "light"
+            "value": "light-text"
           }
         ]
       },
