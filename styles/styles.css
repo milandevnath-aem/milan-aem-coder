@@ -763,11 +763,32 @@ main .section.brand {
   text-align: center;
 }
 
+main .section.bg-grey :is(h2,h3,h4,h5,h6) {
+  margin: 0 0 8px;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  letter-spacing: 2.32px;
+  color: var(--text-color);
+}
+
+main .section.bg-grey {
+  background-color: var(--surface-color);
+  padding: var(--section-spacing) 0;
+  color: var(--text-primary-default-base);
+  text-align: center;
+}
+
+main .section.bg-grey p {
+  margin: 0;
+}
+
 main .section.brand.has-background {
   margin: 16px 0 0 ;
 }
 
-main .section.brand .default-content-wrapper {
+main .section.brand .default-content-wrapper,
+main .section.bg-grey .default-content-wrapper {
   max-width: calc(680px + 2 * var(--gb-margin));
 }
 
