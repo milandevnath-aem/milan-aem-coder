@@ -472,3 +472,21 @@
     font-size: 14px;
     line-height: 18px;
 }
+
+/* icon-border: icon framed in a bordered square */
+.feature-cards.icon-border .feature-cards-icon img {
+    box-sizing: border-box;
+    width: 32px;
+    height: 32px;
+    padding: 6.4px;
+    border: 0.8px solid #dedede;
+    border-radius: 8px;
+    background: #eee;
+}
+
+:where(.desktop-view) .feature-cards.icon-border .feature-cards-icon img {
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    border-width: 1px;
+}
