@@ -64,6 +64,7 @@ export const isConfigured = () => Boolean(ENDPOINTS.generateOtp && ENDPOINTS.val
  * @throws {LeadApiError}
  */
 async function post(endpoint, body, signal) {
+  if (signal.aborted) throw new LeadApiError('cancelled', `${endpoint}: cancelled`);
   const controller = new AbortController();
   let timedOut = false;
   const timer = setTimeout(() => { timedOut = true; controller.abort(); }, REQUEST_TIMEOUT_MS);
@@ -86,6 +87,9 @@ async function post(endpoint, body, signal) {
     }
 
     const json = await response.json().catch(() => null);
+    // the body was cut off by the timeout or a cancel
+    if (timedOut) throw new LeadApiError('timeout', `${endpoint}: no answer in ${REQUEST_TIMEOUT_MS}ms`);
+    if (signal.aborted) throw new LeadApiError('cancelled', `${endpoint}: cancelled`);
     if (!response.ok) {
       throw new LeadApiError('http', `${endpoint}: HTTP ${response.status}`, {
         status: response.status, code: json?.code,
@@ -99,7 +103,7 @@ async function post(endpoint, body, signal) {
     }
     return json.data || {};
   } catch (error) {
-    // the body was cut off by the timeout or a cancel
+    // anything unexpected still reaches the caller as a LeadApiError
     if (!(error instanceof LeadApiError)) {
       throw new LeadApiError(timedOut ? 'timeout' : 'network', `${endpoint}: ${error.message}`);
     }

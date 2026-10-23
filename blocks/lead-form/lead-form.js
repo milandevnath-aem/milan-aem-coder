@@ -578,6 +578,11 @@ export default function decorate(block) {
         success.focusTitle();
       },
     });
+    // closing the modal ends the journey: no resend countdown or request left running
+    dialog()?.addEventListener('close', () => {
+      otp.stop();
+      session.cancel();
+    }, { once: true });
     block.append(otp);
     showStep(otp);
     nameDialog(otp.titleId);
