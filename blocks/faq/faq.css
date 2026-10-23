@@ -13,11 +13,12 @@
     margin-top: 32px;
 }
 
-.faq .faq-intro h2 {
+.faq .faq-intro :is(h2, h3, h4, h5, h6) {
     margin: 0;
     font-size: var(--type-display-size);
     line-height: var(--type-display-line);
     letter-spacing: var(--type-display-ls);
+    color: var(--color-button-secondary-default-text-base);
 }
 
 .faq .faq-intro .faq-intro-description {
@@ -120,6 +121,10 @@
 
 .faq .faq-item {
     border-bottom: 1px solid var(--surface-color);
+}
+
+.faq .faq-item:last-child{
+    border-bottom: none;
 }
 
 .faq .faq-item summary {
