@@ -123,6 +123,10 @@
     border-bottom: 1px solid var(--surface-color);
 }
 
+.faq .faq-item:last-child{
+    border-bottom: none;
+}
+
 .faq .faq-item summary {
     position: relative;
     padding: 20px 32px 12px 0;
