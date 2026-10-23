@@ -1126,6 +1126,7 @@
         "valueType": "string",
         "name": "label",
         "label": "Label",
+        "description": "Do not add a City field: it is added automatically from the placeholders for the selected loan category.",
         "value": ""
       },
       {

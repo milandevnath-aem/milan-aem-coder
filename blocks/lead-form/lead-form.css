@@ -380,6 +380,10 @@
   color: var(--muted-color);
 }
 
+.lead-form button.button.primary.lead-form-submit:disabled {
+  cursor: not-allowed;
+}
+
 /* loading: spinner in place of the label */
 .lead-form button.button.primary.is-loading {
   border-color: var(--text-color);

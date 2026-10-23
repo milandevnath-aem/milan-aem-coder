@@ -35,21 +35,29 @@ export const OTP_LENGTH = 6;
 export const RESEND_SECONDS = 30;
 
 /**
- * Loan category (as shown in "Select loan category") -> fields added to `lead` for it.
+ * Loan category (as shown in "Select loan category") -> how its form works. One line per
+ * category is all it takes to connect a category (e.g. Car Lease) to an API: no logic changes.
  * - product: the API the backend calls (NewCarFinance, TWL, LAP)
  * - Product__c: New Car Finance API only, which of its products the lead is for
- * Every key of an entry is sent as is, so another category specific value is one more key.
+ * - cities: key of its city list in the placeholders sheet (/placeholders.json), whose value is
+ *   the path of the city sheet. Left out, the key is the category name in camelCase
+ *   ("Home Loan" -> a placeholder "home-loan"). Cities are never authored in a form.
+ * Every other key is sent in `lead` as is, so another category specific value is one more key.
  * Matching ignores case, spaces and punctuation ("Two-Wheeler Loans" = "two wheeler loan").
- * A category that is not listed keeps the demo flow: Car Lease and Dealer Finance until
- * their API is decided. To connect one, add a line here; no other change is needed.
+ * A category that is not listed has no API yet (Car Lease and Dealer Finance for now): its
+ * form can be filled in, no cities are fetched and Apply now stays disabled.
  */
 export const PRODUCT_BY_CATEGORY = {
-  'New Car Finance': { product: 'NewCarFinance', Product__c: 'New CAR' },
-  'Used Car & Re-finance': { product: 'NewCarFinance', Product__c: 'Used Car' },
-  'Top-Up Loan': { product: 'NewCarFinance', Product__c: 'PL/KPTR' },
-  'Two-Wheeler Loan': { product: 'TWL' },
-  'Loan Against Property': { product: 'LAP' },
+  'New Car Finance': { product: 'NewCarFinance', Product__c: 'New CAR', cities: 'ncf' },
+  'Used Car & Re-finance': { product: 'NewCarFinance', Product__c: 'Used Car', cities: 'ncf' },
+  'Top-Up Loan': { product: 'NewCarFinance', Product__c: 'PL/KPTR', cities: 'ncf' },
+  'Two-Wheeler Loan': { product: 'TWL', cities: 'tw' },
+  'Loan Against Property': { product: 'LAP', cities: 'lap' },
 };
+
+/** Column of the city sheets holding the city name, and the rows to ask for (default is 1000). */
+export const CITY_COLUMN = 'SUB_CITY_NAME';
+export const CITY_LIMIT = 5000;
 
 /**
  * Form field name -> key in `lead`. The field name is the label in lower case with dashes

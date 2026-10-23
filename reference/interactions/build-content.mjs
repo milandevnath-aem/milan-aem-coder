@@ -224,7 +224,6 @@ ${LEAD_DISCLAIMER}
 <div><div>Apply now</div></div>
 ${field('Select loan category', 'select', LEAD_CATEGORIES)}
 ${nameFields}
-${field('City', 'search', CITIES.map(([c, r]) => `${c}: ${r}`).join(', '))}
 ${field('Zip / Postal code', 'zip', '', false)}
 ${field('Enter the code', 'captcha')}
 </div></div>`;

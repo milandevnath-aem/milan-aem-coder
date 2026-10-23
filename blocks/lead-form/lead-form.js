@@ -2,7 +2,10 @@ import { getMetadata } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createDropdown } from '../../scripts/dropdown.js';
 import { createLeadSession, errorMessage as apiErrorMessage } from './lead-api.js';
-import { buildLead, productFor } from './lead-payload.js';
+import {
+  buildLead, cityKeyFor, isSubmitDisabled, productFor,
+} from './lead-payload.js';
+import fetchCities from './lead-cities.js';
 import { createOtpStep, createSuccessStep, setLoading } from './lead-form-otp.js';
 import {
   readForms, rememberForms, rememberedForms, resolveForm, slug,
@@ -355,10 +358,32 @@ export default function decorate(block) {
   const dropdowns = [];
   const checks = [];
   let captcha;
+  // the City field goes before the first of these (see below)
+  let cityAnchor;
+
+  // adds a field with its error text to the grid, before `before` when given
+  const mount = (item, field, label, kind, before) => {
+    const control = field.querySelector('.dropdown-field') || field.querySelector('input:not([type="hidden"]), textarea');
+    item.append(field);
+    if (control) {
+      const error = fieldError(control, errorMessage(label, kind));
+      const isDropdown = dropdowns.includes(field);
+      let valid = () => control.checkValidity();
+      if (field === captcha) valid = () => captcha.isValid();
+      if (isDropdown) valid = () => !field.dataset.required || Boolean(field.value);
+      checks.push({
+        field, control, error, valid,
+      });
+      item.append(error.el);
+    }
+    fields.insertBefore(item, before || null);
+  };
 
   fieldRows.forEach((row) => {
     const [labelCell, kindCell, optionsCell, requiredCell, halfCell] = row.children;
     const label = labelCell?.textContent.trim() || 'Field';
+    // cities come from the placeholders (see below), never from the authored form
+    if (slug(label) === 'city') return;
     let kind = kindCell?.textContent.trim() || 'text';
     const optionsText = optionsCell?.textContent.trim() || '';
     // fields left as plain text: a description is multi-line, a field with a list of
@@ -397,22 +422,25 @@ export default function decorate(block) {
       field = textField(label, kind === 'text-half' ? 'text' : kind, required);
     }
     moveInstrumentation(row, field);
+    if (!cityAnchor && (kind === 'zip' || kind === 'captcha')) cityAnchor = item;
     // text error under each field: what is wrong and how to fix it
-    const control = field.querySelector('.dropdown-field') || field.querySelector('input:not([type="hidden"]), textarea');
-    item.append(field);
-    if (control) {
-      const error = fieldError(control, errorMessage(label, kind));
-      const isDropdown = dropdowns.includes(field);
-      let valid = () => control.checkValidity();
-      if (field === captcha) valid = () => captcha.isValid();
-      if (isDropdown) valid = () => !field.dataset.required || Boolean(field.value);
-      checks.push({
-        field, control, error, valid,
-      });
-      item.append(error.el);
-    }
-    fields.append(item);
+    mount(item, field, label, kind);
   });
+
+  // City: filled from the placeholders for the picked loan category (see loadCities)
+  const cityOptions = [];
+  const cityField = createDropdown({
+    label: 'City',
+    name: 'city',
+    options: cityOptions,
+    search: true,
+    searchPlaceholder: 'Search city',
+    pinSelected: true,
+  });
+  dropdowns.push(cityField);
+  const cityItem = document.createElement('div');
+  cityItem.className = 'lead-form-item';
+  mount(cityItem, cityField, 'City', 'search', cityAnchor);
   form.append(fields);
 
   const legal = document.createElement('div');
@@ -448,6 +476,14 @@ export default function decorate(block) {
   legal.append(submitError, submit);
   form.append(legal);
 
+  // loan category: the form's product, so the dropdown is needed before the first refresh
+  const categoryDropdown = dropdowns
+    .find((d) => /category/i.test(d.querySelector('input[type="hidden"]').name));
+  const categoryOptions = categoryDropdown?.optionValues || [];
+  const currentCategory = () => categoryDropdown?.value || pageCategory();
+  // categories without an API yet (Car Lease, Dealer Finance) can't be submitted
+  const isBlocked = () => isSubmitDisabled(currentCategory());
+
   const isValid = () => form.checkValidity()
     && dropdowns.every((d) => !d.dataset.required || d.value)
     && (!captcha || captcha.isValid());
@@ -458,9 +494,11 @@ export default function decorate(block) {
     box.classList.toggle('is-invalid', invalid);
   };
   // the button stays focusable while the form is incomplete (aria-disabled, not disabled);
-  // submitting then lists what is missing
+  // submitting then lists what is missing. A blocked category really disables it.
   const refresh = () => {
-    submit.setAttribute('aria-disabled', !isValid());
+    const blocked = isBlocked();
+    submit.disabled = blocked;
+    submit.setAttribute('aria-disabled', blocked || !isValid());
   };
   form.addEventListener('input', refresh);
   form.addEventListener('change', refresh);
@@ -515,7 +553,7 @@ export default function decorate(block) {
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (submit.classList.contains('is-loading')) return;
+    if (submit.classList.contains('is-loading') || isBlocked()) return;
     if (!isValid()) {
       const invalid = checks.filter((check) => !check.valid());
       checks.forEach((check) => setState(check, invalid.includes(check)));
@@ -591,9 +629,6 @@ export default function decorate(block) {
   });
 
   // loan category: preselect the product of the page the form is opened from
-  const categoryDropdown = dropdowns
-    .find((d) => /category/i.test(d.querySelector('input[type="hidden"]').name));
-  const categoryOptions = categoryDropdown?.optionValues || [];
   const selectCategory = (text) => {
     if (!categoryDropdown || !text) return;
     const key = normalize(text);
@@ -602,6 +637,33 @@ export default function decorate(block) {
     if (match) categoryDropdown.setValue(match);
   };
   selectCategory(pageCategory());
+
+  // City list of the picked category (placeholders.json -> city sheet). Switching category
+  // swaps the list; the city stays selected when the new list has it, else it is cleared.
+  let wantedCities = [];
+  let cityRequest = 0;
+  const loadCities = async () => {
+    cityRequest += 1;
+    const request = cityRequest;
+    const key = cityKeyFor(currentCategory());
+    // required while the list loads, so the form can't be sent without a city meanwhile
+    if (key) cityField.dataset.required = 'true';
+    refresh();
+    const cities = key ? await fetchCities(key) : [];
+    if (request !== cityRequest) return;
+    const previous = cityField.value;
+    const items = cities.map((city) => ({ value: city, label: city }));
+    cityOptions.splice(0, cityOptions.length, ...items);
+    // no city list for the category (or it could not be loaded): nothing to be required
+    if (!cities.length) delete cityField.dataset.required;
+    const match = [previous, ...wantedCities].map((c) => String(c || '').trim().toLowerCase())
+      .map((c) => c && cities.find((city) => city.toLowerCase() === c)).find(Boolean);
+    if (match) cityField.setValue(match);
+    else if (previous) cityField.setValue('');
+    else refresh();
+  };
+  categoryDropdown?.addEventListener('change', loadCities);
+  loadCities();
   refresh();
   // picking another product in a modal opens that product's form
   categoryDropdown?.addEventListener('change', (e) => {
@@ -637,6 +699,8 @@ export default function decorate(block) {
         return n === name || n.endsWith(`-${name}`) || name.endsWith(`-${n}`);
       });
       const match = dropdown && candidates.find((c) => dropdown.hasOption(c));
+      // the city list may still be loading: apply the value once it is there
+      if (dropdown === cityField) wantedCities = candidates;
       if (match) dropdown.setValue(match);
     });
     refresh();

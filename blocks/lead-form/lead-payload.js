@@ -6,22 +6,32 @@
   PascalCase. The name always arrives as FirstName + LastName, whether the form asks for
   "First name" and "Last name" or one "Your name".
 */
-import { EXCLUDED_FIELDS, LEAD_FIELD_KEYS, PRODUCT_BY_CATEGORY } from './lead-api-config.js';
+import {
+  EXCLUDED_FIELDS,
+  LEAD_FIELD_KEYS,
+  PRODUCT_BY_CATEGORY,
+} from './lead-api-config.js';
 
 /** "Two-Wheeler Loans", "two wheeler loan" -> "twowheelerloan" */
 const normalize = (text) => String(text || '').toLowerCase().replace(/[^a-z0-9]/g, '').replace(/loans$/, 'loan');
 
+/** The PRODUCT_BY_CATEGORY entry of a loan category, {} when it has none. */
+function entryFor(category) {
+  const wanted = normalize(category);
+  if (!wanted) return {};
+  const label = Object.keys(PRODUCT_BY_CATEGORY).find((l) => normalize(l) === wanted);
+  return label ? PRODUCT_BY_CATEGORY[label] : {};
+}
+
 /**
- * The lead fields of a loan category (PRODUCT_BY_CATEGORY).
+ * The lead fields of a loan category (PRODUCT_BY_CATEGORY, without its city list key).
  * @param {string} category e.g. "New Car Finance"
  * @returns {Object<string, string>} e.g. { product: "NewCarFinance", Product__c: "New CAR" };
  *   {} when the category has no API yet (Car Lease, Dealer Finance)
  */
 export function categoryFields(category) {
-  const wanted = normalize(category);
-  if (!wanted) return {};
-  const label = Object.keys(PRODUCT_BY_CATEGORY).find((l) => normalize(l) === wanted);
-  return label ? PRODUCT_BY_CATEGORY[label] : {};
+  const { cities, ...fields } = entryFor(category);
+  return fields;
 }
 
 /**
@@ -31,6 +41,31 @@ export function categoryFields(category) {
  */
 export function productFor(category) {
   return categoryFields(category).product || '';
+}
+
+/**
+ * Whether the form of a loan category can't be submitted: it has no API yet.
+ * @param {string} category e.g. "Car Lease"
+ * @returns {boolean}
+ */
+export function isSubmitDisabled(category) {
+  return Boolean(normalize(category)) && !productFor(category);
+}
+
+/**
+ * The placeholder key of the city list of a loan category: `cities` of its
+ * PRODUCT_BY_CATEGORY entry, else the category's own name in camelCase
+ * ("Home Loan" -> "homeLoan", as fetchPlaceholders names "home-loan").
+ * @param {string} category e.g. "Two-Wheeler Loan"
+ * @returns {string} e.g. "tw"; '' for no category or one without an API (no cities fetched)
+ */
+export function cityKeyFor(category) {
+  if (!normalize(category) || isSubmitDisabled(category)) return '';
+  const { cities } = entryFor(category);
+  if (cities) return cities;
+  return String(category).toLowerCase().split(/[^a-z0-9]+/).filter(Boolean)
+    .map((word, i) => (i ? word[0].toUpperCase() + word.slice(1) : word))
+    .join('');
 }
 
 /**
