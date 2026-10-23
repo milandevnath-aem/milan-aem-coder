@@ -306,8 +306,8 @@
 } */
 
 main:has(.hero-loan.product) .feature-banner .feature-banner-content a.button {
-    padding: 14px 12px;
-    min-width: 134px;
+    padding: 12px;
+    min-width: 124px;
 }
 
 :where(.desktop-view)
