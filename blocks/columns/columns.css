@@ -33,7 +33,7 @@
 /* heading left, long text right */
 .columns.columns-split > div > div:first-child h2,
 .columns.columns-split > div > div:first-child h3 {
-    margin: 0 0 32px;
+    margin: 0 0 var(--spacing-4xl);
     font-size: var(--type-display-medium-df-1-font-size);
     line-height: var(--type-display-medium-df-1-line-height);
     letter-spacing: -0.8px;
@@ -65,7 +65,7 @@
 
 .feature-cards-container .columns.columns-split p,
 .feature-cards-container .columns.columns-split li {
-    margin-bottom: 24px;
+    margin-bottom: var(--spacing-3xl);
     margin-top: 0;
 }
 
@@ -83,8 +83,8 @@
 }
 
 .feature-cards-container .columns.columns-split ul {
-    margin-top: 24px;
-    padding-left: 24px;
+    margin-top: var(--spacing-3xl);
+    padding-left: var(--spacing-3xl);
 }
 
 .columns-container.feature-cards-container .feature-cards-wrapper {

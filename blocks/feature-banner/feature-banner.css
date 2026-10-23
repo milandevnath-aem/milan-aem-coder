@@ -103,7 +103,7 @@
 }
 
 .feature-banner .feature-banner-content p {
-    margin: 8px 0 0;
+    margin: var(--spacing-md) 0 0;
     color: var(--feature-banner-muted);
     font-size: var(--body-font-size-m);
     font-weight: 500;
@@ -235,7 +235,7 @@
 }
 
 :where(.desktop-view) .feature-banner .feature-banner-content p {
-    margin: 12px 0 0;
+    margin: var(--spacing-lg) 0 0;
     font-size: var(--heading-font-size-m);
     line-height: 28px;
 }
