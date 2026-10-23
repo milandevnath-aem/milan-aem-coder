@@ -35,7 +35,7 @@
 }
 
 .offers .offers-item.no-bg-color {
-    background-color: var(--coloffers-halfor-button-primary-default-text-base);
+    background-color: var(--color-button-primary-default-text-base);
     min-height: 0;
     padding: 0 24px;
 }
