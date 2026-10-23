@@ -107,6 +107,14 @@
             { "name": "Icon card", "value": "icon" },
             { "name": "Large image card", "value": "image" }
           ]
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "number",
+          "label": "Number",
+          "value": "",
+          "description": "Optional. Shown on numbered and split-with-numbered-cards variants, e.g. 01."
         }
       ]
     }
