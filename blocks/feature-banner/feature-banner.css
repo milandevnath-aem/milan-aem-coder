@@ -39,6 +39,10 @@
     color: var(--color-text-primary-inverse-base);
 }
 
+.feature-banner .feature-banner-item.dark-text p {
+    color: var(--color-text-primary-default-base);
+}
+
 .feature-banner .feature-banner-image,
 .feature-banner .feature-banner-image img {
     position: absolute;
