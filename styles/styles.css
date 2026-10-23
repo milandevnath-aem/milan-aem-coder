@@ -598,11 +598,6 @@ main > .section.feature-banner-container {
   margin-bottom: 0;
 }
 
-:where(.desktop-view) main > .section.hero-loan-container:has(+ .feature-banner-container),
-:where(.desktop-view) main > .section.hero-loan-container:has(+ .brand) {
-  margin-bottom: 24px;
-}
-
 main > .section.feature-banner-container + .section {
   margin-top: var(--section-spacing);
 }
