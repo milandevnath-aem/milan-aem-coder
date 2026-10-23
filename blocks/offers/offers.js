@@ -20,6 +20,7 @@ export default function decorate(block) {
     const layout = /\bhalf\b/i.test(style) ? 'half' : 'full';
     item.classList.add(`offers-${layout}`);
     if (/\bshort\b/i.test(style)) item.classList.add('offers-short');
+    if (/\bfixed-height\b/i.test(style)) item.classList.add('offers-fixed-height');
     if (/\bdark\b/i.test(style)) item.classList.add('offers-dark-text');
     if (/\bno-bg-color\b/i.test(style)) item.classList.add('no-bg-color');
 

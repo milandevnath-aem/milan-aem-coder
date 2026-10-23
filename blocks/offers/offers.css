@@ -35,7 +35,7 @@
 }
 
 .offers .offers-item.no-bg-color {
-    background-color: var(--color-button-primary-default-text-base);
+    background-color: var(--coloffers-halfor-button-primary-default-text-base);
     min-height: 0;
     padding: 0 24px;
 }
@@ -254,4 +254,22 @@
 :where(.desktop-view) .offers .offers-short {
     --offers-height: 672px;
     --offers-padding: 124px 12px 44px;
+}
+
+.offers .offers-item.offers-fixed-height {
+    height: 480px;
+    min-height: 480px;
+}
+
+:where(.desktop-view) .offers .offers-item.offers-fixed-height {
+    height: 460px;
+    min-height: 460px;
+}
+
+.offers .offers-item.offers-fixed-height .button-wrapper {
+    display: none;
+}
+
+.offers .offers-item.offers-fixed-height:hover .button-wrapper {
+    display: block;
 }

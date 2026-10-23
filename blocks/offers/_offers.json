@@ -89,6 +89,18 @@
         },
         {
           "component": "select",
+          "name": "style",
+          "label": "Style",
+          "valueType": "string",
+          "options": [
+            {
+              "name": "Hover banner to show cta",
+              "value": "fixed-height"
+            }
+          ]
+        },
+        {
+          "component": "select",
           "name": "style_theme",
           "label": "Text colour",
           "valueType": "string",
