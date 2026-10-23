@@ -812,6 +812,6 @@ main > .section.branch-locator-container:last-of-type {
 }
 
 /* bg-color grey */
-main > .section.bg-grey {
+main > .section.sec-bg-grey {
   background-color: var(--color-background-2-default-base);
 }
