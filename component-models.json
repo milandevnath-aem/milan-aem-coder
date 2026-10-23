@@ -891,7 +891,7 @@
             "value": "icon-border"
           },
           {
-            "name": "Feature cards card alignment in row",
+            "name": "Feature cards card alignment in row for mobile",
             "value": "direction-row"
           }
         ]

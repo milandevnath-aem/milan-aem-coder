@@ -46,6 +46,13 @@
   justify-content: flex-start;
 }
 
+.feature-cards.direction-row .feature-cards-card.is-icon {
+  flex-direction: row;
+  gap: var(--spacing-lg);
+  justify-content: flex-start;
+}
+
+:where(.desktop-view) .feature-cards.direction-row .feature-cards-card.is-icon,
 :where(.desktop-view) .feature-cards .feature-cards-card.is-icon{
   flex-direction: column;
   justify-content: space-between;
