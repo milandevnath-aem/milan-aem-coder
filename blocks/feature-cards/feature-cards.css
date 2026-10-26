@@ -343,7 +343,7 @@
     padding: 14px 12px;
 }
 
-.feature-cards.split .feature-cards-footer p:not(.button-wrapper){
+.feature-cards.split .feature-cards-intro p:not(.button-wrapper){
     margin: var(--spacing-lg) 0 0;
     color: var(--color-text-secondary-default-base);
     font-size: var(--type-body-b1-font-size);
