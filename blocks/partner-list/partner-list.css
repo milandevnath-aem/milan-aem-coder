@@ -2,7 +2,8 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--spacing-3xl);
-  padding: var(--spacing-3xl) var(--spacing-xl);
+  
+  /* padding: var(--spacing-3xl) var(--spacing-xl); */
 }
 
 .partner-list .partner-list-title {
@@ -58,7 +59,7 @@
 @media (width >= 900px) {
   .partner-list {
     grid-template-columns: 2fr 3fr;
-    gap: var(--spacing-7xl);
+    gap: var(--spacing-8xl);
     padding: var(--spacing-5xl) 0;
   }
 
