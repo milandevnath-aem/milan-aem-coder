@@ -489,6 +489,7 @@
 }
 
 /* icon-border: icon framed in a bordered square */
+
 .feature-cards.icon-border .feature-cards-icon img {
     box-sizing: border-box;
     width: 32px;
@@ -499,6 +500,7 @@
     background: #eee;
 }
 
+.feature-cards.split.icon-border .feature-cards-icon img,
 :where(.desktop-view) .feature-cards.icon-border .feature-cards-icon img {
     width: 40px;
     height: 40px;
