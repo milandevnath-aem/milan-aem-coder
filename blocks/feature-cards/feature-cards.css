@@ -343,6 +343,15 @@
     padding: 14px 12px;
 }
 
+.feature-cards.split .feature-cards-footer p:not(.button-wrapper){
+    margin: var(--spacing-lg) 0 0;
+    color: var(--color-text-secondary-default-base);
+    font-size: var(--type-body-b1-font-size);
+    line-height: var(--type-body-b1-line-height);
+    font-weight: var(--type-body-b1-font-weight);
+    letter-spacing: var(--type-body-b1-letter-spacing);
+}
+
 .feature-cards.split.top-up-loan-cards .feature-cards-footer p:not(.button-wrapper) {
     margin: 12px 0 0;
     color: var(--muted-color);
