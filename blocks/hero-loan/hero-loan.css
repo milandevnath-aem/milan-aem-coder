@@ -88,10 +88,10 @@
 
 .hero-loan .hero-loan-content a.button {
   width: 100%;
-  border-color: #fff;
   background-color: #fff;
   color: var(--text-color);
   padding: 14px 12px;
+  border: none;
 }
 
 .hero-loan .hero-loan-content a.button:hover,
@@ -193,11 +193,12 @@
 }
 
 :where(.desktop-view) .hero-loan .hero-loan-content .button-wrapper {
-  width: auto;
+  width: 100%;
+  max-width: 220px;
   margin: 0;
 }
 
-:where(.desktop-view) .hero-loan .hero-loan-content a.button {
+:where(.desktop-view) .hero-loan:has(.hero-loan-form) .hero-loan-content a.button {
   display: none;
 }
 
@@ -554,7 +555,7 @@
   line-height: 20px;
 }
 
-:where(.desktop-view) .hero-loan.product .hero-loan-content .button-wrapper {
+:where(.desktop-view) .hero-loan:has(.hero-loan-form) .button-wrapper {
   display: none;
 }
 

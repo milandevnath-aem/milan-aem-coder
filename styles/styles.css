@@ -598,13 +598,12 @@ main > .section.feature-banner-container {
   margin-bottom: 0;
 }
 
-:where(.desktop-view) main > .section.hero-loan-container:has(+ .feature-banner-container),
-:where(.desktop-view) main > .section.hero-loan-container:has(+ .brand) {
-  margin-bottom: 24px;
-}
-
 main > .section.feature-banner-container + .section {
   margin-top: var(--section-spacing);
+}
+
+main > .section.feature-banner-container + .section.feature-banner-container{
+  margin-top: 0;
 }
 
 /* full bleed on small screens so cards slide to the screen edge; the track pads itself onto the grid */
@@ -763,11 +762,32 @@ main .section.brand {
   text-align: center;
 }
 
+main .section.bg-grey :is(h2,h3,h4,h5,h6) {
+  margin: 0 0 8px;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  letter-spacing: 2.32px;
+  color: var(--text-color);
+}
+
+main .section.bg-grey {
+  background-color: var(--surface-color);
+  padding: var(--section-spacing) 0;
+  color: var(--text-primary-default-base);
+  text-align: center;
+}
+
+main .section.bg-grey p {
+  margin: 0;
+}
+
 main .section.brand.has-background {
   margin: 16px 0 0 ;
 }
 
-main .section.brand .default-content-wrapper {
+main .section.brand .default-content-wrapper,
+main .section.bg-grey .default-content-wrapper {
   max-width: calc(680px + 2 * var(--gb-margin));
 }
 
@@ -789,4 +809,9 @@ main .section.brand p {
 
 main > .section.branch-locator-container:last-of-type {
   margin-bottom: 24px;
+}
+
+/* bg-color grey */
+main > .section.sec-bg-grey {
+  background-color: var(--color-background-2-default-base);
 }

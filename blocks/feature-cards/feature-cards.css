@@ -20,7 +20,7 @@
 .feature-cards .feature-cards-list {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--grid-gutter);
+    gap: var(--spacing-xl);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -42,14 +42,21 @@
 
 .feature-cards .feature-cards-card.is-icon{
   flex-direction: column;
-  gap: 12px;
+  gap: var(--spacing-5xl);
   justify-content: flex-start;
 }
 
+.feature-cards.direction-row .feature-cards-card.is-icon {
+  flex-direction: row;
+  gap: var(--spacing-lg);
+  justify-content: flex-start;
+}
+
+:where(.desktop-view) .feature-cards.direction-row .feature-cards-card.is-icon,
 :where(.desktop-view) .feature-cards .feature-cards-card.is-icon{
   flex-direction: column;
   justify-content: space-between;
-  gap: 24px;
+  gap: var(--spacing-5xl);
 }
 
 .feature-cards .feature-cards-number {
@@ -92,9 +99,14 @@
 
 .feature-cards .feature-cards-icon img {
     display: block;
-    width: 83px;
-    height: 72px;
+    width: 52px;
+    height: 52px;
     object-fit: contain;
+}
+
+:where(.desktop-view) .feature-cards .feature-cards-icon img{
+    width: 72px;
+    height: 72px;
 }
 
 /* media card: picture fills the card, text sits at the bottom */
@@ -199,13 +211,15 @@
 
 .feature-cards.info .feature-cards-body p {
     margin: 0;
-    font-size: var(--body-font-size-s);
-    line-height: 18px;
+    font-size: var(--type-body-b1-font-size);
+    line-height: var(--type-body-b1-line-height);
+    font-weight: var(--type-body-b1-font-weight);
+    letter-spacing: var(--type-body-b1-letter-spacing);
 }
 
 .feature-cards.info .feature-cards-body p.feature-cards-value,
 .feature-cards.info .feature-cards-body p.feature-cards-value strong {
-    margin: 6px 0 0;
+    margin: 8px 0 0;
     color: var(--text-color);
     font-size: var(--type-headline-h4-font-size);
     line-height: var(--type-headline-h4-line-height);
@@ -214,8 +228,8 @@
 }
 
 .feature-cards.info .feature-cards-body p.feature-cards-value:not(:last-child) {
-    margin-bottom: 16px;
-    padding-bottom: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 24px;
     border-bottom: 1px solid #dedede;
 }
 
@@ -327,7 +341,7 @@
 
 :where(.desktop-view) .feature-cards .feature-cards-list {
     grid-template-columns: repeat(6, 1fr);
-    gap: 12px;
+    gap: var(--spacing-lg);
 }
 
 :where(.desktop-view) .feature-cards .feature-cards-card {
@@ -469,4 +483,22 @@
 :where(.desktop-view) .feature-cards.split.top-up-loan-cards .feature-cards-footer p:not(.button-wrapper) {
     font-size: 14px;
     line-height: 18px;
+}
+
+/* icon-border: icon framed in a bordered square */
+.feature-cards.icon-border .feature-cards-icon img {
+    box-sizing: border-box;
+    width: 32px;
+    height: 32px;
+    padding: 6.4px;
+    border: 0.8px solid #dedede;
+    border-radius: 8px;
+    background: #eee;
+}
+
+:where(.desktop-view) .feature-cards.icon-border .feature-cards-icon img {
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    border-width: 1px;
 }

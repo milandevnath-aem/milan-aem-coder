@@ -163,6 +163,10 @@
             "value": "brand"
           },
           {
+            "name": "Brand (grey, centered text)",
+            "value": "bg-grey"
+          },
+          {
             "name": "Animate text (banner text lights up on scroll)",
             "value": "animate-text"
           },
@@ -197,6 +201,10 @@
           {
             "name": "No margin bottom (desktop only)",
             "value": "no-margin-bottom-desktop"
+          },
+          {
+            "name": "Background grey",
+            "value": "sec-bg-grey"
           }
         ]
       },
@@ -817,15 +825,15 @@
         "name": "style_theme",
         "label": "Text colour",
         "valueType": "string",
-        "value": "dark",
+        "value": "",
         "options": [
           {
             "name": "Dark text (light images)",
-            "value": "dark"
+            "value": "dark-text"
           },
           {
             "name": "Light text (dark images)",
-            "value": "light"
+            "value": "light-text"
           }
         ]
       },
@@ -852,7 +860,7 @@
     "id": "feature-cards",
     "fields": [
       {
-        "component": "select",
+        "component": "multiselect",
         "name": "classes",
         "label": "Variant",
         "valueType": "string",
@@ -877,6 +885,14 @@
           {
             "name": "About Us info cards (company details)",
             "value": "about-us"
+          },
+          {
+            "name": "Icon with border",
+            "value": "icon-border"
+          },
+          {
+            "name": "Feature cards card alignment in row for mobile",
+            "value": "direction-row"
           }
         ]
       },
