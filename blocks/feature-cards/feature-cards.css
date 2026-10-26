@@ -46,6 +46,12 @@
   justify-content: flex-start;
 }
 
+.feature-cards.split .feature-cards-card.is-icon{
+    min-height: 200px;
+    display: flex;
+    justify-content: space-between;
+}
+
 .feature-cards.direction-row .feature-cards-card.is-icon {
   flex-direction: row;
   gap: var(--spacing-lg);
