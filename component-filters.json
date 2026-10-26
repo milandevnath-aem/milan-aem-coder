@@ -22,6 +22,7 @@
       "offers",
       "testimonials",
       "service-links",
+      "link-list",
       "article-cards",
       "feature-banner",
       "feature-cards",
@@ -99,6 +100,12 @@
     "id": "lead-form",
     "components": [
       "lead-form-field"
+    ]
+  },
+  {
+    "id": "link-list",
+    "components": [
+      "link-list-item"
     ]
   },
   {

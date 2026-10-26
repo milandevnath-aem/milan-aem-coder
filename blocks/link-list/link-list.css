@@ -1,0 +1,154 @@
+.link-list {
+  max-width: 720px;
+}
+
+.link-list .link-list-intro h1,
+.link-list .link-list-intro h2,
+.link-list .link-list-intro h3 {
+  margin: 0 0 4px;
+  font-size: var(--heading-font-size-s);
+  line-height: 1.3;
+}
+
+.link-list .link-list-intro p {
+  margin: 0 0 16px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--border-color);
+}
+
+.link-list > ul {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.link-list .link-list-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-sizing: border-box;
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.link-list .link-list-title {
+  flex: 1;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+/* LSP list */
+.link-list.lsp-list > ul {
+  gap: 12px;
+}
+
+.link-list.lsp-list .link-list-row {
+  padding: 12px;
+  border-radius: 24px;
+  background-color: var(--surface-color);
+}
+
+.link-list.lsp-list .link-list-media,
+.link-list.lsp-list .link-list-media img {
+  display: block;
+  width: 72px;
+  height: 72px;
+  border-radius: 16px;
+  object-fit: cover;
+}
+
+.link-list.lsp-list .link-list-media {
+  flex: 0 0 auto;
+}
+
+/* the whole card is the hit area; mobile shows a chevron instead of the label */
+.link-list.lsp-list .link-list-more {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  overflow: hidden;
+  font-size: 0;
+  color: var(--text-color);
+  background: url('../../icons/chevron-right.svg') center / 20px no-repeat;
+}
+
+.link-list.lsp-list .link-list-more::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.link-list.lsp-list .link-list-more:focus-visible {
+  outline: 2px solid var(--text-color);
+  outline-offset: 2px;
+}
+
+.link-list .link-list-note {
+  margin-top: 24px;
+  padding: 16px;
+  border-radius: 16px;
+  background-color: var(--surface-color);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.link-list .link-list-note p {
+  margin: 0;
+}
+
+/* Quick links */
+.link-list.quick-links .link-list-item + .link-list-item {
+  border-top: 1px solid var(--surface-color);
+}
+
+.link-list.quick-links .link-list-row {
+  justify-content: space-between;
+  padding: 20px 0;
+}
+
+.link-list.quick-links a.link-list-row:hover .link-list-title {
+  text-decoration: underline;
+}
+
+.link-list.quick-links a.link-list-row:focus-visible {
+  outline: 2px solid var(--text-color);
+  outline-offset: 2px;
+}
+
+.link-list.quick-links .link-list-media,
+.link-list.quick-links .link-list-media img {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
+.link-list.quick-links .link-list-media {
+  flex: 0 0 auto;
+}
+
+:where(.desktop-view) .link-list.lsp-list .link-list-row {
+  padding: 12px 24px 12px 12px;
+}
+
+:where(.desktop-view) .link-list.lsp-list .link-list-more {
+  width: auto;
+  height: auto;
+  overflow: visible;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  background: none;
+  text-decoration: none;
+}
+
+:where(.desktop-view) .link-list.lsp-list .link-list-more:hover {
+  text-decoration: underline;
+}
+
+:where(.desktop-view) .link-list .link-list-title {
+  font-size: 14px;
+}
