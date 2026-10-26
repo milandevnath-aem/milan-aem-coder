@@ -293,6 +293,21 @@
     line-height: 40px;
 }
 
+.feature-cards.split .feature-cards-body h3,
+.feature-cards.split .feature-cards-body h4 {
+    font-size: var(--type-headline-h3-font-size);
+    font-weight: var(--type-headline-h3-font-weight);
+    line-height: var(--type-headline-h3-line-height);
+    letter-spacing: var(--type-headline-h3-letter-spacing);
+}
+
+.feature-cards.split .feature-cards-body p{
+    font-size: var(--type-body-b1-font-size);
+    line-height: var(--type-body-b1-line-height);
+    letter-spacing: var(--type-body-b1-letter-spacing);
+    font-weight: var(--type-body-b1-font-weight);
+}
+
 
 .feature-cards.split .feature-cards-card.is-media {
     min-height: 286px;
