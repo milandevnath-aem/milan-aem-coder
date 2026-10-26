@@ -167,6 +167,10 @@
             "value": "bg-grey"
           },
           {
+            "name": "Section text align left",
+            "value": "text-align-left"
+          },
+          {
             "name": "Animate text (banner text lights up on scroll)",
             "value": "animate-text"
           },
