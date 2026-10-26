@@ -311,6 +311,7 @@
 .feature-cards.split .feature-cards-aside h2,
 .feature-cards.split .feature-cards-aside h3 {
     margin: 0 0 32px;
+    color: var(--color-text-primary-default-base);
 } 
 
 
