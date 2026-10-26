@@ -11,7 +11,7 @@
               "name": "Link List",
               "model": "link-list",
               "filter": "link-list",
-              "classes": "lsp-list"
+              "classes": "bg-grey"
             }
           }
         }
@@ -40,13 +40,21 @@
         {
           "component": "select",
           "name": "classes",
-          "label": "Variant",
+          "label": "Background",
           "valueType": "string",
-          "value": "lsp-list",
+          "value": "bg-grey",
           "options": [
-            { "name": "LSP List (image, title, Know more)", "value": "lsp-list" },
-            { "name": "Quick Links (title and icon)", "value": "quick-links" }
+            { "name": "Grey background (cards)", "value": "bg-grey" },
+            { "name": "No background (divider list)", "value": "" }
           ]
+        },
+        {
+          "component": "richtext",
+          "name": "side",
+          "value": "",
+          "label": "Side title & description",
+          "description": "Left column on desktop: a heading and a paragraph. Leave empty on the second list in the same section.",
+          "valueType": "string"
         },
         {
           "component": "richtext",
@@ -61,7 +69,7 @@
           "name": "note",
           "value": "",
           "label": "Note",
-          "description": "LSP List only. Grey note box shown below the list.",
+          "description": "Grey note box shown below the list.",
           "valueType": "string"
         }
       ]
@@ -73,8 +81,8 @@
           "component": "reference",
           "valueType": "string",
           "name": "image",
-          "label": "Image / icon",
-          "description": "LSP List: thumbnail, shown only when authored. Quick Links: right-hand icon.",
+          "label": "Image",
+          "description": "Optional thumbnail. Shown only when authored.",
           "multi": false
         },
         {
@@ -95,15 +103,7 @@
           "component": "aem-content",
           "name": "link",
           "label": "Link",
-          "description": "Opens in a new tab. Without a link the item is not clickable."
-        },
-        {
-          "component": "text",
-          "valueType": "string",
-          "name": "linkText",
-          "label": "Link text",
-          "description": "LSP List: label such as Know more.",
-          "value": ""
+          "description": "Opens in a new tab. Without a link the item is not clickable and has no arrow."
         }
       ]
     }

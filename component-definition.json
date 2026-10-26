@@ -435,7 +435,7 @@
                   "name": "Link List",
                   "model": "link-list",
                   "filter": "link-list",
-                  "classes": "lsp-list"
+                  "classes": "bg-grey"
                 }
               }
             }
