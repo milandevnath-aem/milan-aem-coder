@@ -45,7 +45,8 @@
           "value": "eligibility",
           "options": [
             { "name": "Eligibility (icon, label, value)", "value": "eligibility" },
-            { "name": "Documents (title and checklist)", "value": "documents" }
+            { "name": "Documents (title and checklist)", "value": "documents" },
+            { "name": "Eligibility Smaller font sizes due to larger content", "value": "elgb-small-text" }
           ]
         },
         {
