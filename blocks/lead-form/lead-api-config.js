@@ -2,25 +2,50 @@
   Lead API settings: the only file to edit when the endpoints, products or field names change.
   The logic lives in lead-api.js (requests) and lead-payload.js (form -> lead).
 
-  Until both endpoints are filled in, every form runs in demo mode (OTP 123456 is accepted),
-  so the journey can still be tested end to end.
+  The APIs are AEM servlets called as `{API_BASE_URL}{API_PAGE_PATH}.{selector}.json`
+  (see api.md): captcha-generate -> captcha-verify -> otp-generate -> otp-verify.
+  They rely on HttpOnly cookies, so the site must be served from the same site as AEM.
+
+  Demo mode (see DEMO_MODE) runs the whole journey without the APIs: a captcha drawn in the
+  browser and OTP 123456, so it can be tested on localhost and *.aem.page.
 
   Everything here ships to the browser: never put API keys, secrets or passwords in this file.
 */
 
 /**
- * Base URL of the lead service, without a trailing slash, e.g. 'https://api.example.com/v1'.
- * Leave empty when the endpoints are on the same domain as the site (e.g. '/api/otp/generate').
+ * Origin of the APIs, without a trailing slash. Leave empty when they are on the same domain
+ * as the site (required in production: the cookies are SameSite=Strict).
  */
 export const API_BASE_URL = '';
 
-/** Endpoint paths, appended to API_BASE_URL. Both empty = demo mode. */
-export const ENDPOINTS = {
-  /** POST { mobile } -> { data: { transactionId, token } } */
-  generateOtp: '',
-  /** POST { transactionId, otp, token, lead } -> { data: { Result, LeadNumber, Stage } } */
-  validateOtp: '',
+/** Any page under /content/kotakmahindraprime-aem/, the selectors are appended to it. */
+export const API_PAGE_PATH = '/content/kotakmahindraprime-aem/in/en/home';
+
+/** Servlet selectors: POST `${API_PAGE_PATH}.${selector}.json` */
+export const SELECTORS = {
+  /** {} -> { data: { image } }, sets the kmp_captcha cookie */
+  captchaGenerate: 'captcha-generate',
+  /** { captcha } -> { data: { verified } }, sets the kmp_captcha_ok cookie */
+  captchaVerify: 'captcha-verify',
+  /** { mobile } -> { data: { transactionId, token } }, needs kmp_captcha_ok */
+  otpGenerate: 'otp-generate',
+  /** { transactionId, otp, token, category, lead } -> { data: lead API response } */
+  otpVerify: 'otp-verify',
+  // TODO audio captcha: a 'captcha-audio' selector once the backend provides it
 };
+
+/**
+ * true: always demo, false: always the APIs,
+ * null: demo on localhost, *.aem.page and *.aem.live (they cannot reach the AEM servlets)
+ * or when API_PAGE_PATH is empty.
+ */
+export const DEMO_MODE = null;
+
+/**
+ * window variable that keeps the journey's data between OTP generation and validation:
+ * { transactionId, token, mobile, category, lead }. Cleared on back, close and success.
+ */
+export const LEAD_STORE_KEY = 'kmpLeadJourney';
 
 /** A request still pending after this long is cancelled and shown as an error. */
 export const REQUEST_TIMEOUT_MS = 15000;
@@ -31,14 +56,17 @@ export const REQUEST_HEADERS = {
   Accept: 'application/json',
 };
 
+export const CAPTCHA_LENGTH = 5;
 export const OTP_LENGTH = 6;
 export const RESEND_SECONDS = 30;
 
 /**
- * Loan category (as shown in "Select loan category") -> fields added to `lead` for it.
- * - product: the API the backend calls (NewCarFinance, TWL, LAP)
+ * Loan category (as shown in "Select loan category") -> fields for it.
+ * - product: the API the backend calls (NewCarFinance, TWL, LAP), sent as the `category`
+ *   of the OTP validation
  * - Product__c: New Car Finance API only, which of its products the lead is for
- * Every key of an entry is sent as is, so another category specific value is one more key.
+ * Every other key of an entry is added to `lead` as is, so another category specific value
+ * is one more key.
  * Matching ignores case, spaces and punctuation ("Two-Wheeler Loans" = "two wheeler loan").
  * A category that is not listed keeps the demo flow: Car Lease and Dealer Finance until
  * their API is decided. To connect one, add a line here; no other change is needed.
@@ -67,8 +95,16 @@ export const LEAD_FIELD_KEYS = {
 /** Form fields that are never sent (checked on the page only). */
 export const EXCLUDED_FIELDS = ['captcha'];
 
-/** What the visitor sees when a request fails. */
+/**
+ * What the visitor sees when a request fails. Upper case keys are API error codes; a code
+ * that is not listed shows the API's own message.
+ */
 export const MESSAGES = {
+  INVALID_CAPTCHA: 'Invalid or expired captcha. Please enter the new one.',
+  CAPTCHA_REQUIRED: 'Please complete the captcha.',
+  INVALID_OTP: 'Invalid or expired OTP.',
+  captchaLoadFailed: 'We couldn’t load the captcha. Tap refresh to try again.',
+  resendNeedsCaptcha: 'Please go back and complete the captcha to get a new OTP.',
   wrongOtp: 'Incorrect OTP. Please try again.',
   sendFailed: 'We couldn’t send the OTP. Please try again.',
   submitFailed: 'We couldn’t submit your details. Please try again.',

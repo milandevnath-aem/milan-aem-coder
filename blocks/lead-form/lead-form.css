@@ -269,10 +269,36 @@
   gap: 16px 8px;
 }
 
-.lead-form .lead-form-captcha canvas {
-  width: 100%;
+/* the captcha image from the API, a spinner while a new one loads */
+.lead-form .lead-form-captcha-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 64px;
   border-radius: 12px;
+  background: #f2f2f2;
+  overflow: hidden;
+}
+
+.lead-form .lead-form-captcha-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.lead-form .lead-form-captcha-frame .lead-form-spinner {
+  display: none;
+  border-color: #dedede;
+  border-top-color: var(--text-color);
+}
+
+.lead-form .lead-form-captcha.is-loading .lead-form-captcha-image {
+  display: none;
+}
+
+.lead-form .lead-form-captcha.is-loading .lead-form-captcha-frame .lead-form-spinner {
+  display: inline-block;
 }
 
 .lead-form .lead-form-captcha .lead-form-input {
@@ -754,7 +780,7 @@
   margin-right: 8px;
 }
 
-:where(.desktop-view) .lead-form .lead-form-captcha canvas {
+:where(.desktop-view) .lead-form .lead-form-captcha-frame {
   width: 168px;
   height: 68px;
 }

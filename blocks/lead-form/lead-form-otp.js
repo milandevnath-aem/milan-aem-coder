@@ -190,7 +190,7 @@ export function createOtpStep({
     try {
       await sendOtp();
     } catch (e) {
-      const message = errorMessage(e, 'send');
+      const message = errorMessage(e, 'resend');
       if (message) setError(message);
       resend.setAttribute('aria-disabled', 'false');
       return;

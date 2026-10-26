@@ -62,8 +62,9 @@ export function splitName(fullName) {
  * is a company (organization), so it is sent as a field of its own.
  * @param {HTMLFormElement} form
  * @param {string} category the picked loan category, adds its fields (see categoryFields)
+ *   except `product`, which is sent next to the lead as its `category` (see lead-api.js)
  * @returns {Object<string, string>} e.g. { FirstName, LastName, Email, Location, ...,
- *   product: "NewCarFinance", Product__c: "New CAR" }
+ *   Product__c: "New CAR" }
  */
 export function buildLead(form, category) {
   const fields = {};
@@ -81,6 +82,7 @@ export function buildLead(form, category) {
   const names = name.given || name.family
     ? { FirstName: name.given, LastName: name.family }
     : splitName(name.full);
-  // the category's fields (product, Product__c) last, so no form field can override them
-  return { ...fields, ...names, ...categoryFields(category) };
+  // the category's fields (Product__c) last, so no form field can override them
+  const { product, ...extra } = categoryFields(category);
+  return { ...fields, ...names, ...extra };
 }
