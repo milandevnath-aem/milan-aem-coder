@@ -56,7 +56,10 @@
 :where(.desktop-view) .feature-cards .feature-cards-card.is-icon{
   flex-direction: column;
   justify-content: space-between;
-  gap: var(--spacing-5xl);
+}
+
+:where(.desktop-view) .feature-cards.direction-row .feature-cards-card.is-icon{
+    gap: var(--spacing-5xl);
 }
 
 .feature-cards .feature-cards-number {
