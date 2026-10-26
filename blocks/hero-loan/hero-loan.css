@@ -88,10 +88,10 @@
 
 .hero-loan .hero-loan-content a.button {
   width: 100%;
-  border-color: #fff;
   background-color: #fff;
   color: var(--text-color);
   padding: 14px 12px;
+  border: none;
 }
 
 .hero-loan .hero-loan-content a.button:hover,

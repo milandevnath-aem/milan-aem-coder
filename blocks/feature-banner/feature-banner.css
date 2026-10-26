@@ -35,6 +35,14 @@
     background-color: #1a1a1a;
 }
 
+.feature-banner .feature-banner-item.light-text p{
+    color: var(--color-text-primary-inverse-base);
+}
+
+.feature-banner .feature-banner-item.dark-text p {
+    color: var(--color-text-primary-default-base);
+}
+
 .feature-banner .feature-banner-image,
 .feature-banner .feature-banner-image img {
     position: absolute;
@@ -58,14 +66,15 @@
 
 /* small screens with a mobile crop (subject in its lower half): a long text grows the
    banner, so the text ends in the upper half and stays clear of the subject */
-:where(html:not(.desktop-view))
+   
+/* :where(html:not(.desktop-view))
     .feature-banner
     .feature-banner-item.has-mobile-image:not(.side-image) {
     min-height: max(
         var(--feature-banner-height),
         2 * var(--feature-banner-text-end, 0px)
     );
-}
+} */
 
 /* small screens without a mobile crop: the desktop picture would sit under the text, so
    it follows the text instead and fills the rest of the banner edge to edge, cropped
@@ -297,8 +306,8 @@
 } */
 
 main:has(.hero-loan.product) .feature-banner .feature-banner-content a.button {
-    padding: 14px 12px;
-    min-width: 134px;
+    padding: 12px;
+    min-width: 124px;
 }
 
 :where(.desktop-view)
@@ -306,7 +315,7 @@ main:has(.hero-loan.product) .feature-banner .feature-banner-content a.button {
     .feature-banner
     .feature-banner-content
     a.button {
-    padding: 14px 26px;
+    padding: 14px 16px;
 }
 
 :where(.desktop-view) .feature-banner .side-image .feature-banner-image {

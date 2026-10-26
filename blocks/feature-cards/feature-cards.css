@@ -46,6 +46,13 @@
   justify-content: flex-start;
 }
 
+.feature-cards.direction-row .feature-cards-card.is-icon {
+  flex-direction: row;
+  gap: var(--spacing-lg);
+  justify-content: flex-start;
+}
+
+:where(.desktop-view) .feature-cards.direction-row .feature-cards-card.is-icon,
 :where(.desktop-view) .feature-cards .feature-cards-card.is-icon{
   flex-direction: column;
   justify-content: space-between;
@@ -92,12 +99,14 @@
 
 .feature-cards .feature-cards-icon img {
     display: block;
-    max-width: 32px;
-    max-height: 32px;
-
-    /* width: 83px;
-    height: 72px; */
+    width: 52px;
+    height: 52px;
     object-fit: contain;
+}
+
+:where(.desktop-view) .feature-cards .feature-cards-icon img{
+    width: 72px;
+    height: 72px;
 }
 
 /* media card: picture fills the card, text sits at the bottom */
@@ -344,10 +353,10 @@
     padding: 32px;
 }
 
-:where(.desktop-view) .feature-cards .feature-cards-icon img {
+/* :where(.desktop-view) .feature-cards .feature-cards-icon img {
     width: 40px;
     height: 40px;
-}
+} */
 
 :where(.desktop-view) .feature-cards .feature-cards-card.is-media {
     grid-column: span 3;
@@ -802,4 +811,22 @@
 :where(.desktop-view) .feature-cards.split-insurance .feature-cards-note p {
     font-size: 14px;
     line-height: 18px;
+}
+
+/* icon-border: icon framed in a bordered square */
+.feature-cards.icon-border .feature-cards-icon img {
+    box-sizing: border-box;
+    width: 32px;
+    height: 32px;
+    padding: 6.4px;
+    border: 0.8px solid #dedede;
+    border-radius: 8px;
+    background: #eee;
+}
+
+:where(.desktop-view) .feature-cards.icon-border .feature-cards-icon img {
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    border-width: 1px;
 }
