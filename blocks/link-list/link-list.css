@@ -66,13 +66,11 @@
   line-height: 20px;
 }
 
-/* icon follows the text color so it works on any background */
-.link-list .link-list-arrow {
+.link-list .link-list-icon {
   flex: 0 0 auto;
   width: 20px;
   height: 20px;
-  background-color: currentcolor;
-  mask: url('../../icons/chevron-right.svg') center / 20px no-repeat;
+  object-fit: contain;
 }
 
 .link-list .link-list-media,

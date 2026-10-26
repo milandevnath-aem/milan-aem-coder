@@ -2,7 +2,7 @@ import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createPicture } from '../../scripts/images.js';
 
 function buildItem(row) {
-  const [imageCell, textCell, linkCell] = row.children;
+  const [imageCell, textCell, linkCell, iconCell] = row.children;
   const source = linkCell?.querySelector('a');
   const href = source?.getAttribute('href')?.trim();
   const hasLink = Boolean(href && href !== '#');
@@ -34,11 +34,15 @@ function buildItem(row) {
   label.textContent = textCell?.textContent.trim() || '';
   wrap.append(label);
 
-  if (hasLink) {
-    const arrow = document.createElement('span');
-    arrow.className = 'link-list-arrow';
-    arrow.setAttribute('aria-hidden', 'true');
-    wrap.append(arrow);
+  const iconImg = iconCell?.querySelector('img');
+  if (iconImg?.src) {
+    const icon = document.createElement('img');
+    icon.className = 'link-list-icon';
+    icon.src = iconImg.src;
+    icon.alt = '';
+    icon.loading = 'lazy';
+    moveInstrumentation(iconImg, icon);
+    wrap.append(icon);
   }
 
   item.append(wrap);

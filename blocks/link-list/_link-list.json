@@ -103,7 +103,15 @@
           "component": "aem-content",
           "name": "link",
           "label": "Link",
-          "description": "Opens in a new tab. Without a link the item is not clickable and has no arrow."
+          "description": "Opens in a new tab. Without a link the item is not clickable."
+        },
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "icon",
+          "label": "Arrow icon",
+          "description": "Right-hand icon (SVG recommended). Shown only when authored.",
+          "multi": false
         }
       ]
     }
