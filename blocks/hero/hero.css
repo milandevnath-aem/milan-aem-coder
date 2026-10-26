@@ -5,12 +5,12 @@
 
 .hero {
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  padding: var(--spacing-5xl) var(--spacing-3xl);
+  min-height: 18.75rem;
 }
 
 .hero h1 {
-  max-width: 1200px;
+  max-width: 75rem;
   margin-left: auto;
   margin-right: auto;
   color: var(--background-color);
@@ -31,5 +31,5 @@
 }
 
 :where(.desktop-view) .hero {
-  padding: 40px 32px;
+  padding: var(--spacing-5xl) var(--spacing-4xl);
 }

@@ -17,10 +17,10 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 24px;
+  gap: var(--spacing-3xl);
   height: 100%;
   box-sizing: border-box;
-  padding: 28px var(--spacing-3xl);
+  padding: 1.75rem var(--spacing-3xl);
   border-radius: var(--spacing-4xl);
   background-color: var(--service-links-bg);
   color: var(--text-color);
@@ -34,8 +34,8 @@
 }
 
 .service-links a.service-links-tile:focus-visible {
-  outline: 2px solid var(--text-color);
-  outline-offset: 2px;
+  outline: 0.125rem solid var(--text-color);
+  outline-offset: 0.125rem;
 }
 
 .service-links .service-links-title {
@@ -52,8 +52,8 @@
 .service-links .service-links-arrow {
   position: relative;
   flex: 0 0 auto;
-  width: 28px;
-  height: 28px;
+  width: 1.75rem;
+  height: 1.75rem;
   border-radius: 50%;
   background-color: var(--text-color);
   transition: transform 0.2s;
@@ -64,8 +64,8 @@
   display: block;
   width: 100%;
   height: 100%;
-  background-color: #fff;
-  mask: url('../../icons/arrow-up-right.svg') center / 18px no-repeat;
+  background-color: var(--color-white);
+  mask: url('../../icons/arrow-up-right.svg') center / 1.125rem no-repeat;
 }
 
 .service-links a.service-links-tile:hover .service-links-arrow {
@@ -73,7 +73,7 @@
 }
 
 .service-links .service-links-has-image .service-links-tile {
-  min-height: 220px;
+  min-height: 13.75rem;
 }
 
 .service-links .service-links-media,
@@ -109,27 +109,27 @@
 }
 
 :where(.desktop-view) .service-links .service-links-tile {
-  padding: 32px;
-  border-radius: 32px;
+  padding: var(--spacing-4xl);
+  border-radius: var(--radius-4xl);
 }
 
 :where(.desktop-view) .service-links .service-links-title {
   font-size: var(--heading-font-size-l);
-  line-height: 32px;
+  line-height: 2rem;
 }
 
 :where(.desktop-view) .service-links .service-links-arrow {
-  width: 40px;
-  height: 40px;
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 :where(.desktop-view) .service-links .service-links-arrow::before {
-  mask-size: 20px;
+  mask-size: 1.25rem;
 }
 
 :where(.desktop-view) .service-links .service-links-has-image .service-links-tile,
 :where(.desktop-view) .service-links .service-links-highlight .service-links-tile {
-  min-height: 300px;
+  min-height: 18.75rem;
 }
 
 :where(.desktop-view) .service-links .service-links-highlight .service-links-tile {
@@ -138,8 +138,8 @@
 }
 
 :where(.desktop-view) .service-links .service-links-highlight .service-links-title {
-  font-size: 24px;
-  line-height: 32px;
+  font-size: 1.5rem;
+  line-height: 2rem;
 }
 
 :where(.desktop-view) .service-links .service-links-highlight .service-links-arrow {
@@ -151,5 +151,5 @@
 }
 
 :where(.desktop-view) .service-links .service-links-tall .service-links-tile {
-  min-height: 220px;
+  min-height: 13.75rem;
 }

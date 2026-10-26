@@ -9,78 +9,76 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-@import url("variables/base.css");
-
 :root {
   /* colors */
-  --background-color: #fcfcfc;
-  --light-color: #f5f5f5;
-  --surface-color: #eee;
-  --dark-color: #666;
-  --text-color: #121212;
-  --heading-color: #1a1a1a;
-  --muted-color: #666;
-  --border-color: #8c8c8c;
-  --border-light-color: #d6d6d6;
-  --brand-color: #db0d28;
-  --accent-color: #3857ff;
-  --inverse-color: #f5f5f5;
-  --link-color: #121212;
-  --link-hover-color: #3857ff;
+  --background-color: var(--color-background-1-default-base);
+  --light-color: var(--color-background-1-default-pressed);
+  --surface-color: var(--color-background-2-default-base);
+  --dark-color: var(--color-text-secondary-default-base);
+  --text-color: var(--color-text-primary-default-base);
+  --heading-color: var(--color-background-1-inverse-base);
+  --muted-color: var(--color-text-secondary-default-base);
+  --border-color: var(--color-button-pills-stroke-default-stroke-disabled);
+  --border-light-color: var(--color-stroke-3-default);
+  --brand-color: var(--color-brand-gradient-kotak-mahindra-default-2);
+  --accent-color: var(--color-button-primary-default-bg-base);
+  --inverse-color: var(--color-text-primary-inverse-base);
+  --link-color: var(--color-text-primary-default-base);
+  --link-hover-color: var(--color-button-tertiary-default-text-base);
 
   /* fonts */
   --body-font-family: manrope, manrope-fallback, sans-serif;
   --heading-font-family: manrope, manrope-fallback, sans-serif;
 
   /* body sizes */
-  --body-font-size-m: 16px;
-  --body-font-size-s: 14px;
-  --body-font-size-xs: 12px;
+  --body-font-size-m: 1rem;
+  --body-font-size-s: 0.875rem;
+  --body-font-size-xs: 0.75rem;
 
   /* heading sizes */
-  --heading-font-size-xxl: 32px;
-  --heading-font-size-xl: 28px;
-  --heading-font-size-l: 24px;
-  --heading-font-size-m: 20px;
-  --heading-font-size-s: 18px;
-  --heading-font-size-xs: 16px;
+  --heading-font-size-xxl: 2rem;
+  --heading-font-size-xl: 1.75rem;
+  --heading-font-size-l: 1.5rem;
+  --heading-font-size-m: 1.25rem;
+  --heading-font-size-s: 1.125rem;
+  --heading-font-size-xs: 1rem;
 
   /*
    * type styles from the design system ("Web Breakpoint/…" in Figma): mobile values here,
    * desktop view values below. Each style is size / line height / letter spacing (+ weight).
    */
-  --type-display-size: 32px; /* Display/Medium/DF-1 */
-  --type-display-line: 40px;
-  --type-display-ls: -0.8px;
-  --type-b1-size: 12px; /* Body/B1 */
-  --type-b1-line: 16px;
-  --type-b1-ls: 0.24px;
-  --type-b2-size: 14px; /* Body/B2 */
-  --type-b2-line: 20px;
+  --type-display-size: 2rem; /* Display/Medium/DF-1 */
+  --type-display-line: 2.5rem;
+  --type-display-ls: -0.05rem;
+  --type-b1-size: 0.75rem; /* Body/B1 */
+  --type-b1-line: 1rem;
+  --type-b1-ls: 0.015rem;
+  --type-b2-size: 0.875rem; /* Body/B2 */
+  --type-b2-line: 1.25rem;
   --type-b2-ls: 0;
-  --type-b3-size: 16px; /* Body/B3 */
-  --type-b3-line: 24px;
-  --type-h2-size: 12px; /* Headline/H2, semibold */
-  --type-h2-line: 16px;
-  --type-eyebrow-size: 12px; /* Section Title/S, semibold uppercase */
-  --type-eyebrow-line: 16px;
-  --type-eyebrow-ls: 1.98px;
-  --type-a1-size: 14px; /* Amount/A1, bold */
-  --type-a1-line: 14px;
-  --type-a1-ls: -0.42px;
-  --type-a5-size: 28px; /* Amount/A5, bold */
-  --type-a5-line: 28px;
-  --type-a5-ls: -1.4px;
-  --type-s1-size: 14px; /* Symbol/S1 (currency in value pills), semibold */
-  --type-s1-line: 18px;
-  --type-s3-size: 20px; /* currency next to A5, semibold */
-  --type-s3-line: 28px;
-  --type-bt1-size: 12px; /* Button/BT-1, semibold */
-  --type-bt1-line: 16px;
-  --type-bt2-size: 14px; /* Button/BT-2 (pill CTAs), semibold */
-  --type-bt2-line: 20px;
-  --type-h4-size: 16px; /* Headline/H4 (card titles) */
-  --type-h4-line: 24px;
+  --type-b3-size: 1rem; /* Body/B3 */
+  --type-b3-line: 1.5rem;
+  --type-h2-size: 0.75rem; /* Headline/H2, semibold */
+  --type-h2-line: 1rem;
+  --type-eyebrow-size: 0.75rem; /* Section Title/S, semibold uppercase */
+  --type-eyebrow-line: 1rem;
+  --type-eyebrow-ls: 0.1237rem;
+  --type-a1-size: 0.875rem; /* Amount/A1, bold */
+  --type-a1-line: 0.875rem;
+  --type-a1-ls: -0.0262rem;
+  --type-a5-size: 1.75rem; /* Amount/A5, bold */
+  --type-a5-line: 1.75rem;
+  --type-a5-ls: -0.0875rem;
+  --type-s1-size: 0.875rem; /* Symbol/S1 (currency in value pills), semibold */
+  --type-s1-line: 1.125rem;
+  --type-s3-size: 1.25rem; /* currency next to A5, semibold */
+  --type-s3-line: 1.75rem;
+  --type-bt1-size: 0.75rem; /* Button/BT-1, semibold */
+  --type-bt1-line: 1rem;
+  --type-bt2-size: 0.875rem; /* Button/BT-2 (pill CTAs), semibold */
+  --type-bt2-line: 1.25rem;
+  --type-h4-size: 1rem; /* Headline/H4 (card titles) */
+  --type-h4-line: 1.5rem;
   --type-h4-weight: 500;
 
   /*
@@ -88,14 +86,14 @@
    * by scripts/viewport.js. Mobile values below, tablet / laptop / desktop overrides follow.
    */
   --grid-columns: 4;
-  --grid-gutter: 12px;
-  --grid-max-width: 1440px;
+  --grid-gutter: 0.75rem;
+  --grid-max-width: 90rem;
 
   /* section margins: full bleed (FB), grid bound (GB), adaptive bound (AB) and footer */
-  --fb-margin: 4px;
-  --gb-margin: 24px;
-  --ab-margin: 8px;
-  --footer-padding: 20px;
+  --fb-margin: var(--spacing-xs);
+  --gb-margin: var(--spacing-3xl);
+  --ab-margin: var(--spacing-md);
+  --footer-padding: var(--spacing-2xl);
 
   /* container width for grid bound / adaptive bound blocks and the content limit (desktop only) */
   --gb-max-width: none;
@@ -106,36 +104,36 @@
    * text by --fb-inset so it lines up with the grid
    */
   --gb-offset: var(--gb-margin);
-  --fb-inset: 24px; /* inner padding of full bleed blocks on small screens (Figma) */
-  --section-spacing: 80px;
+  --fb-inset: var(--spacing-3xl); /* inner padding of full bleed blocks on small screens (Figma) */
+  --section-spacing: var(--spacing-8xl);
 
   /* nav height: announcement bar + nav bar */
-  --topbar-height: 32px;
-  --nav-height: 92px;
+  --topbar-height: 2rem;
+  --nav-height: 5.75rem;
 }
 
 /* tablet portrait: 600px up to the desktop view */
 :root[data-viewport='tablet-portrait'] {
-  --grid-columns: 8px;
-  --fb-margin: 8px;
+  --grid-columns: 8;
+  --fb-margin: var(--spacing-md);
 }
 
 /* tablet landscape: desktop view up to 1280px */
 :root[data-viewport='tablet-landscape'] {
-  --grid-columns: 12px;
-  --fb-margin: 8px;
-  --gb-margin: 48px;
-  --footer-padding: 36px;
+  --grid-columns: 12;
+  --fb-margin: var(--spacing-md);
+  --gb-margin: var(--spacing-6xl);
+  --footer-padding: 2.25rem;
 }
 
 /* laptop: 1281px to 1679px, fluid */
 :root[data-viewport='laptop'] {
-  --grid-columns: 12px;
-  --grid-gutter: 16px;
-  --fb-margin: 12px;
-  --gb-margin: 92px;
-  --ab-margin: 12px;
-  --footer-padding: 80px;
+  --grid-columns: 12;
+  --grid-gutter: 1rem;
+  --fb-margin: var(--spacing-lg);
+  --gb-margin: 5.75rem;
+  --ab-margin: var(--spacing-lg);
+  --footer-padding: var(--spacing-8xl);
 }
 
 /*
@@ -144,11 +142,11 @@
  */
 :root[data-viewport='desktop'] {
   --grid-columns: 12;
-  --grid-gutter: 16px;
-  --fb-margin: 12px;
-  --gb-margin: 0px;
-  --ab-margin: 0px;
-  --footer-padding: 80px;
+  --grid-gutter: 1rem;
+  --fb-margin: var(--spacing-lg);
+  --gb-margin: 0rem;
+  --ab-margin: 0rem;
+  --footer-padding: var(--spacing-8xl);
   --gb-max-width: var(--grid-max-width);
   --grid-limit: var(--grid-max-width);
   --gb-offset: calc((100vw - var(--grid-max-width)) / 2);
@@ -163,55 +161,55 @@
 
 :root:where(.desktop-view) {
   /* heading sizes */
-  --heading-font-size-xxl: 40px;
-  --heading-font-size-xl: 32px;
-  --heading-font-size-l: 24px;
-  --heading-font-size-m: 20px;
-  --heading-font-size-s: 18px;
-  --heading-font-size-xs: 16px;
+  --heading-font-size-xxl: 2.5rem;
+  --heading-font-size-xl: 2rem;
+  --heading-font-size-l: 1.5rem;
+  --heading-font-size-m: 1.25rem;
+  --heading-font-size-s: 1.125rem;
+  --heading-font-size-xs: 1rem;
 
 
   /* type styles (desktop view) */
-  --type-display-size: 40px;
-  --type-display-line: 48px;
-  --type-display-ls: -1px;
-  --type-b1-size: 14px;
-  --type-b1-line: 18px;
+  --type-display-size: 2.5rem;
+  --type-display-line: 3rem;
+  --type-display-ls: -0.0625rem;
+  --type-b1-size: 0.875rem;
+  --type-b1-line: 1.125rem;
   --type-b1-ls: 0;
-  --type-b2-size: 16px;
-  --type-b2-line: 24px;
-  --type-b3-size: 20px;
-  --type-b3-line: 28px;
-  --type-h2-size: 14px;
-  --type-h2-line: 20px;
-  --type-eyebrow-size: 16px;
-  --type-eyebrow-line: 24px;
-  --type-eyebrow-ls: 2.64px;
-  --type-a1-size: 20px;
-  --type-a1-line: 20px;
-  --type-a1-ls: -1px;
-  --type-a5-size: 36px;
-  --type-a5-line: 36px;
-  --type-a5-ls: -1.8px;
-  --type-s1-size: 16px;
-  --type-s1-line: 22px;
-  --type-s3-size: 24px;
-  --type-s3-line: 32px;
-  --type-bt1-size: 14px;
-  --type-bt1-line: 20px;
-  --type-bt2-size: 16px;
-  --type-bt2-line: 24px;
-  --type-h4-size: 20px;
-  --type-h4-line: 28px;
+  --type-b2-size: 1rem;
+  --type-b2-line: 1.5rem;
+  --type-b3-size: 1.25rem;
+  --type-b3-line: 1.75rem;
+  --type-h2-size: 0.875rem;
+  --type-h2-line: 1.25rem;
+  --type-eyebrow-size: 1rem;
+  --type-eyebrow-line: 1.5rem;
+  --type-eyebrow-ls: 0.165rem;
+  --type-a1-size: 1.25rem;
+  --type-a1-line: 1.25rem;
+  --type-a1-ls: -0.0625rem;
+  --type-a5-size: 2.25rem;
+  --type-a5-line: 2.25rem;
+  --type-a5-ls: -0.1125rem;
+  --type-s1-size: 1rem;
+  --type-s1-line: 1.375rem;
+  --type-s3-size: 1.5rem;
+  --type-s3-line: 2rem;
+  --type-bt1-size: 0.875rem;
+  --type-bt1-line: 1.25rem;
+  --type-bt2-size: 1rem;
+  --type-bt2-line: 1.5rem;
+  --type-h4-size: 1.25rem;
+  --type-h4-line: 1.75rem;
   --type-h4-weight: 600;
 
   /* layout: full bleed blocks pad their text to the grid line */
-  --section-spacing: 124px;
+  --section-spacing: 7.75rem;
   --fb-inset: calc(var(--gb-offset) - var(--fb-margin));
 
   /* nav height: announcement bar + nav bar */
-  --topbar-height: 44px;
-  --nav-height: 112px;
+  --topbar-height: 2.75rem;
+  --nav-height: 7rem;
 }
 
 body {
@@ -259,7 +257,7 @@ h6 {
   font-weight: 500;
   line-height: 1.25;
   letter-spacing: -0.025em;
-  scroll-margin: 40px;
+  scroll-margin: var(--spacing-5xl);
 }
 
 h1 { font-size: var(--heading-font-size-xxl); }
@@ -285,15 +283,15 @@ pre {
 }
 
 pre {
-  padding: 16px;
-  border-radius: 8px;
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-md);
   background-color: var(--light-color);
   overflow-x: auto;
   white-space: pre;
 }
 
 main > div {
-  margin: 40px 16px;
+  margin: var(--spacing-5xl) var(--spacing-xl);
 }
 
 input,
@@ -317,7 +315,7 @@ a:hover {
 
 /* buttons */
 p.button-wrapper {
-  margin: 12px 0;
+  margin: var(--spacing-lg) 0;
 }
 
 a.button:any-link,
@@ -328,13 +326,13 @@ button.button {
   justify-content: center;
   max-width: 100%;
   margin: 0;
-  border: 1px solid transparent;
-  border-radius: 100px;
-  padding: 13px 32px;
+  border: 0.0625rem solid transparent;
+  border-radius: 6.25rem;
+  padding: 0.8125rem var(--spacing-4xl);
   font: inherit;
   font-size: var(--body-font-size-m);
   font-weight: 600;
-  line-height: 24px;
+  line-height: 1.5rem;
   text-decoration: none;
   cursor: pointer;
   overflow: hidden;
@@ -352,16 +350,16 @@ a.button.primary,
 button.button.primary {
   border-color: var(--text-color);
   background-color: var(--text-color);
-  color: #fff;
+  color: var(--color-white);
 }
 
 a.button.primary:hover,
 a.button.primary:focus-visible,
 button.button.primary:hover,
 button.button.primary:focus-visible {
-  border-color: #333;
-  background-color: #333;
-  color: #fff;
+  border-color: var(--color-stroke-2-inverse);
+  background-color: var(--color-background-3-inverse-pressed);
+  color: var(--color-white);
 }
 
 a.button.primary[aria-disabled="true"],
@@ -437,8 +435,8 @@ main img {
 
 .icon {
   display: inline-block;
-  height: 24px;
-  width: 24px;
+  height: 1.5rem;
+  width: 1.5rem;
 }
 
 .icon img {
@@ -467,33 +465,33 @@ main > .section:first-of-type {
 /* keyboard focus: dark ring with a light halo, visible on light and dark backgrounds
    (blocks may refine it; zero specificity) */
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
-  outline: 2px solid var(--text-color);
-  outline-offset: 2px;
-  box-shadow: 0 0 0 2px var(--background-color);
+  outline: 0.125rem solid var(--text-color);
+  outline-offset: 0.125rem;
+  box-shadow: 0 0 0 0.125rem var(--background-color);
 }
 
 /* sticky header and bottom bars never cover the focused element (WCAG 2.4.11) */
 html {
-  scroll-padding-top: calc(var(--nav-height) + 16px);
-  scroll-padding-bottom: 96px;
+  scroll-padding-top: calc(var(--nav-height) + 1rem);
+  scroll-padding-bottom: 6rem;
 }
 
 /* skip link: first focusable element, shown on focus */
 .skip-link {
   position: fixed;
-  top: 8px;
-  left: 8px;
+  top: 0.5rem;
+  left: 0.5rem;
   z-index: 1000;
-  padding: 12px 20px;
-  border-radius: 100px;
+  padding: var(--spacing-lg) var(--spacing-2xl);
+  border-radius: 6.25rem;
   background-color: var(--text-color);
-  color: #fff;
+  color: var(--color-white);
   font-weight: 600;
   text-decoration: none;
 }
 
 .skip-link:any-link {
-  color: #fff;
+  color: var(--color-white);
 }
 
 main:focus {
@@ -514,9 +512,9 @@ main:focus {
 /* text for screen readers only (stays visible while focused, e.g. skip links) */
 .visually-hidden:where(:not(:focus-within, :active)) {
   position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  margin: -1px !important;
+  width: 0.0625rem !important;
+  height: 0.0625rem !important;
+  margin: -0.0625rem !important;
   border: 0 !important;
   padding: 0 !important;
   overflow: hidden !important;
@@ -543,7 +541,7 @@ main > .section > .feature-banner-wrapper{
 
 /* product pages: eligibility and documents sections */
 main > .section.requirements-container .default-content-wrapper > h2 + p {
-  margin-bottom: 32px;
+  margin-bottom: var(--spacing-4xl);
 }
 
 /* product pages and the edge-to-edge variant: feature banners run edge to edge
@@ -579,7 +577,7 @@ main > .section > .article-cards-wrapper {
 }
 
 main > .section.article-cards-container .default-content-wrapper > h2:first-child {
-  margin-bottom: 16px;
+  margin-bottom: var(--spacing-xl);
 }
 
 :where(.desktop-view) main > .section.article-cards-container .default-content-wrapper > h2:first-child {
@@ -628,7 +626,7 @@ main > .section.highlight + .section.offers-container {
 
 /* eyebrow paragraph directly above a section heading (Body/B2) */
 main .default-content-wrapper > p:has(+ h2) {
-  margin: 0 0 8px;
+  margin: 0 0 var(--spacing-md);
   color: var(--text-color);
   font-size: var(--type-b2-size);
   font-weight: 500;
@@ -638,7 +636,7 @@ main .default-content-wrapper > p:has(+ h2) {
 /* section heading (Display/Medium/DF-1) */
 main .default-content-wrapper > p + h2,
 main .default-content-wrapper > h2:first-child {
-  margin: 0 0 32px;
+  margin: 0 0 var(--spacing-4xl);
   font-size: var(--type-display-size);
   font-weight: 500;
   line-height: var(--type-display-line);
@@ -647,32 +645,32 @@ main .default-content-wrapper > h2:first-child {
 }
 
 :where(.desktop-view) main .default-content-wrapper > h2:only-child {
-  margin-bottom: 40px;
+  margin-bottom: var(--spacing-5xl);
 }
 
 /* heading with a subheading line below it (product pages) */
 main .section .default-content-wrapper > h2:has(+ p) {
-  margin: 0 0 8px;
+  margin: 0 0 var(--spacing-md);
 }
 
 main .default-content-wrapper > h2 + p {
-  margin: 0 0 24px;
+  margin: 0 0 var(--spacing-3xl);
   color: var(--muted-color);
   font-size: var(--body-font-size-m);
   font-weight: 500;
-  line-height: 24px;
+  line-height: 1.5rem;
 }
 
 :where(.desktop-view) main .section .default-content-wrapper > h2:has(+ p) {
   font-size: var(--heading-font-size-xxl);
-  line-height: 48px;
-  letter-spacing: -1px;
+  line-height: 3rem;
+  letter-spacing: -0.0625rem;
 }
 
 :where(.desktop-view) main .default-content-wrapper > h2 + p {
-  margin-bottom: 32px;
+  margin-bottom: var(--spacing-4xl);
   font-size: var(--heading-font-size-m);
-  line-height: 28px;
+  line-height: 1.75rem;
 }
 
 /* section metadata */
@@ -756,18 +754,18 @@ main > .section > .section-background img {
 
 main .section.brand {
   margin: 0;
-  padding: 80px 0;
+  padding: var(--spacing-8xl) 0;
   background-color: var(--brand-color);
-  color: #fff;
+  color: var(--color-white);
   text-align: center;
 }
 
 main .section.bg-grey :is(h2,h3,h4,h5,h6) {
-  margin: 0 0 8px;
-  font-size: 16px;
-  line-height: 24px;
+  margin: 0 0 var(--spacing-md);
+  font-size: 1rem;
+  line-height: 1.5rem;
   font-weight: 600;
-  letter-spacing: 2.32px;
+  letter-spacing: 0.145rem;
   color: var(--text-color);
 }
 
@@ -783,19 +781,19 @@ main .section.bg-grey p {
 }
 
 main .section.brand.has-background {
-  margin: 16px 0 0 ;
+  margin: var(--spacing-xl) 0 0 ;
 }
 
 main .section.brand .default-content-wrapper,
 main .section.bg-grey .default-content-wrapper {
-  max-width: calc(680px + 2 * var(--gb-margin));
+  max-width: calc(42.5rem + 2 * var(--gb-margin));
 }
 
 main .section.brand p {
   margin: 0;
   font-size: var(--body-font-size-s);
   font-weight: 600;
-  line-height: 20px;
+  line-height: 1.25rem;
 }
 
 :where(.desktop-view) main .section.brand {
@@ -804,11 +802,11 @@ main .section.brand p {
 
 :where(.desktop-view) main .section.brand p {
   font-size: var(--body-font-size-m);
-  line-height: 24px;
+  line-height: 1.5rem;
 }
 
 main > .section.branch-locator-container:last-of-type {
-  margin-bottom: 24px;
+  margin-bottom: var(--spacing-3xl);
 }
 
 /* bg-color grey */

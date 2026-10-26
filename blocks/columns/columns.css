@@ -22,7 +22,7 @@
 :where(.desktop-view) .columns > div {
     align-items: center;
     flex-direction: unset;
-    gap: 24px;
+    gap: var(--spacing-3xl);
 }
 
 :where(.desktop-view) .columns > div > div {
@@ -36,19 +36,19 @@
     margin: 0 0 var(--spacing-4xl);
     font-size: var(--type-display-medium-df-1-font-size);
     line-height: var(--type-display-medium-df-1-line-height);
-    letter-spacing: -0.8px;
-    color: #121212;
+    letter-spacing: -0.05rem;
+    color: var(--color-text-primary-default-base);
 }
 
 .columns.about-us.columns.columns-split > div > div:first-child h2,
 .columns.about-us.columns.columns-split > div > div:first-child h3 {
-    line-height: 40px;
-    letter-spacing: -0.8px;
+    line-height: 2.5rem;
+    letter-spacing: -0.05rem;
 }
 
 :where(.desktop-view) .columns.columns-split > div > div:first-child h2,
 :where(.desktop-view) .columns.columns-split > div > div:first-child h3 {
-    letter-spacing: -0.1px;
+    letter-spacing: -0.0063rem;
 }
 
 .feature-cards-container .columns.columns-split > div > div:first-child h2 {
@@ -60,7 +60,7 @@
     color: var(--muted-color);
     font-size: var(--body-font-size-m);
     font-weight: 500;
-    line-height: 24px;
+    line-height: 1.5rem;
 }
 
 .feature-cards-container .columns.columns-split p,
@@ -79,7 +79,7 @@
 }
 
 .columns.columns-split ul {
-    padding-left: 20px;
+    padding-left: var(--spacing-2xl);
 }
 
 .feature-cards-container .columns.columns-split ul {
@@ -88,7 +88,7 @@
 }
 
 .columns-container.feature-cards-container .feature-cards-wrapper {
-    margin-top: 80px;
+    margin-top: var(--spacing-8xl);
 }
 
 .columns.columns-split a:any-link {
@@ -104,25 +104,25 @@
 }
 
 .columns.columns-split a:any-link .icon {
-    padding: 12px;
+    padding: var(--spacing-lg);
     border-radius: var(--spacing-md);
-    border: 1px solid var(--color-stroke-2-default);
+    border: 0.0625rem solid var(--color-stroke-2-default);
 }
 
 /* about-us website link: 40px icon box (16px globe) + underlined URL, 32px below the text */
 .columns.about-us p.columns-website {
-    margin: 32px 0 0;
+    margin: var(--spacing-4xl) 0 0;
 }
 
 .columns.about-us p.columns-website a:any-link {
     position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 12px;
-    color: #003874;
+    gap: var(--spacing-lg);
+    color: var(--color-extra-003874);
     font-size: var(--body-font-size-s);
     font-weight: 600;
-    line-height: 20px;
+    line-height: 1.25rem;
     text-decoration: underline;
     overflow-wrap: anywhere;
 }
@@ -132,10 +132,10 @@
     content: "";
     flex: none;
     box-sizing: border-box;
-    width: 40px;
-    height: 40px;
-    border: 1px solid #dedede;
-    border-radius: 8px;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 0.0625rem solid var(--color-stroke-2-default);
+    border-radius: var(--radius-md);
     background-color: var(--surface-color);
 }
 
@@ -144,9 +144,9 @@
     content: "";
     position: absolute;
     top: 50%;
-    left: 12px;
-    width: 16px;
-    height: 16px;
+    left: 0.75rem;
+    width: 1rem;
+    height: 1rem;
     background-color: currentcolor;
     mask: url("../../icons/globe.svg") center / contain no-repeat;
     transform: translateY(-50%);
@@ -159,11 +159,11 @@
 :where(.desktop-view) .columns.columns-split > div {
     align-items: flex-start;
     justify-content: space-between;
-    gap: 80px;
+    gap: var(--spacing-8xl);
 }
 
 :where(.desktop-view) .columns.columns-split > div > div:first-child {
-    flex: 0 1 442px;
+    flex: 0 1 27.625rem;
 }
 
 /* about-us: the heading stays below the pinned nav while the text column scrolls past,
@@ -181,15 +181,15 @@
 
 :where(.desktop-view) .columns.about-us .columns-sticky > * {
     position: sticky;
-    top: calc(var(--nav-height) - var(--topbar-height) + 24px);
+    top: calc(var(--nav-height) - var(--topbar-height) + 1.5rem);
 }
 
 :where(.desktop-view) .columns.columns-split > div > div:last-child {
-    flex: 0 1 660px;
+    flex: 0 1 41.25rem;
 }
 
 :where(.desktop-view) .columns.columns-split p,
 :where(.desktop-view) .columns.columns-split li {
     font-size: var(--heading-font-size-m);
-    line-height: 28px;
+    line-height: 1.75rem;
 }

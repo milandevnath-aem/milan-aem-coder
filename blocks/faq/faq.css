@@ -10,7 +10,7 @@
 }
 
 .faq .faq-intro + .faq-list {
-    margin-top: 32px;
+    margin-top: var(--spacing-4xl);
 }
 
 .faq .faq-intro :is(h2, h3, h4, h5, h6) {
@@ -22,7 +22,7 @@
 }
 
 .faq .faq-intro .faq-intro-description {
-    margin: 8px 0 0;
+    margin: var(--spacing-md) 0 0;
     font-size: var(--type-body-b3-font-size);
     line-height: var(--type-body-b3-line-height);
     font-weight: var(--type-body-b3-font-weight);
@@ -50,15 +50,15 @@
 .faq .faq-intro .faq-intro-info .icon {
     display: flex;
     flex-shrink: 0;
-    width: 13.333px;
-    height: 13.333px;
+    width: 0.8333rem;
+    height: 0.8333rem;
 }
 
 .faq .faq-intro .faq-intro-info img {
     width: 100%;
     height: 100%;
     aspect-ratio: 1 / 1;
-    padding: 1.333px;
+    padding: 0.0833rem;
 }
 
 /* note card: h3 + ul group */
@@ -66,7 +66,7 @@
     order: 1;
     margin-top: var(--spacing-xl);
     padding: var(--spacing-4xl) var(--spacing-3xl);
-    border: 1px solid var(--color-stroke-2-default);
+    border: 0.0625rem solid var(--color-stroke-2-default);
     border-radius: var(--radius-lg);
     background-color: var(--color-background-1-default-base);
 }
@@ -74,7 +74,7 @@
 .faq .faq-intro .faq-intro-note-title {
     margin: 0;
     padding-bottom: var(--spacing-lg);
-    border-bottom: 1px solid var(--color-stroke-2-default);
+    border-bottom: 0.0625rem solid var(--color-stroke-2-default);
     color: var(--color-text-primary-default-base);
     font-size: var(--type-headline-h3-font-size);
     font-weight: var(--type-headline-h3-font-weight);
@@ -93,7 +93,7 @@
 
 .faq .faq-intro .faq-intro-note-list li {
     position: relative;
-    padding-left: 25px;
+    padding-left: 1.5625rem;
     color: var(--color-text-secondary-default-base);
     font-size: var(--type-body-b2-font-size);
     font-weight: var(--type-body-b2-font-weight);
@@ -105,13 +105,13 @@
 .faq .faq-intro .faq-intro-note-list li::before {
     content: "";
     position: absolute;
-    top: 2px;
+    top: 0.125rem;
     left: 0;
-    width: 16.667px;
-    height: 16.667px;
+    width: 1.0417rem;
+    height: 1.0417rem;
     border-radius: 50%;
     background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 17 17' fill='none'%3E%3Cpath d='M15.083 8.33333C15.083 4.60541 12.0613 1.58366 8.33333 1.58366C4.60541 1.58366 1.58366 4.60541 1.58366 8.33333C1.58366 12.0613 4.60541 15.083 8.33333 15.083C12.0613 15.083 15.083 12.0613 15.083 8.33333ZM16.5837 8.33333C16.5837 12.8897 12.8897 16.5837 8.33333 16.5837C3.77698 16.5837 0.0830078 12.8897 0.0830078 8.33333C0.0830078 3.77698 3.77698 0.0830078 8.33333 0.0830078C12.8897 0.0830078 16.5837 3.77698 16.5837 8.33333Z' fill='%23666666'/%3E%3Cpath d='M10.7544 5.92855C11.04 5.62857 11.5148 5.61621 11.8148 5.90169C12.1147 6.18721 12.1262 6.66205 11.8408 6.96208L7.76449 11.2451C7.62292 11.3938 7.42618 11.4779 7.22087 11.4779C7.01555 11.4779 6.81881 11.3938 6.67725 11.2451L4.82422 9.2985C4.53874 8.99848 4.5511 8.52367 4.85107 8.23812C5.1511 7.95265 5.62591 7.96419 5.91146 8.26416L7.22087 9.63949L10.7544 5.92855Z' fill='%23666666'/%3E%3C/svg%3E") center / contain no-repeat;
-    padding: 1.667px;
+    padding: 0.1042rem;
   }
 
 .faq .faq-intro .faq-intro-note-list a {
@@ -120,7 +120,7 @@
 }
 
 .faq .faq-item {
-    border-bottom: 1px solid var(--surface-color);
+    border-bottom: 0.0625rem solid var(--surface-color);
 }
 
 .faq .faq-item:last-child{
@@ -129,21 +129,21 @@
 
 .faq .faq-item summary {
     position: relative;
-    padding: 20px 32px 12px 0;
+    padding: var(--spacing-2xl) var(--spacing-4xl) var(--spacing-lg) 0;
     font-size: var(--body-font-size-s);
     font-weight: 600;
-    line-height: 20px;
+    line-height: 1.25rem;
     letter-spacing: 0;
     list-style: none;
     cursor: pointer;
 }
 
 .faq .faq-item:not([open]) summary {
-    padding-bottom: 20px;
+    padding-bottom: var(--spacing-2xl);
 }
 
 .faq .faq-item[open] summary {
-    padding-bottom: 8px;
+    padding-bottom: var(--spacing-md);
 }
 
 .faq .faq-item summary::-webkit-details-marker {
@@ -153,10 +153,10 @@
 .faq .faq-item summary::after {
     content: "";
     position: absolute;
-    top: 22px;
+    top: 1.375rem;
     right: 0;
-    width: 20px;
-    height: 20px;
+    width: 1.25rem;
+    height: 1.25rem;
     background: url("../../icons/chevron-down.svg") center / contain no-repeat;
     transition: transform 0.2s;
 }
@@ -166,16 +166,16 @@
 }
 
 .faq .faq-item summary:focus-visible {
-    outline: 2px solid var(--accent-color);
-    outline-offset: 2px;
+    outline: 0.125rem solid var(--accent-color);
+    outline-offset: 0.125rem;
 }
 
 .faq .faq-answer {
-    padding: 0 40px 20px 0;
+    padding: 0 var(--spacing-5xl) var(--spacing-2xl) 0;
     color: var(--muted-color);
     font-size: var(--body-font-size-s);
     font-weight: 600;
-    line-height: 20px;
+    line-height: 1.25rem;
     letter-spacing: 0;
 }
 
@@ -186,12 +186,12 @@
 :where(.desktop-view) .faq {
     flex-direction: row;
     justify-content: space-between;
-    gap: 80px;
+    gap: var(--spacing-8xl);
 }
 
 :where(.desktop-view) .faq .faq-intro {
     display: block;
-    flex: 0 1 442px;
+    flex: 0 1 27.625rem;
 }
 
 :where(.desktop-view) .faq .faq-intro + .faq-list {
@@ -209,22 +209,22 @@
 }
 
 :where(.desktop-view) .faq .faq-list {
-    flex: 0 1 660px;
+    flex: 0 1 41.25rem;
 }
 
 :where(.desktop-view) .faq .faq-item summary,
 :where(.desktop-view) .faq .faq-answer {
     font-size: var(--heading-font-size-m);
     font-weight: 500;
-    line-height: 28px;
+    line-height: 1.75rem;
 }
 
 :where(.desktop-view) .faq .faq-item[open] summary {
-    padding-bottom: 12px;
+    padding-bottom: var(--spacing-lg);
 }
 
 :where(.desktop-view) .faq .faq-item summary::after {
-    top: 24px;
+    top: 1.5rem;
 }
 
 /* item-count: keep the count line visible when the item is collapsed */
@@ -257,7 +257,7 @@
 }
 
 .faq.grouped-content .faq-item[open] summary {
-    padding-bottom: 20px;
+    padding-bottom: var(--spacing-2xl);
 }
 
 .faq.grouped-content .faq-answer {
@@ -269,15 +269,15 @@
 
 .faq.grouped-content .faq-group {
     width: 100%;
-    border: 1px solid var(--surface-color);
+    border: 0.0625rem solid var(--surface-color);
     border-radius: var(--radius-lg);
     overflow: hidden;
 }
 
 .faq.grouped-content .faq-group-title {
     margin: 0;
-    padding: 14px var(--spacing-lg);
-    border-bottom: 1px solid var(--color-stroke-2-default);
+    padding: 0.875rem var(--spacing-lg);
+    border-bottom: 0.0625rem solid var(--color-stroke-2-default);
     background-color: var(--surface-color);
     color: var(--muted-color);
     font-size: var(--type-headline-h3-font-size);
@@ -296,8 +296,8 @@
 }
 
 .faq.grouped-content .faq-group-list li {
-    padding: 18px var(--spacing-lg);
-    border-bottom: 1px solid var(--color-stroke-2-default);
+    padding: 1.125rem var(--spacing-lg);
+    border-bottom: 0.0625rem solid var(--color-stroke-2-default);
     color: var(--color-text-primary-default-base);
     font-size: var(--type-headline-h3-font-size);
     font-weight: 500;
@@ -334,7 +334,7 @@
 }
 
 :where(.desktop-view) .faq.grouped-content .faq-group-title {
-    padding: 14px var(--spacing-2xl);
+    padding: 0.875rem var(--spacing-2xl);
 }
 
 /* grouped-table: each group becomes a column, rows align across columns */
@@ -343,7 +343,7 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: repeat(var(--faq-table-rows, 1), auto);
     gap: 0;
-    border: 1px solid var(--color-stroke-2-default);
+    border: 0.0625rem solid var(--color-stroke-2-default);
     border-radius: var(--radius-lg);
     background-color: var(--color-background-1-default-base);
     overflow: hidden;
@@ -359,7 +359,7 @@
 }
 
 .faq.grouped-table .faq-group + .faq-group {
-    border-left: 1px solid var(--color-stroke-2-default);
+    border-left: 0.0625rem solid var(--color-stroke-2-default);
 }
 
 .faq.grouped-table .faq-group-list {
@@ -367,13 +367,13 @@
 }
 
 .faq.grouped-table .faq-group-title {
-    padding: 14px var(--spacing-2xl);
+    padding: 0.875rem var(--spacing-2xl);
     background-color: var(--color-background-2-default-base);
     color: var(--color-text-secondary-default-base);
 }
 
 .faq.grouped-table .faq-group-list li {
-    padding: 18px var(--spacing-2xl);
+    padding: 1.125rem var(--spacing-2xl);
     color: var(--color-text-primary-default-base);
     font-size: var(--type-body-b2-font-size);
     font-weight: var(--type-body-b2-font-weight);

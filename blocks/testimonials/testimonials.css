@@ -1,6 +1,6 @@
 .testimonials {
   --testimonials-card-width: 100%;
-  --testimonials-card-padding: 24px;
+  --testimonials-card-padding: var(--spacing-3xl);
   --testimonials-card-bg: var(--surface-color);
 }
 
@@ -25,11 +25,11 @@
   flex: 0 0 var(--testimonials-card-width);
   flex-direction: column;
   justify-content: space-between;
-  gap: 40px;
-  min-height: 225px;
+  gap: var(--spacing-5xl);
+  min-height: 14.0625rem;
   box-sizing: border-box;
   padding: var(--testimonials-card-padding);
-  border-radius: 32px;
+  border-radius: var(--radius-4xl);
   background-color: var(--testimonials-card-bg);
   scroll-snap-align: start;
 }
@@ -49,14 +49,14 @@
 .testimonials .testimonials-author {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--spacing-md);
 }
 
 .testimonials .testimonials-avatar,
 .testimonials .testimonials-avatar img {
   display: block;
-  width: 40px;
-  height: 40px;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -78,7 +78,7 @@
   font-size: var(--type-h2-size);
   font-weight: 600;
   line-height: var(--type-h2-line);
-  margin: 0 0 2px;
+  margin: 0 0 var(--spacing-xxs);
 }
 
 .testimonials .testimonials-role {
@@ -93,19 +93,19 @@
 .testimonials .testimonials-controls {
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
-  margin-top: 32px;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-4xl);
   padding-right: var(--gb-offset);
 }
 
 .testimonials .testimonials-controls button {
-  width: 44px;
-  height: 44px;
+  width: 2.75rem;
+  height: 2.75rem;
   margin: 0;
   padding: 0;
-  border: 1px solid var(--text-color);
+  border: 0.0625rem solid var(--text-color);
   border-radius: 50%;
-  background: center / 20px no-repeat transparent;
+  background: center / 1.25rem no-repeat transparent;
   cursor: pointer;
 }
 
@@ -124,12 +124,12 @@
 }
 
 :where(.desktop-view) .testimonials {
-  --testimonials-card-width: 386px;
-  --testimonials-card-padding: 32px;
+  --testimonials-card-width: 24.125rem;
+  --testimonials-card-padding: var(--spacing-4xl);
 }
 
 :where(.desktop-view) .testimonials .testimonials-item {
-  min-height: 260px;
+  min-height: 16.25rem;
 }
 
 /* desktop view: the wrapper starts on the grid and the next cards peek in from the right */

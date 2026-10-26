@@ -1,9 +1,9 @@
 .offers {
-    --offers-radius: 52px;
-    --offers-height: 628px;
-    --offers-padding: 80px 24px 32px;
+    --offers-radius: 3.25rem;
+    --offers-height: 39.25rem;
+    --offers-padding: var(--spacing-8xl) var(--spacing-3xl) var(--spacing-4xl);
     --offers-text: var(--inverse-color);
-    --offers-cta-gap: 32px;
+    --offers-cta-gap: var(--spacing-4xl);
 }
 
 .offers > ul {
@@ -24,8 +24,8 @@
     box-sizing: border-box;
     padding: var(--offers-padding);
     border-radius: var(--offers-radius);
-    background-color: #000;
-    color: #fff;
+    background-color: var(--color-black);
+    color: var(--color-white);
     text-align: center;
     overflow: hidden;
 }
@@ -51,7 +51,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 481px;
+    max-width: 30.0625rem;
 }
 
 .offers .offers-content p {
@@ -59,7 +59,7 @@
 }
 
 .offers .offers-content .offers-eyebrow {
-    margin-bottom: 8px;
+    margin-bottom: var(--spacing-md);
     font-size: var(--type-eyebrow-size);
     font-weight: 600;
     line-height: var(--type-eyebrow-line);
@@ -83,10 +83,10 @@
 
 /* pill CTA: 192px wide, 12px (mobile) / 14px (desktop) vertical padding */
 .offers .offers-content a.button {
-    width: 192px;
-    padding: 12px 15px;
-    border-color: #fff;
-    background-color: #fff;
+    width: 12rem;
+    padding: var(--spacing-lg) 0.9375rem;
+    border-color: var(--color-white);
+    background-color: var(--color-white);
     color: var(--text-color);
     font-size: var(--type-bt2-size);
     line-height: var(--type-bt2-line);
@@ -101,7 +101,7 @@
 
 .offers .offers-disclaimer {
     margin: auto 0 0;
-    padding-top: 24px;
+    padding-top: var(--spacing-3xl);
     color: var(--inverse-color);
     font-size: var(--type-h2-size);
     font-weight: 500;
@@ -117,14 +117,14 @@
 }
 
 :where(.desktop-view) .offers {
-    --offers-radius: 40px;
-    --offers-height: 768px;
-    --offers-padding: 124px 12px 44px;
-    --offers-cta-gap: 40px;
+    --offers-radius: 2.5rem;
+    --offers-height: 48rem;
+    --offers-padding: 7.75rem var(--spacing-lg) 2.75rem;
+    --offers-cta-gap: var(--spacing-5xl);
 }
 
 :where(.desktop-view) .offers .offers-content a.button {
-    padding: 14px 15px;
+    padding: 0.875rem 0.9375rem;
 }
 
 :where(.desktop-view) .offers > ul {
@@ -137,23 +137,23 @@
 }
 
 :where(.desktop-view) .offers .offers-half {
-    --offers-padding: 124px 92px 44px;
+    --offers-padding: 7.75rem 5.75rem 2.75rem;
 }
 
 /* compact band (e.g. "Need help?") */
 .offers .offers-short {
-    --offers-height: 672px;
-    --offers-padding: 80px 24px;
+    --offers-height: 42rem;
+    --offers-padding: var(--spacing-8xl) var(--spacing-3xl);
 
     border-radius: 0;
 }
 
 .offers .offers-short .offers-content h2 {
-    color: #fff;
+    color: var(--color-white);
 }
 
 .offers .offers-content > p:not(.offers-eyebrow, .button-wrapper) {
-    margin-top: 12px;
+    margin-top: var(--spacing-lg);
     font-size: var(--type-b2-size);
     font-weight: 500;
     line-height: var(--type-b2-line);
@@ -164,8 +164,8 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 12px;
-    margin-top: 32px;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-4xl);
 }
 
 .offers .offers-buttons .button-wrapper {
@@ -175,26 +175,26 @@
 .offers .offers-content .offers-buttons a.button {
     width: auto;
     border: 0;
-    padding: 12px;
+    padding: var(--spacing-lg);
     font-size: var(--body-font-size-s);
     font-weight: 600;
-    line-height: 20px;
+    line-height: 1.25rem;
     letter-spacing: 0;
 }
 
 :where(.desktop-view) .offers .offers-content .offers-buttons a.button {
-    padding: 14px 12px;
+    padding: 0.875rem var(--spacing-lg);
     font-size: var(--type-bt2-size);
     line-height: var(--type-bt2-line);
 }
 
 :where(.desktop-view) .offers .offers-short .offers-content h2 {
-    letter-spacing: -1px;
+    letter-spacing: -0.0625rem;
 }
 
 /* "Need help?" pill buttons: 12px + 14px inner padding (Figma) */
 .offers .offers-short .offers-content .offers-buttons a.button {
-    padding: 12px 26px;
+    padding: var(--spacing-lg) 1.625rem;
 }
 
 :where(.desktop-view)
@@ -203,10 +203,10 @@
     .offers-content
     .offers-buttons
     a.button {
-    padding: 14px 26px;
+    padding: 0.875rem 1.625rem;
 }
 
 :where(.desktop-view) .offers .offers-short {
-    --offers-height: 672px;
-    --offers-padding: 124px 12px 44px;
+    --offers-height: 42rem;
+    --offers-padding: 7.75rem var(--spacing-lg) 2.75rem;
 }

@@ -5,16 +5,16 @@
 
 :where(.desktop-view) .feature-cards-container h2#key-features{
   padding-block: 0;
-  margin-bottom: 32px;
+  margin-bottom: var(--spacing-4xl);
 }
 
 .feature-cards {
     --feature-cards-bg: var(--surface-color);
-    --feature-cards-radius: 24px;
+    --feature-cards-radius: var(--radius-3xl);
 }
 
 .feature-cards.numbered {
-    margin-top: 32px;
+    margin-top: var(--spacing-4xl);
 }
 
 .feature-cards .feature-cards-list {
@@ -31,10 +31,10 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 24px;
+    gap: var(--spacing-3xl);
     box-sizing: border-box;
-    min-height: 100px;
-    padding: 24px;
+    min-height: 6.25rem;
+    padding: var(--spacing-3xl);
     border-radius: var(--feature-cards-radius);
     background-color: var(--feature-cards-bg);
     overflow: hidden;
@@ -74,22 +74,22 @@
 
 .feature-cards.split.top-up-loan-cards .feature-cards-body h3,
 .feature-cards.split.top-up-loan-cards .feature-cards-body h4 {
-    font-size: 14px;
-    line-height: 20px;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
 }
 
 .feature-cards .feature-cards-body p{
-  margin: 8px 0 0;
+  margin: var(--spacing-md) 0 0;
   color: var(--muted-color);
   font-weight: 500;
   font-size: var(--type-a1-size);
   line-height: var(--type-bt2-line);
-  letter-spacing: 0.24px;
+  letter-spacing: 0.015rem;
 }
 
 .feature-cards.split.top-up-loan-cards .feature-cards-body p {
-    font-size: 12px;
-    line-height: 16px;
+    font-size: 0.75rem;
+    line-height: 1rem;
 }
 
 .feature-cards .feature-cards-icon {
@@ -99,21 +99,21 @@
 
 .feature-cards .feature-cards-icon img {
     display: block;
-    width: 52px;
-    height: 52px;
+    width: 3.25rem;
+    height: 3.25rem;
     object-fit: contain;
 }
 
 :where(.desktop-view) .feature-cards .feature-cards-icon img{
-    width: 72px;
-    height: 72px;
+    width: 4.5rem;
+    height: 4.5rem;
 }
 
 /* media card: picture fills the card, text sits at the bottom */
 .feature-cards .feature-cards-card.is-media {
     justify-content: flex-end;
-    min-height: 250px;
-    background-color: #f2f2f2;
+    min-height: 15.625rem;
+    background-color: var(--color-extra-f2f2f2);
 }
 
 .feature-cards .feature-cards-image,
@@ -134,9 +134,9 @@
     inset: 0;
     background: linear-gradient(
         to top,
-        rgb(252 252 252 / 96%) 0%,
-        rgb(252 252 252 / 80%) 30%,
-        rgb(252 252 252 / 0%) 55%
+        var(--color-background-1-alpha-96) 0%,
+        var(--color-background-1-alpha-80) 30%,
+        var(--color-background-1-alpha-0) 55%
     );
     pointer-events: none;
 }
@@ -148,16 +148,16 @@
 
 /* intro (heading/CTA/note) */
 .feature-cards .feature-cards-intro h2 {
-    margin: 0 0 32px;
+    margin: 0 0 var(--spacing-4xl);
     font-size: var(--heading-font-size-xxl);
-    line-height: 40px;
+    line-height: 2.5rem;
 }
 
 .feature-cards.numbered .feature-cards-number {
     display: block;
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 600;
-    line-height: 24px;
+    line-height: 1.5rem;
     letter-spacing: 0;
     color: var(--muted-color);
 }
@@ -165,12 +165,12 @@
 /* numbered */
 :where(.desktop-view) .feature-cards.numbered .feature-cards-number {
     font-size: var(--heading-font-size-m);
-    line-height: 28px;
-    letter-spacing: -0.4px;
+    line-height: 1.75rem;
+    letter-spacing: -0.025rem;
 }
 
 .feature-cards.numbered .feature-cards-card {
-    min-height: 180px;
+    min-height: 11.25rem;
 }
 
 .feature-cards.numbered .feature-cards-body {
@@ -181,27 +181,27 @@
 
 .feature-cards.numbered .feature-cards-body h3 {
     margin-top: auto;
-    padding-top: 40px;
-    font-size: 16px;
-    line-height: 24px;
+    padding-top: var(--spacing-5xl);
+    font-size: 1rem;
+    line-height: 1.5rem;
     letter-spacing: 0;
 }
 
 :where(.desktop-view) .feature-cards.numbered .feature-cards-body h3 {
     font-size: var(--heading-font-size-m);
-    line-height: 28px;
-    letter-spacing: -0.4px;
+    line-height: 1.75rem;
+    letter-spacing: -0.025rem;
 }
 
 .feature-cards.numbered .feature-cards-body p {
-    font-size: 14px;
-    line-height: 20px;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
     letter-spacing: 0;
 }
 
 :where(.desktop-view) .feature-cards.numbered .feature-cards-body p {
     font-size: var(--body-font-size-m);
-    line-height: 24px;
+    line-height: 1.5rem;
 }
 
 .feature-cards.info .feature-cards-card {
@@ -219,36 +219,36 @@
 
 .feature-cards.info .feature-cards-body p.feature-cards-value,
 .feature-cards.info .feature-cards-body p.feature-cards-value strong {
-    margin: 8px 0 0;
+    margin: var(--spacing-md) 0 0;
     color: var(--text-color);
     font-size: var(--type-headline-h4-font-size);
     line-height: var(--type-headline-h4-line-height);
     font-weight: var(--type-headline-h4-font-weight);
-    letter-spacing: -0.4px;
+    letter-spacing: -0.025rem;
 }
 
 .feature-cards.info .feature-cards-body p.feature-cards-value:not(:last-child) {
-    margin-bottom: 24px;
-    padding-bottom: 24px;
-    border-bottom: 1px solid #dedede;
+    margin-bottom: var(--spacing-3xl);
+    padding-bottom: var(--spacing-3xl);
+    border-bottom: 0.0625rem solid var(--color-stroke-2-default);
 }
 
 /* about-us: company detail cards (icon + label/value pairs) */
 .feature-cards.about-us .feature-cards-list {
-  gap: 12px;
+  gap: var(--spacing-lg);
 }
 
 .feature-cards.about-us .feature-cards-card {
   justify-content: flex-start;
-  gap: 40px;
+  gap: var(--spacing-5xl);
   min-height: 0;
-  padding: 24px;
+  padding: var(--spacing-3xl);
   flex-direction: column;
 }
 
 .feature-cards.about-us .feature-cards-icon img {
-  width: 83px;
-  height: 72px;
+  width: 5.1875rem;
+  height: 4.5rem;
 }
 
 .feature-cards.about-us .feature-cards-body p {
@@ -256,57 +256,57 @@
   color: var(--muted-color);
   font-size: var(--body-font-size-xs);
   font-weight: 500;
-  line-height: 16px;
+  line-height: 1rem;
 }
 
 .feature-cards.about-us .feature-cards-body p.feature-cards-value {
-  margin: 8px 0 0;
+  margin: var(--spacing-md) 0 0;
   color: var(--text-color);
   font-size: var(--body-font-size-m);
   font-weight: 600;
-  line-height: 24px;
+  line-height: 1.5rem;
   letter-spacing: 0;
   overflow-wrap: anywhere;
 }
 
 .feature-cards.about-us .feature-cards-body p.feature-cards-value:not(:last-child) {
-  margin-bottom: 24px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid #dedede;
+  margin-bottom: var(--spacing-3xl);
+  padding-bottom: var(--spacing-3xl);
+  border-bottom: 0.0625rem solid var(--color-stroke-2-default);
 }
 
 /* split */
 .feature-cards.split {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: var(--spacing-lg);
 }
 
 .feature-cards.split.top-up-loan-cards .feature-cards-aside h2,
 .feature-cards.split.top-up-loan-cards .feature-cards-aside h3 {
-    margin: 0 0 32px;
-    font-size: 32px;
+    margin: 0 0 var(--spacing-4xl);
+    font-size: 2rem;
     font-weight: 500;
-    line-height: 40px;
+    line-height: 2.5rem;
 }
 
 
 .feature-cards.split .feature-cards-card.is-media {
-    min-height: 286px;
-    border-radius: 24px;
-    background-color: #e46400;
+    min-height: 17.875rem;
+    border-radius: var(--radius-3xl);
+    background-color: var(--color-extra-e46400);
 }
 
 .feature-cards.split.top-up-loan-cards .feature-cards-main .feature-cards-list .feature-cards-card.is-icon {
     flex-direction: column;
-    min-height: 200px;
-    max-height: 200px;
+    min-height: 12.5rem;
+    max-height: 12.5rem;
     justify-content: space-between;
-    gap: 12px;
+    gap: var(--spacing-lg);
 }
 
 .feature-cards.split .feature-cards-footer {
-    margin-top: 32px;
+    margin-top: var(--spacing-4xl);
     text-align: center;
 }
 
@@ -316,27 +316,27 @@
 
 .feature-cards.split .feature-cards-footer a.button {
     width: 100%;
-    padding: 14px 12px;
+    padding: 0.875rem var(--spacing-lg);
 }
 
 .feature-cards.split.top-up-loan-cards .feature-cards-footer p:not(.button-wrapper) {
-    margin: 12px 0 0;
+    margin: var(--spacing-lg) 0 0;
     color: var(--muted-color);
-    font-size: 12px;
-    line-height: 16px;
+    font-size: 0.75rem;
+    line-height: 1rem;
     font-weight: 500;
     letter-spacing: 0;
 }
 
 :where(.desktop-view) .feature-cards {
-    --feature-cards-radius: 32px;
+    --feature-cards-radius: var(--radius-4xl);
 }
 
 :where(.desktop-view) .feature-cards.split.top-up-loan-cards .feature-cards-aside h2,
 .feature-cards.split.top-up-loan-cards .feature-cards-aside h3 {
-    margin-bottom: 80px;
-    font-size: 40px;
-    line-height: 48px;
+    margin-bottom: var(--spacing-8xl);
+    font-size: 2.5rem;
+    line-height: 3rem;
 }
 
 :where(.desktop-view) .feature-cards .feature-cards-list {
@@ -346,25 +346,25 @@
 
 :where(.desktop-view) .feature-cards .feature-cards-card {
     grid-column: span 2;
-    min-height: 272px;
-    padding: 32px;
+    min-height: 17rem;
+    padding: var(--spacing-4xl);
 }
 
 :where(.desktop-view) .feature-cards .feature-cards-card.is-media {
     grid-column: span 3;
-    min-height: 350px;
+    min-height: 21.875rem;
 }
 
 :where(.desktop-view) .feature-cards .feature-cards-body h3,
 :where(.desktop-view) .feature-cards .feature-cards-body h4 {
     font-size: var(--heading-font-size-m);
-    line-height: 28px;
+    line-height: 1.75rem;
     letter-spacing: 0;
 }
 
 :where(.desktop-view) .feature-cards .feature-cards-body p {
     font-size: var(--body-font-size-m);
-    line-height: 24px;
+    line-height: 1.5rem;
 }
 
 /* trailing 2-up / single icon cards lay out horizontally */
@@ -386,11 +386,11 @@
 }
 
 :where(.desktop-view) .feature-cards .feature-cards-intro h2 {
-    margin-bottom: 40px;
+    margin-bottom: var(--spacing-5xl);
 }
 
 :where(.desktop-view) .feature-cards.numbered .feature-cards-card {
-    min-height: 220px;
+    min-height: 13.75rem;
 }
 
 :where(.desktop-view) .feature-cards.info .feature-cards-list {
@@ -415,7 +415,7 @@
 :where(.desktop-view) .feature-cards.about-us .feature-cards-card {
   grid-column: span 1;
   min-height: 0;
-  padding: 32px;
+  padding: var(--spacing-4xl);
 }
 
 :where(.desktop-view) .feature-cards.about-us .feature-cards-card:last-child:nth-child(odd) {
@@ -423,22 +423,22 @@
 }
 
 :where(.desktop-view) .feature-cards.about-us .feature-cards-icon img {
-  height: 72px;
+  height: 4.5rem;
 }
 
 :where(.desktop-view) .feature-cards.about-us .feature-cards-body p {
   font-size: var(--body-font-size-s);
-  line-height: 18px;
+  line-height: 1.125rem;
 }
 
 :where(.desktop-view) .feature-cards.about-us .feature-cards-body p.feature-cards-value {
   font-size: var(--heading-font-size-m);
-  line-height: 28px;
+  line-height: 1.75rem;
 }
 
 :where(.desktop-view) .feature-cards.split {
     flex-direction: row;
-    gap: 80px;
+    gap: var(--spacing-8xl);
 }
 
 :where(.desktop-view) .feature-cards.split .feature-cards-aside,
@@ -448,13 +448,13 @@
 
 :where(.desktop-view) .feature-cards.split .feature-cards-aside h2,
 :where(.desktop-view) .feature-cards.split .feature-cards-aside h3 {
-    margin-bottom: 32px;
+    margin-bottom: var(--spacing-4xl);
     font-size: var(--heading-font-size-xxl);
-    line-height: 48px;
+    line-height: 3rem;
 }
 
 :where(.desktop-view) .feature-cards.split .feature-cards-card.is-media {
-    min-height: 494px;
+    min-height: 30.875rem;
 }
 
 :where(.desktop-view) .feature-cards.split .feature-cards-list {
@@ -467,38 +467,38 @@
 
 :where(.desktop-view) .feature-cards.split.top-up-loan-cards .feature-cards-body h3 {
     font-size: var(--body-font-size-m);
-    line-height: 24px;
+    line-height: 1.5rem;
 }
 
 :where(.desktop-view) .feature-cards.split.top-up-loan-cards .feature-cards-body p {
     font-size: var(--body-font-size-s);
-    line-height: 18px;
+    line-height: 1.125rem;
 }
 
 :where(.desktop-view) .feature-cards.split.top-up-loan-cards .feature-cards-main .feature-cards-list .feature-cards-card.is-icon {
-    min-height: 272px;
-    max-height: 272px;
+    min-height: 17rem;
+    max-height: 17rem;
 }
 
 :where(.desktop-view) .feature-cards.split.top-up-loan-cards .feature-cards-footer p:not(.button-wrapper) {
-    font-size: 14px;
-    line-height: 18px;
+    font-size: 0.875rem;
+    line-height: 1.125rem;
 }
 
 /* icon-border: icon framed in a bordered square */
 .feature-cards.icon-border .feature-cards-icon img {
     box-sizing: border-box;
-    width: 32px;
-    height: 32px;
-    padding: 6.4px;
-    border: 0.8px solid #dedede;
-    border-radius: 8px;
-    background: #eee;
+    width: 2rem;
+    height: 2rem;
+    padding: 0.4rem;
+    border: 0.05rem solid var(--color-stroke-2-default);
+    border-radius: var(--radius-md);
+    background: var(--color-background-2-default-base);
 }
 
 :where(.desktop-view) .feature-cards.icon-border .feature-cards-icon img {
-    width: 40px;
-    height: 40px;
-    padding: 8px;
-    border-width: 1px;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: var(--spacing-md);
+    border-width: 0.0625rem;
 }
