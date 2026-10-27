@@ -4,23 +4,9 @@
       "id": "page-metadata",
       "fields": [
         {
-          "component": "text",
-          "valueType": "string",
-          "name": "jcr:title",
-          "label": "Title"
-        },
-        {
-          "component": "text",
-          "valueType": "string",
-          "name": "jcr:description",
-          "label": "Description"
-        },
-        {
-          "component": "text",
-          "valueType": "string",
-          "name": "keywords",
-          "multi": true,
-          "label": "Keywords"
+          "component": "tab",
+          "name": "basic",
+          "label": "Basic"
         },
         {
           "component": "text",
@@ -42,6 +28,30 @@
           "name": "breadcrumb",
           "label": "Breadcrumb title",
           "description": "Shown in the footer breadcrumb (Home > title). Defaults to the page heading."
+        },
+        {
+          "component": "tab",
+          "name": "seo",
+          "label": "SEO"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "jcr:title",
+          "label": "Title"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "jcr:description",
+          "label": "Description"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "keywords",
+          "multi": true,
+          "label": "Keywords"
         },
         {
           "component": "text",
@@ -96,8 +106,14 @@
           "label": "Twitter: Card",
           "value": "summary_large_image",
           "options": [
-            { "name": "Summary", "value": "summary" },
-            { "name": "Summary large image", "value": "summary_large_image" }
+            {
+              "name": "Summary",
+              "value": "summary"
+            },
+            {
+              "name": "Summary large image",
+              "value": "summary_large_image"
+            }
           ]
         },
         {
