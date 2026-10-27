@@ -24,16 +24,6 @@
   box-sizing: border-box;
 }
 
-/* scrim above the picture so the heading keeps its contrast */
-.hero::after {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  background: linear-gradient(90deg, rgb(0 0 0 / 55%) 0%, rgb(0 0 0 / 30%) 60%, rgb(0 0 0 / 15%) 100%);
-  pointer-events: none;
-}
-
 .hero img {
   object-fit: cover;
   width: 100%;
