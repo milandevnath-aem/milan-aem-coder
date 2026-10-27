@@ -66,7 +66,7 @@ function buildMore(chips, overflow) {
     more.textContent = selected ? selected.value : 'More';
     more.classList.toggle('is-selected', Boolean(selected));
     if (selected) more.setAttribute('aria-label', `${selected.value}, more loan categories`);
-    else more.removeAttribute('aria-label');
+    else more.setAttribute('aria-label', 'More loan categories');
     items.forEach((item, i) => item.setAttribute('aria-pressed', inputs[i].checked));
   };
   const close = (focusMore = false) => {

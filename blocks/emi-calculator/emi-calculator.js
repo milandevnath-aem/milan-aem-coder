@@ -101,6 +101,8 @@ function buildCalculator(types, link) {
     const tab = document.createElement('button');
     tab.type = 'button';
     tab.setAttribute('role', 'tab');
+    tab.id = `${uid}-tab-${i}`;
+    tab.setAttribute('aria-controls', `${uid}-result`);
     tab.textContent = type.title;
     tab.dataset.index = i;
     moveInstrumentation(type.row, tab);
@@ -126,6 +128,8 @@ function buildCalculator(types, link) {
 
   const result = document.createElement('div');
   result.className = 'emi-calculator-result';
+  result.id = `${uid}-result`;
+  if (types.length > 1) result.setAttribute('role', 'tabpanel');
   result.innerHTML = `
     <div class="emi-calculator-summary">
       <div>
@@ -287,6 +291,7 @@ function buildCalculator(types, link) {
     [...tablist.children].forEach((tab, i) => {
       tab.setAttribute('aria-selected', i === index);
       tab.tabIndex = i === index ? 0 : -1;
+      if (i === index && types.length > 1) result.setAttribute('aria-labelledby', tab.id);
     });
     Object.entries(fields).forEach(([key, group]) => {
       const {

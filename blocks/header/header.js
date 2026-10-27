@@ -151,6 +151,7 @@ function buildDesktopMenu(menus) {
     toggle.type = 'button';
     toggle.className = 'nav-menu-toggle';
     toggle.textContent = menu.label;
+    if (/^more$/i.test(menu.label)) toggle.setAttribute('aria-label', 'More navigation links');
     toggle.setAttribute('aria-expanded', 'false');
     toggle.setAttribute('aria-controls', `nav-panel-${uid}`);
 
@@ -340,7 +341,7 @@ async function openAccessibility() {
       <p>This is a preview of how text will look in this website. Adjust it based on your requirement.</p>
     </div>
     <div class="nav-a11y-controls">
-      <div class="nav-a11y-options" role="radiogroup" aria-label="Setting"></div>
+      <div class="nav-a11y-options" role="radiogroup" aria-label="Accessibility setting"></div>
       <div class="nav-a11y-slider">
         <p><label for="nav-a11y-range">Slide to adjust</label><span class="nav-a11y-preview" aria-hidden="true">Aa</span></p>
         <input id="nav-a11y-range" type="range">
@@ -361,7 +362,11 @@ async function openAccessibility() {
   };
   const select = (setting) => {
     current = setting;
-    [...options.children].forEach((b) => b.setAttribute('aria-checked', b.dataset.key === setting.key));
+    [...options.children].forEach((b) => {
+      const checked = b.dataset.key === setting.key;
+      b.setAttribute('aria-checked', checked);
+      b.tabIndex = checked ? 0 : -1;
+    });
     Object.assign(range, { min: setting.min, max: setting.max, step: setting.step });
     range.value = settings[setting.key] ?? setting.min;
     paint();
@@ -373,6 +378,18 @@ async function openAccessibility() {
     button.dataset.key = setting.key;
     button.append(icon(setting.icon), setting.label);
     button.addEventListener('click', () => select(setting));
+    button.addEventListener('keydown', (e) => {
+      const steps = {
+        ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1,
+      };
+      const step = steps[e.key];
+      if (!step) return;
+      e.preventDefault();
+      const list = [...options.children];
+      const next = list[(list.indexOf(button) + step + list.length) % list.length];
+      next.focus();
+      next.click();
+    });
     options.append(button);
   });
   range.addEventListener('input', () => {
@@ -726,6 +743,10 @@ export default async function decorate(block) {
   });
   nav.addEventListener('focusout', (e) => {
     if (desktopMenu && !desktopMenu.contains(e.relatedTarget)) desktopMenu.closeAll();
+  });
+  // the top bar scrolls away: bring it back when a keyboard user lands in it
+  navTopbar?.addEventListener('focusin', () => {
+    if (navTopbar.getBoundingClientRect().bottom <= 0) window.scrollTo({ top: 0 });
   });
   isDesktop.addEventListener('change', () => {
     setMenu(false);

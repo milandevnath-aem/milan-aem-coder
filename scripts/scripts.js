@@ -246,12 +246,36 @@ async function loadEager(doc) {
 }
 
 /**
+ * Decorative icons are hidden from screen readers (unless they are the only content of a
+ * control without a name); generic link text ("Apply now") gets the nearest heading as context.
+ * @param {Document} doc The document
+ */
+function improveAccessibility(doc) {
+  doc.querySelectorAll('span.icon:not([aria-hidden])').forEach((icon) => {
+    const host = icon.closest('a, button');
+    const named = host && (host.textContent.trim() || host.getAttribute('aria-label') || host.title);
+    if (!host || named) icon.setAttribute('aria-hidden', 'true');
+  });
+
+  const generic = /^(apply now|read more|know more|learn more|view all|explore|buy now)$/i;
+  doc.querySelectorAll('main a[href], main button').forEach((el) => {
+    const text = el.textContent.trim();
+    if (!generic.test(text) || el.hasAttribute('aria-label') || el.hasAttribute('aria-labelledby')) return;
+    const scope = el.closest('.section') || doc.body;
+    const heading = [...scope.querySelectorAll('h1, h2, h3, h4')]
+      .filter((h) => [4, 20].includes(h.compareDocumentPosition(el)))
+      .pop();
+    if (heading?.textContent.trim()) el.setAttribute('aria-label', `${text}: ${heading.textContent.trim()}`);
+  });
+}
+
+/**
  * Loads everything that doesn't need to be delayed.
  * @param {Element} doc The container element
  */
 async function loadLazy(doc) {
   autolinkModals(doc);
-  loadHeader(doc.querySelector('header'));
+  const headerLoaded = loadHeader(doc.querySelector('header'));
 
   const main = doc.querySelector('main');
   await loadSections(main);
@@ -260,7 +284,8 @@ async function loadLazy(doc) {
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
   if (hash && element) element.scrollIntoView();
 
-  loadFooter(doc.querySelector('footer'));
+  const footerLoaded = loadFooter(doc.querySelector('footer'));
+  Promise.all([headerLoaded, footerLoaded]).then(() => improveAccessibility(doc));
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   loadFonts();
