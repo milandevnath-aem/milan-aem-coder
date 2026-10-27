@@ -5,6 +5,7 @@ import { MEDIA } from '../../scripts/viewport.js';
 import {
   authoredForm, readForms, rememberForms, resolveForm,
 } from '../../scripts/category-forms.js';
+import { productType, setStableId, trackOnce } from '../../scripts/analytics.js';
 
 // chips shown in the row; the rest are listed under "More"
 const VISIBLE_CATEGORIES = 4;
@@ -138,10 +139,18 @@ function confirmOnSubmit(form, modalHref, forms = [], categories = []) {
   // on load without looking pages up; a change of category resolves its form
   show(authoredForm(selected(), forms, categories) || modalHref);
   form.addEventListener('change', update);
+  form.addEventListener('focusin', () => {
+    trackOnce('form_start:hero_callback', 'form_start', { form_name: 'hero_callback', product_type: productType(selected()) });
+  });
 
   form.addEventListener('submit', async (e) => {
-    if (form.getAttribute('action')) return;
+    // never a native submit: it would put the entered name and mobile number in the URL
     e.preventDefault();
+    // a configured Form submit URL is opened without the entered data
+    if (form.dataset.action) {
+      window.location.assign(form.dataset.action);
+      return;
+    }
     const target = await update();
     if (target) {
       // continue in the full application form, carrying over what was entered
@@ -216,8 +225,8 @@ function buildForm(config, isProduct) {
   const actionLink = actionRow?.querySelector('a');
   const action = actionLink?.getAttribute('href');
   const modalHref = action && isModalLink(action) ? action : '';
-  if (action && action !== '#' && !modalHref) form.action = action;
-  form.method = 'get';
+  if (action && action !== '#' && !modalHref) form.dataset.action = action;
+  form.method = 'post';
   form.innerHTML = `
     <div class="hero-loan-fields"></div>
     <fieldset class="hero-loan-categories">
@@ -226,6 +235,7 @@ function buildForm(config, isProduct) {
     </fieldset>
     <button type="submit" class="button primary"></button>`;
   form.querySelector('button[type="submit"]').textContent = cellText(actionRow) || 'Apply now';
+  setStableId(form.querySelector('button[type="submit"]'), 'hero-apply-submit');
 
   const labels = (fieldsText || 'Your name, Mobile number')
     .split(',').map((f) => f.trim()).filter(Boolean);

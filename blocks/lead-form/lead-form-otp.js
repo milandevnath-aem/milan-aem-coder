@@ -1,6 +1,7 @@
 import {
   OTP_LENGTH, RESEND_SECONDS, sendOtp, verifyOtp,
 } from './lead-api.js';
+import { setStableId } from '../../scripts/analytics.js';
 
 let uid = 0;
 
@@ -81,6 +82,7 @@ export function createOtpStep({
   const boxes = view.querySelector('.lead-form-otp-boxes');
   const error = view.querySelector('.lead-form-otp-error');
   const validate = view.querySelector('.lead-form-validate');
+  setStableId(validate, 'otp-validate');
   const resend = view.querySelector('.lead-form-resend-button');
   const inputs = [...Array(OTP_LENGTH)].map((_, i) => {
     const input = document.createElement('input');

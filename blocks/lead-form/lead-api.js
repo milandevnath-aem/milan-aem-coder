@@ -38,7 +38,8 @@ export async function verifyOtp({ otp }) {
 /**
  * Submits the lead once the mobile number is verified.
  * @param {Object<string, string>} data form values
- * @returns {Promise<{ ok: boolean }>}
+ * @returns {Promise<{ ok: boolean, leadId?: string }>}
+ * leadId is an internal reference, never the mobile number
  */
 export async function submitLead(data) { // eslint-disable-line no-unused-vars
   // TODO: call the lead service, e.g. fetch('/api/leads', { method: 'POST', body: ... })

@@ -1,6 +1,9 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createDropdown } from '../../scripts/dropdown.js';
+import {
+  orNotFound, productType, setStableId, track, trackOnce,
+} from '../../scripts/analytics.js';
 import { sendOtp, submitLead } from './lead-api.js';
 import { createOtpStep, createSuccessStep, setLoading } from './lead-form-otp.js';
 import {
@@ -348,6 +351,7 @@ export default function decorate(block) {
 
   const form = document.createElement('form');
   form.noValidate = true;
+  form.method = 'post'; // a native submit must never put the entered data in the URL
   form.className = 'lead-form-form';
   const fields = document.createElement('div');
   fields.className = 'lead-form-fields';
@@ -433,6 +437,7 @@ export default function decorate(block) {
   const submit = document.createElement('button');
   submit.type = 'submit';
   submit.className = 'button primary lead-form-submit';
+  setStableId(submit, 'apply-now-submit');
   submit.textContent = submitRow?.textContent.trim() || 'Apply now';
   if (submitRow) moveInstrumentation(submitRow, submit);
   legal.append(submit);
@@ -456,6 +461,21 @@ export default function decorate(block) {
   form.addEventListener('change', refresh);
   refresh();
 
+  // analytics: only the form name, product and city; never the entered personal data
+  const trackingFields = (data = Object.fromEntries(new FormData(form))) => {
+    const key = (re) => Object.keys(data).find((k) => re.test(k));
+    // eslint-disable-next-line no-shadow
+    const fields = {
+      form_name: 'apply_now',
+      product_type: productType(data[key(/category$/)] || pageCategory()),
+    };
+    const city = data[key(/city/i)];
+    if (city !== undefined) fields.city = orNotFound(city);
+    return fields;
+  };
+  form.addEventListener('focusin', () => {
+    trackOnce('form_start:apply_now', 'form_start', { form_name: 'apply_now', product_type: trackingFields().product_type });
+  });
   // mark fields the user left with an invalid value; clear the message while correcting
   form.addEventListener('focusout', (e) => {
     const check = checks.find((c) => c.control === e.target);
@@ -519,10 +539,11 @@ export default function decorate(block) {
     block.classList.add('is-sending');
     loading.hidden = false;
     announce('Sending OTP');
-    await sendOtp({ mobile, category: data[Object.keys(data).find((k) => k.endsWith('category'))] });
+    const sent = await sendOtp({ mobile, category: data[Object.keys(data).find((k) => k.endsWith('category'))] });
     setLoading(submit, false);
     block.classList.remove('is-sending');
     loading.hidden = true;
+    if (sent?.ok !== false) track('lead_form_submit', trackingFields(data));
 
     block.querySelector('.lead-form-otp')?.remove();
     const otp = createOtpStep({
@@ -535,7 +556,10 @@ export default function decorate(block) {
         submit.focus();
       },
       onVerified: async () => {
-        await submitLead(data);
+        const lead = await submitLead(data);
+        if (lead?.ok !== false) {
+          track('generate_lead', { ...trackingFields(data), lead_id: orNotFound(lead?.leadId) });
+        }
         const success = createSuccessStep({
           emiHref: document.querySelector('main .emi-calculator') ? '#emi-calculator' : `${siteRoot()}/home#emi-calculator`,
           onDone: close,

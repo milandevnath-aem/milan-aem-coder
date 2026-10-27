@@ -13,6 +13,7 @@ import {
 // sets the viewport classes on <html> before the page is shown
 import { isDesktop } from './viewport.js';
 import { createResponsivePicture, decorateDynamicMedia } from './images.js';
+import { trackContactClicks } from './analytics.js';
 
 /**
  * Moves all the attributes from a given elmenet to another given element.
@@ -251,6 +252,7 @@ async function loadEager(doc) {
  */
 async function loadLazy(doc) {
   autolinkModals(doc);
+  trackContactClicks(doc);
   loadHeader(doc.querySelector('header'));
 
   const main = doc.querySelector('main');
@@ -272,7 +274,7 @@ async function loadLazy(doc) {
  */
 function loadDelayed() {
   // eslint-disable-next-line import/no-cycle
-  window.setTimeout(() => import('./delayed.js'), 3000);
+  window.setTimeout(() => import('./delayed.js'), 5000);
   // load anything that can be postponed to the latest here
 }
 

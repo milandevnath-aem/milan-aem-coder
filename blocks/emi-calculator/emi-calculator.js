@@ -1,5 +1,6 @@
 import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createPicture } from '../../scripts/images.js';
+import { setStableId, trackOnce } from '../../scripts/analytics.js';
 
 const inr = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 });
 
@@ -34,6 +35,23 @@ function formatAmountShort(value) {
 
 function years(value) {
   return `${value} ${value === 1 ? 'year' : 'years'}`;
+}
+
+/** Loan amount band for analytics, e.g. "5-10L" */
+function amountBand(amount) {
+  const bands = [
+    [100000, '<1L'], [500000, '1-5L'], [1000000, '5-10L'], [2500000, '10-25L'],
+    [5000000, '25-50L'], [10000000, '50L-1Cr'],
+  ];
+  return bands.find(([limit]) => amount < limit)?.[1] || '1Cr+';
+}
+
+/** Calculator name for analytics from the loan type tab */
+function calculatorName(title) {
+  if (/two/i.test(title)) return 'two_wheeler_emi';
+  if (/property/i.test(title)) return 'lap_emi';
+  if (/car/i.test(title)) return 'car_emi';
+  return 'not_found';
 }
 
 /**
@@ -142,6 +160,21 @@ function buildCalculator(types, link) {
 
   const state = {};
   const cta = result.querySelector('.emi-calculator-cta');
+
+  // analytics: once per page view, after the user's first change has settled
+  let usedTimer;
+  const trackUse = () => {
+    clearTimeout(usedTimer);
+    usedTimer = setTimeout(() => {
+      trackOnce('calculator_use', 'calculator_use', {
+        calculator: calculatorName(cta.dataset.loanCategory),
+        loan_amount_band: amountBand(state.amount),
+        tenure_months: state.tenure * 12,
+      });
+    }, 1000);
+  };
+  card.addEventListener('input', trackUse);
+  tablist.addEventListener('click', trackUse);
 
   const display = {
     amount: (v) => inr.format(v),
@@ -321,6 +354,7 @@ function buildCalculator(types, link) {
   if (link) {
     cta.href = link.getAttribute('href');
     cta.textContent = link.textContent.trim() || 'Apply now';
+    setStableId(cta, 'emi-apply-now');
     moveInstrumentation(link, cta);
   } else {
     cta.remove();
