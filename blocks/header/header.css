@@ -50,7 +50,7 @@ header .nav-icon {
 }
 
 /* mobile menu: full screen */
-header nav[aria-expanded='true'] {
+header nav[data-expanded='true'] {
   position: fixed;
   inset: 0;
   z-index: 30;
@@ -71,7 +71,7 @@ body.nav-search-open {
 }
 
 :where(.desktop-view) header nav,
-:where(.desktop-view) header nav[aria-expanded='true'] {
+:where(.desktop-view) header nav[data-expanded='true'] {
   position: relative;
   display: flex;
   align-items: center;
@@ -329,11 +329,11 @@ header nav .nav-hamburger button {
 }
 
 header nav .nav-hamburger .nav-icon-close,
-header nav[aria-expanded='true'] .nav-hamburger .nav-icon-menu {
+header nav[data-expanded='true'] .nav-hamburger .nav-icon-menu {
   display: none;
 }
 
-header nav[aria-expanded='true'] .nav-hamburger .nav-icon-close {
+header nav[data-expanded='true'] .nav-hamburger .nav-icon-close {
   display: block;
 }
 
@@ -372,7 +372,7 @@ header nav .nav-sections {
   display: none;
 }
 
-header nav[aria-expanded='true'] .nav-sections {
+header nav[data-expanded='true'] .nav-sections {
   display: flex;
   flex-direction: column;
   align-self: stretch;
@@ -530,7 +530,7 @@ header nav .nav-login-wrapper .button {
 }
 
 :where(.desktop-view) header nav .nav-sections,
-:where(.desktop-view) header nav[aria-expanded='true'] .nav-sections {
+:where(.desktop-view) header nav[data-expanded='true'] .nav-sections {
   display: block;
   flex: 0 1 auto;
   min-height: 0;
@@ -695,7 +695,7 @@ header nav .nav-tools {
   justify-self: end;
 }
 
-header nav[aria-expanded='true'] .nav-tools {
+header nav[data-expanded='true'] .nav-tools {
   display: none;
 }
 
@@ -768,7 +768,7 @@ header nav .nav-tools a[aria-expanded='true'] .nav-icon-close {
 }
 
 :where(.desktop-view) header nav .nav-tools,
-:where(.desktop-view) header nav[aria-expanded='true'] .nav-tools {
+:where(.desktop-view) header nav[data-expanded='true'] .nav-tools {
   display: block;
   flex: 1 1 auto;
 }

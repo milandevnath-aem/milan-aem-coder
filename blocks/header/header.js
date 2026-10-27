@@ -655,11 +655,12 @@ export default async function decorate(block) {
   }
 
   const setMenu = (expanded) => {
-    nav.setAttribute('aria-expanded', expanded);
+    nav.dataset.expanded = expanded;
+    hamburgerButton.setAttribute('aria-expanded', expanded);
     hamburgerButton.setAttribute('aria-label', expanded ? 'Close navigation' : 'Open navigation');
     document.body.classList.toggle('nav-open', expanded && !isDesktop.matches);
   };
-  hamburgerButton.addEventListener('click', () => setMenu(nav.getAttribute('aria-expanded') !== 'true'));
+  hamburgerButton.addEventListener('click', () => setMenu(nav.dataset.expanded !== 'true'));
 
   nav.prepend(hamburger);
   navSections?.prepend(settingsBar);
@@ -715,7 +716,7 @@ export default async function decorate(block) {
     } else if (!search.hidden) {
       setSearch(false);
       searchLink?.focus();
-    } else if (nav.getAttribute('aria-expanded') === 'true' && !isDesktop.matches) {
+    } else if (nav.dataset.expanded === 'true' && !isDesktop.matches) {
       setMenu(false);
       hamburgerButton.focus();
     }

@@ -94,6 +94,25 @@
     box-sizing: border-box;
     width: 100%;
     padding: 80px 24px 40px;
+    isolation: isolate;
+}
+
+/* scrim between the picture and the text so the text keeps its contrast on any photo */
+.feature-banner .feature-banner-content::before {
+    content: '';
+    position: absolute;
+    inset: -40px -24px;
+    z-index: -1;
+    background: radial-gradient(ellipse at center, rgb(0 0 0 / 55%) 0%, rgb(0 0 0 / 30%) 55%, transparent 80%);
+    pointer-events: none;
+}
+
+.feature-banner .dark-text .feature-banner-content::before {
+    background: radial-gradient(ellipse at center, rgb(255 255 255 / 65%) 0%, rgb(255 255 255 / 35%) 55%, transparent 80%);
+}
+
+.feature-banner .side-image .feature-banner-content::before {
+    content: none;
 }
 
 .feature-banner .feature-banner-content h2,

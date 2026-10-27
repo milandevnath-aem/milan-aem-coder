@@ -173,9 +173,11 @@
 .requirements .requirements-title {
   margin: 0;
   color: var(--muted-color);
+  font-family: inherit;
   font-size: var(--body-font-size-m);
   font-weight: 500;
   line-height: 24px;
+  letter-spacing: normal;
 }
 
 .requirements .requirements-text p {

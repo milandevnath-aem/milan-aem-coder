@@ -87,6 +87,10 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  min-width: 0;
+  margin: 0;
+  border: 0;
+  padding: 0;
 }
 
 .emi-calculator .emi-calculator-field {
@@ -339,15 +343,10 @@
 }
 
 .emi-calculator .emi-calculator-breakdown {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr auto;
   gap: 12px;
   margin: 0;
-}
-
-.emi-calculator .emi-calculator-breakdown div {
-  display: flex;
-  justify-content: space-between;
   font-size: var(--type-b1-size);
   font-weight: 500;
   line-height: var(--type-b1-line);

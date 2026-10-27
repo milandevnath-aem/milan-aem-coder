@@ -23,7 +23,7 @@ function buildCard(row, isDocuments) {
     picture.className = 'requirements-icon';
     card.append(picture);
   }
-  const label = document.createElement(isDocuments ? 'h3' : 'p');
+  const label = document.createElement('h3');
   label.className = 'requirements-title';
   label.textContent = title;
   moveInstrumentation(titleCell, label);
@@ -47,8 +47,8 @@ function addCarousel(panel, label) {
   const nav = document.createElement('div');
   nav.className = 'requirements-nav';
   nav.innerHTML = `
-    <button type="button" class="requirements-prev" aria-label="Previous"></button>
-    <button type="button" class="requirements-next" aria-label="Next"></button>`;
+    <button type="button" class="requirements-prev" aria-label="Previous" title="Previous"></button>
+    <button type="button" class="requirements-next" aria-label="Next" title="Next"></button>`;
   const [prev, next] = nav.children;
   const update = () => {
     const max = list.scrollWidth - list.clientWidth - 1;
@@ -137,8 +137,11 @@ export default function decorate(block) {
         });
       });
       button.addEventListener('keydown', (e) => {
-        const keys = { ArrowRight: i + 1, ArrowLeft: i - 1 };
+        const keys = {
+          ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1,
+        };
         if (!(e.key in keys)) return;
+        e.preventDefault();
         const next = tablist.children[(keys[e.key] + tabs.length) % tabs.length];
         next.click();
         next.focus();

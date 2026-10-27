@@ -65,7 +65,7 @@ function sliderGroup(id, label) {
   group.className = 'emi-calculator-field';
   group.innerHTML = `
     <div class="emi-calculator-field-head">
-      <label for="${id}-value">${label}</label>
+      <label id="${id}-label" for="${id}-value">${label}</label>
       <img class="emi-calculator-error-icon" src="${window.hlx.codeBasePath}/icons/alert.svg" alt="" width="16" height="16">
       <div class="emi-calculator-value">
         <span class="emi-calculator-prefix"></span>
@@ -78,7 +78,7 @@ function sliderGroup(id, label) {
       <span class="emi-calculator-slider-fill" aria-hidden="true"></span>
       <span class="emi-calculator-slider-knob" aria-hidden="true"></span>
       <span class="emi-calculator-slider-track" aria-hidden="true"></span>
-      <input id="${id}-range" class="emi-calculator-range" type="range" aria-label="${label}">
+      <input id="${id}-range" class="emi-calculator-range" type="range" aria-labelledby="${id}-label">
     </div>
     <div class="emi-calculator-bounds" id="${id}-bounds"><span></span><span></span></div>`;
   return group;
@@ -116,9 +116,12 @@ function buildCalculator(types, link) {
   fields.amount.querySelector('.emi-calculator-prefix').textContent = '₹';
   fields.rate.querySelector('.emi-calculator-suffix').textContent = '%';
   fields.tenure.querySelector('.emi-calculator-suffix').textContent = 'Years';
-  const fieldList = document.createElement('div');
+  const fieldList = document.createElement('fieldset');
   fieldList.className = 'emi-calculator-fields';
-  fieldList.append(fields.amount, fields.rate, fields.tenure);
+  const legend = document.createElement('legend');
+  legend.className = 'visually-hidden';
+  legend.textContent = 'Loan details';
+  fieldList.append(legend, fields.amount, fields.rate, fields.tenure);
   controls.append(fieldList);
 
   const result = document.createElement('div');
@@ -127,15 +130,15 @@ function buildCalculator(types, link) {
     <div class="emi-calculator-summary">
       <div>
         <p class="emi-calculator-label">Your monthly EMI will be</p>
-        <p class="emi-calculator-emi" aria-live="polite"><span>₹</span><strong></strong></p>
+        <output class="emi-calculator-emi" aria-live="polite"><span>₹</span><strong></strong></output>
         <p class="emi-calculator-label emi-calculator-note"></p>
       </div>
       <a class="button emi-calculator-cta" href="#"></a>
     </div>
     <dl class="emi-calculator-breakdown">
-      <div><dt>Principal</dt><dd data-key="principal"></dd></div>
-      <div><dt>Interest Payable</dt><dd data-key="interest"></dd></div>
-      <div><dt>Total Amount Payable</dt><dd data-key="total"></dd></div>
+      <dt>Principal</dt><dd data-key="principal"></dd>
+      <dt>Interest Payable</dt><dd data-key="interest"></dd>
+      <dt>Total Amount Payable</dt><dd data-key="total"></dd>
     </dl>`;
 
   card.append(controls, result);
@@ -310,8 +313,11 @@ function buildCalculator(types, link) {
   [...tablist.children].forEach((tab, i) => {
     tab.addEventListener('click', () => selectType(i));
     tab.addEventListener('keydown', (e) => {
-      const keys = { ArrowRight: i + 1, ArrowLeft: i - 1 };
+      const keys = {
+        ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: types.length - 1,
+      };
       if (!(e.key in keys)) return;
+      e.preventDefault();
       const next = (keys[e.key] + types.length) % types.length;
       selectType(next);
       tablist.children[next].focus();
