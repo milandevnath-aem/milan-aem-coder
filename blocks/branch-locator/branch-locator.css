@@ -7,6 +7,7 @@
   padding: 44px var(--fb-inset) 24px;
   border-radius: 32px;
   background:
+    linear-gradient(180deg, rgb(0 0 0 / 28%) 0, rgb(0 0 0 / 0%) 260px),
     radial-gradient(circle at 85% 0%, rgb(238 156 147 / 80%) 0, transparent 45%),
     linear-gradient(180deg, #c33d33 0%, #f6e6cf 100%);
   color: var(--inverse-color);
