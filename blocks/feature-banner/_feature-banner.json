@@ -27,7 +27,6 @@
               "name": "Feature Banner Item",
               "model": "feature-banner-item",
               "style_align": "left",
-              "style_theme": "dark",
               "style_media": "background"
             }
           }
@@ -101,10 +100,10 @@
           "name": "style_theme",
           "label": "Text colour",
           "valueType": "string",
-          "value": "dark",
+          "value": "",
           "options": [
-            { "name": "Dark text (light images)", "value": "dark" },
-            { "name": "Light text (dark images)", "value": "light" }
+            { "name": "Dark text (light images)", "value": "dark-text" },
+            { "name": "Light text (dark images)", "value": "light-text" }
           ]
         },
         {

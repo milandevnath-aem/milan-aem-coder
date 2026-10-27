@@ -43,6 +43,10 @@
               "value": "bg-grey"
             },
             {
+              "name": "Section text align left",
+              "value": "text-align-left"
+            },
+            {
               "name": "Animate text (banner text lights up on scroll)",
               "value": "animate-text"
             },
@@ -80,7 +84,7 @@
             },
             {
               "name": "Background grey",
-              "value": "bg-grey"
+              "value": "sec-bg-grey"
             }
           ]
         },
@@ -128,10 +132,12 @@
         "offers",
         "testimonials",
         "service-links",
+        "link-list",
         "article-cards",
         "feature-banner",
         "feature-cards",
         "requirements",
+        "partner-list",
         "faq",
         "team",
         "branch-locator",

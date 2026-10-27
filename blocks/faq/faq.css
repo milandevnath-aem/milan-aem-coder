@@ -85,7 +85,7 @@
 .faq .faq-intro .faq-intro-note-list {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-2xl);
+    gap: var(--spacing-3xl);
     margin: var(--spacing-4xl) 0 0;
     padding: 0;
     list-style: none;
@@ -202,6 +202,10 @@
     margin-top: var(--spacing-5xl);
     padding: var(--spacing-4xl);
     border-radius: var(--radius-3xl);
+}
+
+:where(.desktop-view) .faq .faq-intro .faq-intro-note-list{
+    gap: var(--spacing-4xl);
 }
 
 :where(.desktop-view) .faq .faq-list {

@@ -163,11 +163,16 @@
   margin-top: auto;
 }
 
-.requirements .requirements-icon img {
+.requirements.eligibility .requirements-icon img {
   display: block;
-  width: 60px;
-  height: 60px;
+  width: 52px;
+  height: 52px;
   object-fit: contain;
+}
+
+:where(.desktop-view) .requirements.eligibility .requirements-icon img {
+  width: 72px;
+  height: 72px;
 }
 
 .requirements .requirements-title {
@@ -238,6 +243,13 @@
   font-size: var(--body-font-size-s);
   font-weight: 500;
   line-height: 20px;
+}
+
+.requirements.eligibility.elgb-small-text .requirements-text p {
+  font-size: var(--type-headline-h4-font-size);
+  line-height: var(--type-headline-h4-line-height);
+  letter-spacing: var(--type-headline-h4-letter-spacing);
+  font-weight: var(--type-headline-h4-font-weight);
 }
 
 /* carousel arrows */
