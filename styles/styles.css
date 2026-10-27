@@ -778,6 +778,10 @@ main .section.bg-grey {
   text-align: center;
 }
 
+main .section.bg-grey.text-align-left {
+  text-align: left;
+}
+
 main .section.bg-grey p {
   margin: 0;
 }
@@ -786,8 +790,11 @@ main .section.brand.has-background {
   margin: 16px 0 0 ;
 }
 
-main .section.brand .default-content-wrapper,
-main .section.bg-grey .default-content-wrapper {
+:where(.desktop-view) main .section.brand.has-background {
+  margin: initial;
+}
+
+main .section.brand .default-content-wrapper {
   max-width: calc(680px + 2 * var(--gb-margin));
 }
 
