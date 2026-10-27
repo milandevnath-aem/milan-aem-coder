@@ -778,6 +778,10 @@ main .section.bg-grey {
   text-align: center;
 }
 
+main .section.bg-grey.text-align-left {
+  text-align: left;
+}
+
 main .section.bg-grey p {
   margin: 0;
 }

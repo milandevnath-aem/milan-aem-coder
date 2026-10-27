@@ -171,6 +171,10 @@
             "value": "bggrey-remove-space"
           },
           {
+            "name": "Section text align left",
+            "value": "text-align-left"
+          },
+          {
             "name": "Animate text (banner text lights up on scroll)",
             "value": "animate-text"
           },
@@ -642,6 +646,34 @@
       {
         "component": "text",
         "valueType": "string",
+        "name": "tenure_step",
+        "label": "Slider step (years)",
+        "description": "How much one slider move changes the value, e.g. 1. Must be more than 0 and no more than the range."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "tenure_minMonths",
+        "label": "Minimum tenure (months)",
+        "description": "Whole months, e.g. 12. Used when the customer switches the tenure to MO. Leave empty to use the minimum years × 12."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "tenure_maxMonths",
+        "label": "Maximum tenure (months)",
+        "description": "Whole months, e.g. 84. Must not be less than the minimum. Leave empty to use the maximum years × 12."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "tenure_stepMonths",
+        "label": "Slider step (months)",
+        "description": "How many months one slider move changes the value, e.g. 1 or 6. Leave empty for 1."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
         "name": "tenure_defaultError",
         "label": "⚠ Error: default tenure must be between the minimum and maximum",
         "description": "Change the default, minimum or maximum. Until this is fixed, the calculator starts at the nearest limit.",
@@ -690,9 +722,28 @@
       {
         "component": "text",
         "valueType": "string",
-        "name": "tenure_step",
-        "label": "Slider step (years)",
-        "description": "How much one slider move changes the value, e.g. 1. Must be more than 0 and no more than the range."
+        "name": "tenure_monthsError",
+        "label": "⚠ Error: minimum months must not be more than maximum months",
+        "description": "Change the minimum or maximum months. Until this is fixed, the calculator uses the minimum and maximum years × 12.",
+        "readOnly": true,
+        "condition": {
+          ">": [
+            {
+              "+": [
+                {
+                  "var": "tenure_minMonths"
+                }
+              ]
+            },
+            {
+              "+": [
+                {
+                  "var": "tenure_maxMonths"
+                }
+              ]
+            }
+          ]
+        }
       }
     ]
   },
@@ -1251,6 +1302,93 @@
     ]
   },
   {
+    "id": "link-list",
+    "fields": [
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Background",
+        "valueType": "string",
+        "value": "bg-grey",
+        "options": [
+          {
+            "name": "Grey background (cards)",
+            "value": "bg-grey"
+          },
+          {
+            "name": "No background (divider list)",
+            "value": ""
+          }
+        ]
+      },
+      {
+        "component": "richtext",
+        "name": "side",
+        "value": "",
+        "label": "Side title & description",
+        "description": "Left column on desktop: a heading and a paragraph. Leave empty on the second list in the same section.",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Intro",
+        "description": "Heading and subtitle shown above the list.",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "note",
+        "value": "",
+        "label": "Note",
+        "description": "Grey note box shown below the list.",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "link-list-item",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Image",
+        "description": "Optional thumbnail. Shown only when authored.",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Alt text",
+        "value": ""
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "text",
+        "label": "Text",
+        "value": ""
+      },
+      {
+        "component": "aem-content",
+        "name": "link",
+        "label": "Link",
+        "description": "Opens in a new tab. Without a link the item is not clickable."
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "icon",
+        "label": "Arrow icon",
+        "description": "Right-hand icon (SVG recommended). Shown only when authored.",
+        "multi": false
+      }
+    ]
+  },
+  {
     "id": "offer",
     "fields": [
       {
@@ -1347,6 +1485,51 @@
     ]
   },
   {
+    "id": "partner-list",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "title",
+        "label": "Title",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "description",
+        "value": "",
+        "label": "Description",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "partner-item",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Icon / logo",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Alt text",
+        "value": ""
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "text",
+        "label": "Label",
+        "value": ""
+      }
+    ]
+  },
+  {
     "id": "product-tab",
     "fields": [
       {
@@ -1384,7 +1567,7 @@
     "id": "requirements",
     "fields": [
       {
-        "component": "select",
+        "component": "multiselect",
         "name": "classes",
         "label": "Variant",
         "valueType": "string",
@@ -1397,6 +1580,10 @@
           {
             "name": "Documents (title and checklist)",
             "value": "documents"
+          },
+          {
+            "name": "Eligibility Smaller font sizes due to larger content",
+            "value": "elgb-small-text"
           }
         ]
       },
