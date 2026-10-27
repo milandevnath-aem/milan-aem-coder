@@ -60,11 +60,11 @@
 
 .offers .offers-content .offers-eyebrow {
     margin-bottom: 8px;
-    text-transform: uppercase;
     font-size: var(--type-eyebrow-size);
     font-weight: 600;
     line-height: var(--type-eyebrow-line);
     letter-spacing: var(--type-eyebrow-ls);
+    text-transform: uppercase;
 }
 
 .offers .offers-content h2,
