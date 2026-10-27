@@ -139,8 +139,6 @@ footer .footer-other a:any-link {
 footer .footer-links li li a:any-link,
 footer .footer-other li a:any-link {
   display: inline-block;
-  min-height: 24px;
-  line-height: 24px;
 }
 
 /* bottom bar */
