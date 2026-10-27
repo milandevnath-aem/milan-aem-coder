@@ -22,10 +22,12 @@
       "offers",
       "testimonials",
       "service-links",
+      "link-list",
       "article-cards",
       "feature-banner",
       "feature-cards",
       "requirements",
+      "partner-list",
       "faq",
       "team",
       "branch-locator",
@@ -102,9 +104,21 @@
     ]
   },
   {
+    "id": "link-list",
+    "components": [
+      "link-list-item"
+    ]
+  },
+  {
     "id": "offers",
     "components": [
       "offer"
+    ]
+  },
+  {
+    "id": "partner-list",
+    "components": [
+      "partner-item"
     ]
   },
   {
