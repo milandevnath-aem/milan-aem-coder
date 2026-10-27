@@ -226,7 +226,10 @@
                   "tenure_min": "1",
                   "tenure_max": "7",
                   "tenure_default": "5",
-                  "tenure_step": "1"
+                  "tenure_step": "1",
+                  "tenure_minMonths": "12",
+                  "tenure_maxMonths": "84",
+                  "tenure_stepMonths": "1"
                 }
               }
             }
