@@ -41,6 +41,13 @@ function buildCard(row, isDocuments) {
 
 function addCarousel(panel, label) {
   const list = panel.querySelector('.requirements-cards');
+  const region = document.createElement('div');
+  region.className = 'requirements-carousel';
+  region.setAttribute('role', 'region');
+  region.setAttribute('aria-roledescription', 'carousel');
+  region.setAttribute('aria-label', label || 'Requirements');
+  list.replaceWith(region);
+  region.append(list);
   // the cards scroll sideways: focusable so keyboard users can scroll with arrow keys
   list.tabIndex = 0;
   list.setAttribute('aria-label', label || 'Requirements');

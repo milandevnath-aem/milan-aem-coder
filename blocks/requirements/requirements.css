@@ -242,6 +242,11 @@
   line-height: 20px;
 }
 
+/* carousel region wrapper adds no box */
+.requirements .requirements-carousel {
+  display: contents;
+}
+
 /* carousel arrows */
 .requirements .requirements-nav {
   display: none;
