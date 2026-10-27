@@ -174,7 +174,7 @@ function buildField(label, index) {
   }
   const input = document.createElement('input');
   input.placeholder = label;
-  input.setAttribute('aria-label', label);
+  input.setAttribute('aria-label', `${label} (required)`);
   input.required = true;
   input.name = label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || `field-${index}`;
   if (isPhone) {
