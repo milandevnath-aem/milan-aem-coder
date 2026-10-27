@@ -638,6 +638,34 @@
       {
         "component": "text",
         "valueType": "string",
+        "name": "tenure_step",
+        "label": "Slider step (years)",
+        "description": "How much one slider move changes the value, e.g. 1. Must be more than 0 and no more than the range."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "tenure_minMonths",
+        "label": "Minimum tenure (months)",
+        "description": "Whole months, e.g. 12. Used when the customer switches the tenure to MO. Leave empty to use the minimum years × 12."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "tenure_maxMonths",
+        "label": "Maximum tenure (months)",
+        "description": "Whole months, e.g. 84. Must not be less than the minimum. Leave empty to use the maximum years × 12."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "tenure_stepMonths",
+        "label": "Slider step (months)",
+        "description": "How many months one slider move changes the value, e.g. 1 or 6. Leave empty for 1."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
         "name": "tenure_defaultError",
         "label": "⚠ Error: default tenure must be between the minimum and maximum",
         "description": "Change the default, minimum or maximum. Until this is fixed, the calculator starts at the nearest limit.",
@@ -686,9 +714,28 @@
       {
         "component": "text",
         "valueType": "string",
-        "name": "tenure_step",
-        "label": "Slider step (years)",
-        "description": "How much one slider move changes the value, e.g. 1. Must be more than 0 and no more than the range."
+        "name": "tenure_monthsError",
+        "label": "⚠ Error: minimum months must not be more than maximum months",
+        "description": "Change the minimum or maximum months. Until this is fixed, the calculator uses the minimum and maximum years × 12.",
+        "readOnly": true,
+        "condition": {
+          ">": [
+            {
+              "+": [
+                {
+                  "var": "tenure_minMonths"
+                }
+              ]
+            },
+            {
+              "+": [
+                {
+                  "var": "tenure_maxMonths"
+                }
+              ]
+            }
+          ]
+        }
       }
     ]
   },
