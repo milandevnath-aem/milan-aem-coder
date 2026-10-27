@@ -1,0 +1,127 @@
+{
+  "definitions": [
+    {
+      "title": "Link List",
+      "id": "link-list",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Link List",
+              "model": "link-list",
+              "filter": "link-list",
+              "classes": "bg-grey"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Link List Item",
+      "id": "link-list-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "name": "Link List Item",
+              "model": "link-list-item"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "link-list",
+      "fields": [
+        {
+          "component": "select",
+          "name": "classes",
+          "label": "Background",
+          "valueType": "string",
+          "value": "bg-grey",
+          "options": [
+            { "name": "Grey background (cards)", "value": "bg-grey" },
+            { "name": "No background (divider list)", "value": "" }
+          ]
+        },
+        {
+          "component": "richtext",
+          "name": "side",
+          "value": "",
+          "label": "Side title & description",
+          "description": "Left column on desktop: a heading and a paragraph. Leave empty on the second list in the same section.",
+          "valueType": "string"
+        },
+        {
+          "component": "richtext",
+          "name": "text",
+          "value": "",
+          "label": "Intro",
+          "description": "Heading and subtitle shown above the list.",
+          "valueType": "string"
+        },
+        {
+          "component": "richtext",
+          "name": "note",
+          "value": "",
+          "label": "Note",
+          "description": "Grey note box shown below the list.",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "link-list-item",
+      "fields": [
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "image",
+          "label": "Image",
+          "description": "Optional thumbnail. Shown only when authored.",
+          "multi": false
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "imageAlt",
+          "label": "Alt text",
+          "value": ""
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "text",
+          "label": "Text",
+          "value": ""
+        },
+        {
+          "component": "aem-content",
+          "name": "link",
+          "label": "Link",
+          "description": "Opens in a new tab. Without a link the item is not clickable."
+        },
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "icon",
+          "label": "Arrow icon",
+          "description": "Right-hand icon (SVG recommended). Shown only when authored.",
+          "multi": false
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "link-list",
+      "components": [
+        "link-list-item"
+      ]
+    }
+  ]
+}
