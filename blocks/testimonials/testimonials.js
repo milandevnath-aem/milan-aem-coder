@@ -84,6 +84,9 @@ export default function decorate(block) {
   track.addEventListener('scroll', () => updateButtons(track, prev, next), { passive: true });
 
   block.replaceChildren(track, controls);
+  block.setAttribute('role', 'region');
+  block.setAttribute('aria-roledescription', 'carousel');
+  block.setAttribute('aria-label', 'Customer testimonials');
   requestAnimationFrame(() => updateButtons(track, prev, next));
   new ResizeObserver(() => updateButtons(track, prev, next)).observe(track);
 }

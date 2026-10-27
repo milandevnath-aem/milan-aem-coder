@@ -267,6 +267,18 @@ function improveAccessibility(doc) {
       .pop();
     if (heading?.textContent.trim()) el.setAttribute('aria-label', `${text}: ${heading.textContent.trim()}`);
   });
+
+  // block headings are fixed at h3: expose the level that follows the previous heading
+  let prev = 0;
+  doc.querySelectorAll('main h1, main h2, main h3, main h4, main h5, main h6').forEach((h) => {
+    const level = Number(h.tagName[1]);
+    if (prev && level > prev + 1 && !h.hasAttribute('aria-level')) {
+      h.setAttribute('aria-level', prev + 1);
+      prev += 1;
+    } else {
+      prev = Number(h.getAttribute('aria-level')) || level;
+    }
+  });
 }
 
 /**
