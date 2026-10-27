@@ -277,7 +277,7 @@ function buildCalculator(types, link) {
       trackOnce('calculator_use', 'calculator_use', {
         calculator: calculatorName(cta.dataset.loanCategory),
         loan_amount_band: amountBand(state.amount),
-        tenure_months: state.tenure * 12,
+        tenure_months: tenureInMonths(),
       });
     }, 1000);
   };

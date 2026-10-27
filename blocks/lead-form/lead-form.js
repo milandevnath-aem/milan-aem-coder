@@ -543,7 +543,7 @@ export default function decorate(block) {
     setLoading(submit, false);
     block.classList.remove('is-sending');
     loading.hidden = true;
-    if (sent?.ok !== false) track('lead_form_submit', trackingFields(data));
+    if (sent?.ok) track('lead_form_submit', trackingFields(data));
 
     block.querySelector('.lead-form-otp')?.remove();
     const otp = createOtpStep({
@@ -557,7 +557,7 @@ export default function decorate(block) {
       },
       onVerified: async () => {
         const lead = await submitLead(data);
-        if (lead?.ok !== false) {
+        if (lead?.ok) {
           track('generate_lead', { ...trackingFields(data), lead_id: orNotFound(lead?.leadId) });
         }
         const success = createSuccessStep({
