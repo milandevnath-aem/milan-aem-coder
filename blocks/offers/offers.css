@@ -61,12 +61,7 @@
     position: absolute;
     inset: -40px -24px;
     z-index: -1;
-    background: radial-gradient(ellipse at center, rgb(0 0 0 / 50%) 0%, rgb(0 0 0 / 25%) 55%, transparent 80%);
     pointer-events: none;
-}
-
-.offers .offers-dark-text .offers-content::before {
-    background: radial-gradient(ellipse at center, rgb(255 255 255 / 65%) 0%, rgb(255 255 255 / 35%) 55%, transparent 80%);
 }
 
 .offers .offers-content p {
