@@ -83,7 +83,7 @@
               "value": "no-margin-bottom-desktop"
             },
             {
-              "name": "Background grey",
+              "name": "`Grey background, left-aligned text`",
               "value": "sec-bg-grey"
             }
           ]
