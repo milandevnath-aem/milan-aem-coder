@@ -6,7 +6,7 @@
 
     const { image } = await generateCaptcha(signal);    // on opening the form, and on refresh
     const product = productFor('New Car Finance');      // 'NewCarFinance'
-    const lead = buildLead(form, 'New Car Finance');    // every form field + Product__c 'New CAR'
+    const lead = buildLead(form, 'New Car Finance');    // the API's fields + Product 'New CAR'
     const session = createLeadSession({ mobile: '8097475810', product, lead });
     try {
       await session.submit('aB3dE');                    // verifies the captcha, texts the OTP
@@ -22,8 +22,8 @@
   A category without a product (Car Lease, Dealer Finance) skips the APIs the same way.
 */
 import {
-  API_BASE_URL, CAPTCHA_LENGTH, DEMO_MODE, ENDPOINTS, LEAD_STORE_KEY, MESSAGES,
-  OTP_LENGTH, REQUEST_HEADERS, REQUEST_TIMEOUT_MS,
+  API_BASE_URL, CAPTCHA_LENGTH, DEMO_MODE, ENDPOINTS, LEAD_CREATED_EVENT, LEAD_RESULT_KEY,
+  LEAD_STORE_KEY, MESSAGES, OTP_LENGTH, REQUEST_HEADERS, REQUEST_TIMEOUT_MS,
 } from './lead-api-config.js';
 
 export { CAPTCHA_LENGTH, OTP_LENGTH, RESEND_SECONDS } from './lead-api-config.js';
@@ -42,7 +42,7 @@ const wait = (ms) => new Promise((resolve) => { setTimeout(resolve, ms); });
  * - http:          the server answered with an error status (see `status`, `code`)
  * - bad-response:  the answer is not the expected JSON
  * - rejected:      the service said no (status is not "success"), e.g. a wrong OTP
- * - lead-failed:   the OTP was accepted but the lead was not created (Result is not "Success")
+ * (a lead that was not created is an `http` error with status 502 and code LEAD_FAILED)
  * `code` is the API error code (INVALID_CAPTCHA, CAPTCHA_REQUIRED, INVALID_OTP, BAD_REQUEST...)
  * and `serverMessage` its message. `step` ('captcha' or 'otp') says which call of
  * session.submit failed.
@@ -225,6 +225,31 @@ async function verifyCaptcha(captcha, signal) {
   await post('captchaVerify', { captcha }, signal);
 }
 
+/**
+ * The lead id in a lead API answer: LeadId (TWL, LAP) or the Lead record of the Salesforce
+ * composite (NewCarFinance).
+ * @param {Object|string} data `data` of a successful otp-verify
+ * @returns {string} '' when the answer has none
+ */
+function leadIdOf(data) {
+  if (!data || typeof data !== 'object') return '';
+  const lead = data.compositeResponse?.find((part) => part.referenceId === 'referLead');
+  return String(data.LeadId || data.LeadNumber || lead?.body?.id || '');
+}
+
+/**
+ * Keeps a created lead for analytics: window[LEAD_RESULT_KEY] and a LEAD_CREATED_EVENT on
+ * document (see lead-api-config.js).
+ * @param {{ leadId: string, category: string, loanCategory: string }} lead
+ * @returns {{ leadId: string, category: string, loanCategory: string, createdAt: string }}
+ */
+function keepCreatedLead(lead) {
+  const created = { ...lead, createdAt: new Date().toISOString() };
+  window[LEAD_RESULT_KEY] = created;
+  document.dispatchEvent(new CustomEvent(LEAD_CREATED_EVENT, { detail: created }));
+  return created;
+}
+
 /** Removes the journey's data from window (when it is still `journey`, if given). */
 export function clearJourney(journey) {
   if (!journey || window[LEAD_STORE_KEY] === journey) delete window[LEAD_STORE_KEY];
@@ -237,15 +262,20 @@ export function clearJourney(journey) {
  * @param {string} options.product backend product (LAP, TWL, NewCarFinance), '' when the
  *   category has no API yet
  * @param {Object<string, string>} options.lead see buildLead in lead-payload.js
+ * @param {string} [options.loanCategory] the loan category picked in the form, e.g.
+ *   "Used Car & Re-finance", kept with the created lead for analytics
  * @returns {{
  *   live: boolean,
  *   submit: (captcha: string|null) => Promise<void>,
  *   sendOtp: () => Promise<void>,
- *   verifyOtp: (otp: string) => Promise<{ leadNumber: string, stage: string, data: Object }>,
+ *   verifyOtp: (otp: string) => Promise<{ leadId: string, category: string,
+ *     loanCategory: string, createdAt: string, stage: string, data: Object }>,
  *   cancel: () => void,
  * }}
  */
-export function createLeadSession({ mobile, product, lead }) {
+export function createLeadSession({
+  mobile, product, lead, loanCategory = '',
+}) {
   const demo = isDemo();
   const live = Boolean(product) && !demo;
   if (!product && !demo) {
@@ -305,7 +335,10 @@ export function createLeadSession({ mobile, product, lead }) {
       await wait(1200);
       if (otp !== DEMO_OTP) throw new LeadApiError('rejected', 'demo mode: wrong OTP', { code: 'INVALID_OTP' });
       clearJourney(journey);
-      return { leadNumber: '', stage: 'demo', data: {} };
+      // no lead is created in demo mode, so nothing is kept for analytics
+      return {
+        leadId: '', category: product, loanCategory, createdAt: '', stage: 'demo', data: {},
+      };
     }
     // the data kept when the OTP was generated
     const stored = window[LEAD_STORE_KEY];
@@ -317,13 +350,14 @@ export function createLeadSession({ mobile, product, lead }) {
       category: stored.category,
       lead: stored.lead || {},
     }, controller.signal);
-    // `data` is the answer of the lead API the backend called: the success step is shown
-    // only when it says Success (a missing Result is a failure too)
-    if (String(data.Result || '').toLowerCase() !== 'success') {
-      throw new LeadApiError('lead-failed', `otp-verify: ${data.ErrorMsg || data.Result || 'no Result'}`);
-    }
+    // the server answers success only when the lead API created the lead (Result "Success",
+    // a Salesforce composite without errors, or a 2xx answer); otherwise 502 LEAD_FAILED.
+    // `data` is the lead API's answer as it is.
     clearJourney(stored);
-    return { leadNumber: data.LeadNumber || '', stage: data.Stage || '', data };
+    const created = keepCreatedLead({
+      leadId: leadIdOf(data), category: stored.category, loanCategory,
+    });
+    return { ...created, stage: data.Stage || '', data };
   });
 
   return {
