@@ -9,6 +9,7 @@ import {
   loadSection,
   loadSections,
   loadCSS,
+  getMetadata,
 } from './aem.js';
 // sets the viewport classes on <html> before the page is shown
 import { isDesktop } from './viewport.js';
@@ -212,12 +213,60 @@ export function decorateMain(main) {
 }
 
 /**
+ * Adds head tags the server doesn't render from page metadata: hreflang,
+ * authored <meta>/<link> tags and JSON-LD.
+ */
+function decorateSeo() {
+  const { head } = document;
+
+  const hreflang = getMetadata('hreflang');
+  if (hreflang) {
+    const link = document.createElement('link');
+    link.rel = 'alternate';
+    link.hreflang = hreflang;
+    link.href = getMetadata('canonical') || window.location.href.split(/[?#]/)[0];
+    head.append(link);
+  }
+
+  const rawTags = getMetadata('meta-tags');
+  if (rawTags) {
+    const parsed = new DOMParser().parseFromString(rawTags, 'text/html');
+    // only meta/link are copied, so authored markup cannot add scripts
+    parsed.head.querySelectorAll('meta, link').forEach((el) => {
+      const key = el.getAttribute('name') || el.getAttribute('property');
+      if (key && head.querySelector(`meta[name="${CSS.escape(key)}"], meta[property="${CSS.escape(key)}"]`)) return;
+      const tag = document.createElement(el.localName);
+      [...el.attributes]
+        .filter(({ name }) => !name.startsWith('on'))
+        .forEach(({ name, value }) => tag.setAttribute(name, value));
+      head.append(tag);
+    });
+  }
+
+  const rawSchema = getMetadata('schema-script');
+  if (rawSchema) {
+    const json = rawSchema.replace(/^\s*<script[^>]*>/i, '').replace(/<\/script>\s*$/i, '');
+    try {
+      JSON.parse(json);
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.textContent = json;
+      head.append(script);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn('Invalid JSON-LD in schema-script metadata', e);
+    }
+  }
+}
+
+/**
  * Loads everything needed to get to LCP.
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
+  decorateSeo();
   const main = doc.querySelector('main');
   // skip link to the main content (WCAG 2.4.1)
   if (main && !doc.querySelector('.skip-link')) {

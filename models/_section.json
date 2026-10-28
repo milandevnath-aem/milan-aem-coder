@@ -43,6 +43,14 @@
               "value": "bg-grey"
             },
             {
+              "name": "Remove bottom space of bg grey",
+              "value": "bggrey-remove-space"
+            },
+            {
+              "name": "Section text align left",
+              "value": "text-align-left"
+            },
+            {
               "name": "Animate text (banner text lights up on scroll)",
               "value": "animate-text"
             },
@@ -128,10 +136,12 @@
         "offers",
         "testimonials",
         "service-links",
+        "link-list",
         "article-cards",
         "feature-banner",
         "feature-cards",
         "requirements",
+        "partner-list",
         "faq",
         "team",
         "branch-locator",
