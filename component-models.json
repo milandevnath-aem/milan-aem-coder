@@ -1561,18 +1561,6 @@
     ]
   },
   {
-    "id": "offers",
-    "fields": [
-      {
-        "component": "text",
-        "name": "classes",
-        "label": "CSS Classes",
-        "valueType": "string",
-        "value": ""
-      }
-    ]
-  },
-  {
     "id": "offer",
     "fields": [
       {
