@@ -1561,6 +1561,18 @@
     ]
   },
   {
+    "id": "offers",
+    "fields": [
+      {
+        "component": "text",
+        "name": "classes",
+        "label": "CSS Classes",
+        "valueType": "string",
+        "value": ""
+      }
+    ]
+  },
+  {
     "id": "offer",
     "fields": [
       {
@@ -1657,13 +1669,6 @@
             "value": "no-bg-color"
           }
         ]
-      },
-      {
-        "component": "text",
-        "name": "classes",
-        "label": "CSS Classes",
-        "valueType": "string",
-        "value": ""
       }
     ]
   },

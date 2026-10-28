@@ -1,3 +1,4 @@
+
 {
   "definitions": [
     {
@@ -9,6 +10,7 @@
             "resourceType": "core/franklin/components/block/v1/block",
             "template": {
               "name": "Offers",
+              "model": "offers",
               "filter": "offers"
             }
           }
@@ -34,6 +36,18 @@
     }
   ],
   "models": [
+    {
+      "id": "offers",
+      "fields": [
+        {
+          "component": "text",
+          "name": "classes",
+          "label": "CSS Classes",
+          "valueType": "string",
+          "value": ""
+        }
+      ]
+    },
     {
       "id": "offer",
       "fields": [
@@ -131,13 +145,6 @@
               "value": "no-bg-color"
             }
           ]
-        },
-        {
-          "component": "text",
-          "name": "classes",
-          "label": "CSS Classes",
-          "valueType": "string",
-          "value": ""
         }
       ]
     }
