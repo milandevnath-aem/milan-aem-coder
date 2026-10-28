@@ -50,6 +50,14 @@ export const DEMO_MODE = false;
  */
 export const LEAD_STORE_KEY = 'kmpLeadJourney';
 
+/**
+ * The lead created by the last successful OTP validation, for analytics:
+ * window[LEAD_RESULT_KEY] = { leadId, category, loanCategory, createdAt }, also sent as the
+ * detail of a LEAD_CREATED_EVENT on document. No personal data (name, mobile, email, OTP).
+ */
+export const LEAD_RESULT_KEY = 'kmpLead';
+export const LEAD_CREATED_EVENT = 'kmp:lead-created';
+
 /** A request still pending after this long is cancelled and shown as an error. */
 export const REQUEST_TIMEOUT_MS = 15000;
 
@@ -67,7 +75,8 @@ export const RESEND_SECONDS = 30;
  * Loan category (as shown in "Select loan category") -> fields for it.
  * - product: the API the backend calls (NewCarFinance, TWL, LAP), sent as the `category`
  *   of the OTP validation
- * - Product__c: New Car Finance API only, which of its products the lead is for
+ * - Product: New Car Finance API only (required), which of its products the lead is for;
+ *   the server writes it to the Salesforce Product__c field
  * Every other key of an entry is added to `lead` as is, so another category specific value
  * is one more key.
  * Matching ignores case, spaces and punctuation ("Two-Wheeler Loans" = "two wheeler loan").
@@ -75,11 +84,29 @@ export const RESEND_SECONDS = 30;
  * their API is decided. To connect one, add a line here; no other change is needed.
  */
 export const PRODUCT_BY_CATEGORY = {
-  'New Car Finance': { product: 'NewCarFinance', Product__c: 'New CAR' },
-  'Used Car & Re-finance': { product: 'NewCarFinance', Product__c: 'Used Car' },
-  'Top-Up Loan': { product: 'NewCarFinance', Product__c: 'PL/KPTR' },
+  'New Car Finance': { product: 'NewCarFinance', Product: 'New CAR' },
+  'Used Car & Re-finance': { product: 'NewCarFinance', Product: 'Used Car' },
+  'Top-Up Loan': { product: 'NewCarFinance', Product: 'PL/KPTR' },
   'Two-Wheeler Loan': { product: 'TWL' },
   'Loan Against Property': { product: 'LAP' },
+};
+
+/**
+ * The `lead` fields each API takes (api.md, "Lead requests and responses"):
+ * form value -> key in `lead`. Only these are sent, so an API never receives a field it does
+ * not know. Form values are named as in LEAD_FIELD_KEYS, plus FirstName, LastName and Name
+ * (the full name). The mobile number is never sent: the server adds the number verified by
+ * the OTP. A product that is not listed sends every form field.
+ */
+export const LEAD_KEYS_BY_PRODUCT = {
+  // required: FirstName, LastName, Location and Product (from PRODUCT_BY_CATEGORY)
+  NewCarFinance: {
+    FirstName: 'FirstName', LastName: 'LastName', Location: 'Location', Pincode: 'Pincode', Email: 'Email',
+  },
+  // required: firstName, lastName, businessLocation
+  TWL: { FirstName: 'firstName', LastName: 'lastName', Location: 'businessLocation' },
+  // nothing required
+  LAP: { Name: 'Name', Email: 'Email', Location: 'City' },
 };
 
 /**
@@ -93,6 +120,7 @@ export const LEAD_FIELD_KEYS = {
   city: 'Location',
   'mobile-number': 'Mobile',
   'select-loan-category': 'LoanCategory',
+  'zip-postal-code': 'Pincode',
 };
 
 /** Form fields that are never sent (checked on the page only). */

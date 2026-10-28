@@ -579,7 +579,9 @@ export default function decorate(block) {
     // the category picks the API product (lead-api-config.js); none = demo flow
     const category = data[Object.keys(data).find((k) => k.endsWith('category'))] || pageCategory();
     const product = productFor(category);
-    const session = createLeadSession({ mobile, product, lead: buildLead(form, category) });
+    const session = createLeadSession({
+      mobile, product, lead: buildLead(form, category), loanCategory: category,
+    });
 
     // verifying the captcha, then sending the OTP: button spinner (desktop), full view
     // spinner (small screens)

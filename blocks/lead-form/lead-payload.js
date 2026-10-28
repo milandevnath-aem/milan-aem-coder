@@ -1,12 +1,15 @@
 /*
   Form -> `lead` object of the validate OTP request.
 
-  Every named field of the form is sent (except EXCLUDED_FIELDS), so a field added to a form
-  later is sent without a code change. Keys come from LEAD_FIELD_KEYS, else the field name in
-  PascalCase. The name always arrives as FirstName + LastName, whether the form asks for
-  "First name" and "Last name" or one "Your name".
+  Every named field of the form is read (except EXCLUDED_FIELDS). Keys come from
+  LEAD_FIELD_KEYS, else the field name in PascalCase. The name is read as FirstName + LastName
+  (and Name, the full name), whether the form asks for "First name" and "Last name" or one
+  "Your name". The lead then keeps only the fields the category's API takes, under that API's
+  keys (LEAD_KEYS_BY_PRODUCT in lead-api-config.js, see api.md).
 */
-import { EXCLUDED_FIELDS, LEAD_FIELD_KEYS, PRODUCT_BY_CATEGORY } from './lead-api-config.js';
+import {
+  EXCLUDED_FIELDS, LEAD_FIELD_KEYS, LEAD_KEYS_BY_PRODUCT, PRODUCT_BY_CATEGORY,
+} from './lead-api-config.js';
 
 /** "Two-Wheeler Loans", "two wheeler loan" -> "twowheelerloan" */
 const normalize = (text) => String(text || '').toLowerCase().replace(/[^a-z0-9]/g, '').replace(/loans$/, 'loan');
@@ -14,7 +17,7 @@ const normalize = (text) => String(text || '').toLowerCase().replace(/[^a-z0-9]/
 /**
  * The lead fields of a loan category (PRODUCT_BY_CATEGORY).
  * @param {string} category e.g. "New Car Finance"
- * @returns {Object<string, string>} e.g. { product: "NewCarFinance", Product__c: "New CAR" };
+ * @returns {Object<string, string>} e.g. { product: "NewCarFinance", Product: "New CAR" };
  *   {} when the category has no API yet (Car Lease, Dealer Finance)
  */
 export function categoryFields(category) {
@@ -60,11 +63,13 @@ export function splitName(fullName) {
  * Name fields are recognised by their autocomplete value, set from the label in lead-form.js:
  * "First name" = given-name, "Last name" = family-name, "Your name" = name. An "Account name"
  * is a company (organization), so it is sent as a field of its own.
+ * Only the fields the category's API takes are kept, under its keys (LEAD_KEYS_BY_PRODUCT).
  * @param {HTMLFormElement} form
  * @param {string} category the picked loan category, adds its fields (see categoryFields)
  *   except `product`, which is sent next to the lead as its `category` (see lead-api.js)
- * @returns {Object<string, string>} e.g. { FirstName, LastName, Email, Location, ...,
- *   Product__c: "New CAR" }
+ * @returns {Object<string, string>} e.g. New Car Finance: { FirstName, LastName, Location,
+ *   Pincode, Email, Product: "New CAR" }; TWL: { firstName, lastName, businessLocation };
+ *   LAP: { Name, Email, City }
  */
 export function buildLead(form, category) {
   const fields = {};
@@ -82,7 +87,15 @@ export function buildLead(form, category) {
   const names = name.given || name.family
     ? { FirstName: name.given, LastName: name.family }
     : splitName(name.full);
-  // the category's fields (Product__c) last, so no form field can override them
+  const all = { ...fields, ...names, Name: [names.FirstName, names.LastName].filter(Boolean).join(' ') };
+  // the category's fields (Product) last, so no form field can override them
   const { product, ...extra } = categoryFields(category);
-  return { ...fields, ...names, ...extra };
+  const keys = LEAD_KEYS_BY_PRODUCT[product];
+  if (!keys) return { ...all, ...extra };
+  const lead = {};
+  Object.entries(keys).forEach(([from, to]) => {
+    // a blank field is left out (the API treats it as missing either way)
+    if (all[from]) lead[to] = all[from];
+  });
+  return { ...lead, ...extra };
 }
