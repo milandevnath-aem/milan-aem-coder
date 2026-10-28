@@ -428,6 +428,7 @@ function buildSearch(index, placeholder) {
         <div class="nav-search-group"><p class="nav-search-heading">Loans</p><ul></ul></div>
         <div class="nav-search-group"><p class="nav-search-heading">Tools &amp; Help</p><ul></ul></div>
       </div>
+      <p class="nav-search-empty" hidden>No results found</p>
     </div>`;
   const form = search.querySelector('form');
   const input = form.querySelector('input');
@@ -437,6 +438,9 @@ function buildSearch(index, placeholder) {
   clear.append(icon('close'));
   const results = search.querySelector('.nav-search-results');
   const [loans, tools] = search.querySelectorAll('.nav-search-group');
+  const title = search.querySelector('.nav-search-title');
+  const columns = search.querySelector('.nav-search-columns');
+  const empty = search.querySelector('.nav-search-empty');
   let matches = [];
 
   const render = () => {
@@ -468,10 +472,10 @@ function buildSearch(index, placeholder) {
       group.hidden = !items.length;
     });
     results.hidden = !q;
-    if (q && !matches.length) {
-      loans.hidden = false;
-      loans.querySelector('ul').innerHTML = '<li class="nav-search-empty">No results found</li>';
-    }
+    const noMatch = !!q && !matches.length;
+    title.hidden = noMatch;
+    columns.hidden = noMatch;
+    empty.hidden = !noMatch;
   };
   input.addEventListener('input', render);
   clear.addEventListener('click', () => {
