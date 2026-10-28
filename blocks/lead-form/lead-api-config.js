@@ -2,9 +2,11 @@
   Lead API settings: the only file to edit when the endpoints, products or field names change.
   The logic lives in lead-api.js (requests) and lead-payload.js (form -> lead).
 
-  The APIs are AEM servlets, POSTed to `{API_BASE_URL}{ENDPOINTS[name]}` (see api.md):
+  The APIs are AEM servlets, POSTed to ENDPOINTS[name] (see api.md):
   captcha-generate -> captcha-verify -> otp-generate -> otp-verify.
-  They rely on HttpOnly cookies, sent with every request (credentials: 'include').
+  The paths are absolute, from /content, so the APIs are called on the domain the site is
+  served from, whatever it is. They rely on HttpOnly SameSite=Strict cookies, which only work
+  on that same domain.
 
   Demo mode (see DEMO_MODE) runs the whole journey without the APIs: a captcha drawn in the
   browser and OTP 123456, so it can be tested on localhost and *.aem.page.
@@ -12,16 +14,7 @@
   Everything here ships to the browser: never put API keys, secrets or passwords in this file.
 */
 
-/**
- * Origin of the APIs (AEM publish), without a trailing slash. Always https: publish redirects
- * http to https, and browsers drop a redirected cross-origin call.
- * Empty when the APIs are on the same domain as the site.
- * Another domain needs CORS on publish (the site's origin allowed, with credentials) and
- * cookies set with SameSite=None; Secure.
- */
-export const API_BASE_URL = 'https://publish-p221656-e2281518.adobeaemcloud.com';
-
-/** Path of each API, after API_BASE_URL. */
+/** Path of each API, on the site's own domain. */
 export const ENDPOINTS = {
   /** {} -> { data: { image } }, sets the kmp_captcha cookie */
   captchaGenerate: '/content/kotakmahindraprime-aem/in/en/home.captcha-generate.json',
@@ -42,7 +35,7 @@ export const ENDPOINTS = {
  * true: always demo, false: always the APIs,
  * null: demo on localhost, *.aem.page and *.aem.live (they cannot reach the AEM servlets).
  */
-export const DEMO_MODE = false;
+export const DEMO_MODE = null;
 
 /**
  * window variable that keeps the journey's data between OTP generation and validation:
