@@ -13,12 +13,13 @@
 */
 
 /**
- * Origin of the APIs (AEM publish), without a trailing slash; protocol-relative, so it follows
- * the page (https in production). Empty when the APIs are on the same domain as the site.
+ * Origin of the APIs (AEM publish), without a trailing slash. Always https: publish redirects
+ * http to https, and browsers drop a redirected cross-origin call.
+ * Empty when the APIs are on the same domain as the site.
  * Another domain needs CORS on publish (the site's origin allowed, with credentials) and
  * cookies set with SameSite=None; Secure.
  */
-export const API_BASE_URL = '//publish-p221656-e2281518.adobeaemcloud.com';
+export const API_BASE_URL = 'https://publish-p221656-e2281518.adobeaemcloud.com';
 
 /** Path of each API, after API_BASE_URL. */
 export const ENDPOINTS = {
@@ -41,7 +42,7 @@ export const ENDPOINTS = {
  * true: always demo, false: always the APIs,
  * null: demo on localhost, *.aem.page and *.aem.live (they cannot reach the AEM servlets).
  */
-export const DEMO_MODE = null;
+export const DEMO_MODE = false;
 
 /**
  * window variable that keeps the journey's data between OTP generation and validation:
