@@ -314,9 +314,12 @@ dialog.modal .default-content-wrapper p.button-wrapper:last-child .button {
    form instead of the close button */
 :where(html:not(.desktop-view)) dialog.modal.modal-form {
   inset: var(--modal-top, 0) 0 0;
+  width: 100%;
+  max-width: 100%;
   height: auto;
   max-height: none;
   padding: 0;
+  background-color: var(--background-color);
 }
 
 :where(html:not(.desktop-view)) dialog.modal.modal-form::backdrop {
@@ -328,6 +331,9 @@ dialog.modal .default-content-wrapper p.button-wrapper:last-child .button {
 }
 
 :where(html:not(.desktop-view)) dialog.modal.modal-form .modal-content {
+  width: 100%;
+  height: 100%;
+  max-height: none;
   padding: 24px 20px 20px;
 }
 
