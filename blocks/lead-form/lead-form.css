@@ -24,7 +24,10 @@
 }
 
 .lead-form .dropdown.is-filled .dropdown-label {
-  letter-spacing: var(--lead-form-label-spacing);
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
+  font-weight: var(--type-body-b1-font-weight);
+  letter-spacing: var(--type-body-b1-letter-spacing);
 }
 
 .lead-form .dropdown.is-invalid .dropdown-field {
