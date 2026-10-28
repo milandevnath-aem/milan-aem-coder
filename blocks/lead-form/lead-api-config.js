@@ -2,9 +2,9 @@
   Lead API settings: the only file to edit when the endpoints, products or field names change.
   The logic lives in lead-api.js (requests) and lead-payload.js (form -> lead).
 
-  The APIs are AEM servlets called as `{API_BASE_URL}{API_PAGE_PATH}.{selector}.json`
-  (see api.md): captcha-generate -> captcha-verify -> otp-generate -> otp-verify.
-  They rely on HttpOnly cookies, so the site must be served from the same site as AEM.
+  The APIs are AEM servlets, POSTed to `{API_BASE_URL}{ENDPOINTS[name]}` (see api.md):
+  captcha-generate -> captcha-verify -> otp-generate -> otp-verify.
+  They rely on HttpOnly cookies, sent with every request (credentials: 'include').
 
   Demo mode (see DEMO_MODE) runs the whole journey without the APIs: a captcha drawn in the
   browser and OTP 123456, so it can be tested on localhost and *.aem.page.
@@ -13,31 +13,33 @@
 */
 
 /**
- * Origin of the APIs, without a trailing slash. Leave empty when they are on the same domain
- * as the site (required in production: the cookies are SameSite=Strict).
+ * Origin of the APIs (AEM publish), without a trailing slash; protocol-relative, so it follows
+ * the page (https in production). Empty when the APIs are on the same domain as the site.
+ * Another domain needs CORS on publish (the site's origin allowed, with credentials) and
+ * cookies set with SameSite=None; Secure.
  */
-export const API_BASE_URL = '';
+export const API_BASE_URL = '//publish-p221656-e2281518.adobeaemcloud.com';
 
-/** Any page under /content/kotakmahindraprime-aem/, the selectors are appended to it. */
-export const API_PAGE_PATH = '/content/kotakmahindraprime-aem/in/en/home';
-
-/** Servlet selectors: POST `${API_PAGE_PATH}.${selector}.json` */
-export const SELECTORS = {
+/** Path of each API, after API_BASE_URL. */
+export const ENDPOINTS = {
   /** {} -> { data: { image } }, sets the kmp_captcha cookie */
-  captchaGenerate: 'captcha-generate',
+  captchaGenerate: '/content/kotakmahindraprime-aem/in/en/home.captcha-generate.json',
   /** { captcha } -> { data: { verified } }, sets the kmp_captcha_ok cookie */
-  captchaVerify: 'captcha-verify',
+  captchaVerify: '/content/kotakmahindraprime-aem/in/en/home.captcha-verify.json',
   /** { mobile } -> { data: { transactionId, token } }, needs kmp_captcha_ok */
-  otpGenerate: 'otp-generate',
-  /** { transactionId, otp, token, category, lead } -> { data: lead API response } */
-  otpVerify: 'otp-verify',
-  // TODO audio captcha: a 'captcha-audio' selector once the backend provides it
+  otpGenerate: '/content/kotakmahindraprime-aem/in/en.otp-generate.json',
+  /**
+   * { transactionId, otp, token, category, lead } -> { data: lead API response }
+   * One endpoint for every product (LAP, NewCarFinance, TWL): `category` picks the lead API
+   * (see PRODUCT_BY_CATEGORY).
+   */
+  otpVerify: '/content/kotakmahindraprime-aem/in/en.otp-verify.json',
+  // TODO audio captcha: a captchaAudio endpoint once the backend provides it
 };
 
 /**
  * true: always demo, false: always the APIs,
- * null: demo on localhost, *.aem.page and *.aem.live (they cannot reach the AEM servlets)
- * or when API_PAGE_PATH is empty.
+ * null: demo on localhost, *.aem.page and *.aem.live (they cannot reach the AEM servlets).
  */
 export const DEMO_MODE = null;
 

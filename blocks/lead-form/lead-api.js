@@ -1,6 +1,6 @@
 /*
   Lead form services (see api.md): captcha, OTP and the lead.
-  Settings (page path, products, field keys, messages) are in lead-api-config.js.
+  Settings (endpoints, products, field keys, messages) are in lead-api-config.js.
 
   Usage (see lead-form.js):
 
@@ -22,8 +22,8 @@
   A category without a product (Car Lease, Dealer Finance) skips the APIs the same way.
 */
 import {
-  API_BASE_URL, API_PAGE_PATH, CAPTCHA_LENGTH, DEMO_MODE, LEAD_STORE_KEY, MESSAGES,
-  OTP_LENGTH, REQUEST_HEADERS, REQUEST_TIMEOUT_MS, SELECTORS,
+  API_BASE_URL, CAPTCHA_LENGTH, DEMO_MODE, ENDPOINTS, LEAD_STORE_KEY, MESSAGES,
+  OTP_LENGTH, REQUEST_HEADERS, REQUEST_TIMEOUT_MS,
 } from './lead-api-config.js';
 
 export { CAPTCHA_LENGTH, OTP_LENGTH, RESEND_SECONDS } from './lead-api-config.js';
@@ -64,18 +64,20 @@ export class LeadApiError extends Error {
 /** True when the journey runs without the APIs (see DEMO_MODE in lead-api-config.js). */
 export const isDemo = () => (typeof DEMO_MODE === 'boolean'
   ? DEMO_MODE
-  : !API_PAGE_PATH || DEMO_HOSTS.test(window.location.hostname));
+  : DEMO_HOSTS.test(window.location.hostname));
 
 /**
  * POSTs JSON to a servlet and returns the `data` of a { status: "success", data } answer.
- * @param {string} selector key of SELECTORS
+ * @param {string} endpoint key of ENDPOINTS
  * @param {Object} body
  * @param {AbortSignal} signal cancels the request
  * @returns {Promise<Object>}
  * @throws {LeadApiError}
  */
-async function post(selector, body, signal) {
-  const name = SELECTORS[selector];
+async function post(endpoint, body, signal) {
+  const path = ENDPOINTS[endpoint];
+  // e.g. "home.captcha-generate.json", for the console
+  const name = path.split('/').pop();
   if (signal.aborted) throw new LeadApiError('cancelled', `${name}: cancelled`);
   const controller = new AbortController();
   let timedOut = false;
@@ -86,10 +88,10 @@ async function post(selector, body, signal) {
   try {
     let response;
     try {
-      response = await fetch(`${API_BASE_URL}${API_PAGE_PATH}.${name}.json`, {
+      response = await fetch(`${API_BASE_URL}${path}`, {
         method: 'POST',
-        // the captcha cookies (HttpOnly) travel with the requests
-        credentials: 'same-origin',
+        // the captcha cookies (HttpOnly) travel with the requests, also to the publish domain
+        credentials: 'include',
         headers: REQUEST_HEADERS,
         body: JSON.stringify(body),
         signal: controller.signal,
