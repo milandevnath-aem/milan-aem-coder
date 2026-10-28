@@ -40,9 +40,10 @@
 
 .dropdown-label {
   color: var(--muted-color);
-  font-size: var(--dropdown-value-size);
-  font-weight: 500;
-  line-height: var(--dropdown-value-line);
+  font-size: var(--type-body-b3-font-size);
+  font-weight: var(--type-body-b3-font-weight);
+  line-height: var(--type-body-b3-line-height);
+  letter-spacing: var(--type-body-b3-letter-spacing);
 }
 
 .dropdown-value {
