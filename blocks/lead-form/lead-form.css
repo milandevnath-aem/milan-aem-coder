@@ -291,6 +291,26 @@
   gap: 8px;
 }
 
+/* captcha (tablet): same single row as desktop */
+@media (width >= 600px) {
+  .lead-form .lead-form-captcha {
+    grid-template-columns: auto auto 1fr;
+  }
+
+  .lead-form .lead-form-captcha-tools {
+    margin-right: 8px;
+  }
+
+  .lead-form .lead-form-captcha canvas {
+    width: 168px;
+    height: 68px;
+  }
+
+  .lead-form .lead-form-captcha .lead-form-input {
+    grid-column: auto;
+  }
+}
+
 .lead-form .lead-form-icon-button {
   box-sizing: border-box;
   display: flex;
