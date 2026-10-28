@@ -3,23 +3,9 @@
     "id": "page-metadata",
     "fields": [
       {
-        "component": "text",
-        "valueType": "string",
-        "name": "jcr:title",
-        "label": "Title"
-      },
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "jcr:description",
-        "label": "Description"
-      },
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "keywords",
-        "multi": true,
-        "label": "Keywords"
+        "component": "tab",
+        "name": "basic",
+        "label": "Basic"
       },
       {
         "component": "text",
@@ -41,6 +27,133 @@
         "name": "breadcrumb",
         "label": "Breadcrumb title",
         "description": "Shown in the footer breadcrumb (Home > title). Defaults to the page heading."
+      },
+      {
+        "component": "tab",
+        "name": "seo",
+        "label": "SEO"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "jcr:title",
+        "label": "Title"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "jcr:description",
+        "label": "Description"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "keywords",
+        "multi": true,
+        "label": "Keywords"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "robots",
+        "label": "Meta robots",
+        "description": "e.g. index, follow, max-snippet:-1, max-image-preview:large"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "canonical",
+        "label": "Canonical URL",
+        "description": "Absolute URL, e.g. https://kotakprime.in/new-car-finance/. Leave empty to use the page URL."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "hreflang",
+        "label": "Hreflang",
+        "description": "Language-region code, e.g. en-IN."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "og:title",
+        "label": "Og: Title"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "og:description",
+        "label": "Og: Description"
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "og:image",
+        "label": "Og: Image",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "og:url",
+        "label": "Og: URL"
+      },
+      {
+        "component": "select",
+        "valueType": "string",
+        "name": "twitter:card",
+        "label": "Twitter: Card",
+        "value": "summary_large_image",
+        "options": [
+          {
+            "name": "Summary",
+            "value": "summary"
+          },
+          {
+            "name": "Summary large image",
+            "value": "summary_large_image"
+          }
+        ]
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "twitter:title",
+        "label": "Twitter: Title"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "twitter:description",
+        "label": "Twitter: Description"
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "twitter:image",
+        "label": "Twitter: Image",
+        "multi": false
+      },
+      {
+        "component": "textarea",
+        "valueType": "string",
+        "name": "meta-tags",
+        "label": "Additional meta tags",
+        "description": "Raw <meta> and <link> tags added to the page head. Other tags are ignored."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "schema-type",
+        "label": "Schema type",
+        "description": "e.g. Organization + WebSite + FinancialService. For reference only."
+      },
+      {
+        "component": "textarea",
+        "valueType": "string",
+        "name": "schema-script",
+        "label": "Schema script (JSON-LD)",
+        "description": "JSON-LD markup, with or without the surrounding <script> tag."
       }
     ]
   },
