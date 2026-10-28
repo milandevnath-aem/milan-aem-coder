@@ -560,6 +560,11 @@ main > .section > .offers-wrapper:has(.offers-short) {
   padding: 0;
 }
 
+main > .section.offers-container:has(.offers.no-inline-padding) > .default-content-wrapper,
+main > .section.offers-container:has(.offers.no-inline-padding) > .offers-wrapper {
+  padding-inline: 0;
+}
+
 /* EMI calculator: the heading stays on the grid, the card is full bleed on small screens */
 main > .section > .emi-calculator-wrapper {
   padding: 0 var(--fb-margin);
