@@ -1557,7 +1557,7 @@
     ]
   },
   {
-    "id": "offer",
+    "id": "offers",
     "fields": [
       {
         "component": "multiselect",
