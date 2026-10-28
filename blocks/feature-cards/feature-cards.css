@@ -502,6 +502,7 @@
 
 :where(.desktop-view) .feature-cards.split .feature-cards-card.is-icon {
     grid-column: span 1;
+    min-height: 272px;
 }
 
 :where(.desktop-view) .feature-cards.split.top-up-loan-cards .feature-cards-body h3 {
