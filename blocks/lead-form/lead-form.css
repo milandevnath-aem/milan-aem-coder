@@ -121,9 +121,10 @@
   padding: 0;
   background: transparent;
   color: var(--text-color);
-  font-size: var(--lead-form-text);
-  font-weight: 600;
-  line-height: var(--lead-form-line);
+  font-size: var(--type-headline-h4-font-size);
+  font-weight: var(--type-headline-h4-font-weight);
+  line-height: var(--type-headline-h4-line-height);
+  letter-spacing: var(--type-headline-h4-letter-spacing);
   outline: none;
   box-shadow: none;
 }
@@ -137,10 +138,10 @@
 
 .lead-form .lead-form-label {
   color: var(--muted-color);
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 16px;
-  letter-spacing: var(--lead-form-label-spacing);
+  font-size: var(--type-body-b1-font-size);
+  font-weight: var(--type-body-b1-font-weight);
+  line-height: var(--type-body-b1-line-height);
+  letter-spacing: var(--type-body-b1-letter-spacing);
   transition: font-size 0.15s;
 }
 
@@ -148,9 +149,10 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  font-size: var(--lead-form-text);
-  line-height: var(--lead-form-line);
-  letter-spacing: 0;
+  font-size: var(--type-body-b3-font-size);
+  font-weight: var(--type-body-b3-font-weight);
+  line-height: var(--type-body-b3-line-height);
+  letter-spacing: var(--type-body-b3-letter-spacing);
   pointer-events: none;
 }
 
