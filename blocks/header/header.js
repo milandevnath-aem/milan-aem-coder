@@ -224,6 +224,14 @@ function buildAccordion(menus) {
       const expanded = toggle.getAttribute('aria-expanded') === 'true';
       toggle.setAttribute('aria-expanded', !expanded);
       panel.hidden = expanded;
+      if (expanded) return;
+      // the sticky contact/login footer would otherwise cover the opened panel
+      const footer = toggle.closest('.nav-sections')?.querySelector('.nav-menu-footer');
+      panel.style.scrollMarginBottom = `${(footer?.offsetHeight || 0) + 16}px`;
+      panel.scrollIntoView({
+        block: 'nearest',
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      });
     });
     li.append(toggle, panel);
     ul.append(li);
