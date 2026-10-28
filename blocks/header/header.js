@@ -224,6 +224,14 @@ function buildAccordion(menus) {
       const expanded = toggle.getAttribute('aria-expanded') === 'true';
       toggle.setAttribute('aria-expanded', !expanded);
       panel.hidden = expanded;
+      if (expanded) return;
+      // the sticky contact/login footer would otherwise cover the opened panel
+      const footer = toggle.closest('.nav-sections')?.querySelector('.nav-menu-footer');
+      panel.style.scrollMarginBottom = `${(footer?.offsetHeight || 0) + 16}px`;
+      panel.scrollIntoView({
+        block: 'nearest',
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      });
     });
     li.append(toggle, panel);
     ul.append(li);
@@ -428,6 +436,7 @@ function buildSearch(index, placeholder) {
         <div class="nav-search-group"><p class="nav-search-heading">Loans</p><ul></ul></div>
         <div class="nav-search-group"><p class="nav-search-heading">Tools &amp; Help</p><ul></ul></div>
       </div>
+      <p class="nav-search-empty" hidden>No results found</p>
     </div>`;
   const form = search.querySelector('form');
   const input = form.querySelector('input');
@@ -437,7 +446,25 @@ function buildSearch(index, placeholder) {
   clear.append(icon('close'));
   const results = search.querySelector('.nav-search-results');
   const [loans, tools] = search.querySelectorAll('.nav-search-group');
+  const title = search.querySelector('.nav-search-title');
+  const columns = search.querySelector('.nav-search-columns');
+  const empty = search.querySelector('.nav-search-empty');
   let matches = [];
+
+  /**
+   * A calculator link to the page already open selects the tab in place instead of reloading.
+   * @returns {boolean} true when handled
+   */
+  const openOnPage = (href) => {
+    const url = new URL(href, window.location);
+    const calculator = url.searchParams.get('calculator');
+    if (!calculator || url.origin !== window.location.origin
+      || url.pathname !== window.location.pathname) return false;
+    window.history.pushState(null, '', url);
+    window.dispatchEvent(new CustomEvent('emi-calculator:select', { detail: { calculator } }));
+    search.dispatchEvent(new CustomEvent('search:close'));
+    return true;
+  };
 
   const render = () => {
     const query = input.value.trim();
@@ -468,12 +495,16 @@ function buildSearch(index, placeholder) {
       group.hidden = !items.length;
     });
     results.hidden = !q;
-    if (q && !matches.length) {
-      loans.hidden = false;
-      loans.querySelector('ul').innerHTML = '<li class="nav-search-empty">No results found</li>';
-    }
+    const noMatch = !!q && !matches.length;
+    title.hidden = noMatch;
+    columns.hidden = noMatch;
+    empty.hidden = !noMatch;
   };
   input.addEventListener('input', render);
+  results.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href]');
+    if (a && !e.metaKey && !e.ctrlKey && !e.shiftKey && openOnPage(a.href)) e.preventDefault();
+  });
   clear.addEventListener('click', () => {
     input.value = '';
     render();
@@ -482,7 +513,7 @@ function buildSearch(index, placeholder) {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const first = matches[0];
-    if (first) window.location.href = first.href;
+    if (first && !openOnPage(first.href)) window.location.href = first.href;
   });
   search.reset = () => {
     input.value = '';
@@ -703,6 +734,7 @@ export default async function decorate(block) {
     });
   }
   search.id = 'nav-search';
+  search.addEventListener('search:close', () => setSearch(false));
   scrim.addEventListener('click', () => setSearch(false));
 
   /* closing behaviour */
