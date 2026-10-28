@@ -1561,7 +1561,7 @@
     "fields": [
       {
         "component": "multiselect",
-        "name": "style",
+        "name": "classes",
         "label": "Style",
         "valueType": "string",
         "options": [
