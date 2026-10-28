@@ -84,6 +84,10 @@
             {
               "name": "Full width, compact height",
               "value": "short"
+            },
+            {
+              "name": "Remove Padding from Left and Right",
+              "value": "remove-padding"
             }
           ]
         },

@@ -273,3 +273,8 @@
 .offers .offers-item.offers-fixed-height:hover .button-wrapper {
     display: block;
 }
+
+.remove-padding{
+    padding-left:0;
+    padding-right:0;
+}
