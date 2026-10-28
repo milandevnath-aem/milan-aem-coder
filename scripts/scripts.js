@@ -307,7 +307,12 @@ async function loadLazy(doc) {
 
   const { hash } = window.location;
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
-  if (hash && element) element.scrollIntoView();
+  if (hash && element) {
+    // the browser may already have jumped to the anchor: restart from the top and glide down
+    const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (smooth) window.scrollTo({ top: 0, behavior: 'instant' });
+    requestAnimationFrame(() => element.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto' }));
+  }
 
   loadFooter(doc.querySelector('footer'));
 

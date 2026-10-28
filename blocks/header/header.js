@@ -451,6 +451,21 @@ function buildSearch(index, placeholder) {
   const empty = search.querySelector('.nav-search-empty');
   let matches = [];
 
+  /**
+   * A calculator link to the page already open selects the tab in place instead of reloading.
+   * @returns {boolean} true when handled
+   */
+  const openOnPage = (href) => {
+    const url = new URL(href, window.location);
+    const calculator = url.searchParams.get('calculator');
+    if (!calculator || url.origin !== window.location.origin
+      || url.pathname !== window.location.pathname) return false;
+    window.history.pushState(null, '', url);
+    window.dispatchEvent(new CustomEvent('emi-calculator:select', { detail: { calculator } }));
+    search.dispatchEvent(new CustomEvent('search:close'));
+    return true;
+  };
+
   const render = () => {
     const query = input.value.trim();
     clear.hidden = !input.value;
@@ -486,6 +501,10 @@ function buildSearch(index, placeholder) {
     empty.hidden = !noMatch;
   };
   input.addEventListener('input', render);
+  results.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href]');
+    if (a && !e.metaKey && !e.ctrlKey && !e.shiftKey && openOnPage(a.href)) e.preventDefault();
+  });
   clear.addEventListener('click', () => {
     input.value = '';
     render();
@@ -494,7 +513,7 @@ function buildSearch(index, placeholder) {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const first = matches[0];
-    if (first) window.location.href = first.href;
+    if (first && !openOnPage(first.href)) window.location.href = first.href;
   });
   search.reset = () => {
     input.value = '';
@@ -715,6 +734,7 @@ export default async function decorate(block) {
     });
   }
   search.id = 'nav-search';
+  search.addEventListener('search:close', () => setSearch(false));
   scrim.addEventListener('click', () => setSearch(false));
 
   /* closing behaviour */
