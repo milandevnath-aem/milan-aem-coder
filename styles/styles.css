@@ -217,7 +217,7 @@
 body {
   display: none;
   margin: 0;
-  background-color: var(--background-color);
+  background-color: var(--color-button-primary-default-text-base);
   color: var(--text-color);
   font-family: var(--body-font-family);
   font-size: var(--body-font-size-m);
@@ -796,6 +796,10 @@ main .section.brand.has-background {
 
 main .section.brand .default-content-wrapper {
   max-width: calc(680px + 2 * var(--gb-margin));
+}
+
+main .section.bg-grey.bggrey-remove-space {
+  margin: 124px 0 0;
 }
 
 main .section.brand p {

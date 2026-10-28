@@ -43,6 +43,10 @@
               "value": "bg-grey"
             },
             {
+              "name": "Remove bottom space of bg grey",
+              "value": "bggrey-remove-space"
+            },
+            {
               "name": "Section text align left",
               "value": "text-align-left"
             },
