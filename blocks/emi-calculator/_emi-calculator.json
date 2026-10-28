@@ -41,7 +41,8 @@
               "tenure_step": "1",
               "tenure_minMonths": "12",
               "tenure_maxMonths": "84",
-              "tenure_stepMonths": "1"
+              "tenure_stepMonths": "1",
+              "tenure_defaultMonths": "60"
             }
           }
         }
@@ -308,6 +309,61 @@
           "name": "tenure_stepMonths",
           "label": "Slider step (months)",
           "description": "How many months one slider move changes the value, e.g. 1 or 6. Leave empty for 1."
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "tenure_defaultMonths",
+          "label": "Default tenure (months)",
+          "description": "Starting value when the customer switches the tenure to MO, e.g. 60. Must be between the minimum and maximum months, otherwise the nearest limit is used. Leave empty to keep the same period as the years value."
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "tenure_defaultMonthsError",
+          "label": "⚠ Error: default tenure (months) must be between the minimum and maximum months",
+          "description": "Change the default, minimum or maximum months. Until this is fixed, the calculator starts at the nearest limit.",
+          "readOnly": true,
+          "condition": {
+            "or": [
+              {
+                "<": [
+                  {
+                    "+": [
+                      {
+                        "var": "tenure_defaultMonths"
+                      }
+                    ]
+                  },
+                  {
+                    "+": [
+                      {
+                        "var": "tenure_minMonths"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                ">": [
+                  {
+                    "+": [
+                      {
+                        "var": "tenure_defaultMonths"
+                      }
+                    ]
+                  },
+                  {
+                    "+": [
+                      {
+                        "var": "tenure_maxMonths"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
         },
         {
           "component": "text",

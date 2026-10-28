@@ -65,12 +65,13 @@ function readRange(cell, defaults) {
  * Minimum and maximum months for the tenure field. Authored values are used only when
  * both are whole numbers of at least 1 and the minimum is not above the maximum;
  * otherwise (empty, not a number, min > max) the year limits x 12 are used.
- * @param {number[]} authored [min, max, step] as read from the page (may contain NaN)
+ * The default months is kept within the limits; null when not authored.
+ * @param {number[]} authored [min, max, step, default] as read from the page (may contain NaN)
  * @param {{min: number, max: number}} yearLimits sanitized year limits
- * @returns {{min: number, max: number, step: number}}
+ * @returns {{min: number, max: number, step: number, value: number|null}}
  */
 export function resolveMonthLimits(authored, yearLimits) {
-  const [rawMin, rawMax, rawStep] = authored;
+  const [rawMin, rawMax, rawStep, rawDefault] = authored;
   const min = Math.round(rawMin);
   const max = Math.round(rawMax);
   const valid = Number.isFinite(min) && Number.isFinite(max) && min >= 1 && min <= max;
@@ -84,6 +85,8 @@ export function resolveMonthLimits(authored, yearLimits) {
   limits.step = step >= 1 && (limits.max === limits.min || step <= limits.max - limits.min)
     ? step
     : TENURE.monthsStep;
+  const value = Math.round(rawDefault);
+  limits.value = Number.isFinite(value) ? Math.min(limits.max, Math.max(limits.min, value)) : null;
   return limits;
 }
 
@@ -127,8 +130,8 @@ function parseLoanType(row) {
     rate: readRange(rate, DEFAULTS.rate),
     tenure: readRange(tenure, DEFAULTS.tenure),
     // the tenure cell continues after the years fields (min, max, default, step) with
-    // minimum months, maximum months and month step; NaN where not authored
-    tenureMonths: readNumbers(tenure).slice(4, 7),
+    // minimum months, maximum months, month step and default months; NaN where not authored
+    tenureMonths: readNumbers(tenure).slice(4, 8),
   };
 }
 
@@ -383,12 +386,17 @@ function buildCalculator(types, link) {
     showError('tenure', false);
   };
 
-  /** Switches the tenure between years and months, keeping the same loan period. */
+  /**
+   * Switches the tenure between years and months. Months start at the authored default
+   * months; without one, and when going back to years, the same loan period is kept.
+   */
   const setTenureUnit = (unit) => {
     if (unit === state.unit) return;
     const monthCount = tenureInMonths();
     state.unit = unit;
-    state.tenure = unit === 'mo' ? monthCount : Math.round(monthCount / TENURE.monthsPerYear);
+    state.tenure = unit === 'mo'
+      ? tenureLimits.mo.value ?? monthCount
+      : Math.round(monthCount / TENURE.monthsPerYear);
     applyTenureUnit();
     update();
   };
