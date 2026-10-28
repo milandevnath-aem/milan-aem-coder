@@ -178,10 +178,6 @@
     letter-spacing: -0.4px;
 }
 
-.feature-cards.numbered .feature-cards-card {
-    min-height: 180px;
-}
-
 .feature-cards.numbered .feature-cards-body {
     display: flex;
     flex: 1;
@@ -434,10 +430,6 @@
 
 :where(.desktop-view) .feature-cards .feature-cards-intro h2 {
     margin-bottom: 40px;
-}
-
-:where(.desktop-view) .feature-cards.numbered .feature-cards-card {
-    min-height: 220px;
 }
 
 :where(.desktop-view) .feature-cards.info .feature-cards-list {
