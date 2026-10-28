@@ -22,7 +22,7 @@
   A category without a product (Car Lease, Dealer Finance) skips the APIs the same way.
 */
 import {
-  API_BASE_URL, CAPTCHA_LENGTH, DEMO_MODE, ENDPOINTS, LEAD_CREATED_EVENT, LEAD_RESULT_KEY,
+  CAPTCHA_LENGTH, DEMO_MODE, ENDPOINTS, LEAD_CREATED_EVENT, LEAD_RESULT_KEY,
   LEAD_STORE_KEY, MESSAGES, OTP_LENGTH, REQUEST_HEADERS, REQUEST_TIMEOUT_MS,
 } from './lead-api-config.js';
 
@@ -88,10 +88,11 @@ async function post(endpoint, body, signal) {
   try {
     let response;
     try {
-      response = await fetch(`${API_BASE_URL}${path}`, {
+      // absolute path: the request goes to the domain the page is served from
+      response = await fetch(path, {
         method: 'POST',
-        // the captcha cookies (HttpOnly) travel with the requests, also to the publish domain
-        credentials: 'include',
+        // the captcha cookies (HttpOnly) travel with the requests (api.md)
+        credentials: 'same-origin',
         headers: REQUEST_HEADERS,
         body: JSON.stringify(body),
         signal: controller.signal,
