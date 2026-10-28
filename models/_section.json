@@ -89,6 +89,10 @@
             {
               "name": "Background grey",
               "value": "sec-bg-grey"
+            },
+            {
+              "name": "Section Padding left and right",
+              "value": "padding-left-right"
             }
           ]
         },
