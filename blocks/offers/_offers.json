@@ -38,6 +38,23 @@
       "id": "offer",
       "fields": [
         {
+          "component": "multiselect",
+          "name": "style",
+          "label": "Style",
+          "valueType": "string",
+          "options": [
+            {
+              "name": "No inline padding",
+              "value": "no-inline-padding"
+            }
+          ]
+        }
+      ]
+    },
+      {
+      "id": "offer",
+      "fields": [
+        {
           "component": "reference",
           "valueType": "string",
           "name": "image",
