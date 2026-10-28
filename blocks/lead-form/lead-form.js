@@ -1,13 +1,16 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createDropdown } from '../../scripts/dropdown.js';
-import { sendOtp, submitLead } from './lead-api.js';
-import { createOtpStep, createSuccessStep, setLoading } from './lead-form-otp.js';
+import {
+  CAPTCHA_LENGTH, createLeadSession, errorMessage as apiErrorMessage, generateCaptcha, isDemo,
+} from './lead-api.js';
+import { buildLead, productFor } from './lead-payload.js';
+import {
+  createOtpStep, createSuccessStep, setLoading, spinner,
+} from './lead-form-otp.js';
 import {
   readForms, rememberForms, rememberedForms, resolveForm, slug,
 } from '../../scripts/category-forms.js';
-
-const CAPTCHA_CHARS = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
 function iconButton(name, label) {
   const button = document.createElement('button');
@@ -39,7 +42,8 @@ let errorCount = 0;
  * Text error message shown under a field and linked to its control (WCAG 3.3.1).
  * @param {HTMLElement} control the focusable control (input or dropdown button)
  * @param {string} message error text
- * @returns {{ el: HTMLParagraphElement, show: Function }}
+ * @returns {{ el: HTMLParagraphElement, show: Function }} show(invalid, text): text replaces
+ *   the message once (e.g. an API error), the next call shows the default message again
  */
 function fieldError(control, message) {
   errorCount += 1;
@@ -50,7 +54,8 @@ function fieldError(control, message) {
   el.textContent = message;
   const described = control.getAttribute('aria-describedby');
   control.setAttribute('aria-describedby', [described, el.id].filter(Boolean).join(' '));
-  const show = (invalid) => {
+  const show = (invalid, text = message) => {
+    el.textContent = text;
     el.hidden = !invalid;
     if (invalid) control.setAttribute('aria-invalid', 'true');
     else control.removeAttribute('aria-invalid');
@@ -175,71 +180,86 @@ function textareaField(label, required, max) {
   return field;
 }
 
-function drawCaptcha(canvas, code) {
-  const ctx = canvas.getContext('2d');
-  const { width, height } = canvas;
-  ctx.fillStyle = '#002c62';
-  ctx.fillRect(0, 0, width, height);
-  ctx.strokeStyle = 'rgb(255 255 255 / 25%)';
-  for (let i = 0; i < 4; i += 1) {
-    ctx.beginPath();
-    ctx.moveTo(Math.random() * width, Math.random() * height);
-    ctx.bezierCurveTo(
-      Math.random() * width,
-      Math.random() * height,
-      Math.random() * width,
-      Math.random() * height,
-      Math.random() * width,
-      Math.random() * height,
-    );
-    ctx.stroke();
-  }
-  ctx.fillStyle = '#fff';
-  ctx.textBaseline = 'middle';
-  [...code].forEach((char, i) => {
-    ctx.save();
-    ctx.translate(22 + i * 30, height / 2 + (Math.random() * 16 - 8));
-    ctx.rotate((Math.random() - 0.5) * 0.7);
-    ctx.font = `700 ${26 + Math.round(Math.random() * 10)}px Manrope, Arial, sans-serif`;
-    ctx.fillText(char, -8, 0);
-    ctx.restore();
-  });
-}
+/** "aB3" -> "small a, capital B, 3" (the captcha is case-sensitive) */
+const spell = (code) => [...code]
+  .map((c) => {
+    if (/[A-Z]/.test(c)) return `capital ${c}`;
+    if (/[a-z]/.test(c)) return `small ${c}`;
+    return c;
+  })
+  .join(', ');
 
+/**
+ * Captcha from the captcha API (see lead-api.js): image, refresh, listen and the code field.
+ * `field.load()` asks for a new image (on opening the form, refresh, and after every
+ * attempt, as each captcha is single-use); `field.onError(message)` shows a failed load.
+ * @param {string} label field label
+ * @returns {HTMLDivElement & { load: Function, isValid: Function, input: HTMLInputElement }}
+ */
 function captchaField(label) {
   const field = document.createElement('div');
   field.className = 'lead-form-captcha';
-  const canvas = document.createElement('canvas');
-  canvas.width = 168;
-  canvas.height = 68;
-  canvas.setAttribute('role', 'img');
+  const frame = document.createElement('div');
+  frame.className = 'lead-form-captcha-frame';
+  const image = document.createElement('img');
+  image.className = 'lead-form-captcha-image';
+  image.alt = 'Captcha: type the characters shown in this image';
+  image.width = 168;
+  image.height = 68;
+  image.hidden = true;
+  const loader = spinner();
+  frame.append(image, loader);
   const tools = document.createElement('div');
   tools.className = 'lead-form-captcha-tools';
-  const refresh = iconButton('refresh', 'Show a new code');
-  const listen = iconButton('volume', 'Listen to the code');
+  const refresh = iconButton('refresh', 'Show a new captcha');
+  const listen = iconButton('volume', 'Listen to the captcha');
   tools.append(refresh, listen);
-  const input = textField(label || 'Enter the code', 'text', true);
-  input.querySelector('input').name = 'captcha';
-  input.querySelector('input').autocomplete = 'off';
-  field.append(canvas, tools, input);
+  const control = textField(label || 'Enter the captcha shown', 'text', true);
+  const input = control.querySelector('input');
+  // case-sensitive: no automatic capitals or corrections on phones
+  Object.assign(input, {
+    name: 'captcha', autocomplete: 'off', autocapitalize: 'off', spellcheck: false, maxLength: CAPTCHA_LENGTH,
+  });
+  field.append(frame, tools, control);
+  field.input = input;
 
-  const generate = () => {
-    field.code = [...Array(5)].map(() => CAPTCHA_CHARS[Math.floor(Math.random() * CAPTCHA_CHARS.length)]).join('');
-    canvas.setAttribute('aria-label', 'Security code image. Use the listen button to hear it.');
-    drawCaptcha(canvas, field.code);
-    input.querySelector('input').value = '';
-    input.querySelector('input').dispatchEvent(new Event('input', { bubbles: true }));
+  let code = ''; // demo mode only
+  let request = null;
+  field.load = async () => {
+    // the newest request wins: only its captcha matches the cookie
+    request?.abort();
+    request = new AbortController();
+    const { signal } = request;
+    code = '';
+    field.classList.add('is-loading');
+    field.setAttribute('aria-busy', 'true');
+    input.value = '';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    try {
+      const captcha = await generateCaptcha(signal);
+      if (signal.aborted) return;
+      image.src = captcha.image;
+      image.hidden = false;
+      code = captcha.code;
+    } catch (error) {
+      if (signal.aborted) return;
+      image.hidden = true;
+      field.onError?.(apiErrorMessage(error, 'captcha-load'));
+    }
+    field.classList.remove('is-loading');
+    field.removeAttribute('aria-busy');
   };
-  refresh.addEventListener('click', generate);
+  refresh.addEventListener('click', () => field.load());
   listen.addEventListener('click', () => {
-    if (!window.speechSynthesis) return;
-    const utterance = new SpeechSynthesisUtterance([...field.code].join(' '));
+    // TODO audio captcha: play the audio of the captcha-audio API once the backend has it;
+    // until then only the demo captcha (its text is known in the browser) can be read out
+    if (!isDemo() || !code || !window.speechSynthesis) return;
+    const utterance = new SpeechSynthesisUtterance(spell(code));
     utterance.rate = 0.7;
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(utterance);
   });
-  generate();
-  field.isValid = () => input.querySelector('input').value.trim().toLowerCase() === field.code.toLowerCase();
+  field.isValid = () => new RegExp(`^\\S{${CAPTCHA_LENGTH}}$`).test(input.value);
   return field;
 }
 
@@ -435,14 +455,24 @@ export default function decorate(block) {
   submit.className = 'button primary lead-form-submit';
   submit.textContent = submitRow?.textContent.trim() || 'Apply now';
   if (submitRow) moveInstrumentation(submitRow, submit);
-  legal.append(submit);
+  // a failed request (OTP not sent) is shown above the button
+  const submitError = document.createElement('p');
+  submitError.className = 'lead-form-error lead-form-submit-error';
+  submitError.setAttribute('role', 'alert');
+  submitError.hidden = true;
+  const showSubmitError = (message) => {
+    submitError.textContent = message;
+    submitError.hidden = !message;
+  };
+  legal.append(submitError, submit);
   form.append(legal);
 
   const isValid = () => form.checkValidity()
     && dropdowns.every((d) => !d.dataset.required || d.value)
     && (!captcha || captcha.isValid());
-  const setState = (check, invalid) => {
-    check.error.show(invalid);
+  // message: an API error to show instead of the field's own message
+  const setState = (check, invalid, message) => {
+    check.error.show(invalid, message);
     const box = check.field.closest('.lead-form-input')
       || check.field.querySelector('.lead-form-input') || check.field;
     box.classList.toggle('is-invalid', invalid);
@@ -463,6 +493,7 @@ export default function decorate(block) {
     setState(check, !check.valid());
   });
   form.addEventListener('input', (e) => {
+    showSubmitError('');
     const check = checks.find((c) => c.control === e.target);
     if (check) setState(check, false);
   });
@@ -470,6 +501,38 @@ export default function decorate(block) {
     const check = checks.find((c) => c.field === d);
     if (check) setState(check, false);
   }));
+
+  // API errors go under the field they are about, anything else above the button
+  const captchaCheck = checks.find((c) => c.field === captcha);
+  const mobileCheck = checks.find((c) => c.control.type === 'tel');
+  if (captcha) {
+    captcha.onError = (message) => {
+      if (captchaCheck) setState(captchaCheck, true, message);
+      else showSubmitError(message);
+    };
+  }
+  /**
+   * Shows a failed submit (captcha verification or OTP generation).
+   * @param {Error} error see LeadApiError in lead-api.js
+   */
+  const showSubmitFailure = (error) => {
+    const message = apiErrorMessage(error, error.step === 'captcha' ? 'captcha' : 'send');
+    if (!message) return;
+    const refused = error.kind === 'rejected' || (error.kind === 'http' && error.status < 500);
+    let check;
+    if (error.code === 'CAPTCHA_REQUIRED' || (error.step === 'captcha' && refused)) {
+      check = captchaCheck;
+    } else if (error.step === 'otp' && (error.kind === 'invalid-input'
+      || (refused && /mobile/i.test(error.serverMessage || '')))) {
+      check = mobileCheck;
+    }
+    if (check) {
+      setState(check, true, message);
+      check.control.focus();
+    } else {
+      showSubmitError(message);
+    }
+  };
 
   // screen reader announcements for steps that have no visible status text
   const status = document.createElement('p');
@@ -513,29 +576,58 @@ export default function decorate(block) {
     }
     const data = Object.fromEntries(new FormData(form));
     const mobile = form.querySelector('input[type="tel"]')?.value || '';
+    // the category picks the API product (lead-api-config.js); none = demo flow
+    const category = data[Object.keys(data).find((k) => k.endsWith('category'))] || pageCategory();
+    const product = productFor(category);
+    const session = createLeadSession({ mobile, product, lead: buildLead(form, category) });
 
-    // sending the OTP: button spinner (desktop), full view spinner (small screens)
+    // verifying the captcha, then sending the OTP: button spinner (desktop), full view
+    // spinner (small screens)
+    showSubmitError('');
     setLoading(submit, true, 'Sending OTP');
     block.classList.add('is-sending');
     loading.hidden = false;
     announce('Sending OTP');
-    await sendOtp({ mobile, category: data[Object.keys(data).find((k) => k.endsWith('category'))] });
-    setLoading(submit, false);
-    block.classList.remove('is-sending');
-    loading.hidden = true;
+    let failure;
+    try {
+      // no captcha field: the OTP API answers CAPTCHA_REQUIRED, shown above the button
+      await session.submit(captcha ? captcha.input.value : null);
+    } catch (error) {
+      failure = error;
+    } finally {
+      setLoading(submit, false);
+      block.classList.remove('is-sending');
+      loading.hidden = true;
+    }
+    if (failure) {
+      if (failure.kind === 'cancelled') return;
+      // the captcha was used up by the attempt: a new one, then the error (loading clears it)
+      captcha?.load();
+      showSubmitFailure(failure);
+      return;
+    }
 
     block.querySelector('.lead-form-otp')?.remove();
     const otp = createOtpStep({
       mobile,
+      sendOtp: session.sendOtp,
+      verifyOtp: session.verifyOtp,
       announce,
+      // back to the form, values kept: a new OTP needs a new captcha
       onBack: () => {
+        session.cancel();
         otp.remove();
         showStep(main);
         nameDialog(intro.querySelector('h1, h2')?.id);
-        submit.focus();
+        if (captcha) {
+          captcha.load();
+          captcha.input.focus();
+        } else {
+          submit.focus();
+        }
       },
-      onVerified: async () => {
-        await submitLead(data);
+      // the lead is created by verifyOtp
+      onVerified: () => {
         const success = createSuccessStep({
           emiHref: document.querySelector('main .emi-calculator') ? '#emi-calculator' : `${siteRoot()}/home#emi-calculator`,
           onDone: close,
@@ -553,6 +645,11 @@ export default function decorate(block) {
         success.focusTitle();
       },
     });
+    // closing the modal ends the journey: no resend countdown or request left running
+    dialog()?.addEventListener('close', () => {
+      otp.stop();
+      session.cancel();
+    }, { once: true });
     block.append(otp);
     showStep(otp);
     nameDialog(otp.titleId);
@@ -623,4 +720,6 @@ export default function decorate(block) {
   if (heading && !heading.id) heading.id = `lead-form-title-${Math.random().toString(36).slice(2, 8)}`;
   main.append(intro, form);
   block.replaceChildren(goBack, main, loading, status);
+  // the modal decorates the form on every "Apply now", so this is a captcha per opening
+  captcha?.load();
 }
