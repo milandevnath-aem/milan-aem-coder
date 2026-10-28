@@ -131,6 +131,13 @@
               "value": "no-bg-color"
             }
           ]
+        },
+        {
+          "component": "text",
+          "name": "classes",
+          "label": "CSS Classes",
+          "valueType": "string",
+          "value": ""
         }
       ]
     }

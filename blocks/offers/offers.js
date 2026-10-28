@@ -12,6 +12,11 @@ export default function decorate(block) {
     const [imageCell, textCell, disclaimerCell, styleCell] = row.children;
     const item = document.createElement('li');
     item.className = 'offers-item';
+    const classes = row.querySelector('[data-aue-prop="classes"]')?.textContent?.trim();
+
+    if (classes) {
+      item.classList.add(...classes.split(/\s+/));
+    }
     moveInstrumentation(row, item);
 
     const style = styleCell
