@@ -349,6 +349,13 @@
   padding-left: 20px;
 }
 
+.lead-form .lead-form-disclaimer ol li{
+  font-size: var(--type-body-b1-font-size);
+  font-weight: var(--type-body-b1-font-weight);
+  line-height: var(--type-body-b1-line-height);
+  letter-spacing: var(--type-body-b1-letter-spacing);
+}
+
 .lead-form .lead-form-disclaimer.is-collapsed li:nth-child(n + 2) {
   display: none;
 }
