@@ -32,7 +32,7 @@ export default function decorate(block) {
       ]);
       moveInstrumentation(img, picture.querySelector('img'));
       picture.classList.add('offers-image');
-      item.append(picture);
+      item.prepend(picture);
     }
 
     if (textCell) {
@@ -60,7 +60,7 @@ export default function decorate(block) {
         buttons[0].before(group);
         group.append(...buttons);
       }
-      item.append(textCell);
+      item.prepend(textCell);
     }
 
     if (disclaimerCell?.textContent.trim()) {
@@ -68,10 +68,10 @@ export default function decorate(block) {
       disclaimer.className = 'offers-disclaimer';
       disclaimer.textContent = disclaimerCell.textContent.trim();
       moveInstrumentation(disclaimerCell, disclaimer);
-      item.append(disclaimer);
+      item.prepend(disclaimer);
     }
 
-    list.append(item);
+    list.prepend(item);
   });
   block.replaceChildren(list);
 }

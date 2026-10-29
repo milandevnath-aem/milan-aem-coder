@@ -24,7 +24,10 @@
 }
 
 .lead-form .dropdown.is-filled .dropdown-label {
-  letter-spacing: var(--lead-form-label-spacing);
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
+  font-weight: var(--type-body-b1-font-weight);
+  letter-spacing: var(--type-body-b1-letter-spacing);
 }
 
 .lead-form .dropdown.is-invalid .dropdown-field {
@@ -118,9 +121,10 @@
   padding: 0;
   background: transparent;
   color: var(--text-color);
-  font-size: var(--lead-form-text);
-  font-weight: 600;
-  line-height: var(--lead-form-line);
+  font-size: var(--type-headline-h4-font-size);
+  font-weight: var(--type-headline-h4-font-weight);
+  line-height: var(--type-headline-h4-line-height);
+  letter-spacing: var(--type-headline-h4-letter-spacing);
   outline: none;
   box-shadow: none;
 }
@@ -134,10 +138,10 @@
 
 .lead-form .lead-form-label {
   color: var(--muted-color);
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 16px;
-  letter-spacing: var(--lead-form-label-spacing);
+  font-size: var(--type-body-b1-font-size);
+  font-weight: var(--type-body-b1-font-weight);
+  line-height: var(--type-body-b1-line-height);
+  letter-spacing: var(--type-body-b1-letter-spacing);
   transition: font-size 0.15s;
 }
 
@@ -145,9 +149,10 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  font-size: var(--lead-form-text);
-  line-height: var(--lead-form-line);
-  letter-spacing: 0;
+  font-size: var(--type-body-b3-font-size);
+  font-weight: var(--type-body-b3-font-weight);
+  line-height: var(--type-body-b3-line-height);
+  letter-spacing: var(--type-body-b3-letter-spacing);
   pointer-events: none;
 }
 
@@ -269,10 +274,36 @@
   gap: 16px 8px;
 }
 
-.lead-form .lead-form-captcha canvas {
-  width: 100%;
+/* the captcha image from the API, a spinner while a new one loads */
+.lead-form .lead-form-captcha-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 64px;
   border-radius: 12px;
+  background: #f2f2f2;
+  overflow: hidden;
+}
+
+.lead-form .lead-form-captcha-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.lead-form .lead-form-captcha-frame .lead-form-spinner {
+  display: none;
+  border-color: #dedede;
+  border-top-color: var(--text-color);
+}
+
+.lead-form .lead-form-captcha.is-loading .lead-form-captcha-image {
+  display: none;
+}
+
+.lead-form .lead-form-captcha.is-loading .lead-form-captcha-frame .lead-form-spinner {
+  display: inline-block;
 }
 
 .lead-form .lead-form-captcha .lead-form-input {
@@ -284,6 +315,26 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+/* captcha (tablet): same single row as desktop */
+@media (width >= 600px) {
+  .lead-form .lead-form-captcha {
+    grid-template-columns: auto auto 1fr;
+  }
+
+  .lead-form .lead-form-captcha-tools {
+    margin-right: 8px;
+  }
+
+  .lead-form .lead-form-captcha canvas {
+    width: 168px;
+    height: 68px;
+  }
+
+  .lead-form .lead-form-captcha .lead-form-input {
+    grid-column: auto;
+  }
 }
 
 .lead-form .lead-form-icon-button {
@@ -342,6 +393,13 @@
 .lead-form .lead-form-disclaimer ol {
   margin: 0;
   padding-left: 20px;
+}
+
+.lead-form .lead-form-disclaimer ol li{
+  font-size: var(--type-body-b1-font-size);
+  font-weight: var(--type-body-b1-font-weight);
+  line-height: var(--type-body-b1-line-height);
+  letter-spacing: var(--type-body-b1-letter-spacing);
 }
 
 .lead-form .lead-form-disclaimer.is-collapsed li:nth-child(n + 2) {
@@ -754,7 +812,7 @@
   margin-right: 8px;
 }
 
-:where(.desktop-view) .lead-form .lead-form-captcha canvas {
+:where(.desktop-view) .lead-form .lead-form-captcha-frame {
   width: 168px;
   height: 68px;
 }

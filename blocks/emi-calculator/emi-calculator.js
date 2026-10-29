@@ -546,6 +546,23 @@ function buildCalculator(types, link) {
     }
   };
 
+  // "car-loan" matches the tab "Car loans"
+  const normalize = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, '').replace(/s$/, '');
+  const findType = (name) => {
+    if (!name) return undefined;
+    const index = types.findIndex((type) => normalize(type.title) === normalize(name));
+    return index < 0 ? undefined : index;
+  };
+
+  // the header search selects a calculator on the page it is already on
+  window.addEventListener('emi-calculator:select', (e) => {
+    const index = findType(e.detail?.calculator);
+    if (index !== undefined) selectType(index);
+    (document.getElementById('emi-calculator') || card).scrollIntoView({
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    });
+  });
+
   [...tablist.children].forEach((tab, i) => {
     tab.addEventListener('click', () => selectType(i));
     tab.addEventListener('keydown', (e) => {
@@ -565,7 +582,7 @@ function buildCalculator(types, link) {
     cta.remove();
   }
 
-  selectType(0);
+  selectType(findType(new URLSearchParams(window.location.search).get('calculator')) ?? 0);
   return card;
 }
 
@@ -575,6 +592,8 @@ function buildCalculator(types, link) {
  * @param {Element} block The block element
  */
 export default function decorate(block) {
+  // anchor for "#emi-calculator" links, unless a heading already carries it
+  if (!document.getElementById('emi-calculator')) block.id = 'emi-calculator';
   const rows = [...block.children];
   const config = rows.filter((row) => row.children.length <= 1);
   const typeRows = rows.filter((row) => row.children.length > 1);

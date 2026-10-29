@@ -874,7 +874,10 @@ header .nav-search-results {
 }
 
 header .nav-search-results[hidden],
-header .nav-search-group[hidden] {
+header .nav-search-group[hidden],
+header .nav-search-columns[hidden],
+header .nav-search-title[hidden],
+header .nav-search-empty[hidden] {
   display: none;
 }
 
