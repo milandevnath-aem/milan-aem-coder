@@ -296,12 +296,12 @@ function buildCalculator(types, link) {
   /** Writes the state to the result, the number fields and the sliders. */
   const update = () => {
     const monthCount = tenureInMonths();
-    const emi = Math.round(calculateEmiForMonths(state.amount, state.rate, monthCount));
-    const total = emi * monthCount;
-    els.emi.textContent = inr.format(emi);
+    const rawEmi = calculateEmiForMonths(state.amount, state.rate, monthCount);
+    const total = Math.round(rawEmi * monthCount);
+    els.emi.textContent = inr.format(Math.round(rawEmi));
     els.note.textContent = `at ${state.rate}% interest rate for ${tenureText(state.tenure)}`;
     els.principal.textContent = `₹${inr.format(state.amount)}`;
-    els.interest.textContent = `₹${inr.format(total - state.amount)}`;
+    els.interest.textContent = `₹${inr.format(Math.round(total - state.amount))}`;
     els.total.textContent = `₹${inr.format(total)}`;
     Object.entries(parts).forEach(([key, { range, slider, input }]) => {
       const pct = (state[key] - range.min) / (range.max - range.min || 1);
