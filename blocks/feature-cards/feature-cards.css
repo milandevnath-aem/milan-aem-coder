@@ -33,7 +33,7 @@
     justify-content: space-between;
     gap: 24px;
     box-sizing: border-box;
-    min-height: 100px;
+    min-height: 230px;
     padding: 24px;
     border-radius: var(--feature-cards-radius);
     background-color: var(--feature-cards-bg);
