@@ -173,9 +173,14 @@
 
 .feature-cards.numbered .feature-cards-card{
     min-height: 230px;
+    max-width: 386px;
 }
 
 /* numbered */
+:where(.desktop-view) .feature-cards.numbered .feature-cards-card{
+    height: 272px;
+}
+
 :where(.desktop-view) .feature-cards.numbered .feature-cards-number {
     font-size: var(--heading-font-size-m);
     line-height: 28px;
