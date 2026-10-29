@@ -40,6 +40,10 @@
 
 .service-links .service-links-title {
   position: relative;
+  margin: 0;
+  color: inherit;
+  font-family: inherit;
+  letter-spacing: inherit;
   font-size: var(--type-body-b3-font-size);
   line-height: var(--type-body-b3-line-height);
   font-weight: var(--type-body-b3-font-weight);

@@ -41,7 +41,7 @@ export default function decorate(block) {
       item.classList.add('service-links-has-image');
     }
 
-    const title = document.createElement('span');
+    const title = document.createElement('h3');
     title.className = 'service-links-title';
     title.textContent = (source || linkCell)?.textContent.trim() || '';
     tile.append(title);

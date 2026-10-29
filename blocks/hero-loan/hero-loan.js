@@ -66,7 +66,7 @@ function buildMore(chips, overflow) {
     more.textContent = selected ? selected.value : 'More';
     more.classList.toggle('is-selected', Boolean(selected));
     if (selected) more.setAttribute('aria-label', `${selected.value}, more loan categories`);
-    else more.removeAttribute('aria-label');
+    else more.setAttribute('aria-label', 'More loan categories');
     items.forEach((item, i) => item.setAttribute('aria-pressed', inputs[i].checked));
   };
   const close = (focusMore = false) => {
@@ -163,7 +163,7 @@ function confirmOnSubmit(form, modalHref, forms = [], categories = []) {
 
 function buildField(label, index) {
   const isPhone = /mobile|phone/i.test(label);
-  const field = document.createElement('label');
+  const field = document.createElement('div');
   field.className = `hero-loan-input${isPhone ? ' hero-loan-mobile' : ''}`;
   if (isPhone) {
     const prefix = document.createElement('span');
@@ -172,22 +172,21 @@ function buildField(label, index) {
     prefix.textContent = '+91';
     field.append(prefix);
   }
-  const sr = document.createElement('span');
-  sr.className = 'hero-loan-sr';
-  sr.textContent = label;
   const input = document.createElement('input');
   input.placeholder = label;
+  input.setAttribute('aria-label', `${label} (required)`);
   input.required = true;
   input.name = label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || `field-${index}`;
   if (isPhone) {
     Object.assign(input, {
-      type: 'tel', inputMode: 'numeric', pattern: '[6-9][0-9]{9}', maxLength: 10, autocomplete: 'tel-national',
+      type: 'tel', inputMode: 'numeric', pattern: '[6-9][0-9]{9}', maxLength: 10, autocomplete: 'tel',
     });
   } else {
     input.type = 'text';
     if (/^(your )?name$/i.test(label)) input.autocomplete = 'name';
   }
-  field.append(sr, input);
+  field.append(input);
+  field.addEventListener('click', () => input.focus());
   return field;
 }
 

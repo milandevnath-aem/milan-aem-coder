@@ -135,6 +135,12 @@ footer .footer-other a:any-link {
   letter-spacing: 0.24px;
 }
 
+/* WCAG 2.5.8: targets of at least 24px */
+footer .footer-links li li a:any-link,
+footer .footer-other li a:any-link {
+  display: inline-block;
+}
+
 /* bottom bar */
 footer .footer-bottom .default-content-wrapper {
   display: flex;

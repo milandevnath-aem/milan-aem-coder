@@ -24,6 +24,10 @@ function buildDropdown(li) {
     if (new URL(a.href, window.location).origin === window.location.origin) return;
     a.target = '_blank';
     a.rel = 'noopener';
+    const notice = document.createElement('span');
+    notice.className = 'visually-hidden';
+    notice.textContent = ' (opens in a new tab)';
+    a.append(notice);
   });
   document.addEventListener('click', (e) => {
     if (!details.contains(e.target)) details.open = false;
