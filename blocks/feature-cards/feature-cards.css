@@ -213,9 +213,12 @@
     line-height: 24px;
 }
 
-.feature-cards.info .feature-cards-card {
+.feature-cards.info .feature-cards-card.is-icon {
+    display: flex;
+    flex-direction: column;
     justify-content: flex-start;
     min-height: 0;
+    gap: var(--spacing-5xl);
 }
 
 .feature-cards.info .feature-cards-body p {
