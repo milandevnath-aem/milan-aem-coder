@@ -217,7 +217,7 @@
 body {
   display: none;
   margin: 0;
-  background-color: var(--background-color);
+  background-color: var(--color-button-primary-default-text-base);
   color: var(--text-color);
   font-family: var(--body-font-family);
   font-size: var(--body-font-size-m);
@@ -451,6 +451,10 @@ main > .section {
   margin: var(--section-spacing) 0;
 }
 
+main > .section#documents {
+  scroll-margin-top: calc(-1 * var(--section-spacing))
+}
+
 /* grid bound (GB) by default */
 main > .section > div {
   box-sizing: border-box;
@@ -558,6 +562,12 @@ main > .section > .feature-banner-wrapper:has(> .feature-banner.edge-to-edge) {
 /* "Need help?" band: edge to edge, no rounded corners */
 main > .section > .offers-wrapper:has(.offers-short) {
   padding: 0;
+}
+
+main > .section.offers-container:has(.offers.no-inline-padding) > .default-content-wrapper,
+main > .section.offers-container:has(.offers.no-inline-padding) > .offers-wrapper {
+  padding-inline: 0;
+  padding-bottom: 0;
 }
 
 /* EMI calculator: the heading stays on the grid, the card is full bleed on small screens */
@@ -778,6 +788,10 @@ main .section.bg-grey {
   text-align: center;
 }
 
+main .section.bg-grey.text-align-left {
+  text-align: left;
+}
+
 main .section.bg-grey p {
   margin: 0;
 }
@@ -786,9 +800,16 @@ main .section.brand.has-background {
   margin: 16px 0 0 ;
 }
 
-main .section.brand .default-content-wrapper,
-main .section.bg-grey .default-content-wrapper {
+:where(.desktop-view) main .section.brand.has-background {
+  margin: initial;
+}
+
+main .section.brand .default-content-wrapper {
   max-width: calc(680px + 2 * var(--gb-margin));
+}
+
+main .section.bg-grey.bggrey-remove-space {
+  margin: 124px 0 0;
 }
 
 main .section.brand p {
@@ -814,4 +835,12 @@ main > .section.branch-locator-container:last-of-type {
 /* bg-color grey */
 main > .section.sec-bg-grey {
   background-color: var(--color-background-2-default-base);
+}
+
+main > .section.padding-left-right{
+  padding-inline: 24px;
+}
+
+:where(.desktop-view) main > .section.padding-left-right{
+  padding-inline: 92px;
 }

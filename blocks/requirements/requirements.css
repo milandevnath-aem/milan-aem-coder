@@ -163,11 +163,16 @@
   margin-top: auto;
 }
 
-.requirements .requirements-icon img {
+.requirements.eligibility .requirements-icon img {
   display: block;
-  width: 60px;
-  height: 60px;
+  width: 52px;
+  height: 52px;
   object-fit: contain;
+}
+
+:where(.desktop-view) .requirements.eligibility .requirements-icon img {
+  width: 72px;
+  height: 72px;
 }
 
 .requirements .requirements-title {
@@ -226,8 +231,8 @@
   position: absolute;
   top: 2px;
   left: 0;
-  width: 17px;
-  height: 17px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 17 17' fill='none'%3E%3Cpath d='M15.083 8.33333C15.083 4.60541 12.0613 1.58366 8.33333 1.58366C4.60541 1.58366 1.58366 4.60541 1.58366 8.33333C1.58366 12.0613 4.60541 15.083 8.33333 15.083C12.0613 15.083 15.083 12.0613 15.083 8.33333ZM16.5837 8.33333C16.5837 12.8897 12.8897 16.5837 8.33333 16.5837C3.77698 16.5837 0.0830078 12.8897 0.0830078 8.33333C0.0830078 3.77698 3.77698 0.0830078 8.33333 0.0830078C12.8897 0.0830078 16.5837 3.77698 16.5837 8.33333Z' fill='%23666666'/%3E%3Cpath d='M10.7544 5.92855C11.04 5.62857 11.5148 5.61621 11.8148 5.90169C12.1147 6.18721 12.1262 6.66205 11.8408 6.96208L7.76449 11.2451C7.62292 11.3938 7.42618 11.4779 7.22087 11.4779C7.01555 11.4779 6.81881 11.3938 6.67725 11.2451L4.82422 9.2985C4.53874 8.99848 4.5511 8.52367 4.85107 8.23812C5.1511 7.95265 5.62591 7.96419 5.91146 8.26416L7.22087 9.63949L10.7544 5.92855Z' fill='%23666666'/%3E%3C/svg%3E") center / contain no-repeat;
 }
@@ -238,6 +243,13 @@
   font-size: var(--body-font-size-s);
   font-weight: 500;
   line-height: 20px;
+}
+
+.requirements.eligibility.elgb-small-text .requirements-text p {
+  font-size: var(--type-headline-h4-font-size);
+  line-height: var(--type-headline-h4-line-height);
+  letter-spacing: var(--type-headline-h4-letter-spacing);
+  font-weight: var(--type-headline-h4-font-weight);
 }
 
 /* carousel arrows */
@@ -320,7 +332,9 @@
   flex: 0 0 calc((100% - 2 * var(--grid-gutter)) / 3);
   justify-content: flex-start;
   min-height: 272px;
+  max-height: 272px;
   max-width: 386px;
+  min-width: 386px;
   padding: 32px;
   border-radius: 32px;
   scroll-snap-align: start;
@@ -329,10 +343,6 @@
 /* more than three cards: three and a half in view, so the half card shows there is more */
 :where(.desktop-view) .requirements.eligibility .requirements-cards.carousel > .requirements-card {
   flex-basis: calc((100% - 3 * var(--grid-gutter)) / 3.5);
-}
-
-:where(.desktop-view) .requirements .requirements-card picture.requirements-icon {
-  padding-bottom: 32px;
 }
 
 :where(.desktop-view) .requirements .requirements-icon img {

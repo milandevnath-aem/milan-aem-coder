@@ -3,23 +3,9 @@
     "id": "page-metadata",
     "fields": [
       {
-        "component": "text",
-        "valueType": "string",
-        "name": "jcr:title",
-        "label": "Title"
-      },
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "jcr:description",
-        "label": "Description"
-      },
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "keywords",
-        "multi": true,
-        "label": "Keywords"
+        "component": "tab",
+        "name": "basic",
+        "label": "Basic"
       },
       {
         "component": "text",
@@ -41,6 +27,133 @@
         "name": "breadcrumb",
         "label": "Breadcrumb title",
         "description": "Shown in the footer breadcrumb (Home > title). Defaults to the page heading."
+      },
+      {
+        "component": "tab",
+        "name": "seo",
+        "label": "SEO"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "jcr:title",
+        "label": "Title"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "jcr:description",
+        "label": "Description"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "keywords",
+        "multi": true,
+        "label": "Keywords"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "robots",
+        "label": "Meta robots",
+        "description": "e.g. index, follow, max-snippet:-1, max-image-preview:large"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "canonical",
+        "label": "Canonical URL",
+        "description": "Absolute URL, e.g. https://kotakprime.in/new-car-finance/. Leave empty to use the page URL."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "hreflang",
+        "label": "Hreflang",
+        "description": "Language-region code, e.g. en-IN."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "og:title",
+        "label": "Og: Title"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "og:description",
+        "label": "Og: Description"
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "og:image",
+        "label": "Og: Image",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "og:url",
+        "label": "Og: URL"
+      },
+      {
+        "component": "select",
+        "valueType": "string",
+        "name": "twitter:card",
+        "label": "Twitter: Card",
+        "value": "summary_large_image",
+        "options": [
+          {
+            "name": "Summary",
+            "value": "summary"
+          },
+          {
+            "name": "Summary large image",
+            "value": "summary_large_image"
+          }
+        ]
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "twitter:title",
+        "label": "Twitter: Title"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "twitter:description",
+        "label": "Twitter: Description"
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "twitter:image",
+        "label": "Twitter: Image",
+        "multi": false
+      },
+      {
+        "component": "textarea",
+        "valueType": "string",
+        "name": "meta-tags",
+        "label": "Additional meta tags",
+        "description": "Raw <meta> and <link> tags added to the page head. Other tags are ignored."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "schema-type",
+        "label": "Schema type",
+        "description": "e.g. Organization + WebSite + FinancialService. For reference only."
+      },
+      {
+        "component": "textarea",
+        "valueType": "string",
+        "name": "schema-script",
+        "label": "Schema script (JSON-LD)",
+        "description": "JSON-LD markup, with or without the surrounding <script> tag."
       }
     ]
   },
@@ -167,6 +280,14 @@
             "value": "bg-grey"
           },
           {
+            "name": "Remove bottom space of bg grey",
+            "value": "bggrey-remove-space"
+          },
+          {
+            "name": "Section text align left",
+            "value": "text-align-left"
+          },
+          {
             "name": "Animate text (banner text lights up on scroll)",
             "value": "animate-text"
           },
@@ -205,6 +326,10 @@
           {
             "name": "Background grey",
             "value": "sec-bg-grey"
+          },
+          {
+            "name": "Section Padding left and right",
+            "value": "padding-left-right"
           }
         ]
       },
@@ -638,6 +763,89 @@
       {
         "component": "text",
         "valueType": "string",
+        "name": "tenure_step",
+        "label": "Slider step (years)",
+        "description": "How much one slider move changes the value, e.g. 1. Must be more than 0 and no more than the range."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "tenure_minMonths",
+        "label": "Minimum tenure (months)",
+        "description": "Whole months, e.g. 12. Used when the customer switches the tenure to MO. Leave empty to use the minimum years × 12."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "tenure_maxMonths",
+        "label": "Maximum tenure (months)",
+        "description": "Whole months, e.g. 84. Must not be less than the minimum. Leave empty to use the maximum years × 12."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "tenure_stepMonths",
+        "label": "Slider step (months)",
+        "description": "How many months one slider move changes the value, e.g. 1 or 6. Leave empty for 1."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "tenure_defaultMonths",
+        "label": "Default tenure (months)",
+        "description": "Starting value when the customer switches the tenure to MO, e.g. 60. Must be between the minimum and maximum months, otherwise the nearest limit is used. Leave empty to keep the same period as the years value."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "tenure_defaultMonthsError",
+        "label": "⚠ Error: default tenure (months) must be between the minimum and maximum months",
+        "description": "Change the default, minimum or maximum months. Until this is fixed, the calculator starts at the nearest limit.",
+        "readOnly": true,
+        "condition": {
+          "or": [
+            {
+              "<": [
+                {
+                  "+": [
+                    {
+                      "var": "tenure_defaultMonths"
+                    }
+                  ]
+                },
+                {
+                  "+": [
+                    {
+                      "var": "tenure_minMonths"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              ">": [
+                {
+                  "+": [
+                    {
+                      "var": "tenure_defaultMonths"
+                    }
+                  ]
+                },
+                {
+                  "+": [
+                    {
+                      "var": "tenure_maxMonths"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "component": "text",
+        "valueType": "string",
         "name": "tenure_defaultError",
         "label": "⚠ Error: default tenure must be between the minimum and maximum",
         "description": "Change the default, minimum or maximum. Until this is fixed, the calculator starts at the nearest limit.",
@@ -686,9 +894,28 @@
       {
         "component": "text",
         "valueType": "string",
-        "name": "tenure_step",
-        "label": "Slider step (years)",
-        "description": "How much one slider move changes the value, e.g. 1. Must be more than 0 and no more than the range."
+        "name": "tenure_monthsError",
+        "label": "⚠ Error: minimum months must not be more than maximum months",
+        "description": "Change the minimum or maximum months. Until this is fixed, the calculator uses the minimum and maximum years × 12.",
+        "readOnly": true,
+        "condition": {
+          ">": [
+            {
+              "+": [
+                {
+                  "var": "tenure_minMonths"
+                }
+              ]
+            },
+            {
+              "+": [
+                {
+                  "var": "tenure_maxMonths"
+                }
+              ]
+            }
+          ]
+        }
       }
     ]
   },
@@ -879,6 +1106,14 @@
             "value": "split"
           },
           {
+            "name": "Split with subtitle (heading, subtitle and image left, cards right)",
+            "value": "split-culture"
+          },
+          {
+            "name": "Split with numbered cards (heading on top, image left, numbered cards right)",
+            "value": "split-insurance"
+          },
+          {
             "name": "Info cards (label / value pairs)",
             "value": "info"
           },
@@ -897,11 +1132,23 @@
         ]
       },
       {
+        "component": "multiselect",
+        "name": "classes_style",
+        "label": "Card style",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Expand Card Width",
+            "value": "expand-card-width"
+          }
+        ]
+      },
+      {
         "component": "richtext",
         "name": "text",
         "value": "",
         "label": "Intro",
-        "description": "Optional. Heading; for the split variant also a bold link (button) and a short note.",
+        "description": "Optional. Heading; for the split variants also a subtitle or description, a bold link (button) and a short note after it.",
         "valueType": "string"
       }
     ]
@@ -928,7 +1175,7 @@
         "name": "text",
         "value": "",
         "label": "Text",
-        "description": "Title (heading 3) and description. For info cards: a label paragraph followed by a bold value paragraph, repeated.",
+        "description": "Title (heading 3) and description. For info cards: a label paragraph followed by a bold value paragraph, repeated. For numbered split cards: a bulleted list shows as ticks and makes the card taller.",
         "valueType": "string"
       },
       {
@@ -947,6 +1194,14 @@
             "value": "image"
           }
         ]
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "number",
+        "label": "Number",
+        "value": "",
+        "description": "Optional. Shown on numbered and split-with-numbered-cards variants, e.g. 01."
       }
     ]
   },
@@ -1219,6 +1474,110 @@
     ]
   },
   {
+    "id": "link-list",
+    "fields": [
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Background",
+        "valueType": "string",
+        "value": "bg-grey",
+        "options": [
+          {
+            "name": "Grey background (cards)",
+            "value": "bg-grey"
+          },
+          {
+            "name": "No background (divider list)",
+            "value": ""
+          }
+        ]
+      },
+      {
+        "component": "richtext",
+        "name": "side",
+        "value": "",
+        "label": "Side title & description",
+        "description": "Left column on desktop: a heading and a paragraph. Leave empty on the second list in the same section.",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Intro",
+        "description": "Heading and subtitle shown above the list.",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "note",
+        "value": "",
+        "label": "Note",
+        "description": "Grey note box shown below the list.",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "link-list-item",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Image",
+        "description": "Optional thumbnail. Shown only when authored.",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Alt text",
+        "value": ""
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "text",
+        "label": "Text",
+        "value": ""
+      },
+      {
+        "component": "aem-content",
+        "name": "link",
+        "label": "Link",
+        "description": "Opens in a new tab. Without a link the item is not clickable."
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "icon",
+        "label": "Arrow icon",
+        "description": "Right-hand icon (SVG recommended). Shown only when authored.",
+        "multi": false
+      }
+    ]
+  },
+  {
+    "id": "offers",
+    "fields": [
+      {
+        "component": "multiselect",
+        "name": "classes",
+        "label": "Style",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "No inline padding",
+            "value": "no-inline-padding"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "offer",
     "fields": [
       {
@@ -1268,6 +1627,22 @@
           {
             "name": "Full width, compact height",
             "value": "short"
+          },
+          {
+            "name": "Remove Padding from Left and Right",
+            "value": "remove-padding"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "style",
+        "label": "Style",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Hover banner to show cta",
+            "value": "fixed-height"
           }
         ]
       },
@@ -1287,6 +1662,63 @@
             "value": "dark"
           }
         ]
+      },
+      {
+        "component": "select",
+        "name": "style_bg",
+        "label": "Section Background",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "No Background Color",
+            "value": "no-bg-color"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "partner-list",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "title",
+        "label": "Title",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "description",
+        "value": "",
+        "label": "Description",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "partner-item",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Icon / logo",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Alt text",
+        "value": ""
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "text",
+        "label": "Label",
+        "value": ""
       }
     ]
   },
@@ -1328,7 +1760,7 @@
     "id": "requirements",
     "fields": [
       {
-        "component": "select",
+        "component": "multiselect",
         "name": "classes",
         "label": "Variant",
         "valueType": "string",
@@ -1341,6 +1773,10 @@
           {
             "name": "Documents (title and checklist)",
             "value": "documents"
+          },
+          {
+            "name": "Eligibility Smaller font sizes due to larger content",
+            "value": "elgb-small-text"
           }
         ]
       },

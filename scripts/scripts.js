@@ -9,6 +9,7 @@ import {
   loadSection,
   loadSections,
   loadCSS,
+  getMetadata,
 } from './aem.js';
 // sets the viewport classes on <html> before the page is shown
 import { isDesktop } from './viewport.js';
@@ -209,6 +210,56 @@ export function decorateMain(main) {
   decorateDynamicMedia(main);
   decorateBlocks(main);
   decorateButtons(main);
+  // anchor for search results that link to a page's documents section (#documents)
+  const documents = main.querySelector('.requirements.documents')?.closest('.section');
+  if (documents && !documents.id && !main.querySelector('#documents')) documents.id = 'documents';
+}
+
+/**
+ * Adds head tags the server doesn't render from page metadata: hreflang,
+ * authored <meta>/<link> tags and JSON-LD.
+ */
+function decorateSeo() {
+  const { head } = document;
+
+  const hreflang = getMetadata('hreflang');
+  if (hreflang) {
+    const link = document.createElement('link');
+    link.rel = 'alternate';
+    link.hreflang = hreflang;
+    link.href = getMetadata('canonical') || window.location.href.split(/[?#]/)[0];
+    head.append(link);
+  }
+
+  const rawTags = getMetadata('meta-tags');
+  if (rawTags) {
+    const parsed = new DOMParser().parseFromString(rawTags, 'text/html');
+    // only meta/link are copied, so authored markup cannot add scripts
+    parsed.head.querySelectorAll('meta, link').forEach((el) => {
+      const key = el.getAttribute('name') || el.getAttribute('property');
+      if (key && head.querySelector(`meta[name="${CSS.escape(key)}"], meta[property="${CSS.escape(key)}"]`)) return;
+      const tag = document.createElement(el.localName);
+      [...el.attributes]
+        .filter(({ name }) => !name.startsWith('on'))
+        .forEach(({ name, value }) => tag.setAttribute(name, value));
+      head.append(tag);
+    });
+  }
+
+  const rawSchema = getMetadata('schema-script');
+  if (rawSchema) {
+    const json = rawSchema.replace(/^\s*<script[^>]*>/i, '').replace(/<\/script>\s*$/i, '');
+    try {
+      JSON.parse(json);
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.textContent = json;
+      head.append(script);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn('Invalid JSON-LD in schema-script metadata', e);
+    }
+  }
 }
 
 /**
@@ -218,6 +269,7 @@ export function decorateMain(main) {
 async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
+  decorateSeo();
   const main = doc.querySelector('main');
   // skip link to the main content (WCAG 2.4.1)
   if (main && !doc.querySelector('.skip-link')) {
@@ -258,7 +310,12 @@ async function loadLazy(doc) {
 
   const { hash } = window.location;
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
-  if (hash && element) element.scrollIntoView();
+  if (hash && element) {
+    // the browser may already have jumped to the anchor: restart from the top and glide down
+    const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (smooth) window.scrollTo({ top: 0, behavior: 'instant' });
+    requestAnimationFrame(() => element.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto' }));
+  }
 
   loadFooter(doc.querySelector('footer'));
 

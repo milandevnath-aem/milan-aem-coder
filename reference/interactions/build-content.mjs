@@ -99,12 +99,14 @@ const MORE = [
 const SEARCH = [
   ['Car loan – New car', 'Product', 'car-loan'],
   ['Car loan – Used car', 'Product', 'used-car-loan'],
-  ['Car loan EMI calculator', 'Calculator', 'home'],
+  ['Car loan EMI calculator', 'Calculator', 'home?calculator=car-loan#emi-calculator'],
   ['Car loan refinance', 'Product', 'used-car-loan'],
   ['How to apply for a car loan', 'Help', 'car-loan'],
-  ['Documents needed for a car loan', 'Help', 'car-loan'],
-  ['Two-wheeler loan EMI calculator', 'Calculator', 'home'],
-  ['Loan against property EMI calculator', 'Calculator', 'home'],
+  ['Documents needed for a car loan', 'Help', 'car-loan#documents'],
+  ['Documents needed for a two-wheeler loan', 'Help', 'two-wheeler-loan#documents'],
+  ['Documents needed for a loan against property', 'Help', 'loan-against-property#documents'],
+  ['Two-wheeler loan EMI calculator', 'Calculator', 'home?calculator=two-wheeler-loan#emi-calculator'],
+  ['Loan against property EMI calculator', 'Calculator', 'home?calculator=loan-against-property#emi-calculator'],
   ['Branch locator', 'Help', 'contact-us'],
 ];
 const href = (target) => (!target ? '#' : target.startsWith('http') ? target : page(target));
