@@ -20,7 +20,7 @@
 .feature-cards .feature-cards-list {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--spacing-xl);
+    gap: var(--spacing-lg);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -169,6 +169,10 @@
     line-height: 24px;
     letter-spacing: 0;
     color: var(--muted-color);
+}
+
+.feature-cards.numbered .feature-cards-card{
+    min-height: 230px;
 }
 
 /* numbered */
@@ -375,7 +379,6 @@
 
 :where(.desktop-view) .feature-cards .feature-cards-list {
     grid-template-columns: repeat(6, 1fr);
-    gap: var(--spacing-lg);
 }
 
 :where(.desktop-view) .feature-cards.expand-card-width .feature-cards-list {
