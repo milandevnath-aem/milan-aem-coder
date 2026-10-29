@@ -485,7 +485,7 @@
 }
 
 :where(.desktop-view) .feature-cards.split .feature-cards-main{
-    min-width: 556px;
+    max-width: 556px;
 }
 
 :where(.desktop-view) .feature-cards.split .feature-cards-aside,

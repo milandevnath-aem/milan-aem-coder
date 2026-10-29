@@ -827,12 +827,3 @@ main > .section.sec-bg-grey {
   background-color: var(--color-background-2-default-base);
 }
 
-main > .section.padding-left-right{
-  padding-left:24px;
-  padding-right:24px;
-}
-
-:where(.desktop-view) main > .section.padding-left-right{
-  padding-left:92px;
-  padding-right:92px;
-}
