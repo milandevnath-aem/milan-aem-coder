@@ -451,6 +451,10 @@ main > .section {
   margin: var(--section-spacing) 0;
 }
 
+main > .section#documents {
+  scroll-margin-top: calc(-1 * var(--section-spacing))
+}
+
 /* grid bound (GB) by default */
 main > .section > div {
   box-sizing: border-box;
