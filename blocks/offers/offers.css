@@ -132,8 +132,9 @@
     font-weight: 600;
 }
 
-.offers .offers-dark-text {
-    --offers-text: var(--text-color);
+/* dark text variant: copy turns #121212, buttons keep their own colours */
+.offers .offers-dark-text .offers-content :is(h1, h2, h3, h4, h5, h6, p:not(.button-wrapper)) {
+    color: var(--color-text-primary-default-base);
 }
 
 :where(.desktop-view) .offers {
