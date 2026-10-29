@@ -210,6 +210,9 @@ export function decorateMain(main) {
   decorateDynamicMedia(main);
   decorateBlocks(main);
   decorateButtons(main);
+  // anchor for search results that link to a page's documents section (#documents)
+  const documents = main.querySelector('.requirements.documents')?.closest('.section');
+  if (documents && !documents.id && !main.querySelector('#documents')) documents.id = 'documents';
 }
 
 /**

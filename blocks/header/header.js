@@ -452,17 +452,26 @@ function buildSearch(index, placeholder) {
   let matches = [];
 
   /**
-   * A calculator link to the page already open selects the tab in place instead of reloading.
+   * A calculator or #anchor link to the page already open is handled in place
+   * (tab select / smooth scroll) instead of reloading.
    * @returns {boolean} true when handled
    */
   const openOnPage = (href) => {
     const url = new URL(href, window.location);
-    const calculator = url.searchParams.get('calculator');
-    if (!calculator || url.origin !== window.location.origin
+    if (url.origin !== window.location.origin
       || url.pathname !== window.location.pathname) return false;
+    const calculator = url.searchParams.get('calculator');
+    const target = !calculator && url.hash ? document.getElementById(url.hash.slice(1)) : null;
+    if (!calculator && !target) return false;
     window.history.pushState(null, '', url);
-    window.dispatchEvent(new CustomEvent('emi-calculator:select', { detail: { calculator } }));
+    if (calculator) {
+      window.dispatchEvent(new CustomEvent('emi-calculator:select', { detail: { calculator } }));
+    }
     search.dispatchEvent(new CustomEvent('search:close'));
+    if (target) {
+      const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      requestAnimationFrame(() => target.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto' }));
+    }
     return true;
   };
 
