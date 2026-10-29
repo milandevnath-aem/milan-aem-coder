@@ -326,6 +326,10 @@
           {
             "name": "Background grey",
             "value": "sec-bg-grey"
+          },
+          {
+            "name": "Section Padding left and right",
+            "value": "padding-left-right"
           }
         ]
       },
@@ -1623,6 +1627,10 @@
           {
             "name": "Full width, compact height",
             "value": "short"
+          },
+          {
+            "name": "Remove Padding from Left and Right",
+            "value": "remove-padding"
           }
         ]
       },

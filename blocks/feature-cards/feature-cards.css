@@ -483,6 +483,14 @@
     gap: 80px;
 }
 
+:where(.desktop-view) .feature-cards.split .feature-cards-aside{
+    max-width: 546px;
+}
+
+:where(.desktop-view) .feature-cards.split .feature-cards-main{
+    max-width: 556px;
+}
+
 :where(.desktop-view) .feature-cards.split .feature-cards-aside,
 :where(.desktop-view) .feature-cards.split .feature-cards-main {
     flex: 1 1 0;
