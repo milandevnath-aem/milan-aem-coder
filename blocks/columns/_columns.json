@@ -42,7 +42,8 @@
           "value": "",
           "options": [
             { "name": "Default", "value": "" },
-            { "name": "About Us (sticky heading, website link with icon)", "value": "about-us" }
+            { "name": "About Us (sticky heading, website link with icon)", "value": "about-us" },
+            { "name": "Dropdown + CTA (list of links becomes a dropdown, button opens the selected link)", "value": "dropdown-cta" }
           ]
         }
       ]
