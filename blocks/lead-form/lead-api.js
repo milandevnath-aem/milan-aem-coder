@@ -17,21 +17,15 @@
 
   Between submit and verifyOtp, the journey's data (transactionId, token, mobile, category,
   lead) is kept in window[LEAD_STORE_KEY], and verifyOtp sends it from there.
-
-  Demo mode (DEMO_MODE): the captcha is drawn in the browser and 123456 is the right OTP.
-  A category without a product (Car Lease, Dealer Finance) skips the APIs the same way.
 */
 import {
-  CAPTCHA_LENGTH, DEMO_MODE, ENDPOINTS, LEAD_CREATED_EVENT, LEAD_RESULT_KEY,
+  ENDPOINTS, LEAD_CREATED_EVENT, LEAD_RESULT_KEY,
   LEAD_STORE_KEY, MESSAGES, OTP_LENGTH, REQUEST_HEADERS, REQUEST_TIMEOUT_MS,
 } from './lead-api-config.js';
 
 export { CAPTCHA_LENGTH, OTP_LENGTH, RESEND_SECONDS } from './lead-api-config.js';
 
-const DEMO_OTP = '123456';
-const DEMO_HOSTS = /^(localhost|127\.0\.0\.1)$|\.aem\.(page|live)$/;
 const MOBILE_PATTERN = /^[6-9]\d{9}$/;
-const wait = (ms) => new Promise((resolve) => { setTimeout(resolve, ms); });
 
 /**
  * A failed lead request. `kind` says what went wrong:
@@ -60,11 +54,6 @@ export class LeadApiError extends Error {
     Object.assign(this, details);
   }
 }
-
-/** True when the journey runs without the APIs (see DEMO_MODE in lead-api-config.js). */
-export const isDemo = () => (typeof DEMO_MODE === 'boolean'
-  ? DEMO_MODE
-  : DEMO_HOSTS.test(window.location.hostname));
 
 /**
  * POSTs JSON to a servlet and returns the `data` of a { status: "success", data } answer.
@@ -148,65 +137,18 @@ function singleFlight(task) {
   };
 }
 
-/* demo captcha: drawn in the browser, one attempt like the real one */
-const DEMO_CHARS = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-let demoCaptcha = '';
-
-function drawDemoCaptcha(code) {
-  const canvas = document.createElement('canvas');
-  canvas.width = 168;
-  canvas.height = 68;
-  const ctx = canvas.getContext('2d');
-  const { width, height } = canvas;
-  ctx.fillStyle = '#002c62';
-  ctx.fillRect(0, 0, width, height);
-  ctx.strokeStyle = 'rgb(255 255 255 / 25%)';
-  for (let i = 0; i < 4; i += 1) {
-    ctx.beginPath();
-    ctx.moveTo(Math.random() * width, Math.random() * height);
-    ctx.bezierCurveTo(
-      Math.random() * width,
-      Math.random() * height,
-      Math.random() * width,
-      Math.random() * height,
-      Math.random() * width,
-      Math.random() * height,
-    );
-    ctx.stroke();
-  }
-  ctx.fillStyle = '#fff';
-  ctx.textBaseline = 'middle';
-  [...code].forEach((char, i) => {
-    ctx.save();
-    ctx.translate(22 + i * 30, height / 2 + (Math.random() * 16 - 8));
-    ctx.rotate((Math.random() - 0.5) * 0.7);
-    ctx.font = `700 ${26 + Math.round(Math.random() * 10)}px Manrope, Arial, sans-serif`;
-    ctx.fillText(char, -8, 0);
-    ctx.restore();
-  });
-  return canvas.toDataURL('image/png');
-}
-
 /**
  * A new captcha image; replaces the previous one (only the newest can be verified).
  * @param {AbortSignal} signal cancels the request
- * @returns {Promise<{ image: string, code: string }>} image: data URI for <img src>;
- *   code: the text, in demo mode only (for the listen button)
+ * @returns {Promise<{ image: string }>} image: data URI for <img src>
  * @throws {LeadApiError}
  */
 export async function generateCaptcha(signal) {
-  if (isDemo()) {
-    await wait(300);
-    if (signal.aborted) throw new LeadApiError('cancelled', 'captcha: cancelled');
-    demoCaptcha = [...Array(CAPTCHA_LENGTH)]
-      .map(() => DEMO_CHARS[Math.floor(Math.random() * DEMO_CHARS.length)]).join('');
-    return { image: drawDemoCaptcha(demoCaptcha), code: demoCaptcha };
-  }
   const data = await post('captchaGenerate', {}, signal);
   if (typeof data.image !== 'string' || !data.image.startsWith('data:image/')) {
     throw new LeadApiError('bad-response', 'captcha-generate: image missing');
   }
-  return { image: data.image, code: '' };
+  return { image: data.image };
 }
 
 /**
@@ -216,13 +158,6 @@ export async function generateCaptcha(signal) {
  * @throws {LeadApiError} code INVALID_CAPTCHA when wrong or expired
  */
 async function verifyCaptcha(captcha, signal) {
-  if (isDemo()) {
-    await wait(600);
-    const right = Boolean(demoCaptcha) && captcha === demoCaptcha;
-    demoCaptcha = '';
-    if (!right) throw new LeadApiError('rejected', 'demo mode: wrong captcha', { code: 'INVALID_CAPTCHA' });
-    return;
-  }
   await post('captchaVerify', { captcha }, signal);
 }
 
@@ -261,12 +196,11 @@ export function clearJourney(journey) {
  * @param {Object} options
  * @param {string} options.mobile ten-digit mobile number
  * @param {string} options.product backend product (LAP, TWL, NewCarFinance), '' when the
- *   category has no API yet
+ *   category has no API yet (sent as is: the server refuses the lead)
  * @param {Object<string, string>} options.lead see buildLead in lead-payload.js
  * @param {string} [options.loanCategory] the loan category picked in the form, e.g.
  *   "Used Car & Re-finance", kept with the created lead for analytics
  * @returns {{
- *   live: boolean,
  *   submit: (captcha: string|null) => Promise<void>,
  *   sendOtp: () => Promise<void>,
  *   verifyOtp: (otp: string) => Promise<{ leadId: string, category: string,
@@ -277,11 +211,9 @@ export function clearJourney(journey) {
 export function createLeadSession({
   mobile, product, lead, loanCategory = '',
 }) {
-  const demo = isDemo();
-  const live = Boolean(product) && !demo;
-  if (!product && !demo) {
+  if (!product) {
     // eslint-disable-next-line no-console
-    console.warn('lead-api: this category has no API yet (lead-api-config.js), using demo mode');
+    console.warn('lead-api: this category has no product in PRODUCT_BY_CATEGORY (lead-api-config.js)');
   }
   const controller = new AbortController();
   let journey = null; // what this session put in window[LEAD_STORE_KEY]
@@ -297,11 +229,6 @@ export function createLeadSession({
     if (!MOBILE_PATTERN.test(mobile)) {
       throw new LeadApiError('invalid-input', 'mobile must be 10 digits starting with 6-9');
     }
-    if (!live) {
-      await wait(1200);
-      keep({ transactionId: 'demo', token: 'demo' });
-      return;
-    }
     const data = await post('otpGenerate', { mobile }, controller.signal);
     if (typeof data.transactionId !== 'string' || typeof data.token !== 'string') {
       throw new LeadApiError('bad-response', 'otp-generate: transactionId or token missing');
@@ -311,8 +238,8 @@ export function createLeadSession({
 
   // the form's submit: captcha first, the OTP only once it is accepted
   const submit = singleFlight(async (captcha) => {
-    // a category without an API (live is false outside demo mode) does not use the captcha
-    if (captcha !== null && (live || demo)) {
+    // no captcha field (null): the OTP API answers CAPTCHA_REQUIRED
+    if (captcha !== null) {
       try {
         await verifyCaptcha(captcha, controller.signal);
       } catch (error) {
@@ -331,15 +258,6 @@ export function createLeadSession({
   const verifyOtp = singleFlight(async (otp) => {
     if (!new RegExp(`^\\d{${OTP_LENGTH}}$`).test(otp)) {
       throw new LeadApiError('invalid-input', `the OTP must be ${OTP_LENGTH} digits`);
-    }
-    if (!live) {
-      await wait(1200);
-      if (otp !== DEMO_OTP) throw new LeadApiError('rejected', 'demo mode: wrong OTP', { code: 'INVALID_OTP' });
-      clearJourney(journey);
-      // no lead is created in demo mode, so nothing is kept for analytics
-      return {
-        leadId: '', category: product, loanCategory, createdAt: '', stage: 'demo', data: {},
-      };
     }
     // the data kept when the OTP was generated
     const stored = window[LEAD_STORE_KEY];
@@ -362,7 +280,6 @@ export function createLeadSession({
   });
 
   return {
-    live,
     submit,
     sendOtp,
     verifyOtp,

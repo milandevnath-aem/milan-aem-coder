@@ -8,9 +8,6 @@
   served from, whatever it is. They rely on HttpOnly SameSite=Strict cookies, which only work
   on that same domain.
 
-  Demo mode (see DEMO_MODE) runs the whole journey without the APIs: a captcha drawn in the
-  browser and OTP 123456, so it can be tested on localhost and *.aem.page.
-
   Everything here ships to the browser: never put API keys, secrets or passwords in this file.
 */
 
@@ -30,12 +27,6 @@ export const ENDPOINTS = {
   otpVerify: '/content/kotakmahindraprime-aem/in/en.otp-verify.json',
   // TODO audio captcha: a captchaAudio endpoint once the backend provides it
 };
-
-/**
- * true: always demo, false: always the APIs,
- * null: demo on localhost, *.aem.page and *.aem.live (they cannot reach the AEM servlets).
- */
-export const DEMO_MODE = null;
 
 /**
  * window variable that keeps the journey's data between OTP generation and validation:
@@ -73,8 +64,9 @@ export const RESEND_SECONDS = 30;
  * Every other key of an entry is added to `lead` as is, so another category specific value
  * is one more key.
  * Matching ignores case, spaces and punctuation ("Two-Wheeler Loans" = "two wheeler loan").
- * A category that is not listed keeps the demo flow: Car Lease and Dealer Finance until
- * their API is decided. To connect one, add a line here; no other change is needed.
+ * A category that is not listed (Car Lease, Dealer Finance until their API is decided) has
+ * no product, so the server refuses its lead. To connect one, add a line here; no other
+ * change is needed.
  */
 export const PRODUCT_BY_CATEGORY = {
   'New Car Finance': { product: 'NewCarFinance', Product: 'New CAR' },
