@@ -849,11 +849,11 @@ header .nav-search-bar input {
 /* Fix iPhone Safari automatic zoom on search */
 .nav-search-bar input[type="search"] {
   font-size: 16px !important;
-  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 /* Maintain 16px even on mobile */
-@media (max-width: 767px) {
+@media (width <= 767px) {
   .nav-search-bar input[type="search"] {
     font-size: 16px !important;
   }
