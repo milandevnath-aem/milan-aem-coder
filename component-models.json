@@ -1216,6 +1216,61 @@
     ]
   },
   {
+    "id": "grievance",
+    "fields": [
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Variant",
+        "valueType": "string",
+        "value": "steps",
+        "options": [
+          {
+            "name": "Steps (timeline)",
+            "value": "steps"
+          },
+          {
+            "name": "Directory",
+            "value": "directory"
+          }
+        ]
+      },
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Intro",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "grievance-item",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "title",
+        "label": "Title",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "description",
+        "value": "",
+        "label": "Description",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "details",
+        "value": "",
+        "label": "Contact details (group label paragraph + list; bold text in each list item is the label)",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
     "id": "hero-loan",
     "fields": [
       {

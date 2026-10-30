@@ -31,7 +31,8 @@
       "faq",
       "team",
       "branch-locator",
-      "lead-form"
+      "lead-form",
+      "grievance"
     ]
   },
   {
@@ -89,6 +90,12 @@
     "id": "feature-cards",
     "components": [
       "feature-card"
+    ]
+  },
+  {
+    "id": "grievance",
+    "components": [
+      "grievance-item"
     ]
   },
   {

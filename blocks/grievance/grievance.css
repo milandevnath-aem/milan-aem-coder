@@ -1,0 +1,253 @@
+/* shared: intro + list layout */
+.grievance {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4xl);
+}
+
+.grievance .grievance-intro :is(h1, h2, h3, h4, h5, h6) {
+  margin: 0;
+  font-size: var(--type-display-size);
+  line-height: var(--type-display-line);
+  letter-spacing: var(--type-display-ls);
+  font-weight: 500;
+  color: var(--color-text-primary-default-base);
+}
+
+.grievance .grievance-intro p {
+  margin: var(--spacing-md) 0 0;
+  font-size: var(--type-body-b2-font-size);
+  font-weight: var(--type-body-b2-font-weight);
+  line-height: var(--type-body-b2-line-height);
+  letter-spacing: var(--type-body-b2-letter-spacing);
+  color: var(--color-text-secondary-default-base);
+}
+
+.grievance .grievance-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.grievance .grievance-title {
+  margin: 0;
+  font-size: var(--type-headline-h4-font-size);
+  font-weight: 500;
+  line-height: var(--type-headline-h4-line-height);
+  letter-spacing: var(--type-headline-h4-letter-spacing);
+  color: var(--color-text-primary-default-base);
+}
+
+.grievance .grievance-description {
+  margin-top: var(--spacing-xs);
+  font-size: var(--type-body-b2-font-size);
+  font-weight: var(--type-body-b2-font-weight);
+  line-height: var(--type-body-b2-line-height);
+  letter-spacing: var(--type-body-b2-letter-spacing);
+  color: var(--color-text-secondary-default-base);
+}
+
+.grievance .grievance-description p {
+  margin: 0;
+}
+
+.grievance :is(.grievance-intro, .grievance-description, .grievance-row-value) a:any-link {
+  color: var(--color-brand-gradient-kotak-blue-default-2);
+  text-decoration: underline;
+}
+
+/* shared: contact details panel */
+.grievance .grievance-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+  margin-top: var(--spacing-xl);
+}
+
+.grievance .grievance-details[hidden] {
+  display: none;
+}
+
+.grievance .grievance-group-label {
+  margin: 0;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--radius-xs);
+  background-color: var(--color-status-info-secondary-default-bg-base);
+  color: var(--color-text-primary-default-base);
+  font-size: var(--type-body-b1-font-size);
+  font-weight: 600;
+  line-height: var(--type-body-b1-line-height);
+  letter-spacing: var(--type-body-b1-letter-spacing);
+}
+
+.grievance .grievance-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.grievance .grievance-row {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  gap: var(--spacing-xxs) var(--spacing-lg);
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-stroke-1-default);
+}
+
+.grievance .grievance-row:last-child {
+  border-bottom: none;
+}
+
+.grievance .grievance-row .icon {
+  grid-row: 1 / span 2;
+  display: flex;
+  width: 16px;
+  height: 16px;
+}
+
+.grievance .grievance-row .icon img {
+  width: 100%;
+  height: 100%;
+}
+
+.grievance .grievance-row-label {
+  color: var(--color-text-secondary-default-base);
+  font-size: var(--type-body-b1-font-size);
+  font-weight: var(--type-body-b1-font-weight);
+  line-height: var(--type-body-b1-line-height);
+  letter-spacing: var(--type-body-b1-letter-spacing);
+}
+
+.grievance .grievance-row-value {
+  grid-column: 2;
+  color: var(--color-text-primary-default-base);
+  font-size: var(--type-body-b2-font-size);
+  font-weight: var(--type-body-b2-font-weight);
+  line-height: var(--type-body-b2-line-height);
+  letter-spacing: var(--type-body-b2-letter-spacing);
+  overflow-wrap: anywhere;
+}
+
+/* variant: steps (numbered timeline with collapsible details) */
+.grievance.steps .grievance-item {
+  position: relative;
+  padding: 0 0 var(--spacing-4xl) var(--spacing-5xl);
+}
+
+.grievance.steps .grievance-item:last-child {
+  padding-bottom: 0;
+}
+
+/* dashed line from this marker to the next one */
+.grievance.steps .grievance-item:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  bottom: -14px;
+  left: 9.5px;
+  border-left: 1px dashed var(--color-stroke-3-default);
+}
+
+.grievance.steps .grievance-step {
+  display: block;
+  margin-bottom: var(--spacing-md);
+  color: var(--brand-color);
+  font-size: var(--heading-font-size-l);
+  font-weight: 500;
+  line-height: 28px;
+}
+
+/* red dot with a soft halo */
+.grievance.steps .grievance-step::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--brand-color) 0 3.5px, var(--color-background-2-default-base) 4px);
+}
+
+/* short connector between the dot and the number */
+.grievance.steps .grievance-step::after {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 20px;
+  width: 12px;
+  border-top: 1px solid var(--color-stroke-3-default);
+}
+
+.grievance.steps .grievance-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-xl);
+  padding: var(--spacing-sm) var(--spacing-xl);
+  border: 1px solid var(--color-stroke-4-default);
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-text-primary-default-base);
+  font-size: var(--type-body-b1-font-size);
+  font-weight: 600;
+  line-height: var(--type-body-b1-line-height);
+  cursor: pointer;
+}
+
+.grievance.steps .grievance-toggle:hover {
+  background-color: var(--color-background-1-default-hover);
+}
+
+.grievance.steps .grievance-toggle .icon {
+  display: flex;
+  width: 12px;
+  height: 12px;
+  transition: transform 0.2s;
+}
+
+.grievance.steps .grievance-toggle .icon img {
+  width: 100%;
+  height: 100%;
+}
+
+.grievance.steps .grievance-toggle[aria-expanded="true"] .icon {
+  transform: rotate(180deg);
+}
+
+/* variant: directory (contact groups always shown) */
+.grievance.directory .grievance-details {
+  gap: var(--spacing-4xl);
+}
+
+@media (width >= 900px) {
+  .grievance {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
+    gap: var(--spacing-7xl);
+    align-items: start;
+  }
+
+  .grievance .grievance-intro p {
+    font-size: var(--type-body-b3-font-size);
+    line-height: var(--type-body-b3-line-height);
+  }
+
+  .grievance .grievance-description {
+    font-size: var(--type-body-b3-font-size);
+    line-height: var(--type-body-b3-line-height);
+  }
+
+  .grievance.steps .grievance-item {
+    padding-bottom: var(--spacing-6xl);
+  }
+
+  .grievance.steps .grievance-step {
+    font-size: var(--heading-font-size-xl);
+  }
+
+  .grievance.directory .grievance-title {
+    font-size: var(--heading-font-size-m);
+    line-height: 28px;
+  }
+}
