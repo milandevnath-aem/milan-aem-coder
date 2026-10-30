@@ -848,6 +848,19 @@ header .nav-search-bar input {
   caret-color: var(--text-color);
 }
 
+/* Fix iPhone Safari automatic zoom on search */
+.nav-search-bar input[type="search"] {
+  font-size: 16px !important;
+  text-size-adjust: 100%;
+}
+
+/* Maintain 16px even on mobile */
+@media (width <= 767px) {
+  .nav-search-bar input[type="search"] {
+    font-size: 16px !important;
+  }
+}
+
 header .nav-search-bar input::placeholder {
   color: var(--muted-color);
 }
