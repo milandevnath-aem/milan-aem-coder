@@ -298,6 +298,7 @@
   border-top-color: var(--text-color);
 }
 
+.lead-form .lead-form-captcha-image[hidden],
 .lead-form .lead-form-captcha.is-loading .lead-form-captcha-image {
   display: none;
 }
