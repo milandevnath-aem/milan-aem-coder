@@ -42,7 +42,7 @@
   position: relative;
   font-size: var(--type-body-b3-font-size);
   line-height: var(--type-body-b3-line-height);
-  font-weight: var(--type-body-b3-font-weight);
+  font-weight: 600;
 }
 
 .service-links-item.service-links-has-image .service-links-title {
@@ -116,6 +116,7 @@
 :where(.desktop-view) .service-links .service-links-title {
   font-size: var(--heading-font-size-l);
   line-height: 32px;
+  font-weight: var(--type-body-b3-font-weight);
 }
 
 :where(.desktop-view) .service-links .service-links-arrow {
