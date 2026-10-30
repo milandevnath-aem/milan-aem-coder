@@ -117,10 +117,8 @@ export default function decorate(block) {
   const rows = [...block.children];
   const singleRows = rows.filter((row) => row.children.length === 1);
   const [introRow, moreRow, lessRow] = singleRows;
-  const labels = {
-    more: moreRow?.textContent.trim() || 'Read more',
-    less: lessRow?.textContent.trim() || 'Show less',
-  };
+  const moreLabel = moreRow?.textContent.trim();
+  const labels = { more: moreLabel, less: lessRow?.textContent.trim() || moreLabel };
   const content = [];
 
   if (introRow?.textContent.trim()) {
@@ -169,7 +167,8 @@ export default function decorate(block) {
       while (detailsCell.firstChild) details.append(detailsCell.firstChild);
       decorateDetails(details);
       item.append(details);
-      if (isSteps) addToggle(item, details, `grievance-${blockCount}-details-${i + 1}`, labels);
+      // without an authored button label the details stay visible and no toggle is rendered
+      if (isSteps && labels.more) addToggle(item, details, `grievance-${blockCount}-details-${i + 1}`, labels);
     }
     list.append(item);
   });
