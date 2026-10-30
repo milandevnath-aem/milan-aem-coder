@@ -23,7 +23,9 @@ import {
   LEAD_STORE_KEY, MESSAGES, OTP_LENGTH, REQUEST_HEADERS, REQUEST_TIMEOUT_MS,
 } from './lead-api-config.js';
 
-export { CAPTCHA_LENGTH, OTP_LENGTH, RESEND_SECONDS } from './lead-api-config.js';
+export {
+  CAPTCHA_LENGTH, OTP_LENGTH, OTP_VALID_MS, RESEND_SECONDS,
+} from './lead-api-config.js';
 
 const MOBILE_PATTERN = /^[6-9]\d{9}$/;
 
@@ -307,11 +309,16 @@ export function errorMessage(error, action) {
   }
   if (action === 'captcha-load') return MESSAGES.captchaLoadFailed;
   if (action === 'resend' && code === 'CAPTCHA_REQUIRED') return MESSAGES.resendNeedsCaptcha;
+  // the visitor's input was refused (4xx or status "error"), not a server failure
+  const refused = kind === 'rejected' || (kind === 'http' && status < 500);
+  // an expired OTP: said so by the server, or refused after OTP_VALID_MS (error.expired,
+  // set by the OTP step) when the server does not tell expired from wrong
+  const expired = /EXPIRED/i.test(code || '') || /expire/i.test(serverMessage || '')
+    || (refused && error.expired);
+  if (action === 'verify' && expired) return MESSAGES.OTP_EXPIRED;
   if (code && MESSAGES[code]) return MESSAGES[code];
   if (kind === 'timeout') return MESSAGES.timeout;
   if (kind === 'network') return MESSAGES.network;
-  // the visitor's input was refused (4xx or status "error"), not a server failure
-  const refused = kind === 'rejected' || (kind === 'http' && status < 500);
   if (refused && action === 'captcha') return MESSAGES.INVALID_CAPTCHA;
   if (refused && action === 'verify' && !serverMessage) return MESSAGES.wrongOtp;
   if (refused && serverMessage) return serverMessage;
