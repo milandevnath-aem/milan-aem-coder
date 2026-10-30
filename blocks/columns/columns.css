@@ -193,3 +193,95 @@
     font-size: var(--heading-font-size-m);
     line-height: 28px;
 }
+
+.columns.dropdown-cta > div {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 32px;
+}
+
+.section.columns-container:has(.columns.dropdown-cta) .default-content-wrapper {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.section.columns-container:has(.columns.dropdown-cta) .default-content-wrapper :is(h1, h2, h3, h4, h5, h6) {
+    color: var(--color-button-secondary-default-text-base);
+    font-family: var(--body-font-family);
+    font-size: var(--type-amount-a5-font-size);
+    font-weight: 500;
+    line-height: var(--type-body-b6-line-height);
+    letter-spacing: -0.8px;
+}
+
+.section.columns-container:has(.columns.dropdown-cta) .default-content-wrapper p {
+    color: var(--color-button-secondary-default-text-base);
+    font-family: var(--body-font-family);
+    font-size: var(--type-body-b1-font-size);
+    font-style: normal;
+    font-weight: 500;
+    line-height: var(--type-headline-h3-line-height);
+    margin-bottom: 0;
+}
+
+/* dropdown-cta: the authored list is replaced by a dropdown (scripts/text-dropdown.js) */
+.columns.dropdown-cta > div > div > ul {
+    display: none;
+}
+
+.columns.dropdown-cta .columns-dropdown {
+    position: relative;
+    z-index: 2;
+    margin: 0 0 20px;
+}
+
+.columns.dropdown-cta .columns-dropdown .dropdown-label {
+    font-size: 12px;
+    line-height: 16px;
+}
+
+/* beats ".columns img" so the chevron and tick keep their size */
+.columns.dropdown-cta .dropdown img {
+    width: 20px;
+    height: 20px;
+}
+
+.columns.dropdown-cta p.button-wrapper {
+    margin: 0;
+}
+
+.columns.dropdown-cta p.button-wrapper a.button {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 14px 12px;
+}
+
+:where(.desktop-view) .section.columns-container:has(.columns.dropdown-cta) .default-content-wrapper {
+    text-align: left;
+}
+
+:where(.desktop-view) .columns.dropdown-cta > div {
+    flex-direction: row;
+}
+
+:where(.desktop-view) .section.columns-container:has(.columns.dropdown-cta) .default-content-wrapper :is(h1, h2, h3, h4, h5, h6) {
+    font-size: 40px;
+    line-height: 48px;
+    margin-bottom: 20px;
+}
+
+:where(.desktop-view) .section.columns-container:has(.columns.dropdown-cta) .default-content-wrapper p {
+    font-size: 16px;
+    line-height: 24px;
+}
+
+:where(.desktop-view) .columns.dropdown-cta .columns-dropdown,
+:where(.desktop-view) .columns.dropdown-cta p.button-wrapper {
+    max-width: 320px;
+}
+
+:where(.desktop-view) .columns.dropdown-cta p.button-wrapper:hover {
+    border-color: inherit;
+}
