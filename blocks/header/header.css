@@ -675,9 +675,10 @@ header nav .nav-login-wrapper .button {
 }
 
 :where(.desktop-view) header .nav-panel-group .nav-link-title {
-  font-size: var(--body-font-size-s);
-  font-weight: 500;
-  line-height: 20px;
+  font-size: var(--type-body-b2-font-size);
+  font-weight: var(--type-body-b2-font-weight);
+  line-height: var(--type-body-b2-line-height);
+  letter-spacing: var(--type-body-b2-letter-spacing);
 }
 
 :where(.desktop-view) header .nav-panel-group .nav-link-desc {
