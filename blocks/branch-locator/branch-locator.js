@@ -2,12 +2,13 @@ import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createDropdown } from '../../scripts/dropdown.js';
 import {
   CITY_CONFIG,
-  cityFromPosition,
   createCity,
   findCity,
+  firstCity,
   getPosition,
   getSavedChoice,
   loadCityMaster,
+  nearestCity,
   saveChoice,
   toPosition,
 } from '../../scripts/city-locator.js';
@@ -19,10 +20,14 @@ import {
   authored branch rows are used only when the city master is missing or empty.
 
   First visit: our own dialog asks whether to use the visitor's location. Only after
-  "Turn on location" does the browser ask for permission; the city is then found with
-  the Google Maps Geocoder (the nearest city when the visitor's own is not listed).
-  "No", a denied permission or any failure leaves the A-Z city list. The answer and
-  the selected city are remembered, so the dialog is not shown again.
+  "Turn on location" does the browser ask for permission (the browser prompt cannot be
+  skipped; ours explains it first). The nearest city is then found from the city
+  master's coordinates, if one is within CITY_CONFIG.maxDistanceKm; else, and on "No",
+  a denied permission or any failure, the first city of the sheet is shown. When the
+  browser already allows or blocks location, our dialog is skipped. The answer and the
+  selected city are remembered, so the dialog is not shown again.
+
+  The map is Google's keyless embed, pinned at the city's coordinates (or its address).
 
   Every city change dispatches "city-change" on document ({ detail: { city } }) so
   other city-aware content on the page can follow.
@@ -30,8 +35,8 @@ import {
 
 const MESSAGES = {
   locating: 'Finding the branch nearest to you…',
-  exact: (city) => `Showing the branch in ${city}`,
   nearest: (city) => `Showing the branch nearest to you: ${city}`,
+  noMatch: (city) => `We could not find a branch near you. Showing our ${city} branch; select your city to change it.`,
   failed: 'We could not find a branch near you. Please select your city.',
   empty: 'Branch details are not available right now. Please try again later.',
 };
@@ -230,7 +235,10 @@ export default function decorate(block) {
       iframe.loading = 'lazy';
       iframe.referrerPolicy = 'no-referrer-when-downgrade';
       const address = city.details.find((d) => d.key === 'address')?.value;
-      const q = encodeURIComponent(`Kotak Mahindra Prime ${address || `${city.name} ${city.region}`}`);
+      // coordinates pin the branch exactly; the address is a fallback for rows without them
+      const q = city.position
+        ? `${city.position.lat},${city.position.lng}`
+        : encodeURIComponent(`Kotak Mahindra Prime ${address || `${city.name} ${city.region}`}`);
       iframe.src = `https://maps.google.com/maps?q=${q}&z=15&output=embed`;
       map.replaceChildren(iframe);
     }, map.childElementCount ? 0 : 2500);
@@ -285,18 +293,23 @@ export default function decorate(block) {
     picker = next;
   };
 
-  /** finds the visitor's city (or the nearest one) and selects it; never rejects */
+  /** selects the city nearest to the visitor, else the first city; never rejects */
   const locate = async () => {
     main.setAttribute('aria-busy', 'true');
     setStatus(MESSAGES.locating, true);
     try {
       const position = await getPosition();
       saveChoice({ consent: 'yes' });
-      const result = await cityFromPosition(cities, position);
-      if (!result) throw new Error('No city found for this location');
-      picker.setValue(result.city.key);
-      remember(result.city);
-      setStatus(MESSAGES[result.match](result.city.name));
+      const nearest = nearestCity(cities, position);
+      if (nearest) {
+        picker.setValue(nearest.city.key);
+        remember(nearest.city);
+        setStatus(MESSAGES.nearest(nearest.city.name));
+      } else {
+        const first = firstCity(cities);
+        picker.setValue(first.key);
+        setStatus(MESSAGES.noMatch(first.name));
+      }
     } catch (error) {
       // GeolocationPositionError 1 = permission denied: do not ask the browser again
       if (error?.code === 1) saveChoice({ consent: 'no' });
@@ -324,13 +337,15 @@ export default function decorate(block) {
     const saved = getSavedChoice();
     const remembered = cities.find((city) => city.key === saved.cityKey)
       || (saved.city && findCity(cities, [saved.city]));
-    // A-Z list with the first city, until the visitor's city is known
-    picker.setValue((remembered || cities[0]).key);
+    // the first city of the sheet, until the visitor's city is known
+    picker.setValue((remembered || firstCity(cities)).key);
 
     if (remembered || saved.consent === 'no' || inEditor) return;
-    // location blocked in the browser: asking would lead nowhere, keep the A-Z list
-    if (await locationPermission() === 'denied') return;
-    if (saved.consent === 'yes') locate();
+    const permission = await locationPermission();
+    // location blocked in the browser: asking would lead nowhere, keep the first city
+    if (permission === 'denied') return;
+    // already allowed: the browser will not prompt, so neither do we
+    if (permission === 'granted' || saved.consent === 'yes') locate();
     else afterPageLoad(() => askConsent(locate));
   })();
 }

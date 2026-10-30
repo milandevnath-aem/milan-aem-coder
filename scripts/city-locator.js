@@ -6,44 +6,29 @@ import { fetchPlaceholders } from './placeholders.js';
 
   - City master: a sheet (JSON) of cities and their details. Its URL comes from the
     placeholders sheet ("city-master" row), or CITY_CONFIG.cityMasterPath.
-  - Google Maps: loaded on demand with the key from the placeholders sheet
-    ("google-maps-api-key" row), only to geocode. Never hardcode the key. The key's
-    project needs the Maps JavaScript API and the Geocoding API enabled. When Google
-    is not available (no key, key rejected, API not enabled, timeout) the visitor's
-    city is not looked up: the caller keeps the A-Z city list.
-  - Visitor choice (location consent, selected city) and geocoded city positions are
-    kept in localStorage so we do not ask, or geocode, again on every visit.
+  - Nearest city: worked out in the browser from the city master's latitude and
+    longitude columns ("27.1767° N" or "27.1767"); no maps API or key is used. Cities
+    without coordinates are never suggested.
+  - Visitor choice (location consent, selected city) is kept in localStorage so we do
+    not ask again on every visit.
 */
 
 export const CITY_CONFIG = {
-  // placeholders sheet keys, camel-cased by fetchPlaceholders ("google-maps-api-key")
+  // placeholders sheet keys, camel-cased by fetchPlaceholders ("city-master")
   placeholders: {
-    apiKey: 'googleMapsApiKey',
     cityMaster: 'cityMaster',
   },
   // city master location when the placeholders sheet has no "city-master" row
   cityMasterPath: '/city-master.json',
   // sheet to read when the city master is a workbook with several sheets (first one otherwise)
   cityMasterSheet: '',
-  // geocoding is limited to this country; also the Maps region
-  country: 'IN',
-  // nearest city: only compare cities in the visitor's state when the master has a
-  // state column and lists cities in that state (far fewer geocoder calls)
-  nearestWithinState: true,
-  // parallel geocoder requests when looking up city positions
-  geocodeConcurrency: 4,
-  // how long geocoded city positions are kept in the browser
-  cacheDays: 30,
+  // a city further away than this is not "near" the visitor: the first city is shown
+  maxDistanceKm: 50,
   timeouts: {
     geolocation: 10000,
-    script: 10000,
-    geocode: 8000,
-    // overall budget for geocoding the city master (nearest city search)
-    nearest: 20000,
   },
   storageKeys: {
     choice: 'kmp-city-choice',
-    positions: 'kmp-city-positions-v1',
   },
   // city master columns, matched ignoring case, spaces and punctuation
   columns: {
@@ -78,7 +63,7 @@ export const CITY_CONFIG = {
       key: 'email', label: 'Write to us on', icon: 'mail', columns: ['email', 'email id', 'mail'],
     },
   ],
-  // names Google may return for a city listed under another name (or spelling) in the
+  // other names (or spellings) of a city, used to find a remembered city in the
   // city master. A city master "aliases" column adds more without a code change
   aliases: [
     ['bengaluru', 'bangalore'],
@@ -128,16 +113,6 @@ function humanize(header) {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-function withTimeout(promise, ms, what) {
-  let timer;
-  const timeout = new Promise((resolve, reject) => {
-    timer = setTimeout(() => reject(new Error(`${what} timed out`)), ms);
-  });
-  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
-}
-
-const wait = (ms) => new Promise((resolve) => { setTimeout(resolve, ms); });
-
 // localStorage can be blocked (private mode, site settings): fail silently
 function readStore(key) {
   try {
@@ -168,19 +143,6 @@ function toSiteUrl(url) {
   }
 }
 
-/**
- * The API key from the placeholders sheet. Tolerates a pasted script URL
- * (".../maps/api/js?key=...&region=IN") or stray spaces instead of the bare key.
- */
-function readApiKey(value) {
-  const text = String(value || '').trim();
-  try {
-    return new URL(text).searchParams.get('key') || '';
-  } catch (e) {
-    return text;
-  }
-}
-
 /** great-circle distance in km between two { lat, lng } */
 export function distance(a, b) {
   const rad = (d) => (d * Math.PI) / 180;
@@ -189,10 +151,19 @@ export function distance(a, b) {
   return 12742 * Math.asin(Math.sqrt(h));
 }
 
-/** { lat, lng } when both are numbers, else null */
+/** "27.1767° N" -> 27.1767, "43.2° S" -> -43.2, "78.0081" -> 78.0081; NaN when empty */
+function toDegrees(value) {
+  const text = String(value ?? '').trim();
+  const degrees = parseFloat(text);
+  return /[sw]\s*$/i.test(text) ? -Math.abs(degrees) : degrees;
+}
+
+/** { lat, lng } when both are valid coordinates (sheet or "° N/E" format), else null */
 export function toPosition(lat, lng) {
-  const position = { lat: parseFloat(lat), lng: parseFloat(lng) };
-  return Number.isFinite(position.lat) && Number.isFinite(position.lng) ? position : null;
+  const position = { lat: toDegrees(lat), lng: toDegrees(lng) };
+  const valid = Number.isFinite(position.lat) && Number.isFinite(position.lng)
+    && Math.abs(position.lat) <= 90 && Math.abs(position.lng) <= 180;
+  return valid ? position : null;
 }
 
 /* ---------- cities ---------- */
@@ -275,6 +246,8 @@ export async function loadCityMaster() {
         })),
       }))
       .filter((city) => city.name);
+    // sheet order is kept: the first row is the default city (see firstCity)
+    cities.forEach((city, i) => { city.order = i; });
 
     // a city listed more than once (several branches) keeps every row; the
     // dropdown tells them apart by the start of the address
@@ -285,8 +258,6 @@ export async function loadCityMaster() {
       const address = city.details.find((d) => d.key === 'address')?.value || '';
       [city.note] = address.split(',');
       city.key = `${city.key}-${i + 1}`;
-      // branches of one city are told apart by their address when geocoded
-      city.query = [address, city.name].filter(Boolean).join(', ');
     });
     return cities.sort((a, b) => a.name.localeCompare(b.name));
   } catch (error) {
@@ -309,7 +280,7 @@ function namesOf(city) {
  * Finds the cities (several when a city has more than one branch) known by a name or
  * alias. Names are tried in order, the first one that matches wins.
  * @param {Object[]} cities city records
- * @param {string[]} names e.g. names returned by the geocoder, most specific first
+ * @param {string[]} names names to look for, most specific first
  * @returns {Object[]} matching cities, [] when none
  */
 export function findCities(cities, names) {
@@ -360,181 +331,32 @@ export function getPosition() {
   });
 }
 
-/* ---------- Google Maps ---------- */
-
-function injectMapsScript(key) {
-  return new Promise((resolve, reject) => {
-    const callback = 'kmpGoogleMapsReady';
-    window[callback] = () => {
-      delete window[callback];
-      resolve();
-    };
-    const params = new URLSearchParams({
-      key,
-      v: 'weekly',
-      loading: 'async',
-      callback,
-      region: CITY_CONFIG.country,
-      // English names, so they match the city master whatever the browser language
-      language: 'en',
-    });
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?${params}`;
-    script.async = true;
-    script.onerror = () => reject(new Error('Google Maps script failed to load'));
-    document.head.append(script);
-  });
-}
-
-let geocoderPromise;
-
-// Google calls window.gm_authFailure when it rejects the key (invalid key, site not in
-// the key's allowed referrers, API not enabled). Geocoder calls then never answer, so
-// they race against this to fail at once instead of waiting for the timeout.
-let rejectAuth;
-const authFailure = new Promise((resolve, reject) => { rejectAuth = reject; });
-authFailure.catch(() => {});
+/* ---------- nearest city ---------- */
 
 /**
- * Loads the Maps JavaScript API (once per page) and returns a Geocoder.
- * Rejects when the key is missing or the script does not load in time.
- * @returns {Promise<google.maps.Geocoder>}
+ * The default city: the first row of the city master (sheet order), or the first
+ * city when the order is not known (authored rows).
+ * @param {Object[]} cities city records
+ * @returns {Object|undefined}
  */
-export function loadGeocoder() {
-  geocoderPromise = geocoderPromise || (async () => {
-    if (!window.google?.maps?.importLibrary) {
-      window.gm_authFailure = () => {
-        const error = new Error('Google Maps rejected the API key (see the console error for the reason)');
-        error.code = 'REQUEST_DENIED';
-        rejectAuth(error);
-      };
-      const placeholders = await fetchPlaceholders();
-      const key = readApiKey(placeholders[CITY_CONFIG.placeholders.apiKey]);
-      if (!key) throw new Error('Google Maps API key missing: add "google-maps-api-key" to the placeholders sheet');
-      await withTimeout(injectMapsScript(key), CITY_CONFIG.timeouts.script, 'Google Maps script');
-    }
-    const { Geocoder } = await window.google.maps.importLibrary('geocoding');
-    return new Geocoder();
-  })();
-  return geocoderPromise;
-}
-
-/** Geocoder request with a timeout; "no results" resolves to [] */
-async function geocode(geocoder, request) {
-  try {
-    const answer = Promise.race([geocoder.geocode(request), authFailure]);
-    const { results } = await withTimeout(answer, CITY_CONFIG.timeouts.geocode, 'Geocoder');
-    return results || [];
-  } catch (error) {
-    if (error.code === 'ZERO_RESULTS') return [];
-    throw error;
-  }
+export function firstCity(cities) {
+  const order = (city) => city.order ?? Infinity;
+  return cities.reduce((first, city) => (order(city) < order(first) ? city : first), cities[0]);
 }
 
 /**
- * Reverse geocodes a position into city name candidates (most specific first) and state.
- * @returns {Promise<{names: string[], state: string}>}
- */
-async function describePosition(geocoder, position) {
-  const results = await geocode(geocoder, { location: position });
-  const components = results.flatMap((result) => result.address_components);
-  const names = ['locality', 'postal_town', 'administrative_area_level_3', 'administrative_area_level_2', 'sublocality_level_1']
-    .flatMap((type) => components.filter((c) => c.types.includes(type)))
-    .flatMap((c) => [c.long_name, c.short_name]);
-  const state = components.find((c) => c.types.includes('administrative_area_level_1'))?.long_name || '';
-  return { names: [...new Set(names)], state };
-}
-
-/**
- * Geocodes cities that have no position yet into the cache, a few at a time, until
- * done or the deadline. Cities that are not found are cached too, so they are not
- * looked up again on every visit.
- */
-async function geocodeCities(geocoder, cities, cache, deadline) {
-  const queue = [...cities];
-  const worker = async () => {
-    while (queue.length && Date.now() < deadline) {
-      const city = queue.shift();
-      try {
-        // eslint-disable-next-line no-await-in-loop
-        const [hit] = await geocode(geocoder, {
-          address: city.query || [city.name, city.region].filter(Boolean).join(', '),
-          componentRestrictions: { country: CITY_CONFIG.country },
-        });
-        const location = hit?.geometry?.location;
-        cache[city.key] = location
-          ? { lat: location.lat(), lng: location.lng(), t: Date.now() }
-          : { t: Date.now() };
-      } catch (error) {
-        if (error.code === 'OVER_QUERY_LIMIT') {
-          // rate limited: back off and try this city again
-          queue.push(city);
-          // eslint-disable-next-line no-await-in-loop
-          await wait(1000);
-        } else if (error.code === 'REQUEST_DENIED') {
-          // key not allowed to geocode: no point trying the other cities
-          queue.length = 0;
-        }
-        // other errors (timeouts): skipped now, retried on a later visit
-      }
-    }
-  };
-  await Promise.all(Array.from({ length: CITY_CONFIG.geocodeConcurrency }, worker));
-}
-
-/**
- * Nearest city to a position. Uses city master coordinates when present, else
- * positions geocoded earlier (cached), else geocodes the cities now.
- * @returns {Promise<Object|null>}
- */
-async function findNearestCity(geocoder, cities, position, state) {
-  let candidates = cities;
-  if (CITY_CONFIG.nearestWithinState && state) {
-    const inState = cities.filter((city) => normalize(city.region) === normalize(state));
-    if (inState.length) candidates = inState;
-  }
-
-  const maxAge = CITY_CONFIG.cacheDays * 864e5;
-  const stored = readStore(CITY_CONFIG.storageKeys.positions) || {};
-  const cache = Object.fromEntries(Object.entries(stored)
-    .filter(([, entry]) => Date.now() - entry.t < maxAge));
-  const missing = candidates.filter((city) => !city.position && !cache[city.key]);
-  if (missing.length) {
-    await geocodeCities(geocoder, missing, cache, Date.now() + CITY_CONFIG.timeouts.nearest);
-    writeStore(CITY_CONFIG.storageKeys.positions, cache);
-  }
-
-  return candidates
-    .map((city) => ({
-      city,
-      at: city.position || toPosition(cache[city.key]?.lat, cache[city.key]?.lng),
-    }))
-    .filter(({ at }) => at)
-    .reduce((best, entry) => {
-      const km = distance(position, entry.at);
-      return !best || km < best.km ? { city: entry.city, km } : best;
-    }, null)?.city || null;
-}
-
-/**
- * The city for a position: the city master city it is in, else the nearest one.
- * Rejects when Google Maps is not available (no key, key rejected, Geocoding API not
- * enabled, timeout); the caller then keeps the A-Z city list.
+ * The city with coordinates closest to a position, if it is within
+ * CITY_CONFIG.maxDistanceKm. Cities without coordinates are skipped.
  * @param {Object[]} cities city records
  * @param {{lat: number, lng: number}} position
- * @returns {Promise<{city: Object, match: 'exact'|'nearest'}|null>} null when none found
+ * @returns {{city: Object, km: number}|null} null when no city is near enough
  */
-export async function cityFromPosition(cities, position) {
-  if (!cities.length) return null;
-  const geocoder = await loadGeocoder();
-  const { names, state } = await describePosition(geocoder, position);
-  const matches = findCities(cities, names);
-  if (matches.length === 1) return { city: matches[0], match: 'exact' };
-  if (matches.length > 1) {
-    // the visitor's city has several branches: the nearest of them
-    const city = await findNearestCity(geocoder, matches, position, '');
-    return { city: city || matches[0], match: 'exact' };
-  }
-  const nearest = await findNearestCity(geocoder, cities, position, state);
-  return nearest ? { city: nearest, match: 'nearest' } : null;
+export function nearestCity(cities, position) {
+  const nearest = cities
+    .filter((city) => city.position)
+    .reduce((best, city) => {
+      const km = distance(position, city.position);
+      return !best || km < best.km ? { city, km } : best;
+    }, null);
+  return nearest && nearest.km <= CITY_CONFIG.maxDistanceKm ? nearest : null;
 }
