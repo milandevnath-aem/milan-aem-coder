@@ -135,6 +135,12 @@ footer .footer-other a:any-link {
   letter-spacing: 0.24px;
 }
 
+/* WCAG 2.5.8: targets of at least 24px */
+footer .footer-links li li a:any-link,
+footer .footer-other li a:any-link {
+  display: inline-block;
+}
+
 /* bottom bar */
 footer .footer-bottom .default-content-wrapper {
   display: flex;
@@ -302,7 +308,7 @@ footer .footer-bottom .icon {
 }
 
 :where(.desktop-view) footer .footer-brand img {
-  width: 193px;
+  width: 223px;
   height: 46.873px;
 }
 
@@ -412,7 +418,7 @@ footer .footer-bottom .icon {
 /* breadcrumb */
 footer .footer-breadcrumb {
   grid-column: 1 / -1;
-  padding-bottom: 24px;
+  padding: 24px 0;
   border-bottom: 1px solid var(--surface-color);
 }
 
@@ -427,6 +433,10 @@ footer .footer-breadcrumb ol {
   font-size: var(--body-font-size-s);
   font-weight: 600;
   line-height: 20px;
+}
+
+:where(.desktop-view) footer .footer-breadcrumb {
+  padding: 0 0 24px;
 }
 
 :where(.desktop-view) footer .footer-breadcrumb ol {

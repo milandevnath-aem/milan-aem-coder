@@ -151,6 +151,7 @@ function buildDesktopMenu(menus) {
     toggle.type = 'button';
     toggle.className = 'nav-menu-toggle';
     toggle.textContent = menu.label;
+    if (/^more$/i.test(menu.label)) toggle.setAttribute('aria-label', 'More navigation links');
     toggle.setAttribute('aria-expanded', 'false');
     toggle.setAttribute('aria-controls', `nav-panel-${uid}`);
 
@@ -224,6 +225,14 @@ function buildAccordion(menus) {
       const expanded = toggle.getAttribute('aria-expanded') === 'true';
       toggle.setAttribute('aria-expanded', !expanded);
       panel.hidden = expanded;
+      if (expanded) return;
+      // the sticky contact/login footer would otherwise cover the opened panel
+      const footer = toggle.closest('.nav-sections')?.querySelector('.nav-menu-footer');
+      panel.style.scrollMarginBottom = `${(footer?.offsetHeight || 0) + 16}px`;
+      panel.scrollIntoView({
+        block: 'nearest',
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      });
     });
     li.append(toggle, panel);
     ul.append(li);
@@ -340,7 +349,7 @@ async function openAccessibility() {
       <p>This is a preview of how text will look in this website. Adjust it based on your requirement.</p>
     </div>
     <div class="nav-a11y-controls">
-      <div class="nav-a11y-options" role="radiogroup" aria-label="Setting"></div>
+      <div class="nav-a11y-options" role="radiogroup" aria-label="Accessibility setting"></div>
       <div class="nav-a11y-slider">
         <p><label for="nav-a11y-range">Slide to adjust</label><span class="nav-a11y-preview" aria-hidden="true">Aa</span></p>
         <input id="nav-a11y-range" type="range">
@@ -361,7 +370,11 @@ async function openAccessibility() {
   };
   const select = (setting) => {
     current = setting;
-    [...options.children].forEach((b) => b.setAttribute('aria-checked', b.dataset.key === setting.key));
+    [...options.children].forEach((b) => {
+      const checked = b.dataset.key === setting.key;
+      b.setAttribute('aria-checked', checked);
+      b.tabIndex = checked ? 0 : -1;
+    });
     Object.assign(range, { min: setting.min, max: setting.max, step: setting.step });
     range.value = settings[setting.key] ?? setting.min;
     paint();
@@ -373,6 +386,18 @@ async function openAccessibility() {
     button.dataset.key = setting.key;
     button.append(icon(setting.icon), setting.label);
     button.addEventListener('click', () => select(setting));
+    button.addEventListener('keydown', (e) => {
+      const steps = {
+        ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1,
+      };
+      const step = steps[e.key];
+      if (!step) return;
+      e.preventDefault();
+      const list = [...options.children];
+      const next = list[(list.indexOf(button) + step + list.length) % list.length];
+      next.focus();
+      next.click();
+    });
     options.append(button);
   });
   range.addEventListener('input', () => {
@@ -428,6 +453,7 @@ function buildSearch(index, placeholder) {
         <div class="nav-search-group"><p class="nav-search-heading">Loans</p><ul></ul></div>
         <div class="nav-search-group"><p class="nav-search-heading">Tools &amp; Help</p><ul></ul></div>
       </div>
+      <p class="nav-search-empty" hidden>No results found</p>
     </div>`;
   const form = search.querySelector('form');
   const input = form.querySelector('input');
@@ -437,7 +463,34 @@ function buildSearch(index, placeholder) {
   clear.append(icon('close'));
   const results = search.querySelector('.nav-search-results');
   const [loans, tools] = search.querySelectorAll('.nav-search-group');
+  const title = search.querySelector('.nav-search-title');
+  const columns = search.querySelector('.nav-search-columns');
+  const empty = search.querySelector('.nav-search-empty');
   let matches = [];
+
+  /**
+   * A calculator or #anchor link to the page already open is handled in place
+   * (tab select / smooth scroll) instead of reloading.
+   * @returns {boolean} true when handled
+   */
+  const openOnPage = (href) => {
+    const url = new URL(href, window.location);
+    if (url.origin !== window.location.origin
+      || url.pathname !== window.location.pathname) return false;
+    const calculator = url.searchParams.get('calculator');
+    const target = !calculator && url.hash ? document.getElementById(url.hash.slice(1)) : null;
+    if (!calculator && !target) return false;
+    window.history.pushState(null, '', url);
+    if (calculator) {
+      window.dispatchEvent(new CustomEvent('emi-calculator:select', { detail: { calculator } }));
+    }
+    search.dispatchEvent(new CustomEvent('search:close'));
+    if (target) {
+      const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      requestAnimationFrame(() => target.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto' }));
+    }
+    return true;
+  };
 
   const render = () => {
     const query = input.value.trim();
@@ -468,12 +521,16 @@ function buildSearch(index, placeholder) {
       group.hidden = !items.length;
     });
     results.hidden = !q;
-    if (q && !matches.length) {
-      loans.hidden = false;
-      loans.querySelector('ul').innerHTML = '<li class="nav-search-empty">No results found</li>';
-    }
+    const noMatch = !!q && !matches.length;
+    title.hidden = noMatch;
+    columns.hidden = noMatch;
+    empty.hidden = !noMatch;
   };
   input.addEventListener('input', render);
+  results.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href]');
+    if (a && !e.metaKey && !e.ctrlKey && !e.shiftKey && openOnPage(a.href)) e.preventDefault();
+  });
   clear.addEventListener('click', () => {
     input.value = '';
     render();
@@ -482,7 +539,7 @@ function buildSearch(index, placeholder) {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const first = matches[0];
-    if (first) window.location.href = first.href;
+    if (first && !openOnPage(first.href)) window.location.href = first.href;
   });
   search.reset = () => {
     input.value = '';
@@ -655,11 +712,12 @@ export default async function decorate(block) {
   }
 
   const setMenu = (expanded) => {
-    nav.setAttribute('aria-expanded', expanded);
+    nav.dataset.expanded = expanded;
+    hamburgerButton.setAttribute('aria-expanded', expanded);
     hamburgerButton.setAttribute('aria-label', expanded ? 'Close navigation' : 'Open navigation');
     document.body.classList.toggle('nav-open', expanded && !isDesktop.matches);
   };
-  hamburgerButton.addEventListener('click', () => setMenu(nav.getAttribute('aria-expanded') !== 'true'));
+  hamburgerButton.addEventListener('click', () => setMenu(nav.dataset.expanded !== 'true'));
 
   nav.prepend(hamburger);
   navSections?.prepend(settingsBar);
@@ -703,6 +761,7 @@ export default async function decorate(block) {
     });
   }
   search.id = 'nav-search';
+  search.addEventListener('search:close', () => setSearch(false));
   scrim.addEventListener('click', () => setSearch(false));
 
   /* closing behaviour */
@@ -715,7 +774,7 @@ export default async function decorate(block) {
     } else if (!search.hidden) {
       setSearch(false);
       searchLink?.focus();
-    } else if (nav.getAttribute('aria-expanded') === 'true' && !isDesktop.matches) {
+    } else if (nav.dataset.expanded === 'true' && !isDesktop.matches) {
       setMenu(false);
       hamburgerButton.focus();
     }
@@ -725,6 +784,10 @@ export default async function decorate(block) {
   });
   nav.addEventListener('focusout', (e) => {
     if (desktopMenu && !desktopMenu.contains(e.relatedTarget)) desktopMenu.closeAll();
+  });
+  // the top bar scrolls away: bring it back when a keyboard user lands in it
+  navTopbar?.addEventListener('focusin', () => {
+    if (navTopbar.getBoundingClientRect().bottom <= 0) window.scrollTo({ top: 0 });
   });
   isDesktop.addEventListener('change', () => {
     setMenu(false);

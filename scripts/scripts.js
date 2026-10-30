@@ -9,6 +9,7 @@ import {
   loadSection,
   loadSections,
   loadCSS,
+  getMetadata,
 } from './aem.js';
 // sets the viewport classes on <html> before the page is shown
 import { isDesktop } from './viewport.js';
@@ -209,6 +210,56 @@ export function decorateMain(main) {
   decorateDynamicMedia(main);
   decorateBlocks(main);
   decorateButtons(main);
+  // anchor for search results that link to a page's documents section (#documents)
+  const documents = main.querySelector('.requirements.documents')?.closest('.section');
+  if (documents && !documents.id && !main.querySelector('#documents')) documents.id = 'documents';
+}
+
+/**
+ * Adds head tags the server doesn't render from page metadata: hreflang,
+ * authored <meta>/<link> tags and JSON-LD.
+ */
+function decorateSeo() {
+  const { head } = document;
+
+  const hreflang = getMetadata('hreflang');
+  if (hreflang) {
+    const link = document.createElement('link');
+    link.rel = 'alternate';
+    link.hreflang = hreflang;
+    link.href = getMetadata('canonical') || window.location.href.split(/[?#]/)[0];
+    head.append(link);
+  }
+
+  const rawTags = getMetadata('meta-tags');
+  if (rawTags) {
+    const parsed = new DOMParser().parseFromString(rawTags, 'text/html');
+    // only meta/link are copied, so authored markup cannot add scripts
+    parsed.head.querySelectorAll('meta, link').forEach((el) => {
+      const key = el.getAttribute('name') || el.getAttribute('property');
+      if (key && head.querySelector(`meta[name="${CSS.escape(key)}"], meta[property="${CSS.escape(key)}"]`)) return;
+      const tag = document.createElement(el.localName);
+      [...el.attributes]
+        .filter(({ name }) => !name.startsWith('on'))
+        .forEach(({ name, value }) => tag.setAttribute(name, value));
+      head.append(tag);
+    });
+  }
+
+  const rawSchema = getMetadata('schema-script');
+  if (rawSchema) {
+    const json = rawSchema.replace(/^\s*<script[^>]*>/i, '').replace(/<\/script>\s*$/i, '');
+    try {
+      JSON.parse(json);
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.textContent = json;
+      head.append(script);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn('Invalid JSON-LD in schema-script metadata', e);
+    }
+  }
 }
 
 /**
@@ -218,6 +269,7 @@ export function decorateMain(main) {
 async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
+  decorateSeo();
   const main = doc.querySelector('main');
   // skip link to the main content (WCAG 2.4.1)
   if (main && !doc.querySelector('.skip-link')) {
@@ -246,21 +298,63 @@ async function loadEager(doc) {
 }
 
 /**
+ * Decorative icons are hidden from screen readers (unless they are the only content of a
+ * control without a name); generic link text ("Apply now") gets the nearest heading as context.
+ * @param {Document} doc The document
+ */
+function improveAccessibility(doc) {
+  doc.querySelectorAll('span.icon:not([aria-hidden])').forEach((icon) => {
+    const host = icon.closest('a, button');
+    const named = host && (host.textContent.trim() || host.getAttribute('aria-label') || host.title);
+    if (!host || named) icon.setAttribute('aria-hidden', 'true');
+  });
+
+  const generic = /^(apply now|read more|know more|learn more|view all|explore|buy now)$/i;
+  doc.querySelectorAll('main a[href], main button').forEach((el) => {
+    const text = el.textContent.trim();
+    if (!generic.test(text) || el.hasAttribute('aria-label') || el.hasAttribute('aria-labelledby')) return;
+    const scope = el.closest('.section') || doc.body;
+    const heading = [...scope.querySelectorAll('h1, h2, h3, h4')]
+      .filter((h) => [4, 20].includes(h.compareDocumentPosition(el)))
+      .pop();
+    if (heading?.textContent.trim()) el.setAttribute('aria-label', `${text}: ${heading.textContent.trim()}`);
+  });
+
+  // block headings are fixed at h3: expose the level that follows the previous heading
+  let prev = 0;
+  doc.querySelectorAll('main h1, main h2, main h3, main h4, main h5, main h6').forEach((h) => {
+    const level = Number(h.tagName[1]);
+    if (prev && level > prev + 1 && !h.hasAttribute('aria-level')) {
+      h.setAttribute('aria-level', prev + 1);
+      prev += 1;
+    } else {
+      prev = Number(h.getAttribute('aria-level')) || level;
+    }
+  });
+}
+
+/**
  * Loads everything that doesn't need to be delayed.
  * @param {Element} doc The container element
  */
 async function loadLazy(doc) {
   autolinkModals(doc);
-  loadHeader(doc.querySelector('header'));
+  const headerLoaded = loadHeader(doc.querySelector('header'));
 
   const main = doc.querySelector('main');
   await loadSections(main);
 
   const { hash } = window.location;
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
-  if (hash && element) element.scrollIntoView();
+  if (hash && element) {
+    // the browser may already have jumped to the anchor: restart from the top and glide down
+    const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (smooth) window.scrollTo({ top: 0, behavior: 'instant' });
+    requestAnimationFrame(() => element.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto' }));
+  }
 
-  loadFooter(doc.querySelector('footer'));
+  const footerLoaded = loadFooter(doc.querySelector('footer'));
+  Promise.all([headerLoaded, footerLoaded]).then(() => improveAccessibility(doc));
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   loadFonts();
