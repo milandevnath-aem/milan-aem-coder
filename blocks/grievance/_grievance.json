@@ -99,7 +99,7 @@
           "name": "classes",
           "label": "Variant",
           "valueType": "string",
-          "value": "steps",
+          "value": "",
           "options": [
             { "name": "Steps (RIB Approach)", "value": "rbi-approach" }
           ]
