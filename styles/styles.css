@@ -451,6 +451,10 @@ main > .section {
   margin: var(--section-spacing) 0;
 }
 
+main > .section#documents {
+  scroll-margin-top: calc(-1 * var(--section-spacing))
+}
+
 /* grid bound (GB) by default */
 main > .section > div {
   box-sizing: border-box;
@@ -466,7 +470,7 @@ main > .section:first-of-type {
 
 /* keyboard focus: dark ring with a light halo, visible on light and dark backgrounds
    (blocks may refine it; zero specificity) */
-:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+:where(a, button, input, select, textarea, summary, iframe, [tabindex]):focus-visible {
   outline: 2px solid var(--text-color);
   outline-offset: 2px;
   box-shadow: 0 0 0 2px var(--background-color);

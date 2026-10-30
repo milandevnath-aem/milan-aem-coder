@@ -65,7 +65,6 @@ export function createDropdown({
   field.className = 'dropdown-field';
   field.setAttribute('aria-haspopup', 'listbox');
   field.setAttribute('aria-expanded', 'false');
-  field.setAttribute('aria-controls', `${id}-list`);
   field.innerHTML = '<span class="dropdown-text"><span class="dropdown-label"></span><span class="dropdown-value"></span></span>';
   field.querySelector('.dropdown-label').textContent = label;
   field.append(icon('chevron-down'));
@@ -110,6 +109,7 @@ export function createDropdown({
   list.id = `${id}-list`;
   list.setAttribute('role', 'listbox');
   list.setAttribute('aria-label', label);
+  list.tabIndex = -1;
   panel.append(list);
   root.append(field, input, panel);
 
@@ -183,6 +183,7 @@ export function createDropdown({
     if (panel.hidden) return;
     panel.hidden = true;
     field.setAttribute('aria-expanded', 'false');
+    field.removeAttribute('aria-controls');
     root.classList.remove('is-open');
     if (focusField) field.focus();
   };
@@ -192,6 +193,7 @@ export function createDropdown({
     render();
     panel.hidden = false;
     field.setAttribute('aria-expanded', 'true');
+    field.setAttribute('aria-controls', list.id);
     root.classList.add('is-open');
     fitPanel();
     const selectedIndex = visibleOptions().findIndex((li) => li.dataset.value === input.value);
@@ -200,7 +202,6 @@ export function createDropdown({
       searchInput.parentElement.querySelector('.dropdown-clear').hidden = true;
       searchInput.focus();
     } else {
-      list.tabIndex = -1;
       list.focus();
       if (selectedIndex < 0) setActive(0);
     }

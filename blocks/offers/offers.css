@@ -113,7 +113,7 @@
 /* bold link (a.primary) is black; plain link keeps the white default */
 .offers .offers-content a.button.primary {
     border-color: #000;
-    background-color: #000;
+    background-color: var(--color-button-pills-default-bg-base);
     color: #fff;
 }
 
@@ -277,4 +277,9 @@
 
 .offers .offers-item.offers-fixed-height:hover .button-wrapper {
     display: block;
+}
+
+.remove-padding{
+    padding-left:0;
+    padding-right:0;
 }

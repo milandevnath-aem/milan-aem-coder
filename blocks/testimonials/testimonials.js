@@ -52,7 +52,13 @@ export default function decorate(block) {
       if (!cell?.textContent.trim()) return;
       const p = document.createElement('p');
       p.className = cls;
-      p.textContent = cell.textContent.trim();
+      if (cls === 'testimonials-name') {
+        const cite = document.createElement('cite');
+        cite.textContent = cell.textContent.trim();
+        p.append(cite);
+      } else {
+        p.textContent = cell.textContent.trim();
+      }
       moveInstrumentation(cell, p);
       meta.append(p);
     });
@@ -65,8 +71,8 @@ export default function decorate(block) {
   const controls = document.createElement('div');
   controls.className = 'testimonials-controls';
   controls.innerHTML = `
-    <button type="button" class="testimonials-prev" aria-label="Previous testimonials"></button>
-    <button type="button" class="testimonials-next" aria-label="Next testimonials"></button>`;
+    <button type="button" class="testimonials-prev" aria-label="Previous testimonials" title="Previous testimonials"></button>
+    <button type="button" class="testimonials-next" aria-label="Next testimonials" title="Next testimonials"></button>`;
   const [prev, next] = controls.children;
   const scrollByCard = (dir) => {
     const card = track.firstElementChild;
@@ -78,6 +84,9 @@ export default function decorate(block) {
   track.addEventListener('scroll', () => updateButtons(track, prev, next), { passive: true });
 
   block.replaceChildren(track, controls);
+  block.setAttribute('role', 'region');
+  block.setAttribute('aria-roledescription', 'carousel');
+  block.setAttribute('aria-label', 'Customer testimonials');
   requestAnimationFrame(() => updateButtons(track, prev, next));
   new ResizeObserver(() => updateButtons(track, prev, next)).observe(track);
 }

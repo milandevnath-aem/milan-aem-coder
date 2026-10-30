@@ -114,7 +114,7 @@ function textField(label, kind, required) {
     prefix.textContent = '+91';
     field.append(prefix);
     Object.assign(input, {
-      type: 'tel', inputMode: 'numeric', pattern: '[6-9][0-9]{9}', autocomplete: 'tel-national',
+      type: 'tel', inputMode: 'numeric', pattern: '[6-9][0-9]{9}', autocomplete: 'tel',
     });
     digitsOnly(input, 10);
   } else if (kind === 'email') {
