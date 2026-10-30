@@ -49,6 +49,23 @@
           "value": "",
           "label": "Description",
           "valueType": "string"
+        },
+        {
+          "component": "select",
+          "name": "classes",
+          "value": "",
+          "label": "CSS Style",
+          "valueType": "string",
+          "options": [
+            {
+              "name": "Left Title",
+              "value": "left-title"
+            },
+            {
+              "name": "Right Title",
+              "value": "right-title"
+            }
+          ]
         }
       ]
     },
@@ -82,9 +99,7 @@
   "filters": [
     {
       "id": "partner-list",
-      "components": [
-        "partner-item"
-      ]
+      "components": ["partner-item"]
     }
   ]
 }
