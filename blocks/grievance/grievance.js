@@ -83,7 +83,7 @@ function decorateDetails(details) {
   }
 }
 
-function addToggle(item, details, id) {
+function addToggle(item, details, id, labels) {
   details.id = id;
   details.hidden = true;
   const button = document.createElement('button');
@@ -92,13 +92,13 @@ function addToggle(item, details, id) {
   button.setAttribute('aria-expanded', 'false');
   button.setAttribute('aria-controls', id);
   const text = document.createElement('span');
-  text.textContent = 'Read more';
+  text.textContent = labels.more;
   button.append(text, createIcon('chevron-down'));
   button.addEventListener('click', () => {
     const open = button.getAttribute('aria-expanded') !== 'true';
     button.setAttribute('aria-expanded', open);
     details.hidden = !open;
-    text.textContent = open ? 'Show less' : 'Read more';
+    text.textContent = open ? labels.less : labels.more;
   });
   item.append(button);
 }
@@ -107,14 +107,20 @@ function addToggle(item, details, id) {
  * Grievance / contact directory: intro beside a list of items with contact details.
  * Variants: "steps" numbers the items on a timeline and collapses the details,
  * "directory" (default) shows the details open.
- * Optional first single-cell row: intro. Other rows: title, description, details.
+ * Single-cell rows, in order: intro, "read more" label, "show less" label (all optional).
+ * Other rows: title, description, details.
  * @param {Element} block The block element
  */
 export default function decorate(block) {
   blockCount += 1;
   const isSteps = block.classList.contains('steps');
   const rows = [...block.children];
-  const introRow = rows.find((row) => row.children.length === 1);
+  const singleRows = rows.filter((row) => row.children.length === 1);
+  const [introRow, moreRow, lessRow] = singleRows;
+  const labels = {
+    more: moreRow?.textContent.trim() || 'Read more',
+    less: lessRow?.textContent.trim() || 'Show less',
+  };
   const content = [];
 
   if (introRow?.textContent.trim()) {
@@ -126,7 +132,7 @@ export default function decorate(block) {
 
   const list = document.createElement(isSteps ? 'ol' : 'div');
   list.className = 'grievance-list';
-  rows.filter((row) => row !== introRow).forEach((row, i) => {
+  rows.filter((row) => !singleRows.includes(row)).forEach((row, i) => {
     const [titleCell, descriptionCell, detailsCell] = row.children;
     const item = document.createElement(isSteps ? 'li' : 'div');
     item.className = 'grievance-item';
@@ -163,7 +169,7 @@ export default function decorate(block) {
       while (detailsCell.firstChild) details.append(detailsCell.firstChild);
       decorateDetails(details);
       item.append(details);
-      if (isSteps) addToggle(item, details, `grievance-${blockCount}-details-${i + 1}`);
+      if (isSteps) addToggle(item, details, `grievance-${blockCount}-details-${i + 1}`, labels);
     }
     list.append(item);
   });

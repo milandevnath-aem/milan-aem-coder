@@ -53,6 +53,20 @@
           "value": "",
           "label": "Intro",
           "valueType": "string"
+        },
+        {
+          "component": "text",
+          "name": "readMoreLabel",
+          "value": "Read more",
+          "label": "Read more button label",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "name": "showLessLabel",
+          "value": "Show less",
+          "label": "Show less button label",
+          "valueType": "string"
         }
       ]
     },
