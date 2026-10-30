@@ -46,7 +46,7 @@ export function highlight(el, text, query) {
  * @param {string} [config.boundary] selector of an ancestor (e.g. a banner) the open
  *   panel must stay inside: the list is shortened and scrolls instead of overflowing it
  * @returns {HTMLDivElement} the dropdown; dispatches "change" (detail.byUser: picked by the
- *   visitor), exposes value/setValue()/hasOption()
+ *   visitor), exposes value/setValue()/hasOption()/setOptions()
  */
 export function createDropdown({
   label, name, options, value = '', search = false, searchPlaceholder = 'Search',
@@ -55,6 +55,8 @@ export function createDropdown({
   if (!cssLoaded) cssLoaded = loadCSS(`${window.hlx.codeBasePath}/styles/dropdown.css`);
   idCounter += 1;
   const id = `dropdown-${idCounter}`;
+  // the options listed now; setOptions() replaces them (e.g. once loaded from a sheet)
+  let current = options;
 
   const root = document.createElement('div');
   root.className = 'dropdown';
@@ -130,9 +132,9 @@ export function createDropdown({
   const render = (query = '') => {
     list.textContent = '';
     const q = query.trim().toLowerCase();
-    let matches = options.filter((o) => !q || o.label.toLowerCase().includes(q));
+    let matches = current.filter((o) => !q || o.label.toLowerCase().includes(q));
     if (pinSelected && !q && input.value) {
-      const selected = options.find((o) => o.value === input.value);
+      const selected = current.find((o) => o.value === input.value);
       if (selected) matches = [selected, ...matches.filter((o) => o !== selected)];
     }
     matches.forEach((option, i) => {
@@ -167,16 +169,53 @@ export function createDropdown({
     active = -1;
   };
 
-  // shortens the list to keep the panel inside the boundary, flags it when it scrolls
+  // height the open panel may take (the room on its side of the field), set by placePanel
+  let room = Infinity;
+
+  // shortens the list to keep the panel inside its room and the boundary, flags it when it scrolls
   const fitPanel = () => {
     list.style.maxHeight = '';
+    let overflow = panel.offsetHeight - room;
     const area = boundary && root.closest(boundary);
     if (area) {
       const limit = area.getBoundingClientRect().bottom - 24;
-      const overflow = panel.getBoundingClientRect().bottom - limit;
-      if (overflow > 0) list.style.maxHeight = `${Math.max(list.offsetHeight - overflow, 120)}px`;
+      overflow = Math.max(overflow, panel.getBoundingClientRect().bottom - limit);
     }
+    if (overflow > 0) list.style.maxHeight = `${Math.max(list.offsetHeight - overflow, 120)}px`;
     panel.classList.toggle('is-scrollable', list.scrollHeight > list.clientHeight);
+  };
+
+  // what can show the panel: the nearest scrolling ancestor (e.g. a modal's content, which
+  // clips it) within the window
+  const visibleArea = () => {
+    let el = root.parentElement;
+    while (el && el !== document.body && !/(auto|scroll)/.test(getComputedStyle(el).overflowY)) {
+      el = el.parentElement;
+    }
+    const scroller = el && el !== document.body;
+    const rect = scroller ? el.getBoundingClientRect() : { top: 0, bottom: Infinity };
+    return { top: Math.max(rect.top, 0), bottom: Math.min(rect.bottom, window.innerHeight) };
+  };
+
+  // opens the panel above the field when there is not enough room below it (e.g. the last
+  // field of a modal), and keeps its height while the list is filtered, so the search box
+  // stays where it is as the visitor types
+  const placePanel = () => {
+    panel.classList.remove('is-above');
+    panel.style.minHeight = '';
+    room = Infinity;
+    // a banner (boundary) shortens the list instead
+    if (!boundary) {
+      const area = visibleArea();
+      const rect = field.getBoundingClientRect();
+      const below = area.bottom - rect.bottom - 16;
+      const above = rect.top - area.top - 16;
+      const openAbove = panel.offsetHeight > below && above > below;
+      panel.classList.toggle('is-above', openAbove);
+      room = openAbove ? above : below;
+    }
+    fitPanel();
+    panel.style.minHeight = `${panel.offsetHeight}px`;
   };
 
   const close = (focusField = false) => {
@@ -193,7 +232,7 @@ export function createDropdown({
     panel.hidden = false;
     field.setAttribute('aria-expanded', 'true');
     root.classList.add('is-open');
-    fitPanel();
+    placePanel();
     const selectedIndex = visibleOptions().findIndex((li) => li.dataset.value === input.value);
     if (selectedIndex >= 0) setActive(selectedIndex);
     if (searchInput) {
@@ -211,8 +250,8 @@ export function createDropdown({
   const normalize = (text) => String(text || '').toLowerCase().replace(/[^a-z0-9]/g, '');
   const findOption = (wantedValue) => {
     const wanted = normalize(wantedValue);
-    return options.find((o) => o.value === wantedValue || o.label === wantedValue)
-      || (wanted && options.find((o) => {
+    return current.find((o) => o.value === wantedValue || o.label === wantedValue)
+      || (wanted && current.find((o) => {
         const l = normalize(o.label);
         return l && (l.startsWith(wanted) || wanted.startsWith(l));
       }));
@@ -277,6 +316,14 @@ export function createDropdown({
 
   root.setValue = (v) => setValue(v);
   root.hasOption = (v) => Boolean(findOption(v));
+  // new options; the selected value is kept when it is still one of them
+  root.setOptions = (next) => {
+    current = next;
+    const selected = input.value;
+    setValue(selected, false);
+    if (input.value !== selected) root.dispatchEvent(new CustomEvent('change', { bubbles: true, detail: { byUser: false } }));
+    if (!panel.hidden) render(searchInput?.value);
+  };
   root.focus = () => field.focus();
   setValue(value, false);
   return root;

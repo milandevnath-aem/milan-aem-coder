@@ -11,6 +11,9 @@ import {
 import {
   readForms, rememberForms, rememberedForms, resolveForm, slug,
 } from '../../scripts/category-forms.js';
+import {
+  digitsOnly, emailRules, fieldMessages, isPersonName, mobileRules, nameRules,
+} from '../../scripts/input-rules.js';
 
 function iconButton(name, label) {
   const button = document.createElement('button');
@@ -63,40 +66,11 @@ function fieldError(control, message) {
   return { el, show };
 }
 
-function errorMessage(label, kind) {
-  if (kind === 'tel') return 'Enter a valid 10-digit mobile number';
-  if (kind === 'email') return 'Enter a valid email address';
-  if (kind === 'zip') return 'Enter a valid 6-digit PIN code';
-  if (kind === 'select' || kind === 'search') return `Select ${label.toLowerCase()}`;
-  if (kind === 'captcha') return 'Enter the characters shown in the image';
-  return `Enter your ${label.toLowerCase().replace(/^your /, '')}`;
-}
-
 /**
- * Keeps an input to digits only, up to a length: other typed characters are blocked,
- * pasted, dropped or autofilled text is cleaned (the caret stays after the same digit).
- * @param {HTMLInputElement} input
- * @param {number} max maximum number of digits
+ * Something typed or pasted was refused by the input rules: the form shows the field's
+ * "invalid" message (an "input-rejected" event, see decorate).
  */
-function digitsOnly(input, max) {
-  input.addEventListener('beforeinput', (e) => {
-    if (!e.data || !e.inputType.startsWith('insert')) return;
-    const room = max - (input.value.length - (input.selectionEnd - input.selectionStart));
-    // a typed non-digit, or digits with no room left; longer mixed text (a pasted
-    // "560 001") goes through and is cleaned below
-    if (/^\D$/.test(e.data) || (/^\d+$/.test(e.data) && e.data.length > room)) e.preventDefault();
-  });
-  // runs before the form's own input listener, so validation sees the cleaned value
-  input.addEventListener('input', () => {
-    const clean = input.value.replace(/\D/g, '').slice(0, max);
-    if (clean === input.value) return;
-    const caret = input.selectionStart ?? input.value.length;
-    const digitsBefore = input.value.slice(0, caret).replace(/\D/g, '').length;
-    input.value = clean;
-    const pos = Math.min(digitsBefore, clean.length);
-    input.setSelectionRange(pos, pos);
-  });
-}
+const rejected = (input) => () => input.dispatchEvent(new CustomEvent('input-rejected', { bubbles: true }));
 
 function textField(label, kind, required) {
   const field = document.createElement('label');
@@ -113,25 +87,24 @@ function textField(label, kind, required) {
     prefix.className = 'lead-form-prefix';
     prefix.textContent = '+91';
     field.append(prefix);
-    Object.assign(input, {
-      type: 'tel', inputMode: 'numeric', pattern: '[6-9][0-9]{9}', autocomplete: 'tel-national',
-    });
-    digitsOnly(input, 10);
+    mobileRules(input, rejected(input));
   } else if (kind === 'email') {
-    Object.assign(input, { type: 'email', autocomplete: 'email' });
+    emailRules(input);
   } else if (kind === 'zip') {
     Object.assign(input, {
       type: 'text', inputMode: 'numeric', pattern: '[1-9][0-9]{5}', autocomplete: 'postal-code',
     });
-    digitsOnly(input, 6);
+    digitsOnly(input, 6, rejected(input));
   } else {
     input.type = 'text';
     // first and last name get their own autofill values, or the full name fills both;
-    // a company ("Account name") is not a person's name
+    // a company or dealership ("Account name", "Dealership name") is not a person's name
     if (/\b(first|given)\b.*name/i.test(label)) input.autocomplete = 'given-name';
     else if (/\b(last|sur|family)\s*name/i.test(label)) input.autocomplete = 'family-name';
-    else if (/\b(account|company|business|organi[sz]ation)\b/i.test(label)) input.autocomplete = 'organization';
+    else if (/\b(account|company|business|organi[sz]ation|dealer(ship)?)\b/i.test(label)) input.autocomplete = 'organization';
     else if (/name/i.test(label)) input.autocomplete = 'name';
+    // names: letters only (and spaces in a full name)
+    if (isPersonName(label)) nameRules(input, label, rejected(input));
   }
   const control = document.createElement('span');
   control.className = 'lead-form-control';
@@ -268,6 +241,9 @@ function buildDisclaimer(cell) {
   return wrapper;
 }
 
+/** the "Select loan category" dropdown */
+const isCategory = (dropdown) => /category/i.test(dropdown.querySelector('input[type="hidden"]').name);
+
 /** "Two-Wheeler Loans" and "two-wheeler loan" match */
 const normalize = (text) => text.toLowerCase().replace(/[^a-z]/g, '').replace(/loans?$/, '');
 
@@ -363,7 +339,11 @@ export default function decorate(block) {
     const optionsText = optionsCell?.textContent.trim() || '';
     // fields left as plain text: a description is multi-line, a field with a list of
     // options is a dropdown (searchable when the list is long)
-    if (kind === 'text' && /descri|message|comment|remark/i.test(label)) kind = 'textarea';
+    // a city field lists the cities of the city master (placeholders "city-master"),
+    // searchable; its authored options are kept only when the city master is not available
+    const isCity = /\bcity\b/i.test(label) && ['text', 'select', 'search'].includes(kind);
+    if (isCity) kind = 'search';
+    else if (kind === 'text' && /descri|message|comment|remark/i.test(label)) kind = 'textarea';
     else if (kind === 'text' && optionsText.includes(',')) {
       kind = optionsText.split(',').length > 6 ? 'search' : 'select';
     }
@@ -387,7 +367,21 @@ export default function decorate(block) {
         pinSelected: true,
       });
       field.optionValues = options.map((option) => option.value);
+      field.defaultValue = value;
       dropdowns.push(field);
+      if (isCity) {
+        const city = field;
+        import('../../scripts/city-locator.js')
+          .then(({ loadCityMaster }) => loadCityMaster())
+          .then((cities) => {
+            // one entry per city, even when the city master lists several branches of it
+            const names = [...new Set(cities.map((c) => c.name))];
+            if (!names.length) return;
+            city.setOptions(names.map((n) => ({ value: n, label: n })));
+            city.optionValues = names;
+          })
+          .catch(() => {}); // the authored options stay
+      }
     } else if (kind === 'captcha') {
       field = captchaField(label);
       captcha = field;
@@ -401,13 +395,15 @@ export default function decorate(block) {
     const control = field.querySelector('.dropdown-field') || field.querySelector('input:not([type="hidden"]), textarea');
     item.append(field);
     if (control) {
-      const error = fieldError(control, errorMessage(label, kind));
+      const messages = fieldMessages(label, kind);
+      const error = fieldError(control, messages.empty);
       const isDropdown = dropdowns.includes(field);
       let valid = () => control.checkValidity();
       if (field === captcha) valid = () => captcha.isValid();
       if (isDropdown) valid = () => !field.dataset.required || Boolean(field.value);
+      const isEmpty = isDropdown ? () => !field.value : () => !control.value.trim();
       checks.push({
-        field, control, error, valid,
+        field, control, error, valid, messages, isEmpty,
       });
       item.append(error.el);
     }
@@ -451,9 +447,10 @@ export default function decorate(block) {
   const isValid = () => form.checkValidity()
     && dropdowns.every((d) => !d.dataset.required || d.value)
     && (!captcha || captcha.isValid());
-  // message: an API error to show instead of the field's own message
+  // message: an API error to show instead of the field's own message (blank or invalid)
   const setState = (check, invalid, message) => {
-    check.error.show(invalid, message);
+    const { empty, invalid: wrong } = check.messages;
+    check.error.show(invalid, message || (check.isEmpty() ? empty : wrong));
     const box = check.field.closest('.lead-form-input')
       || check.field.querySelector('.lead-form-input') || check.field;
     box.classList.toggle('is-invalid', invalid);
@@ -477,6 +474,12 @@ export default function decorate(block) {
     showSubmitError('');
     const check = checks.find((c) => c.control === e.target);
     if (check) setState(check, false);
+  });
+  // a refused character (a digit in a name, a letter in the mobile number...) is not
+  // typed, and the field says why
+  form.addEventListener('input-rejected', (e) => {
+    const check = checks.find((c) => c.control === e.target);
+    if (check) setState(check, true, check.messages.invalid);
   });
   dropdowns.forEach((d) => d.addEventListener('change', () => {
     const check = checks.find((c) => c.field === d);
@@ -546,6 +549,20 @@ export default function decorate(block) {
     dialog()?.querySelector('.modal-content')?.scrollTo(0, 0);
   };
 
+  /**
+   * Empties the form once its lead is created: fields, dropdowns (back to their authored
+   * default) and error messages. The loan category keeps the product the form is for.
+   */
+  const clearForm = () => {
+    form.reset();
+    dropdowns.filter((d) => !isCategory(d)).forEach((d) => d.setValue(d.defaultValue));
+    // character counts follow their textarea's "input" event
+    form.querySelectorAll('textarea').forEach((t) => t.dispatchEvent(new Event('input')));
+    checks.forEach((check) => setState(check, false));
+    showSubmitError('');
+    refresh();
+  };
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (submit.classList.contains('is-loading')) return;
@@ -611,6 +628,7 @@ export default function decorate(block) {
       },
       // the lead is created by verifyOtp
       onVerified: () => {
+        clearForm();
         const success = createSuccessStep({
           emiHref: document.querySelector('main .emi-calculator') ? '#emi-calculator' : `${siteRoot()}/home#emi-calculator`,
           onDone: close,
@@ -641,8 +659,7 @@ export default function decorate(block) {
   });
 
   // loan category: preselect the product of the page the form is opened from
-  const categoryDropdown = dropdowns
-    .find((d) => /category/i.test(d.querySelector('input[type="hidden"]').name));
+  const categoryDropdown = dropdowns.find(isCategory);
   const categoryOptions = categoryDropdown?.optionValues || [];
   const selectCategory = (text) => {
     if (!categoryDropdown || !text) return;

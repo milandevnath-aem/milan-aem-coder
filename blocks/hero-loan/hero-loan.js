@@ -5,6 +5,9 @@ import { MEDIA } from '../../scripts/viewport.js';
 import {
   authoredForm, readForms, rememberForms, resolveForm,
 } from '../../scripts/category-forms.js';
+import {
+  emailRules, fieldMessages, isPersonName, mobileRules, nameRules, nativeMessages,
+} from '../../scripts/input-rules.js';
 
 // chips shown in the row; the rest are listed under "More"
 const VISIBLE_CATEGORIES = 4;
@@ -20,7 +23,8 @@ function buildChip(label, index) {
   input.type = 'radio';
   input.name = 'category';
   input.value = label;
-  input.checked = index === 0;
+  // the default checked state is what form.reset() goes back to
+  input.defaultChecked = index === 0;
   const span = document.createElement('span');
   span.textContent = label;
   chip.append(input, span);
@@ -179,13 +183,19 @@ function buildField(label, index) {
   input.placeholder = label;
   input.required = true;
   input.name = label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || `field-${index}`;
+  const isEmail = /e-?mail/i.test(label);
+  // the browser's validation bubble shows the form's messages; a refused character shows
+  // the "invalid" one at once
+  const reject = nativeMessages(input, fieldMessages(label, (isPhone && 'tel') || (isEmail && 'email') || 'text'));
   if (isPhone) {
-    Object.assign(input, {
-      type: 'tel', inputMode: 'numeric', pattern: '[6-9][0-9]{9}', maxLength: 10, autocomplete: 'tel-national',
-    });
+    mobileRules(input, reject);
+  } else if (isEmail) {
+    emailRules(input);
   } else {
     input.type = 'text';
     if (/^(your )?name$/i.test(label)) input.autocomplete = 'name';
+    // names: letters only (and spaces in a full name)
+    if (isPersonName(label)) nameRules(input, label, reject);
   }
   field.append(sr, input);
   return field;
@@ -231,6 +241,16 @@ function buildForm(config, isProduct) {
     .split(',').map((f) => f.trim()).filter(Boolean);
   const fields = form.querySelector('.hero-loan-fields');
   labels.forEach((label, i) => fields.append(buildField(label, i)));
+
+  // a lead created in the lead form ("kmp:lead-created", see LEAD_CREATED_EVENT in
+  // lead-form/lead-api-config.js) clears what was entered here, so it is not carried over
+  // into the next application. The category dropdown of product pages keeps its product.
+  document.addEventListener('kmp:lead-created', () => {
+    form.reset();
+    // the More chip and the Apply now target follow the category back to the first one
+    form.querySelector('input[name="category"]:checked')
+      ?.dispatchEvent(new Event('change', { bubbles: true }));
+  });
 
   const categories = categoriesText.split(',').map((c) => c.trim()).filter(Boolean);
   if (isProduct && categories.length) {

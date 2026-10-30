@@ -386,6 +386,11 @@
   width: 18px;
   height: 18px;
   background: url('../../icons/chevron-down.svg') center / contain no-repeat;
+  transition: transform 0.2s;
+}
+
+.hero-loan .hero-loan-more[aria-expanded='true']::after {
+  transform: rotate(180deg);
 }
 
 /* "More": a menu of the remaining categories; the chip shows the one picked there */
