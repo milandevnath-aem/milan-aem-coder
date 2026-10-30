@@ -1281,6 +1281,19 @@
         "value": "",
         "label": "Contact details (group label paragraph + list; bold text in each list item is the label)",
         "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Variant",
+        "valueType": "string",
+        "value": "steps",
+        "options": [
+          {
+            "name": "Steps (RIB Approach)",
+            "value": "rbi-approach"
+          }
+        ]
       }
     ]
   },

@@ -111,6 +111,7 @@
 }
 
 .grievance .grievance-row-label {
+  grid-column: 2;
   color: var(--color-text-secondary-default-base);
   font-size: var(--type-body-b1-font-size);
   font-weight: var(--type-body-b1-font-weight);

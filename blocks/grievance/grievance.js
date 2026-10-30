@@ -3,33 +3,34 @@ import { moveInstrumentation } from '../../scripts/scripts.js';
 
 let blockCount = 0;
 
-// first matching keyword in a row label picks its icon; anything else is a person
-const ICONS = [
-  ['fax', 'fax'],
-  ['mail', 'mail'],
-  ['hour', 'clock'],
-  ['phone', 'call'],
-  ['toll', 'call'],
-  ['number', 'call'],
-  ['address', 'location'],
-  ['write', 'location'],
-  ['portal', 'globe'],
-  ['website', 'globe'],
-];
-
-function iconFor(label) {
-  const text = label.toLowerCase();
-  return ICONS.find(([keyword]) => text.includes(keyword))?.[1] || 'user';
-}
-
 function createIcon(name) {
   const icon = document.createElement('span');
   icon.className = `icon icon-${name}`;
   return icon;
 }
 
-// list item -> icon + label + value; bold text (or the first line) is the label
+// authored icon: a rendered span.icon-name, or ":name:" text (e.g. ":mail:") inside the item
+function extractIcon(li) {
+  const span = li.querySelector('span.icon');
+  if (span) {
+    const name = [...span.classList].find((c) => c.startsWith('icon-'))?.slice(5);
+    span.remove();
+    return name;
+  }
+  const walker = document.createTreeWalker(li, NodeFilter.SHOW_TEXT);
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    const match = node.textContent.match(/:([a-z0-9-]+):/i);
+    if (match) {
+      node.textContent = node.textContent.replace(match[0], '').trimStart();
+      return match[1].toLowerCase();
+    }
+  }
+  return undefined;
+}
+
+// list item -> optional authored icon + label + value; bold text (or the first line) is the label
 function decorateRow(li) {
+  const iconName = extractIcon(li);
   const strong = li.querySelector('strong');
   let label = '';
   if (strong) {
@@ -54,7 +55,8 @@ function decorateRow(li) {
   labelEl.className = 'grievance-row-label';
   labelEl.textContent = label;
   li.className = 'grievance-row';
-  li.append(createIcon(iconFor(label)), labelEl, value);
+  if (iconName) li.append(createIcon(iconName));
+  li.append(labelEl, value);
 }
 
 // label paragraph + list pairs become groups with a chip heading and contact rows
