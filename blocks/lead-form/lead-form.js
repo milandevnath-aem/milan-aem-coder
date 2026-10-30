@@ -2,7 +2,7 @@ import { getMetadata } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createDropdown } from '../../scripts/dropdown.js';
 import {
-  CAPTCHA_LENGTH, createLeadSession, errorMessage as apiErrorMessage, generateCaptcha, isDemo,
+  CAPTCHA_LENGTH, createLeadSession, errorMessage as apiErrorMessage, generateCaptcha,
 } from './lead-api.js';
 import { buildLead, productFor } from './lead-payload.js';
 import {
@@ -180,15 +180,6 @@ function textareaField(label, required, max) {
   return field;
 }
 
-/** "aB3" -> "small a, capital B, 3" (the captcha is case-sensitive) */
-const spell = (code) => [...code]
-  .map((c) => {
-    if (/[A-Z]/.test(c)) return `capital ${c}`;
-    if (/[a-z]/.test(c)) return `small ${c}`;
-    return c;
-  })
-  .join(', ');
-
 /**
  * Captcha from the captcha API (see lead-api.js): image, refresh, listen and the code field.
  * `field.load()` asks for a new image (on opening the form, refresh, and after every
@@ -223,14 +214,12 @@ function captchaField(label) {
   field.append(frame, tools, control);
   field.input = input;
 
-  let code = ''; // demo mode only
   let request = null;
   field.load = async () => {
     // the newest request wins: only its captcha matches the cookie
     request?.abort();
     request = new AbortController();
     const { signal } = request;
-    code = '';
     field.classList.add('is-loading');
     field.setAttribute('aria-busy', 'true');
     input.value = '';
@@ -240,7 +229,6 @@ function captchaField(label) {
       if (signal.aborted) return;
       image.src = captcha.image;
       image.hidden = false;
-      code = captcha.code;
     } catch (error) {
       if (signal.aborted) return;
       image.hidden = true;
@@ -250,15 +238,8 @@ function captchaField(label) {
     field.removeAttribute('aria-busy');
   };
   refresh.addEventListener('click', () => field.load());
-  listen.addEventListener('click', () => {
-    // TODO audio captcha: play the audio of the captcha-audio API once the backend has it;
-    // until then only the demo captcha (its text is known in the browser) can be read out
-    if (!isDemo() || !code || !window.speechSynthesis) return;
-    const utterance = new SpeechSynthesisUtterance(spell(code));
-    utterance.rate = 0.7;
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(utterance);
-  });
+  // TODO audio captcha: the listen button plays the audio of the captcha-audio API once the
+  // backend has it (the captcha text is not known in the browser)
   field.isValid = () => new RegExp(`^\\S{${CAPTCHA_LENGTH}}$`).test(input.value);
   return field;
 }
@@ -576,7 +557,7 @@ export default function decorate(block) {
     }
     const data = Object.fromEntries(new FormData(form));
     const mobile = form.querySelector('input[type="tel"]')?.value || '';
-    // the category picks the API product (lead-api-config.js); none = demo flow
+    // the category picks the API product (lead-api-config.js)
     const category = data[Object.keys(data).find((k) => k.endsWith('category'))] || pageCategory();
     const product = productFor(category);
     const session = createLeadSession({
