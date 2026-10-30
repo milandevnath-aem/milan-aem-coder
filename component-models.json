@@ -1702,12 +1702,8 @@
         "valueType": "string",
         "options": [
           {
-            "name": "Left Title",
-            "value": "left-title"
-          },
-          {
-            "name": "Right Title",
-            "value": "right-title"
+            "name": "Investors Debt - Relevant Information",
+            "value": "investorsDebt"
           }
         ]
       }
