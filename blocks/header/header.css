@@ -657,9 +657,10 @@ header nav .nav-login-wrapper .button {
 :where(.desktop-view) header .nav-panel-caption {
   padding: 0 8px 4px;
   color: var(--muted-color);
-  font-size: 10px;
-  font-weight: 600;
-  line-height: 16px;
+  font-size: var(--type-headline-h1-font-size);
+  font-weight: var(--type-headline-h1-font-weight);
+  line-height: var(--type-headline-h1-line-height);
+  letter-spacing: var(--type-headline-h1-letter-spacing);
 }
 
 :where(.desktop-view) header .nav-panel-group .nav-links {
@@ -674,9 +675,10 @@ header nav .nav-login-wrapper .button {
 }
 
 :where(.desktop-view) header .nav-panel-group .nav-link-title {
-  font-size: var(--body-font-size-s);
-  font-weight: 500;
-  line-height: 20px;
+  font-size: var(--type-body-b2-font-size);
+  font-weight: var(--type-body-b2-font-weight);
+  line-height: var(--type-body-b2-line-height);
+  letter-spacing: var(--type-body-b2-letter-spacing);
 }
 
 :where(.desktop-view) header .nav-panel-group .nav-link-desc {
