@@ -14,17 +14,17 @@
 /** Path of each API, on the site's own domain. */
 export const ENDPOINTS = {
   /** {} -> { data: { image } }, sets the kmp_captcha cookie */
-  captchaGenerate: 'https://publish-p221656-e2281518.adobeaemcloud.com/content/kotakmahindraprime-aem/in/en/home.captcha-generate.json',
+  captchaGenerate: '/content/kotakmahindraprime-aem/in/en/home.captcha-generate.json',
   /** { captcha } -> { data: { verified } }, sets the kmp_captcha_ok cookie */
-  captchaVerify: 'https://publish-p221656-e2281518.adobeaemcloud.com/content/kotakmahindraprime-aem/in/en/home.captcha-verify.json',
+  captchaVerify: '/content/kotakmahindraprime-aem/in/en/home.captcha-verify.json',
   /** { mobile } -> { data: { transactionId, token } }, needs kmp_captcha_ok */
-  otpGenerate: 'https://publish-p221656-e2281518.adobeaemcloud.com/content/kotakmahindraprime-aem/in/en.otp-generate.json',
+  otpGenerate: '/content/kotakmahindraprime-aem/in/en.otp-generate.json',
   /**
    * { transactionId, otp, token, category, lead } -> { data: lead API response }
    * One endpoint for every product (LAP, NewCarFinance, TWL): `category` picks the lead API
    * (see PRODUCT_BY_CATEGORY).
    */
-  otpVerify: 'https://publish-p221656-e2281518.adobeaemcloud.com/content/kotakmahindraprime-aem/in/en.otp-verify.json',
+  otpVerify: '/content/kotakmahindraprime-aem/in/en.otp-verify.json',
   // TODO audio captcha: a captchaAudio endpoint once the backend provides it
 };
 
