@@ -9,7 +9,7 @@ import {
   createOtpStep, createSuccessStep, setLoading, spinner,
 } from './lead-form-otp.js';
 import {
-  readForms, rememberForms, rememberedForms, resolveForm, slug,
+  CATEGORY_PICKED_EVENT, readForms, rememberForms, rememberedForms, resolveForm, slug,
 } from '../../scripts/category-forms.js';
 import {
   digitsOnly, emailRules, fieldMessages, isPersonName, mobileRules, nameRules,
@@ -672,8 +672,13 @@ export default function decorate(block) {
   refresh();
   // picking another product in a modal opens that product's form
   categoryDropdown?.addEventListener('change', (e) => {
+    if (!e.detail?.byUser || !categoryDropdown.value) return;
+    // the short form follows the pick, so it shows it once the modal is closed
+    document.dispatchEvent(new CustomEvent(CATEGORY_PICKED_EVENT, {
+      detail: { category: categoryDropdown.value },
+    }));
     const d = dialog();
-    if (!e.detail?.byUser || !d?.dataset.modalPath || !categoryDropdown.value) return;
+    if (!d?.dataset.modalPath) return;
     openFormFor(d, categoryDropdown.value, categoryOptions, forms, form);
   });
 

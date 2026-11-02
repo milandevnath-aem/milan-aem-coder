@@ -22,6 +22,23 @@ function key(text) {
 }
 
 /**
+ * Fired on document when a visitor picks a category in a lead form (detail.category), so
+ * the short form behind the modal shows the same one once the modal is closed.
+ */
+export const CATEGORY_PICKED_EVENT = 'kmp:category-picked';
+
+/**
+ * The category of a list that stands for the same product ("New car" = "New Car Finance").
+ * @param {string} category
+ * @param {string[]} categories
+ * @returns {string|undefined}
+ */
+export function matchCategory(category, categories = []) {
+  const wanted = key(category);
+  return wanted ? categories.find((c) => key(c) === wanted) : undefined;
+}
+
+/**
  * Modal page paths from an authored "Category forms" cell (links, or paths as text).
  * @param {Element} [cell]
  * @returns {string[]}

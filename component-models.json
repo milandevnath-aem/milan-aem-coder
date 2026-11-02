@@ -1639,7 +1639,12 @@
         "name": "style",
         "label": "Style",
         "valueType": "string",
+        "value": "",
         "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
           {
             "name": "Hover banner to show cta",
             "value": "fixed-height"
@@ -1668,7 +1673,12 @@
         "name": "style_bg",
         "label": "Section Background",
         "valueType": "string",
+        "value": "",
         "options": [
+          {
+            "name": "Default Background Color",
+            "value": ""
+          },
           {
             "name": "No Background Color",
             "value": "no-bg-color"
