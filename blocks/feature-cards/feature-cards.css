@@ -882,3 +882,7 @@
     padding: 8px;
     border-width: 1px;
 }
+
+.feature-cards-container .default-content-wrapper > h2 + p{
+    max-width: 660px;
+}
