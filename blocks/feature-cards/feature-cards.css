@@ -176,6 +176,10 @@
     max-width: 386px;
 }
 
+.feature-cards.numbered.expand-card-width .feature-cards-card{
+    max-width: 100%;
+}
+
 /* numbered */
 :where(.desktop-view) .feature-cards.numbered .feature-cards-card{
     height: 272px;
