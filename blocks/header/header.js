@@ -422,12 +422,12 @@ async function loadSearchIndex() {
 
   const { data = [] } = await resp.json();
 
-  //use the below data hardcoded array to simulate the search index
+  // use the below data hardcoded array to simulate the search index
   // const data = [
   //   {
   //     path: '/home',
   //     title: 'Kotak Prime Loans | Car, Two-Wheeler & Property Loans',
-  //     description: 'Car loans, two-wheeler loans, loan against property and dealer finance. #emi-calculator - Car loans __ #emi-calculator - Two wheeler loans __ #emi-calculator - Loan against property',
+  //     description: 'c #emi-calculator - Loan against property',
   //     robots: 'index, follow',
   //   },
   //   {
@@ -457,7 +457,7 @@ async function loadSearchIndex() {
   //   {
   //     path: '/dealer-finance',
   //     title: 'Dealer Finance | Kotak Prime Loans',
-  //     description: 'Explore dealer finance solutions. #requirements-2-0-panel - Document Requirement Panel __ #tamtam-id - tamtam documents __ #feature-cards - Feature Cards',
+  //     description: 's. #feature-cards - Feature Cards',
   //     robots: 'index, follow',
   //   },
   //   {
@@ -490,14 +490,13 @@ async function loadSearchIndex() {
     const components = [];
     const componentPattern = /#([a-z0-9_-]+)\s*-\s*([^_]+?)(?=\s*__|$)/gi;
 
-    let component;
-    while ((component = componentPattern.exec(description)) !== null) {
+    [...description.matchAll(componentPattern)].forEach((component) => {
       components.push({
         id: component[1],
         title: component[2].trim(),
         href: `${path}#${component[2].trim().toLowerCase().replace(/\s+/g, '')}`,
       });
-    }
+    });
 
     const cleanDescription = description
       .replace(componentPattern, '')
@@ -569,7 +568,7 @@ function buildSearch(placeholder) {
 
   let activeIndex = -1;
 
-  const setActiveResult = (index) => {
+  const setActiveResult = (nextIndex) => {
     const items = [...list.querySelectorAll(':scope > li')];
 
     if (!items.length) {
@@ -577,7 +576,7 @@ function buildSearch(placeholder) {
       return;
     }
 
-    activeIndex = Math.max(0, Math.min(index, items.length - 1));
+    activeIndex = Math.max(0, Math.min(nextIndex, items.length - 1));
 
     items.forEach((item, i) => {
       item.classList.toggle('is-active', i === activeIndex);
@@ -620,25 +619,25 @@ function buildSearch(placeholder) {
     const q = query.toLowerCase();
     const words = q.split(/\s+/).filter(Boolean);
     matches = words.length ? index
-    .map((entry) => {
-      const pageScore = scoreEntry(entry, words);
+      .map((entry) => {
+        const pageScore = scoreEntry(entry, words);
 
-      const componentMatches = entry.components
-        .map((component) => ({
-          ...component,
-          score: scoreEntry({ title: component.title, text: '' }, words),
-        }))
-        .filter((component) => component.score);
+        const componentMatches = entry.components
+          .map((component) => ({
+            ...component,
+            score: scoreEntry({ title: component.title, text: '' }, words),
+          }))
+          .filter((component) => component.score);
 
-      return {
-        entry,
-        score: Math.max(pageScore, ...componentMatches.map((c) => c.score)),
-        pageScore,
-        componentMatches,
-      };
-    })
-    .filter(({ score }) => score)
-    .sort((a, b) => b.score - a.score) : [];
+        return {
+          entry,
+          score: Math.max(pageScore, ...componentMatches.map((c) => c.score)),
+          pageScore,
+          componentMatches,
+        };
+      })
+      .filter(({ score }) => score)
+      .sort((a, b) => b.score - a.score) : [];
     list.textContent = '';
     matches.slice(0, SEARCH_LIMIT).forEach((match) => {
       const { entry, componentMatches } = match;
@@ -662,23 +661,23 @@ function buildSearch(placeholder) {
       li.append(a);
 
       // Matching component results as independent search results
-    componentMatches.forEach((component) => {
-      const componentLi = document.createElement('li');
-      const componentLink = document.createElement('a');
+      componentMatches.forEach((component) => {
+        const componentLi = document.createElement('li');
+        const componentLink = document.createElement('a');
 
-      componentLink.href = component.id === 'emi-calculator'
-      ? `${entry.href}?calculator=${encodeURIComponent(component.title)}#emi-calculator`
-      : `${entry.href}#${component.id}`;
+        componentLink.href = component.id === 'emi-calculator'
+          ? `${entry.href}?calculator=${encodeURIComponent(component.title)}#emi-calculator`
+          : `${entry.href}#${component.id}`;
 
-      const componentLabel = document.createElement('span');
-      componentLabel.className = 'nav-search-label';
+        const componentLabel = document.createElement('span');
+        componentLabel.className = 'nav-search-label';
 
-      highlight(componentLabel, component.title, q);
+        highlight(componentLabel, component.title, q);
 
-      componentLink.append(componentLabel);
-      componentLi.append(componentLink);
-      list.append(componentLi);
-    });
+        componentLink.append(componentLabel);
+        componentLi.append(componentLink);
+        list.append(componentLi);
+      });
 
       list.append(li);
     });
@@ -715,10 +714,10 @@ function buildSearch(placeholder) {
     if (!item || !list.contains(item)) return;
 
     const items = [...list.querySelectorAll(':scope > li')];
-    const index = items.indexOf(item);
+    const itemIndex = items.indexOf(item);
 
-    if (index !== -1) {
-      setActiveResult(index);
+    if (itemIndex !== -1) {
+      setActiveResult(itemIndex);
     }
   });
   results.addEventListener('click', (e) => {
