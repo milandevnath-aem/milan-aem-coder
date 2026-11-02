@@ -1,6 +1,6 @@
 import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createPicture } from '../../scripts/images.js';
-import { setStableId, track } from '../../scripts/analytics.js';
+import { setStableId, trackOnce } from '../../scripts/analytics.js';
 
 const inr = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 });
 
@@ -280,12 +280,12 @@ function buildCalculator(types, link) {
   const tenureText = (v) => (state.unit === 'mo' ? months(v) : years(v));
   const tenureInMonths = () => (state.unit === 'mo' ? state.tenure : state.tenure * TENURE.monthsPerYear);
 
-  // analytics: after each change has settled (debounced so slider drags send one event)
+  // analytics: once per page view, after the user's first change has settled
   let usedTimer;
   const trackUse = () => {
     clearTimeout(usedTimer);
     usedTimer = setTimeout(() => {
-      track('calculator_use', {
+      trackOnce('calculator_use', 'calculator_use', {
         calculator: calculatorName(cta.dataset.loanCategory),
         loan_amount_band: amountBand(state.amount),
         tenure_months: tenureInMonths(),
