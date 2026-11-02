@@ -66,12 +66,13 @@ function readRange(cell, defaults) {
  * Minimum and maximum months for the tenure field. Authored values are used only when
  * both are whole numbers of at least 1 and the minimum is not above the maximum;
  * otherwise (empty, not a number, min > max) the year limits x 12 are used.
- * @param {number[]} authored [min, max, step] as read from the page (may contain NaN)
+ * The default months is kept within the limits; null when not authored.
+ * @param {number[]} authored [min, max, step, default] as read from the page (may contain NaN)
  * @param {{min: number, max: number}} yearLimits sanitized year limits
- * @returns {{min: number, max: number, step: number}}
+ * @returns {{min: number, max: number, step: number, value: number|null}}
  */
 export function resolveMonthLimits(authored, yearLimits) {
-  const [rawMin, rawMax, rawStep] = authored;
+  const [rawMin, rawMax, rawStep, rawDefault] = authored;
   const min = Math.round(rawMin);
   const max = Math.round(rawMax);
   const valid = Number.isFinite(min) && Number.isFinite(max) && min >= 1 && min <= max;
@@ -85,6 +86,8 @@ export function resolveMonthLimits(authored, yearLimits) {
   limits.step = step >= 1 && (limits.max === limits.min || step <= limits.max - limits.min)
     ? step
     : TENURE.monthsStep;
+  const value = Math.round(rawDefault);
+  limits.value = Number.isFinite(value) ? Math.min(limits.max, Math.max(limits.min, value)) : null;
   return limits;
 }
 
@@ -145,8 +148,8 @@ function parseLoanType(row) {
     rate: readRange(rate, DEFAULTS.rate),
     tenure: readRange(tenure, DEFAULTS.tenure),
     // the tenure cell continues after the years fields (min, max, default, step) with
-    // minimum months, maximum months and month step; NaN where not authored
-    tenureMonths: readNumbers(tenure).slice(4, 7),
+    // minimum months, maximum months, month step and default months; NaN where not authored
+    tenureMonths: readNumbers(tenure).slice(4, 8),
   };
 }
 
@@ -160,9 +163,9 @@ function sliderGroup(id, label, { unitToggle = false } = {}) {
     : '';
   group.innerHTML = `
     <div class="emi-calculator-field-head">
-      <label for="${id}-value">${label}</label>
+      <label id="${id}-label" for="${id}-value">${label}</label>
       <span class="emi-calculator-error-trigger" aria-hidden="true">
-        <img class="emi-calculator-error-icon" src="${window.hlx.codeBasePath}/icons/alert.svg" alt="" width="16" height="16">
+      <img class="emi-calculator-error-icon" src="${window.hlx.codeBasePath}/icons/alert.svg" alt="" width="16" height="16">
         <span class="emi-calculator-tooltip"></span>
       </span>
       <div class="emi-calculator-value">
@@ -177,7 +180,7 @@ function sliderGroup(id, label, { unitToggle = false } = {}) {
       <span class="emi-calculator-slider-fill" aria-hidden="true"></span>
       <span class="emi-calculator-slider-knob" aria-hidden="true"></span>
       <span class="emi-calculator-slider-track" aria-hidden="true"></span>
-      <input id="${id}-range" class="emi-calculator-range" type="range" aria-label="${label}">
+      <input id="${id}-range" class="emi-calculator-range" type="range" aria-labelledby="${id}-label">
     </div>
     <div class="emi-calculator-bounds" id="${id}-bounds"><span></span><span></span></div>`;
   return group;
@@ -200,6 +203,8 @@ function buildCalculator(types, link) {
     const tab = document.createElement('button');
     tab.type = 'button';
     tab.setAttribute('role', 'tab');
+    tab.id = `${uid}-tab-${i}`;
+    tab.setAttribute('aria-controls', `${uid}-result`);
     tab.textContent = type.title;
     tab.dataset.index = i;
     moveInstrumentation(type.row, tab);
@@ -214,26 +219,32 @@ function buildCalculator(types, link) {
   };
   fields.amount.querySelector('.emi-calculator-prefix').textContent = '₹';
   fields.rate.querySelector('.emi-calculator-suffix').textContent = '%';
-  const fieldList = document.createElement('div');
+  fields.tenure.querySelector('.emi-calculator-suffix').textContent = 'Years';
+  const fieldList = document.createElement('fieldset');
   fieldList.className = 'emi-calculator-fields';
-  fieldList.append(fields.amount, fields.rate, fields.tenure);
+  const legend = document.createElement('legend');
+  legend.className = 'visually-hidden';
+  legend.textContent = 'Loan details';
+  fieldList.append(legend, fields.amount, fields.rate, fields.tenure);
   controls.append(fieldList);
 
   const result = document.createElement('div');
   result.className = 'emi-calculator-result';
+  result.id = `${uid}-result`;
+  if (types.length > 1) result.setAttribute('role', 'tabpanel');
   result.innerHTML = `
     <div class="emi-calculator-summary">
       <div>
         <p class="emi-calculator-label">Your monthly EMI will be</p>
-        <p class="emi-calculator-emi" aria-live="polite"><span>₹</span><strong></strong></p>
+        <output class="emi-calculator-emi" aria-live="polite"><span>₹</span><strong></strong></output>
         <p class="emi-calculator-label emi-calculator-note"></p>
       </div>
       <a class="button emi-calculator-cta" href="#"></a>
     </div>
     <dl class="emi-calculator-breakdown">
-      <div><dt>Principal</dt><dd data-key="principal"></dd></div>
-      <div><dt>Interest Payable</dt><dd data-key="interest"></dd></div>
-      <div><dt>Total Amount Payable</dt><dd data-key="total"></dd></div>
+      <dt>Principal</dt><dd data-key="principal"></dd>
+      <dt>Interest Payable</dt><dd data-key="interest"></dd>
+      <dt>Total Amount Payable</dt><dd data-key="total"></dd>
     </dl>`;
 
   card.append(controls, result);
@@ -326,12 +337,12 @@ function buildCalculator(types, link) {
   /** Writes the state to the result, the number fields and the sliders. */
   const update = () => {
     const monthCount = tenureInMonths();
-    const emi = Math.round(calculateEmiForMonths(state.amount, state.rate, monthCount));
-    const total = emi * monthCount;
-    els.emi.textContent = inr.format(emi);
+    const rawEmi = calculateEmiForMonths(state.amount, state.rate, monthCount);
+    const total = Math.round(rawEmi * monthCount);
+    els.emi.textContent = inr.format(Math.round(rawEmi));
     els.note.textContent = `at ${state.rate}% interest rate for ${tenureText(state.tenure)}`;
     els.principal.textContent = `₹${inr.format(state.amount)}`;
-    els.interest.textContent = `₹${inr.format(total - state.amount)}`;
+    els.interest.textContent = `₹${inr.format(Math.round(total - state.amount))}`;
     els.total.textContent = `₹${inr.format(total)}`;
     Object.entries(parts).forEach(([key, { range, slider, input }]) => {
       const pct = (state[key] - range.min) / (range.max - range.min || 1);
@@ -416,12 +427,17 @@ function buildCalculator(types, link) {
     showError('tenure', false);
   };
 
-  /** Switches the tenure between years and months, keeping the same loan period. */
+  /**
+   * Switches the tenure between years and months. Months start at the authored default
+   * months; without one, and when going back to years, the same loan period is kept.
+   */
   const setTenureUnit = (unit) => {
     if (unit === state.unit) return;
     const monthCount = tenureInMonths();
     state.unit = unit;
-    state.tenure = unit === 'mo' ? monthCount : Math.round(monthCount / TENURE.monthsPerYear);
+    state.tenure = unit === 'mo'
+      ? tenureLimits.mo.value ?? monthCount
+      : Math.round(monthCount / TENURE.monthsPerYear);
     applyTenureUnit();
     update();
   };
@@ -544,6 +560,7 @@ function buildCalculator(types, link) {
     [...tablist.children].forEach((tab, i) => {
       tab.setAttribute('aria-selected', i === index);
       tab.tabIndex = i === index ? 0 : -1;
+      if (i === index && types.length > 1) result.setAttribute('aria-labelledby', tab.id);
     });
     Object.keys(fields).forEach((key) => {
       const {
@@ -571,11 +588,31 @@ function buildCalculator(types, link) {
     }
   };
 
+  // "car-loan" matches the tab "Car loans"
+  const normalize = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, '').replace(/s$/, '');
+  const findType = (name) => {
+    if (!name) return undefined;
+    const index = types.findIndex((type) => normalize(type.title) === normalize(name));
+    return index < 0 ? undefined : index;
+  };
+
+  // the header search selects a calculator on the page it is already on
+  window.addEventListener('emi-calculator:select', (e) => {
+    const index = findType(e.detail?.calculator);
+    if (index !== undefined) selectType(index);
+    (document.getElementById('emi-calculator') || card).scrollIntoView({
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    });
+  });
+
   [...tablist.children].forEach((tab, i) => {
     tab.addEventListener('click', () => selectType(i));
     tab.addEventListener('keydown', (e) => {
-      const keys = { ArrowRight: i + 1, ArrowLeft: i - 1 };
+      const keys = {
+        ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: types.length - 1,
+      };
       if (!(e.key in keys)) return;
+      e.preventDefault();
       const next = (keys[e.key] + types.length) % types.length;
       selectType(next);
       tablist.children[next].focus();
@@ -591,7 +628,7 @@ function buildCalculator(types, link) {
     cta.remove();
   }
 
-  selectType(0);
+  selectType(findType(new URLSearchParams(window.location.search).get('calculator')) ?? 0);
   return card;
 }
 
@@ -601,6 +638,8 @@ function buildCalculator(types, link) {
  * @param {Element} block The block element
  */
 export default function decorate(block) {
+  // anchor for "#emi-calculator" links, unless a heading already carries it
+  if (!document.getElementById('emi-calculator')) block.id = 'emi-calculator';
   const rows = [...block.children];
   const config = rows.filter((row) => row.children.length <= 1);
   const typeRows = rows.filter((row) => row.children.length > 1);

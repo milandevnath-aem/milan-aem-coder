@@ -25,9 +25,19 @@
     padding: var(--offers-padding);
     border-radius: var(--offers-radius);
     background-color: #000;
-    color: #fff;
+    color: var(--color-button-primary-default-text-base);
     text-align: center;
     overflow: hidden;
+}
+
+.offers .offers-item.no-bg-color p {
+    color: var(--color-status-neutral-secondary-default-text-base);
+}
+
+.offers .offers-item.no-bg-color {
+    background-color: var(--color-button-primary-default-text-base);
+    min-height: 0;
+    padding: 0 24px;
 }
 
 .offers .offers-image,
@@ -52,6 +62,7 @@
     flex-direction: column;
     align-items: center;
     max-width: 481px;
+    z-index: 1;
 }
 
 .offers .offers-content p {
@@ -85,8 +96,8 @@
 .offers .offers-content a.button {
     width: 192px;
     padding: 12px 15px;
-    border-color: #fff;
-    background-color: #fff;
+    border-color: var(--color-button-primary-default-text-base);
+    background-color: var(--color-button-primary-default-text-base);
     color: var(--text-color);
     font-size: var(--type-bt2-size);
     line-height: var(--type-bt2-line);
@@ -99,7 +110,16 @@
     color: var(--text-color);
 }
 
+/* bold link (a.primary) is black; plain link keeps the white default */
+.offers .offers-content a.button.primary {
+    border-color: #000;
+    background-color: var(--color-button-pills-default-bg-base);
+    color: #fff;
+}
+
+/* the disclaimer is first in the DOM; order keeps the content at the top and pushes the disclaimer to the bottom */
 .offers .offers-disclaimer {
+    order: 1;
     margin: auto 0 0;
     padding-top: 24px;
     color: var(--inverse-color);
@@ -112,8 +132,9 @@
     font-weight: 600;
 }
 
-.offers .offers-dark-text {
-    --offers-text: var(--text-color);
+/* dark text variant: copy turns #121212, buttons keep their own colours */
+.offers .offers-dark-text .offers-content :is(h1, h2, h3, h4, h5, h6, p:not(.button-wrapper)) {
+    color: var(--color-text-primary-default-base);
 }
 
 :where(.desktop-view) .offers {
@@ -149,7 +170,11 @@
 }
 
 .offers .offers-short .offers-content h2 {
-    color: #fff;
+    color: var(--color-button-primary-default-text-base);
+}
+
+.offers .offers-short.no-bg-color .offers-content :is(h2, h3, h4, h5, h6) {
+    color: var(--color-button-secondary-default-text-base);
 }
 
 .offers .offers-content > p:not(.offers-eyebrow, .button-wrapper) {
@@ -168,13 +193,37 @@
     margin-top: 32px;
 }
 
+.offers .offers-item.no-bg-color .offers-buttons {
+    flex-direction: column;
+    width: 100%;
+}
+
+:where(.desktop-view) .offers .offers-item.no-bg-color .offers-buttons {
+    flex-direction: row;
+    width: auto;
+}
+
+.offers .offers-item.no-bg-color .offers-buttons .button-wrapper,
+.offers .offers-item.no-bg-color .offers-content .offers-buttons a.button {
+    width: 100%;
+}
+
+:where(.desktop-view) .offers .offers-item.no-bg-color .offers-buttons .button-wrapper,
+:where(.desktop-view) .offers .offers-item.no-bg-color .offers-content .offers-buttons a.button {
+    width: auto;
+}
+
+:where(.desktop-view) .offers .offers-item.no-bg-color {
+    padding: 0;
+}
+
 .offers .offers-buttons .button-wrapper {
     margin: 0;
 }
 
 .offers .offers-content .offers-buttons a.button {
     width: auto;
-    border: 0;
+    border: 1px solid #000;
     padding: 12px;
     font-size: var(--body-font-size-s);
     font-weight: 600;
@@ -209,4 +258,28 @@
 :where(.desktop-view) .offers .offers-short {
     --offers-height: 672px;
     --offers-padding: 124px 12px 44px;
+}
+
+.offers .offers-item.offers-fixed-height {
+    height: 480px;
+    min-height: 480px;
+}
+
+:where(.desktop-view) .offers .offers-item.offers-fixed-height {
+    height: 460px;
+    min-height: 460px;
+    padding: 72px 92px 44px;
+}
+
+.offers .offers-item.offers-fixed-height .button-wrapper {
+    display: none;
+}
+
+.offers .offers-item.offers-fixed-height:hover .button-wrapper {
+    display: block;
+}
+
+.remove-padding{
+    padding-left:0;
+    padding-right:0;
 }

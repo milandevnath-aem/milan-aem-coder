@@ -3,9 +3,12 @@ import { createPicture } from '../../scripts/images.js';
 import { createDropdown } from '../../scripts/dropdown.js';
 import { MEDIA } from '../../scripts/viewport.js';
 import {
-  authoredForm, readForms, rememberForms, resolveForm,
+  authoredForm, CATEGORY_PICKED_EVENT, matchCategory, readForms, rememberForms, resolveForm,
 } from '../../scripts/category-forms.js';
-import { productType, setStableId, trackOnce } from '../../scripts/analytics.js';
+import { productType, setStableId, trackFormStart } from '../../scripts/analytics.js';
+import {
+  emailRules, fieldMessages, isPersonName, mobileRules, nameRules, nativeMessages,
+} from '../../scripts/input-rules.js';
 
 // chips shown in the row; the rest are listed under "More"
 const VISIBLE_CATEGORIES = 4;
@@ -21,7 +24,8 @@ function buildChip(label, index) {
   input.type = 'radio';
   input.name = 'category';
   input.value = label;
-  input.checked = index === 0;
+  // the default checked state is what form.reset() goes back to
+  input.defaultChecked = index === 0;
   const span = document.createElement('span');
   span.textContent = label;
   chip.append(input, span);
@@ -67,7 +71,7 @@ function buildMore(chips, overflow) {
     more.textContent = selected ? selected.value : 'More';
     more.classList.toggle('is-selected', Boolean(selected));
     if (selected) more.setAttribute('aria-label', `${selected.value}, more loan categories`);
-    else more.removeAttribute('aria-label');
+    else more.setAttribute('aria-label', 'More loan categories');
     items.forEach((item, i) => item.setAttribute('aria-pressed', inputs[i].checked));
   };
   const close = (focusMore = false) => {
@@ -139,9 +143,7 @@ function confirmOnSubmit(form, modalHref, forms = [], categories = []) {
   // on load without looking pages up; a change of category resolves its form
   show(authoredForm(selected(), forms, categories) || modalHref);
   form.addEventListener('change', update);
-  form.addEventListener('focusin', () => {
-    trackOnce('form_start:hero_callback', 'form_start', { form_name: 'hero_callback', product_type: productType(selected()) });
-  });
+  trackFormStart(form, 'hero_callback', () => ({ product_type: productType(selected()) }));
 
   form.addEventListener('submit', async (e) => {
     // never a native submit: it would put the entered name and mobile number in the URL
@@ -172,7 +174,7 @@ function confirmOnSubmit(form, modalHref, forms = [], categories = []) {
 
 function buildField(label, index) {
   const isPhone = /mobile|phone/i.test(label);
-  const field = document.createElement('label');
+  const field = document.createElement('div');
   field.className = `hero-loan-input${isPhone ? ' hero-loan-mobile' : ''}`;
   if (isPhone) {
     const prefix = document.createElement('span');
@@ -181,22 +183,27 @@ function buildField(label, index) {
     prefix.textContent = '+91';
     field.append(prefix);
   }
-  const sr = document.createElement('span');
-  sr.className = 'hero-loan-sr';
-  sr.textContent = label;
   const input = document.createElement('input');
   input.placeholder = label;
+  input.setAttribute('aria-label', `${label} (required)`);
   input.required = true;
   input.name = label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || `field-${index}`;
+  const isEmail = /e-?mail/i.test(label);
+  // the browser's validation bubble shows the form's messages; a refused character shows
+  // the "invalid" one at once
+  const reject = nativeMessages(input, fieldMessages(label, (isPhone && 'tel') || (isEmail && 'email') || 'text'));
   if (isPhone) {
-    Object.assign(input, {
-      type: 'tel', inputMode: 'numeric', pattern: '[6-9][0-9]{9}', maxLength: 10, autocomplete: 'tel-national',
-    });
+    mobileRules(input, reject);
+  } else if (isEmail) {
+    emailRules(input);
   } else {
     input.type = 'text';
     if (/^(your )?name$/i.test(label)) input.autocomplete = 'name';
+    // names: letters only (and spaces in a full name)
+    if (isPersonName(label)) nameRules(input, label, reject);
   }
-  field.append(sr, input);
+  field.append(input);
+  field.addEventListener('click', () => input.focus());
   return field;
 }
 
@@ -242,6 +249,16 @@ function buildForm(config, isProduct) {
   const fields = form.querySelector('.hero-loan-fields');
   labels.forEach((label, i) => fields.append(buildField(label, i)));
 
+  // a lead created in the lead form ("kmp:lead-created", see LEAD_CREATED_EVENT in
+  // lead-form/lead-api-config.js) clears what was entered here, so it is not carried over
+  // into the next application. The category dropdown of product pages keeps its product.
+  document.addEventListener('kmp:lead-created', () => {
+    form.reset();
+    // the More chip and the Apply now target follow the category back to the first one
+    form.querySelector('input[name="category"]:checked')
+      ?.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+
   const categories = categoriesText.split(',').map((c) => c.trim()).filter(Boolean);
   if (isProduct && categories.length) {
     // product pages: compact dropdown, first category preselected
@@ -256,6 +273,11 @@ function buildForm(config, isProduct) {
     moveInstrumentation(optionsRow, select);
     form.querySelector('.hero-loan-categories').remove();
     form.prepend(select);
+    // a category picked in the lead form (modal) is shown here too
+    document.addEventListener(CATEGORY_PICKED_EVENT, (e) => {
+      const match = matchCategory(e.detail?.category, categories);
+      if (match && match !== select.value) select.setValue(match);
+    });
     confirmOnSubmit(form, modalHref, forms, categories);
     if (actionRow) moveInstrumentation(actionRow, form.querySelector('button[type="submit"]'));
     card.append(form);
@@ -270,6 +292,14 @@ function buildForm(config, isProduct) {
   chips.append(...chipList);
   if (overflow.length) chips.append(buildMore(chips, overflow));
   if (!categories.length) form.querySelector('.hero-loan-categories').remove();
+  // a category picked in the lead form (modal) is shown here too, in the More chip if hidden
+  document.addEventListener(CATEGORY_PICKED_EVENT, (e) => {
+    const match = matchCategory(e.detail?.category, categories);
+    const input = match && chipList[categories.indexOf(match)].querySelector('input');
+    if (!input || input.checked) return;
+    input.checked = true;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  });
 
   moveInstrumentation(optionsRow, form.querySelector('.hero-loan-categories'));
   if (actionRow) moveInstrumentation(actionRow, form.querySelector('button[type="submit"]'));

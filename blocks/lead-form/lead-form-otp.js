@@ -1,5 +1,5 @@
 import {
-  OTP_LENGTH, RESEND_SECONDS, sendOtp, verifyOtp,
+  OTP_LENGTH, OTP_VALID_MS, RESEND_SECONDS, errorMessage,
 } from './lead-api.js';
 import { setStableId } from '../../scripts/analytics.js';
 
@@ -7,8 +7,8 @@ let uid = 0;
 
 const iconImg = (name, size = 24, ext = 'svg') => `<img src="${window.hlx.codeBasePath}/icons/${name}.${ext}" alt="" width="${size}" height="${size}">`;
 
-/** "+91 ******0679" */
-export const maskMobile = (mobile) => `+91 ******${String(mobile).slice(-4)}`;
+/** "******0679" */
+export const maskMobile = (mobile) => `******${String(mobile).slice(-4)}`;
 
 /**
  * Loading spinner (decorative; the state is announced separately).
@@ -46,13 +46,15 @@ export function setLoading(button, loading, busyLabel = 'Please wait') {
  * OTP step: six one-digit boxes, Validate, resend timer, wrong OTP state.
  * @param {Object} options
  * @param {string} options.mobile ten-digit mobile number
+ * @param {Function} options.sendOtp sends a new OTP (session.sendOtp, see lead-api.js)
+ * @param {Function} options.verifyOtp checks the OTP, resolves with the lead (session.verifyOtp)
  * @param {Function} options.onBack back to the form
- * @param {Function} options.onVerified called once the OTP is accepted
+ * @param {Function} options.onVerified called with the verifyOtp result once the OTP is accepted
  * @param {Function} options.announce polite screen reader message
  * @returns {HTMLDivElement & { focusFirst: Function, titleId: string, stop: Function }}
  */
 export function createOtpStep({
-  mobile, onBack, onVerified, announce,
+  mobile, sendOtp, verifyOtp, onBack, onVerified, announce,
 }) {
   uid += 1;
   const id = `lead-form-otp-${uid}`;
@@ -64,7 +66,7 @@ export function createOtpStep({
       <div class="lead-form-otp-top">
         <div class="lead-form-otp-title">
           <h2 id="${id}-title" tabindex="-1">Enter OTP</h2>
-          <p id="${id}-desc">Enter the ${OTP_LENGTH}-digit code we texted to <span class="lead-form-otp-number"></span></p>
+          <p id="${id}-desc"><span class="lead-form-otp-intro">Please enter the OTP that was sent to your mobile number</span> <span class="lead-form-otp-number"></span></p>
         </div>
         <div class="lead-form-otp-group">
           <div class="lead-form-otp-boxes" role="group" aria-labelledby="${id}-title" aria-describedby="${id}-desc"></div>
@@ -97,6 +99,8 @@ export function createOtpStep({
 
   const code = () => inputs.map((input) => input.value).join('');
   let busy = false;
+  // when the current OTP was sent, to tell an expired OTP from a wrong one
+  let sentAt = Date.now();
 
   const setError = (message) => {
     error.hidden = !message;
@@ -186,9 +190,21 @@ export function createOtpStep({
   };
   resend.addEventListener('click', async () => {
     if (seconds > 0 || busy) return;
+    busy = true;
     resend.setAttribute('aria-disabled', 'true');
     announce('Sending a new OTP');
-    await sendOtp({ mobile });
+    try {
+      await sendOtp();
+    } catch (e) {
+      const message = errorMessage(e, 'resend');
+      if (message) setError(message);
+      resend.setAttribute('aria-disabled', 'false');
+      return;
+    } finally {
+      busy = false;
+    }
+    sentAt = Date.now();
+    view.querySelector('.lead-form-otp-intro').textContent = 'Please enter the OTP which was re-sent to your mobile number';
     inputs.forEach((input) => { input.value = ''; });
     setError('');
     refresh();
@@ -207,16 +223,27 @@ export function createOtpStep({
     inputs.forEach((input) => { input.readOnly = true; });
     setLoading(validate, true, 'Validating OTP');
     refresh();
-    const result = await verifyOtp({ mobile, otp: code() });
+    let result;
+    let message = '';
+    try {
+      result = await verifyOtp(code());
+    } catch (e) {
+      const failure = e instanceof Error ? e : new Error(String(e));
+      failure.expired = Date.now() - sentAt > OTP_VALID_MS;
+      message = errorMessage(failure, 'verify');
+    }
     busy = false;
     inputs.forEach((input) => { input.readOnly = false; });
     setLoading(validate, false);
     refresh();
-    if (result.ok) {
+    if (result) {
       clearInterval(timer);
-      onVerified();
-    } else {
-      setError('Incorrect OTP. Please try again.');
+      // the lead is created: Validate stays off so it is not sent twice
+      validate.setAttribute('aria-disabled', 'true');
+      busy = true;
+      onVerified(result);
+    } else if (message) {
+      setError(message);
       inputs[0].focus();
     }
   });
@@ -249,7 +276,7 @@ export function createSuccessStep({ emiHref, onDone }) {
     <div class="lead-form-success-status">
       ${iconImg('verified', 48, 'png')}
       <h2 id="${id}-title" tabindex="-1">You’re all set!</h2>
-      <p>Thank you for choosing Kotak Mahindra Prime!<br>Our team will contact you shortly.</p>
+      <p>Thank you for sharing the details. We will get back to you.</p>
     </div>
     <div class="lead-form-success-actions">
       <a class="button secondary lead-form-emi"></a>

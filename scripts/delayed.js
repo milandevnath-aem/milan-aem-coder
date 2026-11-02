@@ -10,7 +10,8 @@ function loadGtm() {
   const script = document.createElement('script');
   script.async = true;
   script.src = `https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`;
-  script.setAttribute('nonce', 'aem');
+  // the page's own nonce (the server replaces "aem" per request); GTM passes it on to its tags
+  script.nonce = document.querySelector('script[nonce]')?.nonce || 'aem';
   document.head.append(script);
 }
 

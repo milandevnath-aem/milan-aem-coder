@@ -178,9 +178,11 @@
 .requirements .requirements-title {
   margin: 0;
   color: var(--muted-color);
+  font-family: inherit;
   font-size: var(--body-font-size-m);
   font-weight: 500;
   line-height: 24px;
+  letter-spacing: normal;
 }
 
 .requirements .requirements-text p {
@@ -243,6 +245,12 @@
   font-size: var(--body-font-size-s);
   font-weight: 500;
   line-height: 20px;
+}
+
+/* carousel region wrapper adds no box */
+.requirements .requirements-carousel {
+  display: contents;
+
 }
 
 .requirements.eligibility.elgb-small-text .requirements-text p {
@@ -332,7 +340,9 @@
   flex: 0 0 calc((100% - 2 * var(--grid-gutter)) / 3);
   justify-content: flex-start;
   min-height: 272px;
+  max-height: 272px;
   max-width: 386px;
+  min-width: 386px;
   padding: 32px;
   border-radius: 32px;
   scroll-snap-align: start;
@@ -341,10 +351,6 @@
 /* more than three cards: three and a half in view, so the half card shows there is more */
 :where(.desktop-view) .requirements.eligibility .requirements-cards.carousel > .requirements-card {
   flex-basis: calc((100% - 3 * var(--grid-gutter)) / 3.5);
-}
-
-:where(.desktop-view) .requirements .requirements-card picture.requirements-icon {
-  padding-bottom: 32px;
 }
 
 :where(.desktop-view) .requirements .requirements-icon img {
