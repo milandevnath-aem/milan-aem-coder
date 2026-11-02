@@ -102,6 +102,12 @@ export default function decorate(block) {
       const rowCount = 1 + Math.max(0, ...lists.map((ul) => ul.children.length));
       answer.style.setProperty('--faq-table-rows', rowCount);
     }
+    details.addEventListener('toggle', () => {
+      if (!details.open) return;
+      list.querySelectorAll('details.faq-item[open]').forEach((other) => {
+        if (other !== details) other.open = false;
+      });
+    });
     details.append(summary, answer);
     list.append(details);
   });
