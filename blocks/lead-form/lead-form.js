@@ -4,12 +4,13 @@ import { createDropdown } from '../../scripts/dropdown.js';
 import {
   CAPTCHA_LENGTH, createLeadSession, errorMessage as apiErrorMessage, generateCaptcha,
 } from './lead-api.js';
+import { MESSAGES } from './lead-api-config.js';
 import { buildLead, productFor } from './lead-payload.js';
 import {
   createOtpStep, createSuccessStep, setLoading, spinner,
 } from './lead-form-otp.js';
 import {
-  readForms, rememberForms, rememberedForms, resolveForm, slug,
+  CATEGORY_PICKED_EVENT, readForms, rememberForms, rememberedForms, resolveForm, slug,
 } from '../../scripts/category-forms.js';
 import {
   digitsOnly, emailRules, fieldMessages, isPersonName, mobileRules, nameRules,
@@ -177,6 +178,9 @@ function captchaField(label) {
   tools.className = 'lead-form-captcha-tools';
   const refresh = iconButton('refresh', 'Show a new captcha');
   const listen = iconButton('volume', 'Listen to the captcha');
+  // shown only while the captcha has audio
+  listen.hidden = true;
+  listen.setAttribute('aria-pressed', 'false');
   tools.append(refresh, listen);
   const control = textField(label || 'Enter the captcha shown', 'text', true);
   const input = control.querySelector('input');
@@ -187,6 +191,69 @@ function captchaField(label) {
   field.append(frame, tools, control);
   field.input = input;
 
+  // an image the browser cannot show (corrupt Base64) is a failed load, not a broken icon
+  image.addEventListener('error', () => {
+    if (!image.getAttribute('src')) return;
+    image.hidden = true;
+    image.removeAttribute('src');
+    field.onError?.(MESSAGES.captchaLoadFailed);
+  });
+
+  // audio captcha: the API's Base64 audio, played from a blob URL (long data URIs are not
+  // played by every browser)
+  const audio = new Audio();
+  audio.preload = 'none';
+  let audioUrl = '';
+  const setPlaying = (playing) => {
+    listen.classList.toggle('is-playing', playing);
+    listen.setAttribute('aria-pressed', String(playing));
+    listen.setAttribute('aria-label', playing ? 'Stop the captcha audio' : 'Listen to the captcha');
+  };
+  const stopAudio = () => {
+    audio.pause();
+    if (audioUrl) audio.currentTime = 0;
+    setPlaying(false);
+  };
+  const audioFailed = () => {
+    stopAudio();
+    field.onError?.(MESSAGES.captchaAudioFailed);
+  };
+  /** @param {string} dataUri the captcha's audio, '' when it has none */
+  const setAudio = (dataUri) => {
+    stopAudio();
+    const previous = audioUrl;
+    audioUrl = '';
+    audio.removeAttribute('src');
+    if (previous) URL.revokeObjectURL(previous);
+    try {
+      if (!dataUri) throw new Error('no audio');
+      const [head, data] = dataUri.split(',');
+      const bytes = Uint8Array.from(atob(data), (c) => c.charCodeAt(0));
+      audioUrl = URL.createObjectURL(new Blob([bytes], { type: head.slice(5).split(';')[0] }));
+      audio.src = audioUrl;
+    } catch (e) {
+      // no audio, or not decodable: the image alone is shown
+    }
+    listen.hidden = !audioUrl;
+  };
+  audio.addEventListener('ended', () => setPlaying(false));
+  audio.addEventListener('error', () => { if (audioUrl) audioFailed(); });
+  listen.addEventListener('click', () => {
+    if (!audioUrl) return;
+    if (!audio.paused) {
+      stopAudio();
+      return;
+    }
+    // closing the modal stops the audio
+    field.closest('dialog')?.addEventListener('close', stopAudio, { once: true });
+    setPlaying(true);
+    audio.play().catch((error) => {
+      // AbortError: stopped or replaced before it started
+      if (error?.name !== 'AbortError') audioFailed();
+    });
+  });
+  field.stopAudio = stopAudio;
+
   let request = null;
   field.load = async () => {
     // the newest request wins: only its captcha matches the cookie
@@ -195,6 +262,7 @@ function captchaField(label) {
     const { signal } = request;
     field.classList.add('is-loading');
     field.setAttribute('aria-busy', 'true');
+    setAudio('');
     input.value = '';
     input.dispatchEvent(new Event('input', { bubbles: true }));
     try {
@@ -202,17 +270,17 @@ function captchaField(label) {
       if (signal.aborted) return;
       image.src = captcha.image;
       image.hidden = false;
+      setAudio(captcha.audio || '');
     } catch (error) {
       if (signal.aborted) return;
       image.hidden = true;
+      image.removeAttribute('src');
       field.onError?.(apiErrorMessage(error, 'captcha-load'));
     }
     field.classList.remove('is-loading');
     field.removeAttribute('aria-busy');
   };
   refresh.addEventListener('click', () => field.load());
-  // TODO audio captcha: the listen button plays the audio of the captcha-audio API once the
-  // backend has it (the captcha text is not known in the browser)
   field.isValid = () => new RegExp(`^\\S{${CAPTCHA_LENGTH}}$`).test(input.value);
   return field;
 }
@@ -455,10 +523,10 @@ export default function decorate(block) {
       || check.field.querySelector('.lead-form-input') || check.field;
     box.classList.toggle('is-invalid', invalid);
   };
-  // the button stays focusable while the form is incomplete (aria-disabled, not disabled);
-  // submitting then lists what is missing
+  // the button is disabled until every field is valid: a click (or Enter in a field) does
+  // nothing; each field says what is wrong when the visitor leaves it
   const refresh = () => {
-    submit.setAttribute('aria-disabled', !isValid());
+    submit.disabled = !isValid();
   };
   form.addEventListener('input', refresh);
   form.addEventListener('change', refresh);
@@ -500,14 +568,17 @@ export default function decorate(block) {
    * @param {Error} error see LeadApiError in lead-api.js
    */
   const showSubmitFailure = (error) => {
-    const message = apiErrorMessage(error, error.step === 'captcha' ? 'captcha' : 'send');
+    const {
+      step, kind, status, code, serverMessage,
+    } = error || {};
+    const message = apiErrorMessage(error, step === 'captcha' ? 'captcha' : 'send');
     if (!message) return;
-    const refused = error.kind === 'rejected' || (error.kind === 'http' && error.status < 500);
+    const refused = kind === 'rejected' || (kind === 'http' && status < 500);
     let check;
-    if (error.code === 'CAPTCHA_REQUIRED' || (error.step === 'captcha' && refused)) {
+    if (code === 'CAPTCHA_REQUIRED' || (step === 'captcha' && refused)) {
       check = captchaCheck;
-    } else if (error.step === 'otp' && (error.kind === 'invalid-input'
-      || (refused && /mobile/i.test(error.serverMessage || '')))) {
+    } else if (step === 'otp' && (kind === 'invalid-input'
+      || (refused && /mobile/i.test(typeof serverMessage === 'string' ? serverMessage : '')))) {
       check = mobileCheck;
     }
     if (check) {
@@ -572,14 +643,26 @@ export default function decorate(block) {
       invalid[0]?.control.focus();
       return;
     }
+    captcha?.stopAudio();
     const data = Object.fromEntries(new FormData(form));
-    const mobile = form.querySelector('input[type="tel"]')?.value || '';
+    const mobile = String(form.querySelector('input[type="tel"]')?.value || '').trim();
     // the category picks the API product (lead-api-config.js)
-    const category = data[Object.keys(data).find((k) => k.endsWith('category'))] || pageCategory();
-    const product = productFor(category);
-    const session = createLeadSession({
-      mobile, product, lead: buildLead(form, category), loanCategory: category,
-    });
+    const categoryKey = Object.keys(data).find((k) => k.endsWith('category'));
+    const category = String((categoryKey && data[categoryKey]) || pageCategory() || '');
+    let session;
+    try {
+      session = createLeadSession({
+        mobile,
+        product: productFor(category),
+        lead: buildLead(form, category),
+        loanCategory: category,
+      });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('lead-form: the lead could not be prepared', error);
+      showSubmitError(MESSAGES.formFailed);
+      return;
+    }
 
     // verifying the captcha, then sending the OTP: button spinner (desktop), full view
     // spinner (small screens)
@@ -600,7 +683,7 @@ export default function decorate(block) {
       loading.hidden = true;
     }
     if (failure) {
-      if (failure.kind === 'cancelled') return;
+      if (failure?.kind === 'cancelled') return;
       // the captcha was used up by the attempt: a new one, then the error (loading clears it)
       captcha?.load();
       showSubmitFailure(failure);
@@ -628,7 +711,13 @@ export default function decorate(block) {
       },
       // the lead is created by verifyOtp
       onVerified: () => {
-        clearForm();
+        // the lead exists now: tidying up must not keep the visitor from the success step
+        try {
+          clearForm();
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.warn('lead-form: the form could not be cleared', error);
+        }
         const success = createSuccessStep({
           emiHref: document.querySelector('main .emi-calculator') ? '#emi-calculator' : `${siteRoot()}/home#emi-calculator`,
           onDone: close,
@@ -672,15 +761,25 @@ export default function decorate(block) {
   refresh();
   // picking another product in a modal opens that product's form
   categoryDropdown?.addEventListener('change', (e) => {
+    if (!e.detail?.byUser || !categoryDropdown.value) return;
+    // the short form follows the pick, so it shows it once the modal is closed
+    document.dispatchEvent(new CustomEvent(CATEGORY_PICKED_EVENT, {
+      detail: { category: categoryDropdown.value },
+    }));
     const d = dialog();
-    if (!e.detail?.byUser || !d?.dataset.modalPath || !categoryDropdown.value) return;
-    openFormFor(d, categoryDropdown.value, categoryOptions, forms, form);
+    if (!d?.dataset.modalPath) return;
+    // the form stays open as it is when the other one cannot be loaded
+    openFormFor(d, categoryDropdown.value, categoryOptions, forms, form).catch((error) => {
+      // eslint-disable-next-line no-console
+      console.error('lead-form: the form of this category could not be opened', error);
+    });
   });
 
   // values carried over from another form (e.g. the hero call-back form)
   // a value may also be a list of candidates (most specific first): a dropdown takes the
   // first one that matches one of its options and is left unchanged when none does
   form.prefill = (data) => {
+    if (!data || typeof data !== 'object') return;
     const inputs = [...form.querySelectorAll('input[name]')].filter((i) => i.type !== 'hidden');
     const first = inputs.find((i) => i.autocomplete === 'given-name');
     const last = inputs.find((i) => i.autocomplete === 'family-name');

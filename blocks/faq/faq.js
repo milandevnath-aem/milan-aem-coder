@@ -52,6 +52,30 @@ function decorateIntro(intro) {
   });
 }
 
+// expand/collapse the answer by animating its height
+function animateItem(details, expand) {
+  const answer = details.querySelector('.faq-answer');
+  answer.getAnimations().forEach((a) => a.cancel());
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce || !answer.animate) {
+    details.open = expand;
+    return;
+  }
+  if (expand) details.open = true;
+  else details.classList.add('is-closing');
+  const full = `${answer.offsetHeight}px`;
+  const frames = expand ? ['0px', full] : [full, '0px'];
+  const animation = answer.animate(
+    { height: frames, opacity: expand ? [0, 1] : [1, 0] },
+    { duration: 250, easing: 'ease-in-out' },
+  );
+  animation.onfinish = () => {
+    details.open = expand;
+    details.classList.remove('is-closing');
+  };
+  animation.oncancel = () => details.classList.remove('is-closing');
+}
+
 /**
  * FAQ accordion with the heading beside it on desktop.
  * Optional first single-cell row: heading. Other rows: question, answer.
@@ -77,7 +101,8 @@ export default function decorate(block) {
     const details = document.createElement('details');
     details.className = 'faq-item';
     moveInstrumentation(row, details);
-    if (i === 0 && block.classList.contains('open-state')) details.open = true;
+    // if (i === 0 && block.classList.contains('open-state')) details.open = true;
+    if (i === 0) details.open = true;
 
     const summary = document.createElement('summary');
     summary.textContent = questionCell?.textContent.trim() || '';
@@ -102,6 +127,18 @@ export default function decorate(block) {
       const rowCount = 1 + Math.max(0, ...lists.map((ul) => ul.children.length));
       answer.style.setProperty('--faq-table-rows', rowCount);
     }
+    // summary is natively keyboard operable (Enter/Space); intercept to animate
+    summary.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (details.open && !details.classList.contains('is-closing')) {
+        animateItem(details, false);
+      } else if (!details.open) {
+        list.querySelectorAll('details.faq-item[open]').forEach((other) => {
+          if (other !== details) animateItem(other, false);
+        });
+        animateItem(details, true);
+      }
+    });
     details.append(summary, answer);
     list.append(details);
   });

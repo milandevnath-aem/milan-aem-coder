@@ -13,7 +13,11 @@
 
 /** Path of each API, on the site's own domain. */
 export const ENDPOINTS = {
-  /** {} -> { data: { image } }, sets the kmp_captcha cookie */
+  /**
+   * {} -> { data: { image, audio } }, sets the kmp_captcha cookie. Both are Base64, as a
+   * data URI or bare (the type is then read from the data); `audio` is optional: without
+   * it the listen button is hidden.
+   */
   captchaGenerate: '/content/kotakmahindraprime-aem/in/en/home.captcha-generate.json',
   /** { captcha } -> { data: { verified } }, sets the kmp_captcha_ok cookie */
   captchaVerify: '/content/kotakmahindraprime-aem/in/en/home.captcha-verify.json',
@@ -25,7 +29,6 @@ export const ENDPOINTS = {
    * (see PRODUCT_BY_CATEGORY).
    */
   otpVerify: '/content/kotakmahindraprime-aem/in/en.otp-verify.json',
-  // TODO audio captcha: a captchaAudio endpoint once the backend provides it
 };
 
 /**
@@ -123,10 +126,12 @@ export const MESSAGES = {
   INVALID_OTP: 'The OTP you have entered is incorrect.',
   OTP_EXPIRED: 'OTP expired. Please regenerate.',
   captchaLoadFailed: 'We couldn’t load the captcha. Tap refresh to try again.',
+  captchaAudioFailed: 'We couldn’t play the audio. Tap refresh for a new captcha.',
   resendNeedsCaptcha: 'Please go back and complete the captcha to get a new OTP.',
   wrongOtp: 'The OTP you have entered is incorrect.',
   sendFailed: 'We couldn’t send the OTP. Please try again.',
   submitFailed: 'We couldn’t submit your details. Please try again.',
+  formFailed: 'Something went wrong. Please refresh the page and try again.',
   timeout: 'This is taking longer than usual. Please try again.',
   network: 'Check your internet connection and try again.',
 };

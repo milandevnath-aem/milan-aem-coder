@@ -46,7 +46,8 @@
           "options": [
             { "name": "Eligibility (icon, label, value)", "value": "eligibility" },
             { "name": "Documents (title and checklist)", "value": "documents" },
-            { "name": "Eligibility Smaller font sizes due to larger content", "value": "elgb-small-text" }
+            { "name": "Eligibility Smaller font sizes due to larger content", "value": "elgb-small-text" },
+            { "name": "Left Title and Right Document Requirement Cards", "value": "left-title-right-documents" }
           ]
         },
         {
