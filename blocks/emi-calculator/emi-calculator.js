@@ -280,9 +280,10 @@ function buildCalculator(types, link) {
   const tenureText = (v) => (state.unit === 'mo' ? months(v) : years(v));
   const tenureInMonths = () => (state.unit === 'mo' ? state.tenure : state.tenure * TENURE.monthsPerYear);
 
-  // analytics: once per calculator per page view, after a change has settled
+  // analytics: once per calculator per page view, after the user's first change has settled
   let usedTimer;
-  const trackUse = () => {
+  const trackUse = (e) => {
+    if (!e.isTrusted) return;
     clearTimeout(usedTimer);
     usedTimer = setTimeout(() => {
       const calculator = calculatorName(cta.dataset.loanCategory);
@@ -294,7 +295,6 @@ function buildCalculator(types, link) {
     }, 1000);
   };
   card.addEventListener('input', trackUse);
-  tablist.addEventListener('click', trackUse);
 
   const display = {
     amount: (v) => inr.format(v),
