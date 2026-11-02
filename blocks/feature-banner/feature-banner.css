@@ -144,6 +144,33 @@
     color: var(--text-color);
 }
 
+/* "Button colour" style: overrides the colour that follows the text colour */
+.feature-banner .feature-banner-item.button-black .feature-banner-content a.button {
+    border-color: var(--color-button-pills-default-bg-base);
+    background-color: var(--color-button-pills-default-bg-base);
+    color: var(--color-button-pills-default-text-base);
+}
+
+.feature-banner .feature-banner-item.button-black .feature-banner-content a.button:hover,
+.feature-banner .feature-banner-item.button-black .feature-banner-content a.button:focus-visible {
+    border-color: var(--color-button-pills-default-bg-hover);
+    background-color: var(--color-button-pills-default-bg-hover);
+    color: var(--color-button-pills-default-text-hover);
+}
+
+.feature-banner .feature-banner-item.button-white .feature-banner-content a.button {
+    border-color: var(--color-button-pills-inverse-bg-base);
+    background-color: var(--color-button-pills-inverse-bg-base);
+    color: var(--color-button-pills-inverse-text-base);
+}
+
+.feature-banner .feature-banner-item.button-white .feature-banner-content a.button:hover,
+.feature-banner .feature-banner-item.button-white .feature-banner-content a.button:focus-visible {
+    border-color: var(--color-button-pills-inverse-bg-hover);
+    background-color: var(--color-button-pills-inverse-bg-hover);
+    color: var(--color-button-pills-inverse-text-hover);
+}
+
 /* side image: the picture sits in its own half instead of filling the band */
 .feature-banner .side-image {
     background-color: var(--background-color);

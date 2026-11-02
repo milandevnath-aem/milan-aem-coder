@@ -3,7 +3,8 @@ import { createPicture } from '../../scripts/images.js';
 import { MEDIA } from '../../scripts/viewport.js';
 
 /**
- * Promotional offer banners. Each row: image, text, disclaimer, style (width + text colour).
+ * Promotional offer banners. Each row: image, text, disclaimer,
+ * style (width + text colour + button colour).
  * @param {Element} block The block element
  */
 export default function decorate(block) {
@@ -23,6 +24,8 @@ export default function decorate(block) {
     if (/\bfixed-height\b/i.test(style)) item.classList.add('offers-fixed-height');
     if (/\bdark\b/i.test(style)) item.classList.add('offers-dark-text');
     if (/\bno-bg-color\b/i.test(style)) item.classList.add('no-bg-color');
+    if (/\bbutton-black\b/i.test(style)) item.classList.add('button-black');
+    if (/\bbutton-white\b/i.test(style)) item.classList.add('button-white');
 
     const img = imageCell?.querySelector('img');
     if (img) {

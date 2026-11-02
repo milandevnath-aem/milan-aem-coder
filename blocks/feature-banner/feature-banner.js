@@ -81,7 +81,8 @@ function revealText(item) {
 
 /**
  * Full-width image + text rows.
- * Each row: image, optional mobile image, text, style (text side, text colour, image mode).
+ * Each row: image, optional mobile image, text,
+ * style (text side, text colour, button colour, image mode).
  * @param {Element} block The block element
  */
 export default function decorate(block) {
@@ -100,6 +101,8 @@ export default function decorate(block) {
     if (tokens.includes('light-text')) item.classList.add('light-text');
     if (tokens.includes('dark-text')) item.classList.add('dark-text');
     if (tokens.includes('side')) item.classList.add('side-image');
+    if (tokens.includes('button-black')) item.classList.add('button-black');
+    if (tokens.includes('button-white')) item.classList.add('button-white');
 
     const img = imageCell?.querySelector('img');
     if (img) {

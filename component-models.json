@@ -1066,6 +1066,28 @@
       },
       {
         "component": "select",
+        "name": "style_button",
+        "label": "Button colour",
+        "description": "Default follows the text colour: black button for dark text, white button for light text.",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Black button, white text",
+            "value": "button-black"
+          },
+          {
+            "name": "White button, black text",
+            "value": "button-white"
+          }
+        ]
+      },
+      {
+        "component": "select",
         "name": "style_media",
         "label": "Image mode",
         "valueType": "string",
@@ -1665,6 +1687,28 @@
           {
             "name": "Dark text (for light images)",
             "value": "dark"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "style_button",
+        "label": "Button colour",
+        "description": "Default: a bold link is a black button, a plain link a white button.",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Black button, white text",
+            "value": "button-black"
+          },
+          {
+            "name": "White button, black text",
+            "value": "button-white"
           }
         ]
       },
