@@ -1,5 +1,6 @@
 import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createPicture } from '../../scripts/images.js';
+import { amountBand, pushOnce } from '../../scripts/analytics.js';
 
 const inr = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 });
 
@@ -37,6 +38,11 @@ const UNITS = {
 let idCounter = 0;
 
 const fill = (template, values) => template.replace(/\{(\w+)\}/g, (_, name) => values[name]);
+
+/** analytics name of a loan type: "Car Loan" -> "car_emi", "Two-Wheeler" -> "two_wheeler_emi" */
+const calculatorName = (title) => `${String(title).toLowerCase()
+  .replace(/\b(loans?|finance)\s*$/, '').replace(/[^a-z0-9]+/g, '_')
+  .replace(/^_|_$/g, '') || 'loan'}_emi`;
 
 /**
  * Reads the numbers of a grouped cell: one paragraph per field, in model order.
@@ -235,6 +241,11 @@ function buildCalculator(types, link) {
   const state = { unit: 'yr' };
   const cta = result.querySelector('.emi-calculator-cta');
   let tenureLimits = {};
+  // set by the visitor's first slider, field, unit or tab change (see calculator_use in update)
+  let touched = false;
+  ['input', 'change', 'click', 'keydown'].forEach((type) => controls.addEventListener(type, (e) => {
+    if (e.isTrusted && e.target.closest('input, button')) touched = true;
+  }, { capture: true }));
 
   // elements touched on every update, looked up once
   const els = {
@@ -311,6 +322,14 @@ function buildCalculator(types, link) {
     els.principal.textContent = `₹${inr.format(state.amount)}`;
     els.interest.textContent = `₹${inr.format(Math.round(total - state.amount))}`;
     els.total.textContent = `₹${inr.format(total)}`;
+    // analytics: the first calculation made by the visitor (not the one shown on load)
+    if (touched) {
+      pushOnce('calculator_use', 'calculator_use', {
+        calculator: calculatorName(cta.dataset.loanCategory || ''),
+        loan_amount_band: amountBand(state.amount),
+        tenure_months: monthCount,
+      });
+    }
     Object.entries(parts).forEach(([key, { range, slider, input }]) => {
       const pct = (state[key] - range.min) / (range.max - range.min || 1);
       slider.style.setProperty('--pct', Math.min(1, Math.max(0, pct)));

@@ -15,6 +15,12 @@ import {
 import {
   digitsOnly, emailRules, fieldMessages, isPersonName, mobileRules, nameRules,
 } from '../../scripts/input-rules.js';
+import {
+  productType, pushEvent, trackFormStart, uniqueId,
+} from '../../scripts/analytics.js';
+
+/** form_name of the lead form's analytics events */
+const FORM_NAME = 'apply_now';
 
 function iconButton(name, label) {
   const button = document.createElement('button');
@@ -498,6 +504,7 @@ export default function decorate(block) {
   const submit = document.createElement('button');
   submit.type = 'submit';
   submit.className = 'button primary lead-form-submit';
+  submit.id = uniqueId('apply-now-submit');
   submit.textContent = submitRow?.textContent.trim() || 'Apply now';
   if (submitRow) moveInstrumentation(submitRow, submit);
   // a failed request (OTP not sent) is shown above the button
@@ -634,6 +641,13 @@ export default function decorate(block) {
     refresh();
   };
 
+  /** the picked loan category, else the page's own product */
+  const currentCategory = (data = Object.fromEntries(new FormData(form))) => {
+    const categoryKey = Object.keys(data).find((k) => k.endsWith('category'));
+    return String((categoryKey && data[categoryKey]) || pageCategory() || '');
+  };
+  trackFormStart(form, FORM_NAME, currentCategory);
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (submit.classList.contains('is-loading')) return;
@@ -647,8 +661,14 @@ export default function decorate(block) {
     const data = Object.fromEntries(new FormData(form));
     const mobile = String(form.querySelector('input[type="tel"]')?.value || '').trim();
     // the category picks the API product (lead-api-config.js)
-    const categoryKey = Object.keys(data).find((k) => k.endsWith('category'));
-    const category = String((categoryKey && data[categoryKey]) || pageCategory() || '');
+    const category = currentCategory(data);
+    // analytics: no personal data, the city is the only field sent
+    const cityKey = Object.keys(data).find((k) => /\b(city|location)\b/.test(k.replace(/-/g, ' ')));
+    const tracked = {
+      form_name: FORM_NAME,
+      product_type: productType(category),
+      city: (cityKey && String(data[cityKey]).trim()) || undefined,
+    };
     let session;
     try {
       session = createLeadSession({
@@ -689,6 +709,7 @@ export default function decorate(block) {
       showSubmitFailure(failure);
       return;
     }
+    pushEvent('lead_form_submit', tracked);
 
     block.querySelector('.lead-form-otp')?.remove();
     const otp = createOtpStep({
@@ -710,7 +731,9 @@ export default function decorate(block) {
         }
       },
       // the lead is created by verifyOtp
-      onVerified: () => {
+      onVerified: (lead) => {
+        // the server's lead reference, never the mobile number
+        pushEvent('generate_lead', { ...tracked, lead_id: lead?.leadId || undefined });
         // the lead exists now: tidying up must not keep the visitor from the success step
         try {
           clearForm();

@@ -8,6 +8,7 @@ import {
 import {
   emailRules, fieldMessages, isPersonName, mobileRules, nameRules, nativeMessages,
 } from '../../scripts/input-rules.js';
+import { trackFormStart, uniqueId } from '../../scripts/analytics.js';
 
 // chips shown in the row; the rest are listed under "More"
 const VISIBLE_CATEGORIES = 4;
@@ -144,8 +145,13 @@ function confirmOnSubmit(form, modalHref, forms = [], categories = []) {
   form.addEventListener('change', update);
 
   form.addEventListener('submit', async (e) => {
-    if (form.getAttribute('action')) return;
+    // never a native submit: it would put the name and mobile number in the URL
     e.preventDefault();
+    const action = form.getAttribute('action');
+    if (action) {
+      window.location.href = action;
+      return;
+    }
     const target = await update();
     if (target) {
       // continue in the full application form, carrying over what was entered
@@ -226,7 +232,7 @@ function buildForm(config, isProduct) {
   const action = actionLink?.getAttribute('href');
   const modalHref = action && isModalLink(action) ? action : '';
   if (action && action !== '#' && !modalHref) form.action = action;
-  form.method = 'get';
+  form.method = 'post';
   form.innerHTML = `
     <div class="hero-loan-fields"></div>
     <fieldset class="hero-loan-categories">
@@ -234,7 +240,10 @@ function buildForm(config, isProduct) {
       <div class="hero-loan-chips"></div>
     </fieldset>
     <button type="submit" class="button primary"></button>`;
-  form.querySelector('button[type="submit"]').textContent = cellText(actionRow) || 'Apply now';
+  const submit = form.querySelector('button[type="submit"]');
+  submit.textContent = cellText(actionRow) || 'Apply now';
+  submit.id = uniqueId('hero-apply-submit');
+  trackFormStart(form, 'hero_apply', () => String(new FormData(form).get('category') || ''));
 
   const labels = (fieldsText || 'Your name, Mobile number')
     .split(',').map((f) => f.trim()).filter(Boolean);
