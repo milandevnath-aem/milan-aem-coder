@@ -38,6 +38,7 @@ const MESSAGES = {
   nearest: (city) => `Showing the branch nearest to you: ${city}`,
   noMatch: (city) => `We could not find a branch near you. Showing our ${city} branch; select your city to change it.`,
   failed: 'We could not find a branch near you. Please select your city.',
+  denied: (city) => `Location access is off. Showing our ${city} branch; select your city to change it.`,
   empty: 'Branch details are not available right now. Please try again later.',
 };
 
@@ -311,11 +312,16 @@ export default function decorate(block) {
         setStatus(MESSAGES.noMatch(first.name));
       }
     } catch (error) {
-      // GeolocationPositionError 1 = permission denied: do not ask the browser again
-      if (error?.code === 1) saveChoice({ consent: 'no' });
-      setStatus(MESSAGES.failed);
-      // eslint-disable-next-line no-console
-      console.warn('branch-locator: location lookup failed', error);
+      // GeolocationPositionError 1 = permission denied (in the browser prompt, after
+      // "Turn on location" in ours): do not ask again, the first city stays shown
+      if (error?.code === 1) {
+        saveChoice({ consent: 'no' });
+        setStatus(MESSAGES.denied(firstCity(cities).name));
+      } else {
+        setStatus(MESSAGES.failed);
+        // eslint-disable-next-line no-console
+        console.warn('branch-locator: location lookup failed', error);
+      }
     } finally {
       main.removeAttribute('aria-busy');
     }
@@ -340,12 +346,17 @@ export default function decorate(block) {
     // the first city of the sheet, until the visitor's city is known
     picker.setValue((remembered || firstCity(cities)).key);
 
-    if (remembered || saved.consent === 'no' || inEditor) return;
+    if (remembered || inEditor) return;
     const permission = await locationPermission();
-    // location blocked in the browser: asking would lead nowhere, keep the first city
-    if (permission === 'denied') return;
-    // already allowed: the browser will not prompt, so neither do we
-    if (permission === 'granted' || saved.consent === 'yes') locate();
+    // already allowed (also when turned on in the browser settings after a "no"):
+    // the browser will not prompt, so neither do we
+    if (permission === 'granted') {
+      locate();
+      return;
+    }
+    // location blocked in the browser, or refused earlier: keep the first city
+    if (permission === 'denied' || saved.consent === 'no') return;
+    if (saved.consent === 'yes') locate();
     else afterPageLoad(() => askConsent(locate));
   })();
 }
