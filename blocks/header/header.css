@@ -932,7 +932,7 @@ header .nav-search .nav-search-group ul {
 
 header .nav-search .nav-search-group li.is-active {
   background-color: #f2f2f2;
-  border-radius: 12px;
+  border-radius: 12px; 
 }
 
 header .nav-search .nav-search-group:hover li.is-active {
