@@ -5,9 +5,22 @@ indices:
     include:
       - '/**'
     exclude:
+      - '/nav'
+      - '/footer'
+      - '/fragments'
+      - '/fragments/**'
+      - '/modals'
+      - '/modals/**'
+      - '/drafts/**'
       - '/**.json'
     target: /query-index.json
     properties:
+      title:
+        select: head > title
+        value: textContent(el)
+      keywords:
+        select: head > meta[name="keywords"]
+        value: attribute(el, "content")
       lastModified:
         select: none
         value: parseTimestamp(headers["last-modified"], "ddd, DD MMM YYYY hh:mm:ss GMT")

@@ -16,6 +16,10 @@ const A11Y_SETTINGS = [
   },
 ];
 const SEARCH_LIMIT = 6;
+const SEARCH_INDEX = '/query-index.json?limit=1000';
+// the home page and pages that are not standalone destinations (in case the index
+// config lets them through)
+const SEARCH_SKIP = /^\/(home)?$|^\/(nav|footer|fragments|modals|drafts)(\/|$)/;
 
 let uid = 0;
 
@@ -418,24 +422,93 @@ async function openAccessibility() {
 function buildSearchIndex(menus, searchSection) {
   const entries = [];
   const seen = new Set();
-  const add = (title, href, tag) => {
+  const add = (title, href, tag, text = '') => {
     const key = title.toLowerCase();
     if (!title || seen.has(key)) return;
     seen.add(key);
-    entries.push({ title, href, tag });
+    entries.push({
+      title, href, tag, text: text.toLowerCase(),
+    });
   };
   searchSection?.querySelectorAll('li').forEach((li) => {
     const { title, href, description } = parseLink(li);
     add(title, href, description || 'Help');
   });
   menus.forEach((menu) => {
-    menu.items.forEach((item) => add(item.title, item.href, 'Product'));
+    menu.items.forEach((item) => add(item.title, item.href, 'Product', item.description));
     menu.groups.forEach((group) => {
       const tag = /help|support/i.test(group.label) ? 'Help' : 'Explore';
-      group.items.forEach((item) => add(item.title, item.href, tag));
+      group.items.forEach((item) => add(item.title, item.href, tag, item.description));
     });
   });
   return entries;
+}
+
+/**
+ * Same-origin path of a link, to match it against query index rows.
+ * @returns {string|null}
+ */
+function pagePath(href) {
+  const url = new URL(href, window.location);
+  return url.origin === window.location.origin ? url.pathname : null;
+}
+
+/**
+ * Adds the published pages from the query index to the suggestions: pages already
+ * linked from the nav get the page keywords as extra search text, the others are
+ * added with their page title. (Descriptions are left out on purpose: they are
+ * generic enough to match most queries on most pages.)
+ * Expects the index to have title, keywords and robots columns.
+ * @param {Object[]} entries suggestions from the nav, extended in place
+ */
+async function addQueryIndex(entries) {
+  const resp = await fetch(SEARCH_INDEX);
+  if (!resp.ok) return;
+  const { data = [] } = await resp.json();
+  const byPath = new Map();
+  entries.forEach((entry) => {
+    const path = pagePath(entry.href);
+    if (path && !byPath.has(path)) byPath.set(path, entry);
+  });
+  const titles = new Set(entries.map((entry) => entry.title.toLowerCase()));
+  data.forEach(({
+    path, title = '', keywords = '', robots = '',
+  }) => {
+    if (!path || SEARCH_SKIP.test(path) || /noindex/i.test(robots)) return;
+    const text = keywords.toLowerCase();
+    const known = byPath.get(path);
+    if (known) {
+      known.text = `${known.text} ${text}`;
+      return;
+    }
+    // "New Car Loan | Apply Online | Kotak Prime Loans" -> "New Car Loan"
+    const name = title.split(' | ')[0].trim();
+    if (!name || titles.has(name.toLowerCase())) return;
+    titles.add(name.toLowerCase());
+    entries.push({
+      title: name, href: path, tag: 'Explore', text,
+    });
+  });
+}
+
+/**
+ * Every word of the query has to match. Whole words in the title rank first, then
+ * the start of a title word ("car" in "careers"), then anywhere in the title, then
+ * the keywords.
+ * @returns {number} 0 when the entry does not match
+ */
+function scoreEntry(entry, words) {
+  const titleWords = entry.title.toLowerCase().split(/[^a-z0-9]+/);
+  const title = entry.title.toLowerCase();
+  let score = 0;
+  return words.every((word) => {
+    if (titleWords.includes(word)) score += 4;
+    else if (titleWords.some((w) => w.startsWith(word))) score += 3;
+    else if (title.includes(word)) score += 2;
+    else if (entry.text.includes(word)) score += 1;
+    else return false;
+    return true;
+  }) ? score : 0;
 }
 
 function buildSearch(index, placeholder) {
@@ -496,7 +569,12 @@ function buildSearch(index, placeholder) {
     const query = input.value.trim();
     clear.hidden = !input.value;
     const q = query.toLowerCase();
-    matches = q ? index.filter((e) => e.title.toLowerCase().includes(q)) : [];
+    const words = q.split(/\s+/).filter(Boolean);
+    matches = words.length ? index
+      .map((entry) => ({ entry, score: scoreEntry(entry, words) }))
+      .filter(({ score }) => score)
+      .sort((a, b) => b.score - a.score)
+      .map(({ entry }) => entry) : [];
     const groups = [
       [loans, matches.filter((e) => e.tag === 'Product')],
       [tools, matches.filter((e) => e.tag !== 'Product')],
@@ -510,7 +588,8 @@ function buildSearch(index, placeholder) {
         a.href = entry.href;
         const label = document.createElement('span');
         label.className = 'nav-search-label';
-        highlight(label, entry.title, query);
+        const name = entry.title.toLowerCase();
+        highlight(label, entry.title, name.includes(q) ? q : words.find((w) => name.includes(w)));
         const tag = document.createElement('span');
         tag.className = 'nav-search-tag';
         tag.textContent = entry.tag;
@@ -544,6 +623,13 @@ function buildSearch(index, placeholder) {
   search.reset = () => {
     input.value = '';
     render();
+  };
+  // the query index is only fetched once search is first opened
+  let loading;
+  search.load = () => {
+    loading ||= addQueryIndex(index)
+      .catch(() => { /* nav suggestions only */ })
+      .then(() => { if (input.value) render(); });
   };
   search.input = input;
   return search;
@@ -745,6 +831,7 @@ export default async function decorate(block) {
     document.body.classList.toggle('nav-search-open', isOpen && !isDesktop.matches);
     if (isOpen) {
       desktopMenu?.closeAll();
+      search.load();
       search.input.focus();
     } else {
       search.reset();
