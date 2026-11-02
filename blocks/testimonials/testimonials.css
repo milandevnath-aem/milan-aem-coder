@@ -81,6 +81,10 @@
   margin: 0 0 2px;
 }
 
+.testimonials .testimonials-name cite {
+  font-style: normal;
+}
+
 .testimonials .testimonials-role {
   color: var(--muted-color);
   font-size: var(--type-b1-size);

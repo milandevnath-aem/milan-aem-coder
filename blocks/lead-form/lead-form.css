@@ -298,6 +298,7 @@
   border-top-color: var(--text-color);
 }
 
+.lead-form .lead-form-captcha-image[hidden],
 .lead-form .lead-form-captcha.is-loading .lead-form-captcha-image {
   display: none;
 }
@@ -355,6 +356,17 @@
 .lead-form .lead-form-icon-button img {
   width: 23.33px;
   height: 23.33px;
+}
+
+.lead-form .lead-form-icon-button[hidden] {
+  display: none;
+}
+
+/* the captcha audio is playing (pressed again, it stops) */
+.lead-form .lead-form-volume.is-playing {
+  background: var(--light-color);
+  outline: 2px solid currentcolor;
+  outline-offset: -2px;
 }
 
 /* disclaimer and submit */

@@ -8,15 +8,16 @@
   served from, whatever it is. They rely on HttpOnly SameSite=Strict cookies, which only work
   on that same domain.
 
-  Demo mode (see DEMO_MODE) runs the whole journey without the APIs: a captcha drawn in the
-  browser and OTP 123456, so it can be tested on localhost and *.aem.page.
-
   Everything here ships to the browser: never put API keys, secrets or passwords in this file.
 */
 
 /** Path of each API, on the site's own domain. */
 export const ENDPOINTS = {
-  /** {} -> { data: { image } }, sets the kmp_captcha cookie */
+  /**
+   * {} -> { data: { image, audio } }, sets the kmp_captcha cookie. Both are Base64, as a
+   * data URI or bare (the type is then read from the data); `audio` is optional: without
+   * it the listen button is hidden.
+   */
   captchaGenerate: '/content/kotakmahindraprime-aem/in/en/home.captcha-generate.json',
   /** { captcha } -> { data: { verified } }, sets the kmp_captcha_ok cookie */
   captchaVerify: '/content/kotakmahindraprime-aem/in/en/home.captcha-verify.json',
@@ -28,14 +29,7 @@ export const ENDPOINTS = {
    * (see PRODUCT_BY_CATEGORY).
    */
   otpVerify: '/content/kotakmahindraprime-aem/in/en.otp-verify.json',
-  // TODO audio captcha: a captchaAudio endpoint once the backend provides it
 };
-
-/**
- * true: always demo, false: always the APIs,
- * null: demo on localhost, *.aem.page and *.aem.live (they cannot reach the AEM servlets).
- */
-export const DEMO_MODE = null;
 
 /**
  * window variable that keeps the journey's data between OTP generation and validation:
@@ -63,6 +57,8 @@ export const REQUEST_HEADERS = {
 export const CAPTCHA_LENGTH = 5;
 export const OTP_LENGTH = 6;
 export const RESEND_SECONDS = 30;
+/** how long an OTP is valid: a refused OTP entered later is shown as expired */
+export const OTP_VALID_MS = 5 * 60 * 1000;
 
 /**
  * Loan category (as shown in "Select loan category") -> fields for it.
@@ -73,8 +69,9 @@ export const RESEND_SECONDS = 30;
  * Every other key of an entry is added to `lead` as is, so another category specific value
  * is one more key.
  * Matching ignores case, spaces and punctuation ("Two-Wheeler Loans" = "two wheeler loan").
- * A category that is not listed keeps the demo flow: Car Lease and Dealer Finance until
- * their API is decided. To connect one, add a line here; no other change is needed.
+ * A category that is not listed (Car Lease, Dealer Finance until their API is decided) has
+ * no product, so the server refuses its lead. To connect one, add a line here; no other
+ * change is needed.
  */
 export const PRODUCT_BY_CATEGORY = {
   'New Car Finance': { product: 'NewCarFinance', Product: 'New CAR' },
@@ -124,14 +121,17 @@ export const EXCLUDED_FIELDS = ['captcha'];
  * that is not listed shows the API's own message.
  */
 export const MESSAGES = {
-  INVALID_CAPTCHA: 'Invalid or expired captcha. Please enter the new one.',
-  CAPTCHA_REQUIRED: 'Please complete the captcha.',
-  INVALID_OTP: 'Invalid or expired OTP.',
+  INVALID_CAPTCHA: 'Invalid captcha please try again!',
+  CAPTCHA_REQUIRED: 'Captcha cannot be blank',
+  INVALID_OTP: 'The OTP you have entered is incorrect.',
+  OTP_EXPIRED: 'OTP expired. Please regenerate.',
   captchaLoadFailed: 'We couldn’t load the captcha. Tap refresh to try again.',
+  captchaAudioFailed: 'We couldn’t play the audio. Tap refresh for a new captcha.',
   resendNeedsCaptcha: 'Please go back and complete the captcha to get a new OTP.',
-  wrongOtp: 'Incorrect OTP. Please try again.',
+  wrongOtp: 'The OTP you have entered is incorrect.',
   sendFailed: 'We couldn’t send the OTP. Please try again.',
   submitFailed: 'We couldn’t submit your details. Please try again.',
+  formFailed: 'Something went wrong. Please refresh the page and try again.',
   timeout: 'This is taking longer than usual. Please try again.',
   network: 'Check your internet connection and try again.',
 };

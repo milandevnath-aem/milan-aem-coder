@@ -16,6 +16,8 @@ const A11Y_SETTINGS = [
   },
 ];
 const SEARCH_LIMIT = 6;
+const SEARCH_INDEX = '/query-index.json';
+const SEARCH_SKIP = /^\/$|^\/(nav|footer|fragments|modals|drafts)(\/|$)/;
 
 let uid = 0;
 
@@ -151,6 +153,7 @@ function buildDesktopMenu(menus) {
     toggle.type = 'button';
     toggle.className = 'nav-menu-toggle';
     toggle.textContent = menu.label;
+    if (/^more$/i.test(menu.label)) toggle.setAttribute('aria-label', 'More navigation links');
     toggle.setAttribute('aria-expanded', 'false');
     toggle.setAttribute('aria-controls', `nav-panel-${uid}`);
 
@@ -348,7 +351,7 @@ async function openAccessibility() {
       <p>This is a preview of how text will look in this website. Adjust it based on your requirement.</p>
     </div>
     <div class="nav-a11y-controls">
-      <div class="nav-a11y-options" role="radiogroup" aria-label="Setting"></div>
+      <div class="nav-a11y-options" role="radiogroup" aria-label="Accessibility setting"></div>
       <div class="nav-a11y-slider">
         <p><label for="nav-a11y-range">Slide to adjust</label><span class="nav-a11y-preview" aria-hidden="true">Aa</span></p>
         <input id="nav-a11y-range" type="range">
@@ -369,7 +372,11 @@ async function openAccessibility() {
   };
   const select = (setting) => {
     current = setting;
-    [...options.children].forEach((b) => b.setAttribute('aria-checked', b.dataset.key === setting.key));
+    [...options.children].forEach((b) => {
+      const checked = b.dataset.key === setting.key;
+      b.setAttribute('aria-checked', checked);
+      b.tabIndex = checked ? 0 : -1;
+    });
     Object.assign(range, { min: setting.min, max: setting.max, step: setting.step });
     range.value = settings[setting.key] ?? setting.min;
     paint();
@@ -381,6 +388,18 @@ async function openAccessibility() {
     button.dataset.key = setting.key;
     button.append(icon(setting.icon), setting.label);
     button.addEventListener('click', () => select(setting));
+    button.addEventListener('keydown', (e) => {
+      const steps = {
+        ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1,
+      };
+      const step = steps[e.key];
+      if (!step) return;
+      e.preventDefault();
+      const list = [...options.children];
+      const next = list[(list.indexOf(button) + step + list.length) % list.length];
+      next.focus();
+      next.click();
+    });
     options.append(button);
   });
   range.addEventListener('input', () => {
@@ -397,31 +416,53 @@ async function openAccessibility() {
   showModal();
 }
 
-/* search: suggestions from the authored search list and the menu links */
-function buildSearchIndex(menus, searchSection) {
+async function loadSearchIndex() {
+  const resp = await fetch(SEARCH_INDEX);
+  if (!resp.ok) throw new Error('Unable to load search results');
+  const { data = [] } = await resp.json();
   const entries = [];
-  const seen = new Set();
-  const add = (title, href, tag) => {
-    const key = title.toLowerCase();
-    if (!title || seen.has(key)) return;
-    seen.add(key);
-    entries.push({ title, href, tag });
-  };
-  searchSection?.querySelectorAll('li').forEach((li) => {
-    const { title, href, description } = parseLink(li);
-    add(title, href, description || 'Help');
-  });
-  menus.forEach((menu) => {
-    menu.items.forEach((item) => add(item.title, item.href, 'Product'));
-    menu.groups.forEach((group) => {
-      const tag = /help|support/i.test(group.label) ? 'Help' : 'Explore';
-      group.items.forEach((item) => add(item.title, item.href, tag));
+  const paths = new Set();
+  data.forEach(({
+    path, title = '', description = '', robots = '',
+  }) => {
+    if (typeof path !== 'string' || !path.startsWith('/') || path.startsWith('//')
+      || SEARCH_SKIP.test(path) || /noindex/i.test(robots) || paths.has(path)) return;
+    const name = typeof title === 'string' ? title.trim() : '';
+    if (!name) return;
+    paths.add(path);
+    entries.push({
+      title: name,
+      href: path,
+      text: typeof description === 'string' ? description.toLowerCase() : '',
     });
   });
   return entries;
 }
 
-function buildSearch(index, placeholder) {
+/**
+ * Every word of the query has to match. Whole words in the title rank first, then
+ * the start of a title word ("car" in "careers"), then anywhere in the title, then
+ * the description.
+ * @returns {number} 0 when the entry does not match
+ */
+function scoreEntry(entry, words) {
+  const titleWords = entry.title.toLowerCase().split(/[^a-z0-9]+/);
+  const title = entry.title.toLowerCase();
+  let score = 0;
+  return words.every((word) => {
+    if (titleWords.includes(word)) score += 4;
+    else if (titleWords.some((w) => w.startsWith(word))) score += 3;
+    else if (title.includes(word)) score += 2;
+    else if (entry.text.includes(word)) score += 1;
+    else return false;
+    return true;
+  }) ? score : 0;
+}
+
+function buildSearch(placeholder) {
+  let index = [];
+  let pending = false;
+  let failed = false;
   const search = document.createElement('div');
   search.className = 'nav-search';
   search.hidden = true;
@@ -433,10 +474,9 @@ function buildSearch(index, placeholder) {
     <div class="nav-search-results" id="nav-search-results" hidden>
       <p class="nav-search-title">Suggested results</p>
       <div class="nav-search-columns">
-        <div class="nav-search-group"><p class="nav-search-heading">Loans</p><ul></ul></div>
-        <div class="nav-search-group"><p class="nav-search-heading">Tools &amp; Help</p><ul></ul></div>
+        <div class="nav-search-group"><ul></ul></div>
       </div>
-      <p class="nav-search-empty" hidden>No results found</p>
+      <p class="nav-search-empty" role="status" hidden>No results found</p>
     </div>`;
   const form = search.querySelector('form');
   const input = form.querySelector('input');
@@ -445,7 +485,7 @@ function buildSearch(index, placeholder) {
   const clear = form.querySelector('.nav-search-clear');
   clear.append(icon('close'));
   const results = search.querySelector('.nav-search-results');
-  const [loans, tools] = search.querySelectorAll('.nav-search-group');
+  const list = search.querySelector('.nav-search-group ul');
   const title = search.querySelector('.nav-search-title');
   const columns = search.querySelector('.nav-search-columns');
   const empty = search.querySelector('.nav-search-empty');
@@ -479,35 +519,38 @@ function buildSearch(index, placeholder) {
     const query = input.value.trim();
     clear.hidden = !input.value;
     const q = query.toLowerCase();
-    matches = q ? index.filter((e) => e.title.toLowerCase().includes(q)) : [];
-    const groups = [
-      [loans, matches.filter((e) => e.tag === 'Product')],
-      [tools, matches.filter((e) => e.tag !== 'Product')],
-    ];
-    groups.forEach(([group, items]) => {
-      const ul = group.querySelector('ul');
-      ul.textContent = '';
-      items.slice(0, SEARCH_LIMIT).forEach((entry) => {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = entry.href;
-        const label = document.createElement('span');
-        label.className = 'nav-search-label';
-        highlight(label, entry.title, query);
-        const tag = document.createElement('span');
-        tag.className = 'nav-search-tag';
-        tag.textContent = entry.tag;
-        a.append(label, tag);
-        li.append(a);
-        ul.append(li);
-      });
-      group.hidden = !items.length;
+    const words = q.split(/\s+/).filter(Boolean);
+    matches = words.length ? index
+      .map((entry) => ({ entry, score: scoreEntry(entry, words) }))
+      .filter(({ score }) => score)
+      .sort((a, b) => b.score - a.score)
+      .map(({ entry }) => entry) : [];
+    list.textContent = '';
+    matches.slice(0, SEARCH_LIMIT).forEach((entry) => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = entry.href;
+      const label = document.createElement('span');
+      label.className = 'nav-search-label';
+      const name = entry.title.toLowerCase();
+      const highlightQuery = name.includes(q) ? q : words.find((word) => name.includes(word));
+      highlight(label, entry.title, highlightQuery);
+      a.append(label);
+      li.append(a);
+      list.append(li);
     });
     results.hidden = !q;
     const noMatch = !!q && !matches.length;
     title.hidden = noMatch;
     columns.hidden = noMatch;
     empty.hidden = !noMatch;
+    if (pending) {
+      empty.textContent = 'Loading results...';
+    } else if (failed) {
+      empty.textContent = 'Search is unavailable. Please try again.';
+    } else {
+      empty.textContent = 'No results found';
+    }
   };
   input.addEventListener('input', render);
   results.addEventListener('click', (e) => {
@@ -527,6 +570,25 @@ function buildSearch(index, placeholder) {
   search.reset = () => {
     input.value = '';
     render();
+  };
+  // the query index is only fetched once search is first opened
+  let loading;
+  search.load = () => {
+    if (!loading) {
+      pending = true;
+      failed = false;
+      loading = loadSearchIndex()
+        .then((entries) => { index = entries; })
+        .catch(() => {
+          failed = true;
+          loading = null;
+        })
+        .finally(() => {
+          pending = false;
+          render();
+        });
+    }
+    return loading;
   };
   search.input = input;
   return search;
@@ -674,12 +736,21 @@ export default async function decorate(block) {
   const menuFooter = document.createElement('div');
   menuFooter.className = 'nav-menu-footer';
   if (contact) {
-    const row = document.createElement('a');
+    // a link cannot hold another link: the contact link covers the row, the number dials
+    const row = document.createElement('div');
     row.className = 'nav-contact';
-    row.href = contact.href;
-    row.innerHTML = '<span><strong></strong><small></small></span><span class="nav-contact-icon"></span>';
+    row.innerHTML = '<span><a class="nav-contact-link"><strong></strong></a></span><span class="nav-contact-icon"></span>';
+    const link = row.querySelector('.nav-contact-link');
+    link.href = contact.href;
     row.querySelector('strong').textContent = contact.textContent.trim().replace(/^contact us$/i, 'Contact Us');
-    row.querySelector('small').textContent = phone ? `${phone.textContent.trim()} · Toll-free` : '';
+    if (phone) {
+      const dial = document.createElement('a');
+      dial.className = 'nav-contact-phone';
+      dial.href = phone.href;
+      dial.innerHTML = '<small></small>';
+      dial.querySelector('small').textContent = `${phone.textContent.trim()} · Toll-free`;
+      link.after(dial);
+    }
     row.querySelector('.nav-contact-icon').append(icon('arrow-up-right', 16));
     menuFooter.append(row);
   }
@@ -695,11 +766,12 @@ export default async function decorate(block) {
   }
 
   const setMenu = (expanded) => {
-    nav.setAttribute('aria-expanded', expanded);
+    nav.dataset.expanded = expanded;
+    hamburgerButton.setAttribute('aria-expanded', expanded);
     hamburgerButton.setAttribute('aria-label', expanded ? 'Close navigation' : 'Open navigation');
     document.body.classList.toggle('nav-open', expanded && !isDesktop.matches);
   };
-  hamburgerButton.addEventListener('click', () => setMenu(nav.getAttribute('aria-expanded') !== 'true'));
+  hamburgerButton.addEventListener('click', () => setMenu(nav.dataset.expanded !== 'true'));
 
   nav.prepend(hamburger);
   navSections?.prepend(settingsBar);
@@ -708,7 +780,6 @@ export default async function decorate(block) {
 
   /* search */
   const search = buildSearch(
-    buildSearchIndex(menus, searchSection),
     searchLink?.getAttribute('title') && !/^search$/i.test(searchLink.getAttribute('title'))
       ? searchLink.getAttribute('title')
       : 'Search loans, branches,calculators',
@@ -727,6 +798,7 @@ export default async function decorate(block) {
     document.body.classList.toggle('nav-search-open', isOpen && !isDesktop.matches);
     if (isOpen) {
       desktopMenu?.closeAll();
+      search.load();
       search.input.focus();
     } else {
       search.reset();
@@ -756,7 +828,7 @@ export default async function decorate(block) {
     } else if (!search.hidden) {
       setSearch(false);
       searchLink?.focus();
-    } else if (nav.getAttribute('aria-expanded') === 'true' && !isDesktop.matches) {
+    } else if (nav.dataset.expanded === 'true' && !isDesktop.matches) {
       setMenu(false);
       hamburgerButton.focus();
     }
@@ -766,6 +838,10 @@ export default async function decorate(block) {
   });
   nav.addEventListener('focusout', (e) => {
     if (desktopMenu && !desktopMenu.contains(e.relatedTarget)) desktopMenu.closeAll();
+  });
+  // the top bar scrolls away: bring it back when a keyboard user lands in it
+  navTopbar?.addEventListener('focusin', () => {
+    if (navTopbar.getBoundingClientRect().bottom <= 0) window.scrollTo({ top: 0 });
   });
   isDesktop.addEventListener('change', () => {
     setMenu(false);

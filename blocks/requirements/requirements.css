@@ -178,9 +178,11 @@
 .requirements .requirements-title {
   margin: 0;
   color: var(--muted-color);
+  font-family: inherit;
   font-size: var(--body-font-size-m);
   font-weight: 500;
   line-height: 24px;
+  letter-spacing: normal;
 }
 
 .requirements .requirements-text p {
@@ -243,6 +245,12 @@
   font-size: var(--body-font-size-s);
   font-weight: 500;
   line-height: 20px;
+}
+
+/* carousel region wrapper adds no box */
+.requirements .requirements-carousel {
+  display: contents;
+
 }
 
 .requirements.eligibility.elgb-small-text .requirements-text p {

@@ -50,7 +50,7 @@ header .nav-icon {
 }
 
 /* mobile menu: full screen */
-header nav[aria-expanded='true'] {
+header nav[data-expanded='true'] {
   position: fixed;
   inset: 0;
   z-index: 30;
@@ -71,7 +71,7 @@ body.nav-search-open {
 }
 
 :where(.desktop-view) header nav,
-:where(.desktop-view) header nav[aria-expanded='true'] {
+:where(.desktop-view) header nav[data-expanded='true'] {
   position: relative;
   display: flex;
   align-items: center;
@@ -329,11 +329,11 @@ header nav .nav-hamburger button {
 }
 
 header nav .nav-hamburger .nav-icon-close,
-header nav[aria-expanded='true'] .nav-hamburger .nav-icon-menu {
+header nav[data-expanded='true'] .nav-hamburger .nav-icon-menu {
   display: none;
 }
 
-header nav[aria-expanded='true'] .nav-hamburger .nav-icon-close {
+header nav[data-expanded='true'] .nav-hamburger .nav-icon-close {
   display: block;
 }
 
@@ -372,7 +372,7 @@ header nav .nav-sections {
   display: none;
 }
 
-header nav[aria-expanded='true'] .nav-sections {
+header nav[data-expanded='true'] .nav-sections {
   display: flex;
   flex-direction: column;
   align-self: stretch;
@@ -482,11 +482,25 @@ header .nav-contact {
   border-top: 1px solid var(--surface-color);
   padding: 16px 0;
   color: var(--text-color);
+  position: relative;
 }
 
 header .nav-contact > span:first-child {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+}
+
+/* the contact link covers the whole row; the phone number sits above it and dials */
+header .nav-contact-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+header .nav-contact-phone {
+  position: relative;
+  z-index: 1;
 }
 
 header .nav-contact strong {
@@ -530,7 +544,7 @@ header nav .nav-login-wrapper .button {
 }
 
 :where(.desktop-view) header nav .nav-sections,
-:where(.desktop-view) header nav[aria-expanded='true'] .nav-sections {
+:where(.desktop-view) header nav[data-expanded='true'] .nav-sections {
   display: block;
   flex: 0 1 auto;
   min-height: 0;
@@ -657,9 +671,10 @@ header nav .nav-login-wrapper .button {
 :where(.desktop-view) header .nav-panel-caption {
   padding: 0 8px 4px;
   color: var(--muted-color);
-  font-size: 10px;
-  font-weight: 600;
-  line-height: 16px;
+  font-size: var(--type-headline-h1-font-size);
+  font-weight: var(--type-headline-h1-font-weight);
+  line-height: var(--type-headline-h1-line-height);
+  letter-spacing: var(--type-headline-h1-letter-spacing);
 }
 
 :where(.desktop-view) header .nav-panel-group .nav-links {
@@ -674,9 +689,10 @@ header nav .nav-login-wrapper .button {
 }
 
 :where(.desktop-view) header .nav-panel-group .nav-link-title {
-  font-size: var(--body-font-size-s);
-  font-weight: 500;
-  line-height: 20px;
+  font-size: var(--type-body-b2-font-size);
+  font-weight: var(--type-body-b2-font-weight);
+  line-height: var(--type-body-b2-line-height);
+  letter-spacing: var(--type-body-b2-letter-spacing);
 }
 
 :where(.desktop-view) header .nav-panel-group .nav-link-desc {
@@ -695,7 +711,7 @@ header nav .nav-tools {
   justify-self: end;
 }
 
-header nav[aria-expanded='true'] .nav-tools {
+header nav[data-expanded='true'] .nav-tools {
   display: none;
 }
 
@@ -768,7 +784,7 @@ header nav .nav-tools a[aria-expanded='true'] .nav-icon-close {
 }
 
 :where(.desktop-view) header nav .nav-tools,
-:where(.desktop-view) header nav[aria-expanded='true'] .nav-tools {
+:where(.desktop-view) header nav[data-expanded='true'] .nav-tools {
   display: block;
   flex: 1 1 auto;
 }
@@ -844,6 +860,19 @@ header .nav-search-bar input {
   outline: none;
   box-shadow: none;
   caret-color: var(--text-color);
+}
+
+/* Fix iPhone Safari automatic zoom on search */
+.nav-search-bar input[type="search"] {
+  font-size: 16px !important;
+  text-size-adjust: 100%;
+}
+
+/* Maintain 16px even on mobile */
+@media (width <= 767px) {
+  .nav-search-bar input[type="search"] {
+    font-size: 16px !important;
+  }
 }
 
 header .nav-search-bar input::placeholder {
@@ -990,7 +1019,7 @@ header .nav-scrim {
 
 :where(.desktop-view) header .nav-search-columns {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 48px;
 }
 
