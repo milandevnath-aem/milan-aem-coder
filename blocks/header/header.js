@@ -533,7 +533,8 @@ function buildSearch(placeholder) {
       const label = document.createElement('span');
       label.className = 'nav-search-label';
       const name = entry.title.toLowerCase();
-      highlight(label, entry.title, name.includes(q) ? q : words.find((word) => name.includes(word)));
+      const highlightQuery = name.includes(q) ? q : words.find((word) => name.includes(word));
+      highlight(label, entry.title, highlightQuery);
       a.append(label);
       li.append(a);
       list.append(li);
@@ -543,8 +544,13 @@ function buildSearch(placeholder) {
     title.hidden = noMatch;
     columns.hidden = noMatch;
     empty.hidden = !noMatch;
-    empty.textContent = pending ? 'Loading results...'
-      : (failed ? 'Search is unavailable. Please try again.' : 'No results found');
+    if (pending) {
+      empty.textContent = 'Loading results...';
+    } else if (failed) {
+      empty.textContent = 'Search is unavailable. Please try again.';
+    } else {
+      empty.textContent = 'No results found';
+    }
   };
   input.addEventListener('input', render);
   results.addEventListener('click', (e) => {
