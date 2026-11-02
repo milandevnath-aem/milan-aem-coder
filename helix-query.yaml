@@ -18,6 +18,9 @@ indices:
       title:
         select: head > title
         value: textContent(el)
+      description:
+        select: head > meta[name="description"]
+        value: attribute(el, "content")
       keywords:
         select: head > meta[name="keywords"]
         value: attribute(el, "content")

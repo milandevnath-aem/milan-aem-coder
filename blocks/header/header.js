@@ -16,10 +16,8 @@ const A11Y_SETTINGS = [
   },
 ];
 const SEARCH_LIMIT = 6;
-const SEARCH_INDEX = '/query-index.json?limit=1000';
-// the home page and pages that are not standalone destinations (in case the index
-// config lets them through)
-const SEARCH_SKIP = /^\/(home)?$|^\/(nav|footer|fragments|modals|drafts)(\/|$)/;
+const SEARCH_INDEX = '/query-index.json';
+const SEARCH_SKIP = /^\/$|^\/(nav|footer|fragments|modals|drafts)(\/|$)/;
 
 let uid = 0;
 
@@ -418,83 +416,33 @@ async function openAccessibility() {
   showModal();
 }
 
-/* search: suggestions from the authored search list and the menu links */
-function buildSearchIndex(menus, searchSection) {
+async function loadSearchIndex() {
+  const resp = await fetch(SEARCH_INDEX);
+  if (!resp.ok) throw new Error('Unable to load search results');
+  const { data = [] } = await resp.json();
   const entries = [];
-  const seen = new Set();
-  const add = (title, href, tag, text = '') => {
-    const key = title.toLowerCase();
-    if (!title || seen.has(key)) return;
-    seen.add(key);
+  const paths = new Set();
+  data.forEach(({
+    path, title = '', description = '', robots = '',
+  }) => {
+    if (typeof path !== 'string' || !path.startsWith('/') || path.startsWith('//')
+      || SEARCH_SKIP.test(path) || /noindex/i.test(robots) || paths.has(path)) return;
+    const name = typeof title === 'string' ? title.trim() : '';
+    if (!name) return;
+    paths.add(path);
     entries.push({
-      title, href, tag, text: text.toLowerCase(),
-    });
-  };
-  searchSection?.querySelectorAll('li').forEach((li) => {
-    const { title, href, description } = parseLink(li);
-    add(title, href, description || 'Help');
-  });
-  menus.forEach((menu) => {
-    menu.items.forEach((item) => add(item.title, item.href, 'Product', item.description));
-    menu.groups.forEach((group) => {
-      const tag = /help|support/i.test(group.label) ? 'Help' : 'Explore';
-      group.items.forEach((item) => add(item.title, item.href, tag, item.description));
+      title: name,
+      href: path,
+      text: typeof description === 'string' ? description.toLowerCase() : '',
     });
   });
   return entries;
 }
 
 /**
- * Same-origin path of a link, to match it against query index rows.
- * @returns {string|null}
- */
-function pagePath(href) {
-  const url = new URL(href, window.location);
-  return url.origin === window.location.origin ? url.pathname : null;
-}
-
-/**
- * Adds the published pages from the query index to the suggestions: pages already
- * linked from the nav get the page keywords as extra search text, the others are
- * added with their page title. (Descriptions are left out on purpose: they are
- * generic enough to match most queries on most pages.)
- * Expects the index to have title, keywords and robots columns.
- * @param {Object[]} entries suggestions from the nav, extended in place
- */
-async function addQueryIndex(entries) {
-  const resp = await fetch(SEARCH_INDEX);
-  if (!resp.ok) return;
-  const { data = [] } = await resp.json();
-  const byPath = new Map();
-  entries.forEach((entry) => {
-    const path = pagePath(entry.href);
-    if (path && !byPath.has(path)) byPath.set(path, entry);
-  });
-  const titles = new Set(entries.map((entry) => entry.title.toLowerCase()));
-  data.forEach(({
-    path, title = '', keywords = '', robots = '',
-  }) => {
-    if (!path || SEARCH_SKIP.test(path) || /noindex/i.test(robots)) return;
-    const text = keywords.toLowerCase();
-    const known = byPath.get(path);
-    if (known) {
-      known.text = `${known.text} ${text}`;
-      return;
-    }
-    // "New Car Loan | Apply Online | Kotak Prime Loans" -> "New Car Loan"
-    const name = title.split(' | ')[0].trim();
-    if (!name || titles.has(name.toLowerCase())) return;
-    titles.add(name.toLowerCase());
-    entries.push({
-      title: name, href: path, tag: 'Explore', text,
-    });
-  });
-}
-
-/**
  * Every word of the query has to match. Whole words in the title rank first, then
  * the start of a title word ("car" in "careers"), then anywhere in the title, then
- * the keywords.
+ * the description.
  * @returns {number} 0 when the entry does not match
  */
 function scoreEntry(entry, words) {
@@ -511,7 +459,10 @@ function scoreEntry(entry, words) {
   }) ? score : 0;
 }
 
-function buildSearch(index, placeholder) {
+function buildSearch(placeholder) {
+  let index = [];
+  let pending = false;
+  let failed = false;
   const search = document.createElement('div');
   search.className = 'nav-search';
   search.hidden = true;
@@ -523,10 +474,9 @@ function buildSearch(index, placeholder) {
     <div class="nav-search-results" id="nav-search-results" hidden>
       <p class="nav-search-title">Suggested results</p>
       <div class="nav-search-columns">
-        <div class="nav-search-group"><p class="nav-search-heading">Loans</p><ul></ul></div>
-        <div class="nav-search-group"><p class="nav-search-heading">Tools &amp; Help</p><ul></ul></div>
+        <div class="nav-search-group"><ul></ul></div>
       </div>
-      <p class="nav-search-empty" hidden>No results found</p>
+      <p class="nav-search-empty" role="status" hidden>No results found</p>
     </div>`;
   const form = search.querySelector('form');
   const input = form.querySelector('input');
@@ -535,7 +485,7 @@ function buildSearch(index, placeholder) {
   const clear = form.querySelector('.nav-search-clear');
   clear.append(icon('close'));
   const results = search.querySelector('.nav-search-results');
-  const [loans, tools] = search.querySelectorAll('.nav-search-group');
+  const list = search.querySelector('.nav-search-group ul');
   const title = search.querySelector('.nav-search-title');
   const columns = search.querySelector('.nav-search-columns');
   const empty = search.querySelector('.nav-search-empty');
@@ -575,35 +525,26 @@ function buildSearch(index, placeholder) {
       .filter(({ score }) => score)
       .sort((a, b) => b.score - a.score)
       .map(({ entry }) => entry) : [];
-    const groups = [
-      [loans, matches.filter((e) => e.tag === 'Product')],
-      [tools, matches.filter((e) => e.tag !== 'Product')],
-    ];
-    groups.forEach(([group, items]) => {
-      const ul = group.querySelector('ul');
-      ul.textContent = '';
-      items.slice(0, SEARCH_LIMIT).forEach((entry) => {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = entry.href;
-        const label = document.createElement('span');
-        label.className = 'nav-search-label';
-        const name = entry.title.toLowerCase();
-        highlight(label, entry.title, name.includes(q) ? q : words.find((w) => name.includes(w)));
-        const tag = document.createElement('span');
-        tag.className = 'nav-search-tag';
-        tag.textContent = entry.tag;
-        a.append(label, tag);
-        li.append(a);
-        ul.append(li);
-      });
-      group.hidden = !items.length;
+    list.textContent = '';
+    matches.slice(0, SEARCH_LIMIT).forEach((entry) => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = entry.href;
+      const label = document.createElement('span');
+      label.className = 'nav-search-label';
+      const name = entry.title.toLowerCase();
+      highlight(label, entry.title, name.includes(q) ? q : words.find((word) => name.includes(word)));
+      a.append(label);
+      li.append(a);
+      list.append(li);
     });
     results.hidden = !q;
     const noMatch = !!q && !matches.length;
     title.hidden = noMatch;
     columns.hidden = noMatch;
     empty.hidden = !noMatch;
+    empty.textContent = pending ? 'Loading results...'
+      : (failed ? 'Search is unavailable. Please try again.' : 'No results found');
   };
   input.addEventListener('input', render);
   results.addEventListener('click', (e) => {
@@ -627,9 +568,21 @@ function buildSearch(index, placeholder) {
   // the query index is only fetched once search is first opened
   let loading;
   search.load = () => {
-    loading ||= addQueryIndex(index)
-      .catch(() => { /* nav suggestions only */ })
-      .then(() => { if (input.value) render(); });
+    if (!loading) {
+      pending = true;
+      failed = false;
+      loading = loadSearchIndex()
+        .then((entries) => { index = entries; })
+        .catch(() => {
+          failed = true;
+          loading = null;
+        })
+        .finally(() => {
+          pending = false;
+          render();
+        });
+    }
+    return loading;
   };
   search.input = input;
   return search;
@@ -812,7 +765,6 @@ export default async function decorate(block) {
 
   /* search */
   const search = buildSearch(
-    buildSearchIndex(menus, searchSection),
     searchLink?.getAttribute('title') && !/^search$/i.test(searchLink.getAttribute('title'))
       ? searchLink.getAttribute('title')
       : 'Search loans, branches,calculators',
