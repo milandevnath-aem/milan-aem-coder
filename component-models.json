@@ -1639,7 +1639,12 @@
         "name": "style",
         "label": "Style",
         "valueType": "string",
+        "value": "",
         "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
           {
             "name": "Hover banner to show cta",
             "value": "fixed-height"
@@ -1668,7 +1673,12 @@
         "name": "style_bg",
         "label": "Section Background",
         "valueType": "string",
+        "value": "",
         "options": [
+          {
+            "name": "Default Background Color",
+            "value": ""
+          },
           {
             "name": "No Background Color",
             "value": "no-bg-color"
@@ -1693,6 +1703,19 @@
         "value": "",
         "label": "Description",
         "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "classes",
+        "value": "",
+        "label": "CSS Style",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Investors Debt - Relevant Information",
+            "value": "investorsDebt"
+          }
+        ]
       }
     ]
   },
@@ -1777,6 +1800,10 @@
           {
             "name": "Eligibility Smaller font sizes due to larger content",
             "value": "elgb-small-text"
+          },
+          {
+            "name": "Left Title and Right Document Requirement Cards",
+            "value": "left-title-right-documents"
           }
         ]
       },

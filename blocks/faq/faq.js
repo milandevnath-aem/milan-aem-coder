@@ -101,7 +101,8 @@ export default function decorate(block) {
     const details = document.createElement('details');
     details.className = 'faq-item';
     moveInstrumentation(row, details);
-    if (i === 0 && block.classList.contains('open-state')) details.open = true;
+    // if (i === 0 && block.classList.contains('open-state')) details.open = true;
+    if (i === 0) details.open = true;
 
     const summary = document.createElement('summary');
     summary.textContent = questionCell?.textContent.trim() || '';

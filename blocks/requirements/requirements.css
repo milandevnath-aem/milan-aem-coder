@@ -419,3 +419,33 @@
 :where(.desktop-view) .requirements.documents .requirements-text li::before {
   top: 3px;
 }
+
+/* Left Title and Right Document Requirement Cards */
+:where(.desktop-view) .requirements.left-title-right-documents .requirements-cards {
+  display:flex;
+}
+
+/* grandparent of the left-title-right-documents block */
+:where(.desktop-view) *:has(> * > .requirements.left-title-right-documents) {
+  display:flex;
+  max-width: 1182px;
+  justify-content: space-around;
+  margin: auto;
+  padding: 0 var(--gb-margin);
+}
+
+/* default content wrapper of the grandparent of the left-title-right-documents block ----CHILD 1 */
+:where(.desktop-view) *:has(> * > .requirements.left-title-right-documents) > .default-content-wrapper {
+  width: 37.39%;
+  max-width:442px;
+  margin:0;
+  padding: 0;
+}
+
+/* parent of the left-title-right-documents block ----CHILD 2 */
+:where(.desktop-view) *:has(> .requirements.left-title-right-documents) {
+  width: 55.84%;
+  max-width: 660px;
+  padding:0;
+  margin:0;
+}
