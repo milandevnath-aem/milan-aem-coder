@@ -2,7 +2,7 @@ import { getMetadata } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createDropdown } from '../../scripts/dropdown.js';
 import {
-  orNotFound, productType, setStableId, track, trackOnce,
+  orNotFound, productType, setStableId, track, trackFormStart,
 } from '../../scripts/analytics.js';
 import {
   CAPTCHA_LENGTH, createLeadSession, errorMessage as apiErrorMessage, generateCaptcha,
@@ -549,9 +549,7 @@ export default function decorate(block) {
     if (city !== undefined) fields.city = orNotFound(city);
     return fields;
   };
-  form.addEventListener('focusin', () => {
-    trackOnce('form_start:apply_now', 'form_start', { form_name: 'apply_now', product_type: trackingFields().product_type });
-  });
+  trackFormStart(form, 'apply_now', () => ({ product_type: trackingFields().product_type }));
   // mark fields the user left with an invalid value; clear the message while correcting
   form.addEventListener('focusout', (e) => {
     const check = checks.find((c) => c.control === e.target);

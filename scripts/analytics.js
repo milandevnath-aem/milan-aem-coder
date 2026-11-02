@@ -32,6 +32,23 @@ export function trackOnce(key, event, fields) {
   return true;
 }
 
+/**
+ * form_start once per form per page view, when the user starts typing or picks a value.
+ * Values set by code (prefill, captcha reset) do not count.
+ * @param {HTMLFormElement} form
+ * @param {string} formName e.g. "apply_now"
+ * @param {Function} fields returns the other event fields, read when the event fires
+ */
+export function trackFormStart(form, formName, fields) {
+  const start = (e) => {
+    // custom dropdowns send their own change event, flagged byUser for a pick by the user
+    if (!e.isTrusted && !e.detail?.byUser) return;
+    trackOnce(`form_start:${formName}`, 'form_start', { form_name: formName, ...fields() });
+  };
+  form.addEventListener('input', start);
+  form.addEventListener('change', start);
+}
+
 // order matters: the most specific patterns first
 const PRODUCT_TYPES = [
   [/against\s*(a\s*)?car/i, 'loan_against_car'],

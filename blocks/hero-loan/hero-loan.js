@@ -5,7 +5,7 @@ import { MEDIA } from '../../scripts/viewport.js';
 import {
   authoredForm, CATEGORY_PICKED_EVENT, matchCategory, readForms, rememberForms, resolveForm,
 } from '../../scripts/category-forms.js';
-import { productType, setStableId, trackOnce } from '../../scripts/analytics.js';
+import { productType, setStableId, trackFormStart } from '../../scripts/analytics.js';
 import {
   emailRules, fieldMessages, isPersonName, mobileRules, nameRules, nativeMessages,
 } from '../../scripts/input-rules.js';
@@ -143,9 +143,7 @@ function confirmOnSubmit(form, modalHref, forms = [], categories = []) {
   // on load without looking pages up; a change of category resolves its form
   show(authoredForm(selected(), forms, categories) || modalHref);
   form.addEventListener('change', update);
-  form.addEventListener('focusin', () => {
-    trackOnce('form_start:hero_callback', 'form_start', { form_name: 'hero_callback', product_type: productType(selected()) });
-  });
+  trackFormStart(form, 'hero_callback', () => ({ product_type: productType(selected()) }));
 
   form.addEventListener('submit', async (e) => {
     // never a native submit: it would put the entered name and mobile number in the URL
