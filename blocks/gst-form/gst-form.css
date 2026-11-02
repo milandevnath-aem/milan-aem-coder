@@ -1,0 +1,115 @@
+/* The fields, captcha and errors come from lead-form.css (the block also has the
+   lead-form class); this file adds the type switch, the buttons and the desktop layout. */
+
+/* small screens: intro, switch, fields, Submit, Contact Us */
+.gst-form.lead-form {
+  gap: 20px;
+}
+
+.gst-form .gst-form-form {
+  gap: 16px;
+}
+
+/* Customer / Vendor: a segmented switch, the picked type a black pill */
+.gst-form .gst-form-types {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  gap: 4px;
+  border-radius: 12px;
+  padding: 4px;
+  background-color: var(--light-color);
+}
+
+.gst-form .gst-form-type {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--muted-color);
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  line-height: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* the radio stays focusable and announced, the label is what shows */
+.gst-form .gst-form-type input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.gst-form .gst-form-type:has(input:checked) {
+  background-color: var(--text-color);
+  color: #fff;
+}
+
+.gst-form .gst-form-type:has(input:focus-visible) {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.gst-form .lead-form-item[hidden] {
+  display: none;
+}
+
+.gst-form .gst-form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.gst-form .gst-form-actions .button {
+  width: 100%;
+}
+
+.gst-form .gst-form-thanks h2 {
+  margin: 0 0 8px;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 32px;
+}
+
+.gst-form .gst-form-thanks h2:focus {
+  outline: none;
+}
+
+.gst-form .gst-form-thanks p {
+  margin: 0;
+  color: var(--muted-color);
+}
+
+/* desktop: intro on the left, the form on the right; Contact Us before Submit */
+:where(.desktop-view) .gst-form.lead-form {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  align-items: start;
+  gap: 40px;
+}
+
+:where(.desktop-view) .gst-form .gst-form-form {
+  gap: 16px;
+}
+
+:where(.desktop-view) .gst-form .gst-form-type {
+  min-height: 44px;
+}
+
+:where(.desktop-view) .gst-form .gst-form-actions {
+  flex-direction: row-reverse;
+  gap: 8px;
+}
+
+:where(.desktop-view) .gst-form .gst-form-actions .button {
+  flex: 1;
+}

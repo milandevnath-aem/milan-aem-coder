@@ -1,6 +1,7 @@
 /*
-  Input rules shared by the forms (hero call-back form, lead form): what a name, email,
-  mobile number or PIN code field accepts, and the messages shown when it is blank or wrong.
+  Input rules shared by the forms (hero call-back form, lead form, GST form): what a name,
+  email, mobile number, PIN code, PAN or GSTIN field accepts, and the messages shown when it
+  is blank or wrong.
 */
 
 // longest accepted name (each name field) and email address
@@ -20,11 +21,15 @@ export const isNamePart = (label) => /\b(first|given|middle|last|sur|family)\s*n
 /**
  * What a field shows when it is left blank (`empty`) or holds a wrong value (`invalid`).
  * @param {string} label the field's label, e.g. "Your name", "City", "Nature of funding"
- * @param {string} kind tel, email, zip, select, search, captcha or text
+ * @param {string} kind tel, email, zip, select, search, captcha, pan, gstin, number,
+ *   alphanumeric or text
  * @returns {{ empty: string, invalid: string }}
  */
 export function fieldMessages(label, kind) {
-  const name = label.toLowerCase().replace(/^(your|select|enter)\s+/, '').trim();
+  // "GST Regn ARN" -> "GST regn ARN": abbreviations stay in capitals
+  const name = label.trim().replace(/^(your|select|enter)\s+/i, '').split(/\s+/)
+    .map((word) => (/^[A-Z0-9/]{2,}$/.test(word) ? word : word.toLowerCase()))
+    .join(' ');
   if (kind === 'tel') {
     return {
       empty: 'Please enter mobile number to proceed!',
@@ -49,6 +54,27 @@ export function fieldMessages(label, kind) {
   }
   if (kind === 'captcha') {
     return { empty: 'Captcha cannot be blank', invalid: 'Invalid captcha please try again!' };
+  }
+  if (kind === 'pan') {
+    return {
+      empty: 'Please enter PAN number to proceed!',
+      invalid: 'Please enter a valid 10-character PAN (e.g. ABCDE1234F) to proceed!',
+    };
+  }
+  if (kind === 'gstin') {
+    return {
+      empty: `Please enter ${name} to proceed!`,
+      invalid: `Please enter a valid 15-character ${label} (e.g. 27ABCDE1234F1Z5) to proceed!`,
+    };
+  }
+  if (kind === 'number') {
+    return { empty: `Please enter ${name} to proceed!`, invalid: 'Please enter digits only to proceed!' };
+  }
+  if (kind === 'alphanumeric') {
+    return {
+      empty: `Please enter ${name} to proceed!`,
+      invalid: 'Please enter letters and numbers only to proceed!',
+    };
   }
   return {
     empty: `Please enter ${name} to proceed!`,
@@ -137,6 +163,48 @@ export function mobileRules(input, onReject) {
     type: 'tel', inputMode: 'numeric', pattern: '[6-9][0-9]{9}', autocomplete: 'tel-national',
   });
   digitsOnly(input, 10, onReject);
+}
+
+/**
+ * Letters and numbers only, up to `max`, typed letters shown in capitals (PAN, GSTIN,
+ * reference numbers).
+ * @param {HTMLInputElement} input a text input
+ * @param {number} max maximum length
+ * @param {Function} [onReject] see allowOnly
+ */
+export function upperAlphanumeric(input, max, onReject) {
+  Object.assign(input, {
+    autocapitalize: 'characters', autocomplete: 'off', spellcheck: false, maxLength: max,
+  });
+  allowOnly(input, /[A-Za-z0-9]/, max, onReject);
+  input.addEventListener('input', () => {
+    const upper = input.value.toUpperCase();
+    if (upper === input.value) return;
+    const { selectionStart, selectionEnd } = input;
+    input.value = upper;
+    input.setSelectionRange(selectionStart, selectionEnd);
+  });
+}
+
+/**
+ * PAN: five letters, four digits, one letter (ABCDE1234F).
+ * @param {HTMLInputElement} input
+ * @param {Function} [onReject] see allowOnly
+ */
+export function panRules(input, onReject) {
+  input.pattern = '[A-Z]{5}[0-9]{4}[A-Z]';
+  upperAlphanumeric(input, 10, onReject);
+}
+
+/**
+ * GSTIN, also the format of a GST provisional ID: state code (2 digits), PAN, entity number,
+ * "Z" and a check character (27ABCDE1234F1Z5).
+ * @param {HTMLInputElement} input
+ * @param {Function} [onReject] see allowOnly
+ */
+export function gstinRules(input, onReject) {
+  input.pattern = '[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]';
+  upperAlphanumeric(input, 15, onReject);
 }
 
 /**

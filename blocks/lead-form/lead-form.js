@@ -28,7 +28,7 @@ function iconButton(name, label) {
 /**
  * "A, B: description, *C" -> options; a leading * marks the default.
  */
-function parseOptions(text) {
+export function parseOptions(text) {
   let value = '';
   const options = text.split(',').map((part) => part.trim()).filter(Boolean).map((part) => {
     const isDefault = part.startsWith('*');
@@ -49,7 +49,7 @@ let errorCount = 0;
  * @returns {{ el: HTMLParagraphElement, show: Function }} show(invalid, text): text replaces
  *   the message once (e.g. an API error), the next call shows the default message again
  */
-function fieldError(control, message) {
+export function fieldError(control, message) {
   errorCount += 1;
   const el = document.createElement('p');
   el.className = 'lead-form-error';
@@ -71,9 +71,9 @@ function fieldError(control, message) {
  * Something typed or pasted was refused by the input rules: the form shows the field's
  * "invalid" message (an "input-rejected" event, see decorate).
  */
-const rejected = (input) => () => input.dispatchEvent(new CustomEvent('input-rejected', { bubbles: true }));
+export const rejected = (input) => () => input.dispatchEvent(new CustomEvent('input-rejected', { bubbles: true }));
 
-function textField(label, kind, required) {
+export function textField(label, kind, required) {
   const field = document.createElement('label');
   field.className = `lead-form-input lead-form-${kind}`;
   const input = document.createElement(kind === 'textarea' ? 'textarea' : 'input');
@@ -161,7 +161,7 @@ function textareaField(label, required, max) {
  * @param {string} label field label
  * @returns {HTMLDivElement & { load: Function, isValid: Function, input: HTMLInputElement }}
  */
-function captchaField(label) {
+export function captchaField(label) {
   const field = document.createElement('div');
   field.className = 'lead-form-captcha';
   const frame = document.createElement('div');
