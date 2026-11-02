@@ -52,6 +52,21 @@ function decorateIntro(intro) {
   });
 }
 
+// Allow only one FAQ accordion to remain open at a time
+function enableSingleOpenAccordion(list) {
+  list.addEventListener('toggle', (event) => {
+    const openedItem = event.target;
+
+    if (openedItem.tagName !== 'DETAILS' || !openedItem.open) return;
+
+    list.querySelectorAll('details[open]').forEach((item) => {
+      if (item !== openedItem) {
+        item.open = false;
+      }
+    });
+  }, true);
+}
+
 /**
  * FAQ accordion with the heading beside it on desktop.
  * Optional first single-cell row: heading. Other rows: question, answer.
@@ -77,7 +92,8 @@ export default function decorate(block) {
     const details = document.createElement('details');
     details.className = 'faq-item';
     moveInstrumentation(row, details);
-    if (i === 0 && block.classList.contains('open-state')) details.open = true;
+    // if (i === 0 && block.classList.contains('open-state')) details.open = true;
+    if (i === 0) details.open = true;
 
     const summary = document.createElement('summary');
     summary.textContent = questionCell?.textContent.trim() || '';
@@ -107,4 +123,5 @@ export default function decorate(block) {
   });
   content.push(list);
   block.replaceChildren(...content);
+  enableSingleOpenAccordion(list);
 }
