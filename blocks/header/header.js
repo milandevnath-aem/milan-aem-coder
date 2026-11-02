@@ -691,12 +691,21 @@ export default async function decorate(block) {
   const menuFooter = document.createElement('div');
   menuFooter.className = 'nav-menu-footer';
   if (contact) {
-    const row = document.createElement('a');
+    // a link cannot hold another link: the contact link covers the row, the number dials
+    const row = document.createElement('div');
     row.className = 'nav-contact';
-    row.href = contact.href;
-    row.innerHTML = '<span><strong></strong><small></small></span><span class="nav-contact-icon"></span>';
+    row.innerHTML = '<span><a class="nav-contact-link"><strong></strong></a></span><span class="nav-contact-icon"></span>';
+    const link = row.querySelector('.nav-contact-link');
+    link.href = contact.href;
     row.querySelector('strong').textContent = contact.textContent.trim().replace(/^contact us$/i, 'Contact Us');
-    row.querySelector('small').textContent = phone ? `${phone.textContent.trim()} · Toll-free` : '';
+    if (phone) {
+      const dial = document.createElement('a');
+      dial.className = 'nav-contact-phone';
+      dial.href = phone.href;
+      dial.innerHTML = '<small></small>';
+      dial.querySelector('small').textContent = `${phone.textContent.trim()} · Toll-free`;
+      link.after(dial);
+    }
     row.querySelector('.nav-contact-icon').append(icon('arrow-up-right', 16));
     menuFooter.append(row);
   }

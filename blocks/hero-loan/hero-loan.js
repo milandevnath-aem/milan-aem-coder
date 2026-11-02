@@ -3,7 +3,7 @@ import { createPicture } from '../../scripts/images.js';
 import { createDropdown } from '../../scripts/dropdown.js';
 import { MEDIA } from '../../scripts/viewport.js';
 import {
-  authoredForm, readForms, rememberForms, resolveForm,
+  authoredForm, CATEGORY_PICKED_EVENT, matchCategory, readForms, rememberForms, resolveForm,
 } from '../../scripts/category-forms.js';
 import {
   emailRules, fieldMessages, isPersonName, mobileRules, nameRules, nativeMessages,
@@ -265,6 +265,11 @@ function buildForm(config, isProduct) {
     moveInstrumentation(optionsRow, select);
     form.querySelector('.hero-loan-categories').remove();
     form.prepend(select);
+    // a category picked in the lead form (modal) is shown here too
+    document.addEventListener(CATEGORY_PICKED_EVENT, (e) => {
+      const match = matchCategory(e.detail?.category, categories);
+      if (match && match !== select.value) select.setValue(match);
+    });
     confirmOnSubmit(form, modalHref, forms, categories);
     if (actionRow) moveInstrumentation(actionRow, form.querySelector('button[type="submit"]'));
     card.append(form);
@@ -279,6 +284,14 @@ function buildForm(config, isProduct) {
   chips.append(...chipList);
   if (overflow.length) chips.append(buildMore(chips, overflow));
   if (!categories.length) form.querySelector('.hero-loan-categories').remove();
+  // a category picked in the lead form (modal) is shown here too, in the More chip if hidden
+  document.addEventListener(CATEGORY_PICKED_EVENT, (e) => {
+    const match = matchCategory(e.detail?.category, categories);
+    const input = match && chipList[categories.indexOf(match)].querySelector('input');
+    if (!input || input.checked) return;
+    input.checked = true;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  });
 
   moveInstrumentation(optionsRow, form.querySelector('.hero-loan-categories'));
   if (actionRow) moveInstrumentation(actionRow, form.querySelector('button[type="submit"]'));
