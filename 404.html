@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta
@@ -7,29 +7,30 @@
     content="script-src 'nonce-aem' 'strict-dynamic' 'unsafe-inline' http: https:; base-uri 'self'; object-src 'none';"
     move-to-http-header="true"
   >
-  <title>Page not found</title>
+  <title>Page not found | Kotak Prime</title>
   <script nonce="aem" type="text/javascript">
     window.isErrorPage = true;
     window.errorCode = '404';
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
   <meta property="og:title" content="Page not found">
   <script nonce="aem" src="/scripts/scripts.js" type="module"></script>
   <script nonce="aem" type="module">
-    window.addEventListener('load', () => {
-      if (document.referrer) {
-        const { origin, pathname } = new URL(document.referrer);
-        if (origin === window.location.origin) {
-          const backBtn = document.createElement('a');
-          backBtn.classList.add('button', 'error-button-back');
-          backBtn.href = pathname;
-          backBtn.textContent = 'Go back';
-          backBtn.title = 'Go back';
-          const btnContainer = document.querySelector('.button-container');
-          btnContainer.append(backBtn);
-        }
-      }
-    });
+    // "Go to home" follows the header logo's link (the site's home page, e.g. /home);
+    // /home stays when the header has none
+    const home = document.querySelector('.error-button-home');
+    const setHome = () => {
+      const link = document.querySelector('header .nav-brand a[href]');
+      if (link) home.href = link.href;
+      return Boolean(link);
+    };
+    const header = document.querySelector('header');
+    if (home && header && !setHome()) {
+      new MutationObserver((_, observer) => {
+        if (setHome()) observer.disconnect();
+      }).observe(header, { childList: true, subtree: true });
+    }
   </script>
   <script nonce="aem" type="module">
     import { sampleRUM } from '/scripts/aem.js';
@@ -39,17 +40,52 @@
   <link rel="stylesheet" href="/styles/styles.css">
   <style>
     main.error {
-      min-height: calc(100vh - var(--nav-height));
       display: flex;
       align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - var(--nav-height));
     }
 
+    main.error .section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 16px;
+      text-align: center;
+    }
+
+    /* the 404 graphic (/icons/404.svg, 71 x 67); its alt text "404" is the heading */
     main.error .error-number {
-      width: 100%;
+      margin: 0;
+      line-height: 0;
     }
 
-    main.error .error-number text {
-      font-family: monospace;
+    /* centred on its own: the content sits in the section's default content wrapper */
+    main.error .error-graphic {
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* Figma Web Breakpoint/Body/B2: 16/24, 500, #666 */
+    main.error .error-message {
+      margin: 8px 0 0;
+      color: var(--muted-color);
+      font-size: var(--body-font-size-m);
+      font-weight: 500;
+      line-height: 24px;
+      letter-spacing: 0;
+    }
+
+    main.error .button-container {
+      margin: 24px 0 0;
+    }
+
+    /* Figma pill button: 14px 24px padding (1px of it is the border), BT-3 16/24, 600 */
+    main.error .error-button-home {
+      padding: 13px 23px;
+      font-size: var(--body-font-size-m);
+      font-weight: 600;
+      line-height: 24px;
     }
   </style>
   <link rel="stylesheet" href="/styles/lazy-styles.css">
@@ -59,12 +95,12 @@
   <header></header>
   <main class="error">
     <div class="section">
-      <svg viewBox="1 0 38 18" class="error-number">
-        <text x="0" y="17">404</text>
-      </svg>
-      <h2 class="error-message">Page Not Found</h2>
+      <h1 class="error-number">
+        <img class="error-graphic" src="/icons/404.svg" alt="404" width="71" height="67">
+      </h1>
+      <p class="error-message">Oops! Page not found.</p>
       <p class="button-container">
-        <a href="/" class="button secondary error-button-home">Go home</a>
+        <a href="/home" class="button primary error-button-home">Go to home</a>
       </p>
     </div>
   </main>
