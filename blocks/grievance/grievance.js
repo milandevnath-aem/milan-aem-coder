@@ -85,18 +85,55 @@ function decorateDetails(details) {
   }
 }
 
+// heading that only holds a link (e.g. a bold link typed as a heading) -> primary button
+function headingToButton(heading) {
+  const link = heading.querySelector('a[href]');
+  if (!link || link.textContent.trim() !== heading.textContent.trim()) return null;
+  const wrapper = document.createElement('p');
+  wrapper.className = 'button-wrapper';
+  link.className = 'button primary';
+  link.title = link.title || link.textContent.trim();
+  wrapper.append(link);
+  return wrapper;
+}
+
+// paragraph made of a link and/or icon only, e.g. "Document title :diagonal-arrow:"
+function isLinkRow(el) {
+  return el?.tagName === 'P'
+    && !el.classList.contains('button-wrapper')
+    && !!el.querySelector(':scope > a[href], :scope > .icon');
+}
+
 // "Approach RBI" details: intro chip, then sections starting at a heading.
 // H2-H4 are numbered steps, H5/H6 are plain headings (e.g. "Learn more").
+// A plain paragraph right before a link row also becomes a plain heading.
 function decorateRbiDetails(details) {
+  const children = [...details.children];
   let section;
-  [...details.children].forEach((el) => {
-    if (/^H[2-6]$/.test(el.tagName)) {
+  children.forEach((el, i) => {
+    const button = /^H[2-6]$/.test(el.tagName) ? headingToButton(el) : null;
+    const isTitle = /^H[2-6]$/.test(el.tagName) && !button;
+    const isLinkTitle = el.tagName === 'P' && !isLinkRow(el) && !el.querySelector('a')
+      && isLinkRow(children[i + 1]);
+
+    if (button) {
+      if (section) section.append(button);
+      else el.before(button);
+      el.remove();
+    } else if (isTitle || isLinkTitle) {
       section = document.createElement('div');
       section.className = 'grievance-section';
-      if (/^H[2-4]$/.test(el.tagName)) section.classList.add('numbered');
-      el.className = 'grievance-section-title';
-      el.before(section);
-      section.append(el);
+      let title = el;
+      if (isLinkTitle) {
+        title = document.createElement('h4');
+        title.textContent = el.textContent.trim();
+        el.replaceWith(title);
+      } else if (/^H[2-4]$/.test(el.tagName)) {
+        section.classList.add('numbered');
+      }
+      title.className = 'grievance-section-title';
+      title.before(section);
+      section.append(title);
     } else if (section) {
       section.append(el);
     } else {
@@ -107,8 +144,11 @@ function decorateRbiDetails(details) {
     ul.classList.add('grievance-rows');
     ul.querySelectorAll('li').forEach(decorateRow);
   });
-  details.querySelectorAll('.grievance-section > p > a:only-child:not(.button)')
-    .forEach((a) => a.classList.add('grievance-link'));
+  details.querySelectorAll('.grievance-section > p').forEach((p) => {
+    if (!isLinkRow(p)) return;
+    p.classList.add('grievance-link');
+    if (!p.querySelector('.icon')) p.append(createIcon('diagonal-arrow'));
+  });
 }
 
 function addToggle(item, details, id, labels) {
@@ -119,6 +159,8 @@ function addToggle(item, details, id, labels) {
   button.className = 'grievance-toggle';
   button.setAttribute('aria-expanded', 'false');
   button.setAttribute('aria-controls', id);
+  const itemTitle = item.querySelector('.grievance-title')?.textContent.trim();
+  if (itemTitle) button.setAttribute('aria-label', `${labels.more}: ${itemTitle}`);
   const text = document.createElement('span');
   text.textContent = labels.more;
   button.append(text, createIcon('chevron-down'));

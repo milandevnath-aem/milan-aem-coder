@@ -223,7 +223,7 @@
 
 /* variant: rbi-approach (complaint routes with numbered sections) */
 .grievance .rbi-approach .grievance-details {
-  gap: var(--spacing-xl);
+  gap: var(--spacing-4xl);
   counter-reset: rbi-step;
 }
 
@@ -231,15 +231,16 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
+  padding-inline: var(--spacing-md);
 }
 
 .grievance .rbi-approach .grievance-section.numbered::before {
   counter-increment: rbi-step;
   content: counter(rbi-step, decimal-leading-zero) ".";
-  color: var(--color-text-secondary-default-base);
+  color: var(--color-text-primary-default-base);
   font-size: var(--type-body-b1-font-size);
   line-height: var(--type-body-b1-line-height);
-  letter-spacing: var(--type-body-b1-letter-spacing);
+  letter-spacing: 0.15em;
 }
 
 .grievance .rbi-approach .grievance-section-title {
@@ -272,7 +273,7 @@
   margin: 0;
 }
 
-.grievance .rbi-approach .grievance-section a:is(.button, .grievance-link)::after {
+.grievance .rbi-approach .grievance-section a.button::after {
   content: "";
   flex: none;
   width: 12px;
@@ -281,8 +282,8 @@
   mask: url("/icons/arrow-up-right.svg") center / contain no-repeat;
 }
 
-/* full-width link with the arrow pushed to the right edge */
-.grievance .rbi-approach .grievance-section a.grievance-link:any-link {
+/* link row: blue underlined text with the arrow pushed to the right edge */
+.grievance .rbi-approach .grievance-section > p.grievance-link {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -291,7 +292,25 @@
   font-size: var(--type-body-b1-font-size);
   font-weight: 500;
   line-height: var(--type-body-b1-line-height);
+  letter-spacing: var(--type-body-b1-letter-spacing);
+}
+
+.grievance .rbi-approach .grievance-section > p.grievance-link a:any-link {
+  color: inherit;
   text-decoration: underline;
+}
+
+.grievance .rbi-approach .grievance-section > p.grievance-link .icon {
+  display: flex;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-left: auto;
+}
+
+.grievance .rbi-approach .grievance-section > p.grievance-link .icon img {
+  width: 100%;
+  height: 100%;
 }
 
 @media (width >= 900px) {
@@ -308,6 +327,11 @@
   }
 
   .grievance .grievance-description {
+    font-size: var(--type-body-b3-font-size);
+    line-height: var(--type-body-b3-line-height);
+  }
+
+  .grievance .rbi-approach .grievance-section > p:not(.grievance-link) {
     font-size: var(--type-body-b3-font-size);
     line-height: var(--type-body-b3-line-height);
   }
