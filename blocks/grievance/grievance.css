@@ -68,16 +68,22 @@
   display: none;
 }
 
+.grievance .grievance-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
 .grievance .grievance-group-label {
   margin: 0;
   padding: var(--spacing-md) var(--spacing-lg);
   border-radius: var(--radius-xs);
   background-color: var(--color-status-info-secondary-default-bg-base);
-  color: var(--color-text-primary-default-base);
-  font-size: var(--type-body-b1-font-size);
-  font-weight: 600;
-  line-height: var(--type-body-b1-line-height);
-  letter-spacing: var(--type-body-b1-letter-spacing);
+  color: var(--color-brand-gradient-kotak-blue-default-1);
+  font-size: var(--type-headline-h3-font-size);
+  font-weight: var(--type-headline-h3-font-weight);
+  line-height: var(--type-headline-h3-line-height);
+  letter-spacing: var(--type-headline-h3-letter-spacing);
 }
 
 .grievance .grievance-rows {
@@ -89,8 +95,8 @@
 .grievance .grievance-row {
   display: grid;
   grid-template-columns: 16px minmax(0, 1fr);
-  gap: var(--spacing-xxs) var(--spacing-lg);
-  padding: var(--spacing-lg);
+  gap: var(--spacing-xs) var(--spacing-lg);
+  padding: 16px var(--spacing-lg);
   border-bottom: 1px solid var(--color-stroke-1-default);
 }
 
@@ -101,8 +107,9 @@
 .grievance .grievance-row .icon {
   grid-row: 1 / span 2;
   display: flex;
-  width: 16px;
-  height: 16px;
+  width: 16.667px;
+  height: 16.667px;
+  padding: 1.667px;
 }
 
 .grievance .grievance-row .icon img {
@@ -185,7 +192,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-xs);
-  margin-top: var(--spacing-3xl);
+  margin-top: var(--spacing-2xl);
   padding: var(--spacing-lg) 26px;
   border: 1px solid var(--color-stroke-4-default);
   border-radius: var(--radius-full);
@@ -197,14 +204,14 @@
   cursor: pointer;
 }
 
-.grievance.steps .grievance-toggle:hover {
-  background-color: var(--color-background-1-default-hover);
-}
-
 .grievance.steps .grievance-toggle .icon {
   display: flex;
-  width: 12px;
-  height: 12px;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 16px;
+  height: 16px;
+  padding: 1.333px;
   transition: transform 0.2s;
 }
 
@@ -314,35 +321,41 @@
   height: 100%;
 }
 
-@media (width >= 900px) {
-  .grievance {
-    display: grid;
-    grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
-    gap: var(--spacing-7xl);
-    align-items: start;
-  }
+:where(.desktop-view) .grievance {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
+  gap: var(--spacing-7xl);
+  align-items: start;
+}
 
-  .grievance .grievance-intro p {
-    font-size: var(--type-body-b3-font-size);
-    line-height: var(--type-body-b3-line-height);
-  }
+:where(.desktop-view) .grievance .grievance-intro p {
+  font-size: var(--type-body-b3-font-size);
+  line-height: var(--type-body-b3-line-height);
+}
 
-  .grievance .grievance-description {
-    font-size: var(--type-body-b3-font-size);
-    line-height: var(--type-body-b3-line-height);
-  }
+:where(.desktop-view) .grievance .grievance-description {
+  font-size: var(--type-body-b3-font-size);
+  line-height: var(--type-body-b3-line-height);
+}
 
-  .grievance .rbi-approach .grievance-section > p:not(.grievance-link) {
-    font-size: var(--type-body-b3-font-size);
-    line-height: var(--type-body-b3-line-height);
-  }
+:where(.desktop-view) .grievance.steps .grievance-toggle{
+  margin-top: var(--spacing-3xl)
+}
 
-  .grievance.steps .grievance-item {
-    padding-bottom: var(--spacing-6xl);
-  }
+:where(.desktop-view) .grievance .rbi-approach .grievance-section > p:not(.grievance-link) {
+  font-size: var(--type-body-b3-font-size);
+  line-height: var(--type-body-b3-line-height);
+}
 
-  .grievance.directory .grievance-title {
-    font-size: var(--heading-font-size-m);
-    line-height: 28px;
-  }
+:where(.desktop-view) .grievance .grievance-row {
+  padding: 18px var(--spacing-lg);
+}
+
+:where(.desktop-view) .grievance.steps .grievance-item {
+  padding-bottom: var(--spacing-6xl);
+}
+
+:where(.desktop-view) .grievance.directory .grievance-title {
+  font-size: var(--heading-font-size-m);
+  line-height: 28px;
 }
