@@ -18,6 +18,13 @@ export const isPersonName = (label) => /name|manufacturer/i.test(label)
 export const isNamePart = (label) => /\b(first|given|middle|last|sur|family)\s*name/i.test(label);
 
 /**
+ * A person's full name ("Your name", "Name", "Promoter name"): first and last name are both
+ * needed, as the lead APIs require a last name. Not a dealership or manufacturer.
+ */
+export const isFullName = (label) => isPersonName(label) && !isNamePart(label)
+  && !/\b(dealer(ship)?|manufacturer|brand|shop|firm|showroom)\b/i.test(label);
+
+/**
  * What a field shows when it is left blank (`empty`) or holds a wrong value (`invalid`).
  * @param {string} label the field's label, e.g. "Your name", "City", "Nature of funding"
  * @param {string} kind tel, email, zip, select, search, captcha or text
@@ -50,6 +57,12 @@ export function fieldMessages(label, kind) {
   if (kind === 'captcha') {
     return { empty: 'Captcha cannot be blank', invalid: 'Invalid captcha please try again!' };
   }
+  if (['text', 'text-half'].includes(kind) && isFullName(label)) {
+    return {
+      empty: `Please enter ${name} to proceed!`,
+      invalid: 'Please enter your first and last name, using letters only, to proceed!',
+    };
+  }
   return {
     empty: `Please enter ${name} to proceed!`,
     invalid: 'Please enter valid characters to proceed!',
@@ -64,23 +77,31 @@ export function fieldMessages(label, kind) {
  * @param {RegExp} allowed matches one allowed character, e.g. /\d/ (no g flag)
  * @param {number} max maximum length
  * @param {Function} [onReject] called when something typed or pasted was refused, after
- *   the form's own input listeners (so they do not clear the message it shows)
+ *   the form's own input listeners (so they do not clear the message it shows). A key
+ *   pressed once the field is full (a fast typist, a key held down) is refused silently:
+ *   the value is complete and stays valid.
  */
 export function allowOnly(input, allowed, max, onReject) {
   const keep = (text) => [...text].filter((c) => allowed.test(c)).join('');
   input.addEventListener('beforeinput', (e) => {
-    if (!e.data || !e.inputType.startsWith('insert')) return;
+    // phone keyboards that compose send the whole word: it is cleaned on input below
+    if (!e.data || !e.inputType.startsWith('insert') || e.inputType === 'insertCompositionText') return;
     const room = max - (input.value.length - (input.selectionEnd - input.selectionStart));
     const clean = keep(e.data) === e.data;
-    // a typed character that is not allowed, or allowed text with no room left; longer
-    // mixed text (a pasted "560 001") goes through and is cleaned below
-    if ((e.data.length === 1 && !clean) || (clean && e.data.length > room)) {
+    // a typed character that is not allowed; longer mixed text (a pasted "560 001") goes
+    // through and is cleaned below
+    if (e.data.length === 1 && !clean) {
       e.preventDefault();
       onReject?.();
+    } else if (clean && e.data.length > room) {
+      // allowed text with no room left: one more key is ignored, a longer paste is refused
+      e.preventDefault();
+      if (e.data.length > 1) onReject?.();
     }
   });
   // runs before the form's own input listener, so validation sees the cleaned value
   input.addEventListener('input', () => {
+    const allowedOnly = keep(input.value) === input.value;
     const clean = keep(input.value).slice(0, max);
     if (clean === input.value) return;
     const caret = input.selectionStart ?? input.value.length;
@@ -88,7 +109,8 @@ export function allowOnly(input, allowed, max, onReject) {
     input.value = clean;
     const pos = Math.min(keptBefore, clean.length);
     input.setSelectionRange(pos, pos);
-    if (onReject) setTimeout(onReject);
+    // only cut to length (composed or autofilled text): nothing to tell
+    if (onReject && !allowedOnly) setTimeout(onReject);
   });
 }
 
@@ -96,8 +118,9 @@ export function allowOnly(input, allowed, max, onReject) {
 export const digitsOnly = (input, max, onReject) => allowOnly(input, /\d/, max, onReject);
 
 /**
- * A name, up to NAME_MAX: letters only for a first or last name, letters and spaces for
- * a full name ("Your name"), which must hold at least one letter (spaces only is blank).
+ * A name, up to NAME_MAX: letters only for a first or last name; letters and spaces for
+ * a full name ("Your name"), which must hold a first and a last name ("Shital Rao", not
+ * "Shital"); letters and spaces, at least one letter, for any other name (a dealership).
  * The pattern also flags a value set by code (e.g. carried over from another form).
  * @param {HTMLInputElement} input a text input
  * @param {string} label the field's label
@@ -107,6 +130,9 @@ export function nameRules(input, label, onReject) {
   if (isNamePart(label)) {
     input.pattern = `[A-Za-z]{1,${NAME_MAX}}`;
     allowOnly(input, /[A-Za-z]/, NAME_MAX, onReject);
+  } else if (isFullName(label)) {
+    input.pattern = `(?=.{1,${NAME_MAX}}$) *[A-Za-z]+( +[A-Za-z]+)+ *`;
+    allowOnly(input, /[A-Za-z ]/, NAME_MAX, onReject);
   } else {
     input.pattern = `(?=.{1,${NAME_MAX}}$) *[A-Za-z][A-Za-z ]*`;
     allowOnly(input, /[A-Za-z ]/, NAME_MAX, onReject);

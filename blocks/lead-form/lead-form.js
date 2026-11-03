@@ -523,10 +523,10 @@ export default function decorate(block) {
       || check.field.querySelector('.lead-form-input') || check.field;
     box.classList.toggle('is-invalid', invalid);
   };
-  // the button stays focusable while the form is incomplete (aria-disabled, not disabled);
-  // submitting then lists what is missing
+  // the button is disabled until every field is valid: a click (or Enter in a field) does
+  // nothing; each field says what is wrong when the visitor leaves it
   const refresh = () => {
-    submit.setAttribute('aria-disabled', !isValid());
+    submit.disabled = !isValid();
   };
   form.addEventListener('input', refresh);
   form.addEventListener('change', refresh);
