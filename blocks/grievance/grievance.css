@@ -232,7 +232,11 @@
 
 /* variant: directory (contact groups always shown) */
 .grievance.directory .grievance-details {
-    gap: var(--spacing-4xl);
+    gap: var(--spacing-3xl);
+}
+
+:where(.desktop-view) .grievance.directory .grievance-details {
+    gap: var(--spacing-5xl);
 }
 
 /* variant: rbi-approach (complaint routes with sections) */
@@ -371,9 +375,4 @@
 
 :where(.desktop-view) .grievance.steps .grievance-item {
     padding-bottom: var(--spacing-6xl);
-}
-
-:where(.desktop-view) .grievance.directory .grievance-title {
-    font-size: var(--heading-font-size-m);
-    line-height: 28px;
 }
