@@ -1,368 +1,389 @@
 /* shared: intro + list layout */
 .grievance {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-4xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4xl);
 }
 
 .grievance .grievance-intro :is(h1, h2, h3, h4, h5, h6) {
-  margin: 0;
-  font-size: var(--type-display-size);
-  line-height: var(--type-display-line);
-  letter-spacing: var(--type-display-ls);
-  font-weight: 500;
-  color: var(--color-text-primary-default-base);
+    margin: 0;
+    font-size: var(--type-display-size);
+    line-height: var(--type-display-line);
+    letter-spacing: var(--type-display-ls);
+    font-weight: 500;
+    color: var(--color-text-primary-default-base);
 }
 
 .grievance .grievance-intro p {
-  margin: var(--spacing-md) 0 0;
-  font-size: var(--type-body-b2-font-size);
-  font-weight: var(--type-body-b2-font-weight);
-  line-height: var(--type-body-b2-line-height);
-  letter-spacing: var(--type-body-b2-letter-spacing);
-  color: var(--color-text-secondary-default-base);
+    margin: var(--spacing-md) 0 0;
+    font-size: var(--type-body-b2-font-size);
+    font-weight: var(--type-body-b2-font-weight);
+    line-height: var(--type-body-b2-line-height);
+    letter-spacing: var(--type-body-b2-letter-spacing);
+    color: var(--color-text-secondary-default-base);
 }
 
 .grievance .grievance-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 .grievance .grievance-title {
-  margin: 0;
-  font-size: var(--type-headline-h5-font-size);
-  font-weight: var(--type-headline-h5-font-weight);
-  line-height: var(--type-headline-h5-line-height);
-  letter-spacing: var(--type-headline-h5-letter-spacing);
-  color: var(--color-text-primary-default-base);
+    margin: 0;
+    font-size: var(--type-headline-h5-font-size);
+    font-weight: var(--type-headline-h5-font-weight);
+    line-height: var(--type-headline-h5-line-height);
+    letter-spacing: var(--type-headline-h5-letter-spacing);
+    color: var(--color-text-primary-default-base);
 }
 
 .grievance .grievance-description {
-  margin-top: var(--spacing-md);
-  font-size: var(--type-body-b2-font-size);
-  font-weight: var(--type-body-b2-font-weight);
-  line-height: var(--type-body-b2-line-height);
-  letter-spacing: var(--type-body-b2-letter-spacing);
-  color: var(--color-text-secondary-default-base);
+    margin-top: var(--spacing-md);
+    font-size: var(--type-body-b2-font-size);
+    font-weight: var(--type-body-b2-font-weight);
+    line-height: var(--type-body-b2-line-height);
+    letter-spacing: var(--type-body-b2-letter-spacing);
+    color: var(--color-text-secondary-default-base);
 }
 
 .grievance .grievance-description p {
-  margin: 0;
+    margin: 0;
 }
 
-.grievance :is(.grievance-intro, .grievance-description, .grievance-row-value) a:any-link {
-  color: var(--color-brand-gradient-kotak-blue-default-2);
-  text-decoration: underline;
+.grievance
+    :is(.grievance-intro, .grievance-description, .grievance-row-value)
+    a:any-link {
+    color: var(--color-brand-gradient-kotak-blue-default-2);
+    text-decoration: underline;
 }
 
 /* shared: contact details panel */
 .grievance .grievance-details {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xl);
-  margin-top: var(--spacing-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+    margin-top: var(--spacing-xl);
 }
 
 .grievance .grievance-details[hidden] {
-  display: none;
+    display: none;
 }
 
 .grievance .grievance-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
 }
 
 .grievance .grievance-group-label {
-  margin: 0;
-  padding: var(--spacing-md) var(--spacing-lg);
-  border-radius: var(--radius-xs);
-  background-color: var(--color-status-info-secondary-default-bg-base);
-  color: var(--color-brand-gradient-kotak-blue-default-1);
-  font-size: var(--type-headline-h3-font-size);
-  font-weight: var(--type-headline-h3-font-weight);
-  line-height: var(--type-headline-h3-line-height);
-  letter-spacing: var(--type-headline-h3-letter-spacing);
+    margin: 0;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--radius-xs);
+    background-color: var(--color-status-info-secondary-default-bg-base);
+    color: var(--color-brand-gradient-kotak-blue-default-1);
+    font-size: var(--type-headline-h3-font-size);
+    font-weight: var(--type-headline-h3-font-weight);
+    line-height: var(--type-headline-h3-line-height);
+    letter-spacing: var(--type-headline-h3-letter-spacing);
 }
 
 .grievance .grievance-rows {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 .grievance .grievance-row {
-  display: grid;
-  grid-template-columns: 16px minmax(0, 1fr);
-  gap: var(--spacing-xs) var(--spacing-lg);
-  padding: 16px var(--spacing-lg);
-  border-bottom: 1px solid var(--color-stroke-1-default);
+    display: grid;
+    grid-template-columns: 16px minmax(0, 1fr);
+    gap: var(--spacing-xs) var(--spacing-lg);
+    padding: 16px var(--spacing-lg);
+    border-bottom: 1px solid var(--color-stroke-1-default);
 }
 
 .grievance .grievance-row:last-child {
-  border-bottom: none;
+    border-bottom: none;
 }
 
 .grievance .grievance-row .icon {
-  grid-row: 1 / span 2;
-  display: flex;
-  width: 16.667px;
-  height: 16.667px;
-  padding: 1.667px;
+    grid-row: 1 / span 2;
+    display: flex;
+    width: 16.667px;
+    height: 16.667px;
+    padding: 1.667px;
 }
 
 .grievance .grievance-row .icon img {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 .grievance .grievance-row-label {
-  grid-column: 2;
-  color: var(--color-text-secondary-default-base);
-  font-size: var(--type-body-b1-font-size);
-  font-weight: var(--type-body-b1-font-weight);
-  line-height: var(--type-body-b1-line-height);
-  letter-spacing: var(--type-body-b1-letter-spacing);
+    grid-column: 2;
+    color: var(--color-text-secondary-default-base);
+    font-size: var(--type-body-b1-font-size);
+    font-weight: var(--type-body-b1-font-weight);
+    line-height: var(--type-body-b1-line-height);
+    letter-spacing: var(--type-body-b1-letter-spacing);
 }
 
 .grievance .grievance-row-value {
-  grid-column: 2;
-  color: var(--color-text-primary-default-base);
-  font-size: var(--type-body-b2-font-size);
-  font-weight: var(--type-body-b2-font-weight);
-  line-height: var(--type-body-b2-line-height);
-  letter-spacing: var(--type-body-b2-letter-spacing);
-  overflow-wrap: anywhere;
+    grid-column: 2;
+    color: var(--color-text-primary-default-base);
+    font-size: var(--type-body-b2-font-size);
+    font-weight: var(--type-body-b2-font-weight);
+    line-height: var(--type-body-b2-line-height);
+    letter-spacing: var(--type-body-b2-letter-spacing);
+    overflow-wrap: anywhere;
 }
 
 /* variant: steps (numbered timeline with collapsible details) */
 .grievance.steps .grievance-item {
-  position: relative;
-  padding: 0 0 var(--spacing-4xl) var(--spacing-5xl);
+    position: relative;
+    padding: 0 0 var(--spacing-4xl) var(--spacing-5xl);
 }
 
 .grievance.steps .grievance-item:last-child {
-  padding-bottom: 0;
+    padding-bottom: 0;
 }
 
 /* dashed line from this marker to the next one */
 .grievance.steps .grievance-item:not(:last-child)::before {
-  content: "";
-  position: absolute;
-  top: 14px;
-  bottom: -14px;
-  left: 9.5px;
-  border-left: 1px dashed var(--color-stroke-3-default);
+    content: "";
+    position: absolute;
+    top: 14px;
+    bottom: -14px;
+    left: 9.5px;
+    border-left: 1px dashed var(--color-stroke-3-default);
 }
 
 .grievance.steps .grievance-step {
-  display: block;
-  margin-bottom: var(--spacing-md);
-  color: var(--color-brand-gradient-kotak-mahindra-default-2);
-  font-size: var(--type-display-semibold-df-1-font-size);
-  font-weight: var(--type-display-semibold-df-1-font-weight);
-  line-height: var(--type-display-semibold-df-1-line-height);
-  letter-spacing: var(--type-display-semibold-df-1-letter-spacing);
+    display: block;
+    margin-bottom: var(--spacing-md);
+    color: var(--color-brand-gradient-kotak-mahindra-default-2);
+    font-size: var(--type-display-semibold-df-1-font-size);
+    font-weight: var(--type-display-semibold-df-1-font-weight);
+    line-height: var(--type-display-semibold-df-1-line-height);
+    letter-spacing: var(--type-display-semibold-df-1-letter-spacing);
 }
 
 /* red dot with a soft halo */
 .grievance.steps .grievance-step::before {
-  content: "";
-  position: absolute;
-  top: 4px;
-  left: 0;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: radial-gradient(circle, var(--brand-color) 0 3.5px, var(--color-background-2-default-base) 4px);
+    content: "";
+    position: absolute;
+    top: 4px;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        var(--brand-color) 0 3.5px,
+        var(--color-background-2-default-base) 4px
+    );
 }
 
 /* short connector between the dot and the number */
 .grievance.steps .grievance-step::after {
-  content: "";
-  position: absolute;
-  top: 14px;
-  left: 20px;
-  width: 12px;
-  border-top: 1px solid var(--color-stroke-3-default);
+    content: "";
+    position: absolute;
+    top: 14px;
+    left: 20px;
+    width: 12px;
+    border-top: 1px solid var(--color-stroke-3-default);
 }
 
 .grievance.steps .grievance-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  margin-top: var(--spacing-2xl);
-  padding: var(--spacing-lg) 26px;
-  border: 1px solid var(--color-stroke-4-default);
-  border-radius: var(--radius-full);
-  background: transparent;
-  color: var(--color-text-primary-default-base);
-  font-size: var(--type-body-b1-font-size);
-  font-weight: 600;
-  line-height: var(--type-body-b1-line-height);
-  cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-2xl);
+    padding: var(--spacing-lg) 26px;
+    border: 1px solid var(--color-stroke-4-default);
+    border-radius: var(--radius-full);
+    background: transparent;
+    color: var(--color-text-primary-default-base);
+    font-size: var(--type-body-b1-font-size);
+    font-weight: 600;
+    line-height: var(--type-body-b1-line-height);
+    cursor: pointer;
 }
 
 .grievance.steps .grievance-toggle .icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  width: 16px;
-  height: 16px;
-  padding: 1.333px;
-  transition: transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 16px;
+    height: 16px;
+    padding: 1.333px;
+    transition: transform 0.2s;
 }
 
 .grievance.steps .grievance-toggle .icon img {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 .grievance.steps .grievance-toggle[aria-expanded="true"] .icon {
-  transform: rotate(180deg);
+    transform: rotate(180deg);
 }
 
 /* variant: directory (contact groups always shown) */
 .grievance.directory .grievance-details {
-  gap: var(--spacing-4xl);
+    gap: var(--spacing-4xl);
 }
 
 /* variant: rbi-approach (complaint routes with sections) */
-.grievance .rbi-approach .grievance-details{
-  gap: var(--spacing-none);
+.grievance .rbi-approach .grievance-details {
+    gap: var(--spacing-none);
 }
 
 .grievance .rbi-approach .grievance-group-label {
-  margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
 }
 
 .grievance .rbi-approach .grievance-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-  padding: var(--spacing-2xl) var(--spacing-none) var(--spacing-2xl) var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding: var(--spacing-2xl) var(--spacing-none) var(--spacing-2xl)
+        var(--spacing-lg);
 }
 
 .grievance .rbi-approach .grievance-section-title {
-  margin: 0;
-  font-size: var(--type-headline-h4-font-size);
-  font-weight: 500;
-  line-height: var(--type-headline-h4-line-height);
-  letter-spacing: var(--type-headline-h4-letter-spacing);
-  color: var(--color-text-primary-default-base);
+    margin: 0;
+    font-size: var(--type-headline-h4-font-size);
+    font-weight: var(--type-headline-h4-font-weight);
+    line-height: var(--type-headline-h4-line-height);
+    letter-spacing: var(--type-headline-h4-letter-spacing);
+    color: var(--color-text-primary-default-base);
 }
 
 /* authored step number ("01.") sits on its own line above the title */
 .grievance .rbi-approach .grievance-section-title strong {
-  display: block;
-  margin-bottom: var(--spacing-md);
-  color: var(--color-text-primary-default-base);
-  font-size: var(--type-section-title-s-font-size);
-  font-weight: var(--type-section-title-s-font-weight);
-  line-height: var(--type-section-title-s-line-height);
-  letter-spacing: var(--type-section-title-s-letter-spacing);
+    display: block;
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text-primary-default-base);
+    font-size: var(--type-section-title-s-font-size);
+    font-weight: var(--type-section-title-s-font-weight);
+    line-height: var(--type-section-title-s-line-height);
+    letter-spacing: var(--type-section-title-s-letter-spacing);
 }
 
 .grievance .rbi-approach .grievance-section > p {
-  margin: 0;
-  font-size: var(--type-body-b2-font-size);
-  font-weight: var(--type-body-b2-font-weight);
-  line-height: var(--type-body-b2-line-height);
-  letter-spacing: var(--type-body-b2-letter-spacing);
-  color: var(--color-text-secondary-default-base);
+    margin: 0;
+    font-size: var(--type-body-b2-font-size);
+    font-weight: var(--type-body-b2-font-weight);
+    line-height: var(--type-body-b2-line-height);
+    letter-spacing: var(--type-body-b2-letter-spacing);
+    color: var(--color-text-secondary-default-base);
 }
 
 /* black pill button with arrow */
 .grievance .rbi-approach .grievance-section a.button:any-link {
-  gap: var(--spacing-xs);
-  padding: var(--spacing-md) 26px;
-  font-size: var(--type-button-bt-1-font-size);
-  line-height: var(--type-button-bt-1-line-height);
-  font-weight: var(--type-button-bt-1-font-weight);
-  letter-spacing: var(--type-button-bt-1-letter-spacing);
+    gap: var(--spacing-xs);
+    padding: var(--spacing-md) 26px;
+    font-size: var(--type-button-bt-1-font-size);
+    line-height: var(--type-button-bt-1-line-height);
+    font-weight: var(--type-button-bt-1-font-weight);
+    letter-spacing: var(--type-button-bt-1-letter-spacing);
 }
 
 .grievance .rbi-approach .grievance-section p.button-wrapper {
-  margin: 0;
+    margin: 0;
 }
 
-.grievance .rbi-approach .grievance-section a.button::after {
-  content: "";
-  flex: none;
-  width: 12px;
-  height: 12px;
-  background-color: currentcolor;
-  mask: url("/icons/arrow-up-right.svg") center / contain no-repeat;
+:where(.desktop-view)
+    .grievance
+    .rbi-approach
+    .grievance-section
+    p.button-wrapper {
+    margin-top: 10px;
+}
+
+.grievance .rbi-approach .grievance-section a.button .icon {
+    display: flex;
+    flex: none;
+    width: 10px;
+    height: 10px;
+    padding: 1px;
+}
+
+.grievance .rbi-approach .grievance-section a.button .icon img {
+    width: 100%;
+    height: 100%;
 }
 
 /* link row: blue underlined text with the arrow pushed to the right edge */
 .grievance .rbi-approach .grievance-section > p.grievance-link {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--spacing-md);
-  color: var(--color-brand-gradient-kotak-blue-default-2);
-  font-size: var(--type-body-b1-font-size);
-  font-weight: 500;
-  line-height: var(--type-body-b1-line-height);
-  letter-spacing: var(--type-body-b1-letter-spacing);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    color: var(--color-brand-gradient-kotak-blue-default-2);
+    font-size: var(--type-link-button-l2-font-size);
+    font-weight: var(--type-link-button-l2-font-weight);
+    line-height: var(--type-link-button-l2-line-height);
+    letter-spacing: var(--type-link-button-l2-letter-spacing);
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
 }
 
 .grievance .rbi-approach .grievance-section > p.grievance-link a:any-link {
-  color: inherit;
-  text-decoration: underline;
+    color: inherit;
+    text-decoration: underline;
 }
 
 .grievance .rbi-approach .grievance-section > p.grievance-link .icon {
-  display: flex;
-  flex: none;
-  width: 16px;
-  height: 16px;
-  margin-left: auto;
+    display: flex;
+    flex: none;
+    width: 13.333px;
+    height: 13.333px;
+    padding: 1.333px;
+    margin-left: auto;
 }
 
 .grievance .rbi-approach .grievance-section > p.grievance-link .icon img {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 :where(.desktop-view) .grievance {
-  display: grid;
-  grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
-  gap: var(--spacing-7xl);
-  align-items: start;
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
+    gap: var(--spacing-7xl);
+    align-items: start;
 }
 
 :where(.desktop-view) .grievance .grievance-intro p {
-  font-size: var(--type-body-b3-font-size);
-  line-height: var(--type-body-b3-line-height);
+    font-size: var(--type-body-b3-font-size);
+    line-height: var(--type-body-b3-line-height);
 }
 
 :where(.desktop-view) .grievance .grievance-description {
-  font-size: var(--type-body-b3-font-size);
-  line-height: var(--type-body-b3-line-height);
+    font-size: var(--type-body-b3-font-size);
+    line-height: var(--type-body-b3-line-height);
 }
 
-:where(.desktop-view) .grievance.steps .grievance-toggle{
-  margin-top: var(--spacing-3xl)
-}
-
-:where(.desktop-view) .grievance .rbi-approach .grievance-section > p:not(.grievance-link) {
-  font-size: var(--type-body-b3-font-size);
-  line-height: var(--type-body-b3-line-height);
+:where(.desktop-view) .grievance.steps .grievance-toggle {
+    margin-top: var(--spacing-3xl);
 }
 
 :where(.desktop-view) .grievance .grievance-row {
-  padding: 18px var(--spacing-lg);
+    padding: 18px var(--spacing-lg);
 }
 
 :where(.desktop-view) .grievance.steps .grievance-item {
-  padding-bottom: var(--spacing-6xl);
+    padding-bottom: var(--spacing-6xl);
 }
 
 :where(.desktop-view) .grievance.directory .grievance-title {
-  font-size: var(--heading-font-size-m);
-  line-height: 28px;
+    font-size: var(--heading-font-size-m);
+    line-height: 28px;
 }
