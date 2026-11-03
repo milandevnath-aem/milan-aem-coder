@@ -358,7 +358,11 @@ async function loadLazy(doc) {
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   loadFonts();
-  import('./analytics.js').then(({ trackContactClicks }) => trackContactClicks());
+  // analytics: a failed load is logged and never stops the page
+  import('./analytics.js')
+    .then(({ trackContactClicks }) => trackContactClicks())
+    // eslint-disable-next-line no-console
+    .catch((error) => console.warn('analytics: contact tracking could not be started', error));
 }
 
 /**

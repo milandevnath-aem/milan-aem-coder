@@ -8,7 +8,7 @@ import {
 import {
   emailRules, fieldMessages, isPersonName, mobileRules, nameRules, nativeMessages,
 } from '../../scripts/input-rules.js';
-import { trackFormStart, uniqueId } from '../../scripts/analytics.js';
+import { analyticsName, trackFormStart, uniqueId } from '../../scripts/analytics.js';
 
 // chips shown in the row; the rest are listed under "More"
 const VISIBLE_CATEGORIES = 4;
@@ -242,8 +242,10 @@ function buildForm(config, isProduct) {
     <button type="submit" class="button primary"></button>`;
   const submit = form.querySelector('button[type="submit"]');
   submit.textContent = cellText(actionRow) || 'Apply now';
-  submit.id = uniqueId('hero-apply-submit');
-  trackFormStart(form, 'hero_apply', () => String(new FormData(form).get('category') || ''));
+  submit.id = uniqueId('hero-loan-submit');
+  // form_name: the form's heading
+  const formName = () => analyticsName(intro.querySelector('h1, h2, h3')?.textContent) || 'hero_loan';
+  trackFormStart(form, formName, () => String(new FormData(form).get('category') || ''));
 
   const labels = (fieldsText || 'Your name, Mobile number')
     .split(',').map((f) => f.trim()).filter(Boolean);

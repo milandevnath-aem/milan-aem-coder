@@ -1,6 +1,8 @@
 import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createPicture } from '../../scripts/images.js';
-import { amountBand, pushOnce } from '../../scripts/analytics.js';
+import {
+  amountBand, analyticsName, pushOnce, safely,
+} from '../../scripts/analytics.js';
 
 const inr = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 });
 
@@ -38,11 +40,6 @@ const UNITS = {
 let idCounter = 0;
 
 const fill = (template, values) => template.replace(/\{(\w+)\}/g, (_, name) => values[name]);
-
-/** analytics name of a loan type: "Car Loan" -> "car_emi", "Two-Wheeler" -> "two_wheeler_emi" */
-const calculatorName = (title) => `${String(title).toLowerCase()
-  .replace(/\b(loans?|finance)\s*$/, '').replace(/[^a-z0-9]+/g, '_')
-  .replace(/^_|_$/g, '') || 'loan'}_emi`;
 
 /**
  * Reads the numbers of a grouped cell: one paragraph per field, in model order.
@@ -241,11 +238,6 @@ function buildCalculator(types, link) {
   const state = { unit: 'yr' };
   const cta = result.querySelector('.emi-calculator-cta');
   let tenureLimits = {};
-  // set by the visitor's first slider, field, unit or tab change (see calculator_use in update)
-  let touched = false;
-  ['input', 'change', 'click', 'keydown'].forEach((type) => controls.addEventListener(type, (e) => {
-    if (e.isTrusted && e.target.closest('input, button')) touched = true;
-  }, { capture: true }));
 
   // elements touched on every update, looked up once
   const els = {
@@ -272,6 +264,23 @@ function buildCalculator(types, link) {
   const months = (v) => `${v} ${v === 1 ? 'month' : 'months'}`;
   const tenureText = (v) => (state.unit === 'mo' ? months(v) : years(v));
   const tenureInMonths = () => (state.unit === 'mo' ? state.tenure : state.tenure * TENURE.monthsPerYear);
+
+  /**
+   * calculator_use: once per calculator (loan type tab) per page view, when the visitor
+   * settles on a value (slider released, number entered, unit switched), so the band and
+   * tenure are the ones they chose. The calculation shown on load and tab switches do not count.
+   */
+  const trackUse = () => safely(() => {
+    const calculator = analyticsName(cta.dataset.loanCategory) || 'emi_calculator';
+    const { range } = parts.amount;
+    pushOnce(`calculator_use:${calculator}`, 'calculator_use', {
+      calculator,
+      loan_amount_band: amountBand(state.amount, {
+        min: Number(range.min), max: Number(range.max), step: Number(range.step),
+      }),
+      tenure_months: tenureInMonths(),
+    });
+  });
 
   const display = {
     amount: (v) => inr.format(v),
@@ -322,14 +331,6 @@ function buildCalculator(types, link) {
     els.principal.textContent = `₹${inr.format(state.amount)}`;
     els.interest.textContent = `₹${inr.format(Math.round(total - state.amount))}`;
     els.total.textContent = `₹${inr.format(total)}`;
-    // analytics: the first calculation made by the visitor (not the one shown on load)
-    if (touched) {
-      pushOnce('calculator_use', 'calculator_use', {
-        calculator: calculatorName(cta.dataset.loanCategory || ''),
-        loan_amount_band: amountBand(state.amount),
-        tenure_months: monthCount,
-      });
-    }
     Object.entries(parts).forEach(([key, { range, slider, input }]) => {
       const pct = (state[key] - range.min) / (range.max - range.min || 1);
       slider.style.setProperty('--pct', Math.min(1, Math.max(0, pct)));
@@ -449,6 +450,11 @@ function buildCalculator(types, link) {
       showError(key, false);
       scheduleUpdate();
     });
+    // "change" fires once the slider is released (or a key moved it): the chosen value
+    range.addEventListener('change', trackUse);
+    // the number field counts once a typed value is committed (not a focus and blur alone)
+    let edited = false;
+    input.addEventListener('input', (e) => { if (e.isTrusted) edited = true; });
     // while the pointer moves the thumb, follow it without easing
     range.addEventListener('pointerdown', () => {
       const start = () => slider.classList.add('is-dragging');
@@ -523,6 +529,10 @@ function buildCalculator(types, link) {
       state[key] = fixed;
       input.value = display[key](fixed);
       update();
+      if (edited) {
+        edited = false;
+        trackUse();
+      }
     };
     input.addEventListener('change', commit);
     input.addEventListener('blur', commit);
@@ -536,7 +546,11 @@ function buildCalculator(types, link) {
   });
 
   parts.tenure.group.querySelectorAll('.emi-calculator-unit button').forEach((button) => {
-    button.addEventListener('click', () => setTenureUnit(button.dataset.unit));
+    button.addEventListener('click', () => {
+      if (button.dataset.unit === state.unit) return;
+      setTenureUnit(button.dataset.unit);
+      trackUse();
+    });
   });
 
   const selectType = (index) => {

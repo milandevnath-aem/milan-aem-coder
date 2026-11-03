@@ -16,11 +16,8 @@ import {
   digitsOnly, emailRules, fieldMessages, isPersonName, mobileRules, nameRules,
 } from '../../scripts/input-rules.js';
 import {
-  productType, pushEvent, trackFormStart, uniqueId,
+  analyticsName, productType, pushEvent, safely, trackFormStart, uniqueId,
 } from '../../scripts/analytics.js';
-
-/** form_name of the lead form's analytics events */
-const FORM_NAME = 'apply_now';
 
 function iconButton(name, label) {
   const button = document.createElement('button');
@@ -504,7 +501,7 @@ export default function decorate(block) {
   const submit = document.createElement('button');
   submit.type = 'submit';
   submit.className = 'button primary lead-form-submit';
-  submit.id = uniqueId('apply-now-submit');
+  submit.id = uniqueId('lead-form-submit');
   submit.textContent = submitRow?.textContent.trim() || 'Apply now';
   if (submitRow) moveInstrumentation(submitRow, submit);
   // a failed request (OTP not sent) is shown above the button
@@ -646,7 +643,16 @@ export default function decorate(block) {
     const categoryKey = Object.keys(data).find((k) => k.endsWith('category'));
     return String((categoryKey && data[categoryKey]) || pageCategory() || '');
   };
-  trackFormStart(form, FORM_NAME, currentCategory);
+  /**
+   * form_name of the analytics events: the modal page the form is opened from
+   * ("/modals/two-wheeler-form" -> "two_wheeler_form"), else the form's heading
+   */
+  const formName = () => {
+    const page = (block.closest('dialog')?.dataset.modalPath || '').split('/').filter(Boolean).pop() || '';
+    return analyticsName(page.replace(/(\.plain)?\.html$/, ''))
+      || analyticsName(intro.querySelector('h1, h2')?.textContent) || 'lead_form';
+  };
+  trackFormStart(form, formName, currentCategory);
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -662,13 +668,16 @@ export default function decorate(block) {
     const mobile = String(form.querySelector('input[type="tel"]')?.value || '').trim();
     // the category picks the API product (lead-api-config.js)
     const category = currentCategory(data);
-    // analytics: no personal data, the city is the only field sent
-    const cityKey = Object.keys(data).find((k) => /\b(city|location)\b/.test(k.replace(/-/g, ' ')));
-    const tracked = {
-      form_name: FORM_NAME,
-      product_type: productType(category),
-      city: (cityKey && String(data[cityKey]).trim()) || undefined,
-    };
+    // analytics: no personal data, the city is the only field sent; a tracking error never
+    // stops the lead (safely: logged, the events are then sent without these fields)
+    const tracked = safely(() => {
+      const cityKey = Object.keys(data).find((k) => /\b(city|location)\b/.test(k.replace(/-/g, ' ')));
+      return {
+        form_name: formName(),
+        product_type: productType(category),
+        city: (cityKey && String(data[cityKey]).trim()) || undefined,
+      };
+    }, {});
     let session;
     try {
       session = createLeadSession({
