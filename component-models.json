@@ -1287,7 +1287,7 @@
         "name": "classes",
         "label": "Variant",
         "valueType": "string",
-        "value": "Default",
+        "value": "",
         "options": [
           {
             "name": "Default",

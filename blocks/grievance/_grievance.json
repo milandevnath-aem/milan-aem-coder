@@ -99,7 +99,7 @@
           "name": "classes",
           "label": "Variant",
           "valueType": "string",
-          "value": "Default",
+          "value": "",
           "options": [
             { "name": "Default", "value": "" },
             { "name": "Steps (RBI Approach)", "value": "rbi-approach" }

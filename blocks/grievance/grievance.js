@@ -133,10 +133,11 @@ export default function decorate(block) {
   const list = document.createElement(isSteps ? 'ol' : 'div');
   list.className = 'grievance-list';
   rows.filter((row) => !singleRows.includes(row)).forEach((row, i) => {
-    const [titleCell, descriptionCell, detailsCell] = row.children;
+    const [titleCell, descriptionCell, detailsCell, classesCell] = row.children;
     const item = document.createElement(isSteps ? 'li' : 'div');
-    // keep classes authored on the row (item "classes" field)
-    item.className = ['grievance-item', ...row.classList].join(' ');
+    // the item "classes" field is delivered as a 4th cell (e.g. "grievance-item, rbi-approach")
+    const variantClasses = (classesCell?.textContent || '').split(/[\s,]+/).filter(Boolean);
+    item.className = [...new Set(['grievance-item', ...row.classList, ...variantClasses])].join(' ');
     moveInstrumentation(row, item);
 
     if (isSteps) {
