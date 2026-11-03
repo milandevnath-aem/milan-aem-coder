@@ -230,15 +230,19 @@
 }
 
 /* variant: rbi-approach (complaint routes with sections) */
-.grievance .rbi-approach .grievance-details {
-  gap: var(--spacing-4xl);
+.grievance .rbi-approach .grievance-details{
+  gap: var(--spacing-none);
+}
+
+.grievance .rbi-approach .grievance-group-label {
+  margin-bottom: var(--spacing-md);
 }
 
 .grievance .rbi-approach .grievance-section {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
-  padding-inline: var(--spacing-md);
+  padding: var(--spacing-2xl) var(--spacing-none) var(--spacing-2xl) var(--spacing-lg);
 }
 
 .grievance .rbi-approach .grievance-section-title {
@@ -255,10 +259,10 @@
   display: block;
   margin-bottom: var(--spacing-md);
   color: var(--color-text-primary-default-base);
-  font-size: var(--type-body-b1-font-size);
-  font-weight: var(--type-body-b1-font-weight);
-  line-height: var(--type-body-b1-line-height);
-  letter-spacing: 0.15em;
+  font-size: var(--type-section-title-s-font-size);
+  font-weight: var(--type-section-title-s-font-weight);
+  line-height: var(--type-section-title-s-line-height);
+  letter-spacing: var(--type-section-title-s-letter-spacing);
 }
 
 .grievance .rbi-approach .grievance-section > p {
@@ -273,9 +277,11 @@
 /* black pill button with arrow */
 .grievance .rbi-approach .grievance-section a.button:any-link {
   gap: var(--spacing-xs);
-  padding: var(--spacing-sm) var(--spacing-xl);
-  font-size: var(--type-body-b1-font-size);
-  line-height: var(--type-body-b1-line-height);
+  padding: var(--spacing-md) 26px;
+  font-size: var(--type-button-bt-1-font-size);
+  line-height: var(--type-button-bt-1-line-height);
+  font-weight: var(--type-button-bt-1-font-weight);
+  letter-spacing: var(--type-button-bt-1-letter-spacing);
 }
 
 .grievance .rbi-approach .grievance-section p.button-wrapper {
