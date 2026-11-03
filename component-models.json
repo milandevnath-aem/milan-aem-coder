@@ -1284,7 +1284,7 @@
       },
       {
         "component": "select",
-        "name": "classes",
+        "name": "style",
         "label": "Variant",
         "valueType": "string",
         "value": "",
