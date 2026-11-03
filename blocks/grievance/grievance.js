@@ -135,9 +135,8 @@ export default function decorate(block) {
   rows.filter((row) => !singleRows.includes(row)).forEach((row, i) => {
     const [titleCell, descriptionCell, detailsCell] = row.children;
     const item = document.createElement(isSteps ? 'li' : 'div');
-    item.className = 'grievance-item';
-    // authored variant (classes field) is carried over from the row
-    item.classList.add(...[...row.classList].filter((c) => c === 'rbi-approach'));
+    // keep classes authored on the row (item "classes" field)
+    item.className = ['grievance-item', ...row.classList].join(' ');
     moveInstrumentation(row, item);
 
     if (isSteps) {
