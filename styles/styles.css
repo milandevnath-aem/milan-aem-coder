@@ -786,6 +786,7 @@ main .section.bg-grey {
   padding: var(--section-spacing) 0;
   color: var(--text-primary-default-base);
   text-align: center;
+  max-width: 660px;
 }
 
 main .section.bg-grey.text-align-left {
