@@ -16,6 +16,8 @@ const A11Y_SETTINGS = [
   },
 ];
 const SEARCH_LIMIT = 6;
+const SEARCH_INDEX = '/query-index.json';
+const SEARCH_SKIP = /^\/$|^\/(nav|footer|fragments|modals|drafts)(\/|$)/;
 
 let uid = 0;
 
@@ -414,31 +416,128 @@ async function openAccessibility() {
   showModal();
 }
 
-/* search: suggestions from the authored search list and the menu links */
-function buildSearchIndex(menus, searchSection) {
+async function loadSearchIndex() {
+  const resp = await fetch(SEARCH_INDEX);
+  if (!resp.ok) throw new Error('Unable to load search results');
+
+  const { data = [] } = await resp.json();
+
+  // use the below data hardcoded array to simulate the search index
+  // const data = [
+  //   {
+  //     path: '/home',
+  //     title: 'Kotak Prime Loans | Car, Two-Wheeler & Property Loans',
+  //     description: 'c #emi-calculator - Loan against property',
+  //     robots: 'index, follow',
+  //   },
+  //   {
+  //     path: '/car-loan',
+  //     title: 'Car Loan | Kotak Prime Loans',
+  //     description: 'Apply for a new car loan with Kotak Prime Loans.',
+  //     robots: 'index, follow',
+  //   },
+  //   {
+  //     path: '/used-car-loan',
+  //     title: 'Used Car Loan | Kotak Prime Loans',
+  //     description: 'Get finance for your used car.',
+  //     robots: 'index, follow',
+  //   },
+  //   {
+  //     path: '/two-wheeler-loan',
+  //     title: 'Two Wheeler Loan | Kotak Prime Loans',
+  //     description: 'Apply for a two wheeler loan.',
+  //     robots: 'index, follow',
+  //   },
+  //   {
+  //     path: '/loan-against-property',
+  //     title: 'Loan Against Property | Kotak Prime Loans',
+  //     description: 'Borrow against your home, shop or office.',
+  //     robots: 'index, follow',
+  //   },
+  //   {
+  //     path: '/dealer-finance',
+  //     title: 'Dealer Finance | Kotak Prime Loans',
+  //     description: 's. #feature-cards - Feature Cards',
+  //     robots: 'index, follow',
+  //   },
+  //   {
+  //     path: '/careers',
+  //     title: 'Careers | Kotak Prime Loans',
+  //     description: 'Explore career opportunities at Kotak Prime.',
+  //     robots: 'index, follow',
+  //   },
+  //   {
+  //     path: '/about-us',
+  //     title: 'About Us | Kotak Prime Loans',
+  //     description: 'Learn more about Kotak Mahindra Prime Limited.',
+  //     robots: 'index, follow',
+  //   },
+  // ];
   const entries = [];
-  const seen = new Set();
-  const add = (title, href, tag) => {
-    const key = title.toLowerCase();
-    if (!title || seen.has(key)) return;
-    seen.add(key);
-    entries.push({ title, href, tag });
-  };
-  searchSection?.querySelectorAll('li').forEach((li) => {
-    const { title, href, description } = parseLink(li);
-    add(title, href, description || 'Help');
-  });
-  menus.forEach((menu) => {
-    menu.items.forEach((item) => add(item.title, item.href, 'Product'));
-    menu.groups.forEach((group) => {
-      const tag = /help|support/i.test(group.label) ? 'Help' : 'Explore';
-      group.items.forEach((item) => add(item.title, item.href, tag));
+  const paths = new Set();
+
+  data.forEach(({
+    path, title = '', description = '', robots = '',
+  }) => {
+    if (typeof path !== 'string' || !path.startsWith('/') || path.startsWith('//')
+      || SEARCH_SKIP.test(path) || /noindex/i.test(robots) || paths.has(path)) return;
+
+    const name = typeof title === 'string' ? title.trim() : '';
+    if (!name) return;
+
+    paths.add(path);
+
+    const components = [];
+    const componentPattern = /#([a-z0-9_-]+)\s*-\s*([^_]+?)(?=\s*__|$)/gi;
+
+    [...description.matchAll(componentPattern)].forEach((component) => {
+      components.push({
+        id: component[1],
+        title: component[2].trim(),
+        href: `${path}#${component[2].trim().toLowerCase().replace(/\s+/g, '')}`,
+      });
+    });
+
+    const cleanDescription = description
+      .replace(componentPattern, '')
+      .replace(/__/g, ' ')
+      .trim();
+
+    entries.push({
+      title: name,
+      href: path,
+      text: cleanDescription.toLowerCase(),
+      components,
     });
   });
+
   return entries;
 }
 
-function buildSearch(index, placeholder) {
+/**
+ * Every word of the query has to match. Whole words in the title rank first, then
+ * the start of a title word ("car" in "careers"), then anywhere in the title, then
+ * the description.
+ * @returns {number} 0 when the entry does not match
+ */
+function scoreEntry(entry, words) {
+  const titleWords = entry.title.toLowerCase().split(/[^a-z0-9]+/);
+  const title = entry.title.toLowerCase();
+  let score = 0;
+  return words.every((word) => {
+    if (titleWords.includes(word)) score += 4;
+    else if (titleWords.some((w) => w.startsWith(word))) score += 3;
+    else if (title.includes(word)) score += 2;
+    else if (entry.text.includes(word)) score += 1;
+    else return false;
+    return true;
+  }) ? score : 0;
+}
+
+function buildSearch(placeholder) {
+  let index = [];
+  let pending = false;
+  let failed = false;
   const search = document.createElement('div');
   search.className = 'nav-search';
   search.hidden = true;
@@ -450,10 +549,9 @@ function buildSearch(index, placeholder) {
     <div class="nav-search-results" id="nav-search-results" hidden>
       <p class="nav-search-title">Suggested results</p>
       <div class="nav-search-columns">
-        <div class="nav-search-group"><p class="nav-search-heading">Loans</p><ul></ul></div>
-        <div class="nav-search-group"><p class="nav-search-heading">Tools &amp; Help</p><ul></ul></div>
+        <div class="nav-search-group"><ul></ul></div>
       </div>
-      <p class="nav-search-empty" hidden>No results found</p>
+      <p class="nav-search-empty" role="status" hidden>No results found</p>
     </div>`;
   const form = search.querySelector('form');
   const input = form.querySelector('input');
@@ -462,11 +560,30 @@ function buildSearch(index, placeholder) {
   const clear = form.querySelector('.nav-search-clear');
   clear.append(icon('close'));
   const results = search.querySelector('.nav-search-results');
-  const [loans, tools] = search.querySelectorAll('.nav-search-group');
+  const list = search.querySelector('.nav-search-group ul');
   const title = search.querySelector('.nav-search-title');
   const columns = search.querySelector('.nav-search-columns');
   const empty = search.querySelector('.nav-search-empty');
   let matches = [];
+
+  let activeIndex = -1;
+
+  const setActiveResult = (nextIndex) => {
+    const items = [...list.querySelectorAll(':scope > li')];
+
+    if (!items.length) {
+      activeIndex = -1;
+      return;
+    }
+
+    activeIndex = Math.max(0, Math.min(nextIndex, items.length - 1));
+
+    items.forEach((item, i) => {
+      item.classList.toggle('is-active', i === activeIndex);
+    });
+
+    items[activeIndex].scrollIntoView({ block: 'nearest' });
+  };
 
   /**
    * A calculator or #anchor link to the page already open is handled in place
@@ -478,7 +595,11 @@ function buildSearch(index, placeholder) {
     if (url.origin !== window.location.origin
       || url.pathname !== window.location.pathname) return false;
     const calculator = url.searchParams.get('calculator');
-    const target = !calculator && url.hash ? document.getElementById(url.hash.slice(1)) : null;
+    // const target = !calculator && url.hash ? document.getElementById(url.hash.slice(1)) : null;
+    const target = !calculator && url.hash
+      ? document.getElementById(url.hash.slice(1))
+        || document.querySelector(`[data-block-name="${CSS.escape(url.hash.slice(1))}"]`)
+      : null;
     if (!calculator && !target) return false;
     window.history.pushState(null, '', url);
     if (calculator) {
@@ -496,37 +617,109 @@ function buildSearch(index, placeholder) {
     const query = input.value.trim();
     clear.hidden = !input.value;
     const q = query.toLowerCase();
-    matches = q ? index.filter((e) => e.title.toLowerCase().includes(q)) : [];
-    const groups = [
-      [loans, matches.filter((e) => e.tag === 'Product')],
-      [tools, matches.filter((e) => e.tag !== 'Product')],
-    ];
-    groups.forEach(([group, items]) => {
-      const ul = group.querySelector('ul');
-      ul.textContent = '';
-      items.slice(0, SEARCH_LIMIT).forEach((entry) => {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = entry.href;
-        const label = document.createElement('span');
-        label.className = 'nav-search-label';
-        highlight(label, entry.title, query);
-        const tag = document.createElement('span');
-        tag.className = 'nav-search-tag';
-        tag.textContent = entry.tag;
-        a.append(label, tag);
-        li.append(a);
-        ul.append(li);
+    const words = q.split(/\s+/).filter(Boolean);
+    matches = words.length ? index
+      .map((entry) => {
+        const pageScore = scoreEntry(entry, words);
+
+        const componentMatches = entry.components
+          .map((component) => ({
+            ...component,
+            score: scoreEntry({ title: component.title, text: '' }, words),
+          }))
+          .filter((component) => component.score);
+
+        return {
+          entry,
+          score: Math.max(pageScore, ...componentMatches.map((c) => c.score)),
+          pageScore,
+          componentMatches,
+        };
+      })
+      .filter(({ score }) => score)
+      .sort((a, b) => b.score - a.score) : [];
+    list.textContent = '';
+    matches.slice(0, SEARCH_LIMIT).forEach((match) => {
+      const { entry, componentMatches } = match;
+
+      const li = document.createElement('li');
+
+      // Parent page result
+      const a = document.createElement('a');
+      a.href = entry.href;
+
+      const label = document.createElement('span');
+      label.className = 'nav-search-label';
+
+      const name = entry.title.toLowerCase();
+      const highlightQuery = name.includes(q)
+        ? q
+        : words.find((word) => name.includes(word));
+
+      highlight(label, entry.title, highlightQuery);
+      a.append(label);
+      li.append(a);
+
+      // Matching component results as independent search results
+      componentMatches.forEach((component) => {
+        const componentLi = document.createElement('li');
+        const componentLink = document.createElement('a');
+
+        componentLink.href = component.id === 'emi-calculator'
+          ? `${entry.href}?calculator=${encodeURIComponent(component.title)}#emi-calculator`
+          : `${entry.href}#${component.id}`;
+
+        const componentLabel = document.createElement('span');
+        componentLabel.className = 'nav-search-label';
+
+        highlight(componentLabel, component.title, q);
+
+        componentLink.append(componentLabel);
+        componentLi.append(componentLink);
+        list.append(componentLi);
       });
-      group.hidden = !items.length;
+
+      list.append(li);
     });
+    setActiveResult(0);
     results.hidden = !q;
     const noMatch = !!q && !matches.length;
     title.hidden = noMatch;
     columns.hidden = noMatch;
     empty.hidden = !noMatch;
+    if (pending) {
+      empty.textContent = 'Loading results...';
+    } else if (failed) {
+      empty.textContent = 'Search is unavailable. Please try again.';
+    } else {
+      empty.textContent = 'No results found';
+    }
   };
   input.addEventListener('input', render);
+  input.addEventListener('keydown', (e) => {
+    const items = list.querySelectorAll(':scope > li');
+
+    if (!items.length) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActiveResult(activeIndex + 1);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActiveResult(activeIndex - 1);
+    }
+  });
+  list.addEventListener('mousemove', (e) => {
+    const item = e.target.closest('li');
+    if (!item || !list.contains(item)) return;
+
+    const items = [...list.querySelectorAll(':scope > li')];
+    const itemIndex = items.indexOf(item);
+
+    if (itemIndex !== -1) {
+      setActiveResult(itemIndex);
+    }
+  });
   results.addEventListener('click', (e) => {
     const a = e.target.closest('a[href]');
     if (a && !e.metaKey && !e.ctrlKey && !e.shiftKey && openOnPage(a.href)) e.preventDefault();
@@ -538,12 +731,36 @@ function buildSearch(index, placeholder) {
   });
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const first = matches[0];
-    if (first && !openOnPage(first.href)) window.location.href = first.href;
+
+    const selected = results.querySelector('li.is-active a[href]')
+      || results.querySelector('a[href]');
+
+    if (selected && !openOnPage(selected.href)) {
+      window.location.href = selected.href;
+    }
   });
   search.reset = () => {
     input.value = '';
     render();
+  };
+  // the query index is only fetched once search is first opened
+  let loading;
+  search.load = () => {
+    if (!loading) {
+      pending = true;
+      failed = false;
+      loading = loadSearchIndex()
+        .then((entries) => { index = entries; })
+        .catch(() => {
+          failed = true;
+          loading = null;
+        })
+        .finally(() => {
+          pending = false;
+          render();
+        });
+    }
+    return loading;
   };
   search.input = input;
   return search;
@@ -735,7 +952,6 @@ export default async function decorate(block) {
 
   /* search */
   const search = buildSearch(
-    buildSearchIndex(menus, searchSection),
     searchLink?.getAttribute('title') && !/^search$/i.test(searchLink.getAttribute('title'))
       ? searchLink.getAttribute('title')
       : 'Search loans, branches,calculators',
@@ -754,6 +970,7 @@ export default async function decorate(block) {
     document.body.classList.toggle('nav-search-open', isOpen && !isDesktop.matches);
     if (isOpen) {
       desktopMenu?.closeAll();
+      search.load();
       search.input.focus();
     } else {
       search.reset();
@@ -809,3 +1026,43 @@ export default async function decorate(block) {
   navWrapper.append(nav, search, scrim);
   block.append(navWrapper);
 }
+
+function handlePageHash() {
+  const hash = decodeURIComponent(window.location.hash.slice(1));
+  if (!hash) return;
+
+  const findTarget = () => document.getElementById(hash)
+    || document.querySelector(
+      `[data-block-name="${CSS.escape(hash)}"]`,
+    );
+
+  const scrollToTarget = () => {
+    const target = findTarget();
+    if (!target) return false;
+
+    target.scrollIntoView({
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? 'auto'
+        : 'smooth',
+    });
+
+    return true;
+  };
+
+  if (scrollToTarget()) return;
+
+  const observer = new MutationObserver(() => {
+    if (scrollToTarget()) observer.disconnect();
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
+
+  window.addEventListener('pagehide', () => observer.disconnect(), {
+    once: true,
+  });
+}
+
+handlePageHash();

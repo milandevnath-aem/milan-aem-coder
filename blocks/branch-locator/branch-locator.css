@@ -62,30 +62,10 @@
   line-height: 24px;
 }
 
-.branch-locator .branch-locator-locate {
-  display: inline-flex;
-  align-items: center;
-  align-self: flex-start;
-  gap: 8px;
-  order: 1;
-  margin: 0;
-  border: 0;
-  border-radius: 100px;
-  padding: 8px 14px 8px 10px;
-  background-color: rgb(252 252 252 / 85%);
-  color: var(--text-color);
-  font-size: var(--body-font-size-s);
-  font-weight: 600;
-  line-height: 20px;
-  cursor: pointer;
-}
-
-.branch-locator .branch-locator-locate:hover,
-.branch-locator .branch-locator-locate:focus-visible {
-  background-color: var(--background-color);
-}
-
 .branch-locator .branch-locator-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   order: 1;
   margin: 0;
   color: var(--inverse-color);
@@ -96,6 +76,27 @@
 
 .branch-locator .branch-locator-status:empty {
   display: none;
+}
+
+/* loading state while the visitor's location and nearest city are worked out */
+.branch-locator .branch-locator-status.is-loading::before {
+  content: '';
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgb(255 255 255 / 40%);
+  border-top-color: var(--inverse-color);
+  border-radius: 50%;
+  animation: branch-locator-spin 0.8s linear infinite;
+}
+
+.branch-locator .branch-locator-main[aria-busy='true'] .branch-locator-card {
+  opacity: 0.5;
+}
+
+/* keeps the space while the cities load, so the page does not shift */
+.branch-locator .branch-locator-card:empty {
+  min-height: 240px;
 }
 
 .branch-locator .branch-locator-map {
@@ -123,6 +124,7 @@
   padding: 24px 20px;
   border-radius: 20px;
   background-color: var(--background-color);
+  transition: opacity 0.2s;
 }
 
 .branch-locator .branch-locator-row {
@@ -153,6 +155,7 @@
 .branch-locator .icon-call { background-image: url('../../icons/call.svg'); }
 .branch-locator .icon-clock { background-image: url('../../icons/clock.svg'); }
 .branch-locator .icon-mail { background-image: url('../../icons/mail.svg'); }
+.branch-locator .icon-info { background-image: url('../../icons/info.svg'); }
 
 .branch-locator .branch-locator-row dt {
   color: var(--muted-color);
@@ -266,13 +269,6 @@ dialog.modal .branch-locator-permission h2 {
   text-align: left;
 }
 
-.branch-locator-permission .branch-locator-permission-error {
-  margin: 0;
-  color: #a32d2c;
-  font-size: var(--body-font-size-s);
-  line-height: 20px;
-}
-
 .branch-locator-permission .branch-locator-permission-actions {
   display: flex;
   flex-direction: column;
@@ -302,9 +298,11 @@ dialog.modal .branch-locator-permission h2 {
   animation: branch-locator-spin 0.8s linear infinite;
 }
 
+/* only the spinner shows while loading (the global disabled style would show the label) */
 .branch-locator-permission button.button.primary.is-loading:disabled {
   border-color: var(--text-color);
   background-color: var(--text-color);
+  color: transparent;
 }
 
 @keyframes branch-locator-spin {

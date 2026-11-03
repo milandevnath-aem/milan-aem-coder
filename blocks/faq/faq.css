@@ -165,12 +165,18 @@
     transform: rotate(180deg);
 }
 
+.faq .faq-item.is-closing summary::after {
+    transform: none;
+}
+
 .faq .faq-item summary:focus-visible {
     outline: 2px solid var(--accent-color);
     outline-offset: 2px;
 }
 
 .faq .faq-answer {
+    box-sizing: border-box;
+    overflow: hidden;
     padding: 0 40px 20px 0;
     color: var(--muted-color);
     font-size: var(--body-font-size-s);
