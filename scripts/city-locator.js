@@ -1,11 +1,11 @@
-import { toClassName } from './aem.js';
 import { fetchPlaceholders } from './placeholders.js';
 
 /*
   City locator: data and location logic shared by city-aware blocks (no UI here).
 
   - City master: a sheet (JSON) of cities and their details. Its URL comes from the
-    placeholders sheet ("city-master" row), or CITY_CONFIG.cityMasterPath.
+    placeholders sheet ("city-master" row), or CITY_CONFIG.cityMasterPath. Only the
+    columns in CITY_CONFIG.columns/details are read; any other column is ignored.
   - Nearest city: worked out in the browser from the city master's latitude and
     longitude columns ("27.1767° N" or "27.1767"); no maps API or key is used. Cities
     without coordinates are never suggested.
@@ -26,22 +26,23 @@ export const CITY_CONFIG = {
   maxDistanceKm: 50,
   timeouts: {
     geolocation: 10000,
+    // the browser's geolocation timeout only starts once permission is given: this
+    // one also covers a browser prompt left unanswered
+    permission: 30000,
   },
   storageKeys: {
     choice: 'kmp-city-choice',
   },
   // city master columns, matched ignoring case, spaces and punctuation
   columns: {
-    city: ['city', 'city name', 'sub city name', 'name'],
+    city: ['city', 'city name', 'sub city name', 'name', 'district'],
     region: ['state', 'state name', 'region'],
     aliases: ['aliases', 'alias', 'other names'],
     lat: ['lat', 'latitude'],
     lng: ['lng', 'lon', 'long', 'longitude'],
   },
-  // city master columns never shown (row numbers and the like)
-  ignoreColumns: ['sr no', 'sr. no.', 'serial no', 's no', 'id'],
-  // details shown for a city, in this order. Any other city master column is shown
-  // after these (label = column name), unless it is ignored or its name starts with "_"
+  // details shown for a city, in this order. Other city master columns (region, ROH,
+  // district, fax, officer…) are internal and never shown
   details: [
     {
       key: 'address', label: 'Address', icon: 'location', columns: ['address', 'branch address'],
@@ -105,12 +106,6 @@ function displayName(text) {
   const value = String(text || '').trim();
   if (value !== value.toUpperCase()) return value;
   return value.toLowerCase().replace(/(^|[\s(/-])([a-z])/g, (m, sep, c) => sep + c.toUpperCase());
-}
-
-/** "BRANCH_MANAGER" -> "Branch manager" */
-function humanize(header) {
-  const text = header.replace(/[_-]+/g, ' ').trim().toLowerCase();
-  return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
 // localStorage can be blocked (private mode, site settings): fail silently
@@ -194,8 +189,10 @@ export function createCity({
 
 /** Maps city master headers to city fields and detail rows (see CITY_CONFIG.columns/details) */
 function mapColumns(headers) {
-  const find = (candidates) => headers
-    .find((h) => candidates.some((c) => normalize(c) === normalize(h)));
+  // candidates are in order of preference: "state" wins over "region" when a sheet has both
+  const find = (candidates) => candidates
+    .map((c) => headers.find((h) => normalize(h) === normalize(c)))
+    .find(Boolean);
   const fields = Object.fromEntries(
     Object.entries(CITY_CONFIG.columns).map(([field, candidates]) => [field, find(candidates)]),
   );
@@ -203,15 +200,6 @@ function mapColumns(headers) {
   const details = CITY_CONFIG.details
     .map(({ columns, ...detail }) => ({ ...detail, column: find(columns) }))
     .filter((detail) => detail.column);
-  // new city master columns are shown too, so a new field needs no code change
-  const used = new Set([...Object.values(fields), ...details.map((d) => d.column)]);
-  const ignored = CITY_CONFIG.ignoreColumns.map(normalize);
-  headers
-    .filter((h) => !used.has(h) && !ignored.includes(normalize(h)))
-    .filter((h) => !h.startsWith('_') && !h.startsWith(':'))
-    .forEach((h) => details.push({
-      key: toClassName(h), label: humanize(h), icon: 'info', column: h,
-    }));
   return { fields, details };
 }
 
@@ -314,7 +302,8 @@ export function saveChoice(update) {
 
 /**
  * Asks the browser for the visitor's position. Call only after the visitor agreed.
- * Rejects with a GeolocationPositionError (code 1 = permission denied) or an Error.
+ * Rejects with a GeolocationPositionError (code 1 = permission denied) or an Error,
+ * also when the browser prompt is left unanswered (CITY_CONFIG.timeouts.permission).
  * @returns {Promise<{lat: number, lng: number}>}
  */
 export function getPosition() {
@@ -323,9 +312,19 @@ export function getPosition() {
       reject(new Error('Geolocation is not available'));
       return;
     }
+    const timer = setTimeout(
+      () => reject(new Error('No answer to the location prompt')),
+      CITY_CONFIG.timeouts.permission,
+    );
     navigator.geolocation.getCurrentPosition(
-      ({ coords }) => resolve({ lat: coords.latitude, lng: coords.longitude }),
-      reject,
+      ({ coords }) => {
+        clearTimeout(timer);
+        resolve({ lat: coords.latitude, lng: coords.longitude });
+      },
+      (error) => {
+        clearTimeout(timer);
+        reject(error);
+      },
       { timeout: CITY_CONFIG.timeouts.geolocation, maximumAge: 600000 },
     );
   });

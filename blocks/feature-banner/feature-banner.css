@@ -66,20 +66,19 @@
 
 /* small screens with a mobile crop (subject in its lower half): a long text grows the
    banner, so the text ends in the upper half and stays clear of the subject */
-   
-/* :where(html:not(.desktop-view))
+:where(html:not(.desktop-view))
     .feature-banner
     .feature-banner-item.has-mobile-image:not(.side-image) {
     min-height: max(
         var(--feature-banner-height),
         2 * var(--feature-banner-text-end, 0px)
     );
-} */
+}
 
 /* small screens without a mobile crop: the desktop picture would sit under the text, so
    it follows the text instead and fills the rest of the banner edge to edge, cropped
    around the subject (like the mobile crops: text on top, image below) */
-:where(html:not(.desktop-view))
+
     .feature-banner
     .feature-banner-item:not(.has-mobile-image, .side-image)
     .feature-banner-image {
@@ -149,15 +148,13 @@
     background-color: var(--background-color);
 }
 
-.feature-banner .side-image .feature-banner-image {
+/* .feature-banner .side-image .feature-banner-image {
     position: relative;
     order: 2;
     width: 130%;
     height: auto;
-
-    /* the covered car is wider than the screen and runs off the left edge */
     margin: auto 0 0 -30%;
-}
+} */
 
 .feature-banner .feature-banner-item.side-image .feature-banner-image img {
     position: static;
@@ -276,7 +273,7 @@
     z-index: 1;
 }
 
-:where(html:not(.desktop-view))
+/* :where(html:not(.desktop-view))
     main:has(.hero-loan.product)
     .feature-banner
     .side-image
@@ -286,7 +283,7 @@
     width: auto;
     height: 321px;
     margin: 0;
-}
+} */
 
 :where(html:not(.desktop-view))
     main:has(.hero-loan.product)

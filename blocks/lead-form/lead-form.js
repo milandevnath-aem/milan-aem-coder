@@ -4,7 +4,7 @@ import { createDropdown } from '../../scripts/dropdown.js';
 import {
   CAPTCHA_LENGTH, createLeadSession, errorMessage as apiErrorMessage, generateCaptcha,
 } from './lead-api.js';
-import { MESSAGES } from './lead-api-config.js';
+import { CITY_COLUMN, CITY_LISTS, MESSAGES } from './lead-api-config.js';
 import { buildLead, productFor } from './lead-payload.js';
 import {
   createOtpStep, createSuccessStep, setLoading, spinner,
@@ -38,6 +38,30 @@ function parseOptions(text) {
     return option;
   });
   return { options, value };
+}
+
+// city sheet URL -> promise of its city names, so a form opened again does not refetch
+const citySheets = {};
+
+/**
+ * The cities the API of a loan category takes (CITY_LISTS in lead-api-config.js), in sheet
+ * order and as written there. Resolves to [] when the category has no sheet or it cannot be read.
+ * @param {string} category loan category
+ * @returns {Promise<string[]>}
+ */
+function loadCities(category) {
+  const url = CITY_LISTS[productFor(category)];
+  if (!url) return Promise.resolve([]);
+  citySheets[url] ||= fetch(url)
+    .then((resp) => (resp.ok ? resp.json() : {}))
+    .then(({ data = [] }) => [...new Set(data
+      .map((row) => String(row[CITY_COLUMN] ?? '').trim())
+      .filter(Boolean))])
+    .catch(() => []);
+  return citySheets[url].then((names) => {
+    if (!names.length) delete citySheets[url]; // tried again next time
+    return names;
+  });
 }
 
 let errorCount = 0;
@@ -399,6 +423,7 @@ export default function decorate(block) {
   const dropdowns = [];
   const checks = [];
   let captcha;
+  let cityField;
 
   fieldRows.forEach((row) => {
     const [labelCell, kindCell, optionsCell, requiredCell, halfCell] = row.children;
@@ -407,8 +432,8 @@ export default function decorate(block) {
     const optionsText = optionsCell?.textContent.trim() || '';
     // fields left as plain text: a description is multi-line, a field with a list of
     // options is a dropdown (searchable when the list is long)
-    // a city field lists the cities of the city master (placeholders "city-master"),
-    // searchable; its authored options are kept only when the city master is not available
+    // a city field lists the cities of the category's API (see loadCities), searchable; its
+    // authored options are kept when the category has no city sheet
     const isCity = /\bcity\b/i.test(label) && ['text', 'select', 'search'].includes(kind);
     if (isCity) kind = 'search';
     else if (kind === 'text' && /descri|message|comment|remark/i.test(label)) kind = 'textarea';
@@ -438,17 +463,8 @@ export default function decorate(block) {
       field.defaultValue = value;
       dropdowns.push(field);
       if (isCity) {
-        const city = field;
-        import('../../scripts/city-locator.js')
-          .then(({ loadCityMaster }) => loadCityMaster())
-          .then((cities) => {
-            // one entry per city, even when the city master lists several branches of it
-            const names = [...new Set(cities.map((c) => c.name))];
-            if (!names.length) return;
-            city.setOptions(names.map((n) => ({ value: n, label: n })));
-            city.optionValues = names;
-          })
-          .catch(() => {}); // the authored options stay
+        cityField = field;
+        cityField.authoredOptions = options;
       }
     } else if (kind === 'captcha') {
       field = captchaField(label);
@@ -523,10 +539,10 @@ export default function decorate(block) {
       || check.field.querySelector('.lead-form-input') || check.field;
     box.classList.toggle('is-invalid', invalid);
   };
-  // the button stays focusable while the form is incomplete (aria-disabled, not disabled);
-  // submitting then lists what is missing
+  // the button is disabled until every field is valid: a click (or Enter in a field) does
+  // nothing; each field says what is wrong when the visitor leaves it
   const refresh = () => {
-    submit.setAttribute('aria-disabled', !isValid());
+    submit.disabled = !isValid();
   };
   form.addEventListener('input', refresh);
   form.addEventListener('change', refresh);
@@ -759,9 +775,27 @@ export default function decorate(block) {
   };
   selectCategory(pageCategory());
   refresh();
+
+  // city: the cities of the selected category's API (the last pick wins when sheets load slowly)
+  let cityRequest = 0;
+  const updateCities = (category) => {
+    if (!cityField) return;
+    cityRequest += 1;
+    const request = cityRequest;
+    loadCities(category).then((names) => {
+      if (request !== cityRequest) return;
+      const options = names.length
+        ? names.map((n) => ({ value: n, label: n }))
+        : cityField.authoredOptions;
+      cityField.setOptions(options);
+      cityField.optionValues = options.map((option) => option.value);
+    });
+  };
+  updateCities(categoryDropdown?.value || pageCategory());
   // picking another product in a modal opens that product's form
   categoryDropdown?.addEventListener('change', (e) => {
     if (!e.detail?.byUser || !categoryDropdown.value) return;
+    updateCities(categoryDropdown.value);
     // the short form follows the pick, so it shows it once the modal is closed
     document.dispatchEvent(new CustomEvent(CATEGORY_PICKED_EVENT, {
       detail: { category: categoryDropdown.value },
