@@ -16,10 +16,10 @@
 
 .grievance .grievance-intro p {
     margin: var(--spacing-md) 0 0;
-    font-size: var(--type-body-b2-font-size);
-    font-weight: var(--type-body-b2-font-weight);
-    line-height: var(--type-body-b2-line-height);
-    letter-spacing: var(--type-body-b2-letter-spacing);
+    font-size: var(--type-body-b3-font-size);
+    font-weight: var(--type-body-b3-font-weight);
+    line-height: var(--type-body-b3-line-height);
+    letter-spacing: var(--type-body-b3-letter-spacing);
     color: var(--color-text-secondary-default-base);
 }
 
@@ -40,10 +40,10 @@
 
 .grievance .grievance-description {
     margin-top: var(--spacing-md);
-    font-size: var(--type-body-b2-font-size);
-    font-weight: var(--type-body-b2-font-weight);
-    line-height: var(--type-body-b2-line-height);
-    letter-spacing: var(--type-body-b2-letter-spacing);
+    font-size: var(--type-body-b3-font-size);
+    font-weight: var(--type-body-b3-font-weight);
+    line-height: var(--type-body-b3-line-height);
+    letter-spacing: var(--type-body-b3-letter-spacing);
     color: var(--color-text-secondary-default-base);
 }
 
@@ -359,16 +359,6 @@
     grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
     gap: var(--spacing-7xl);
     align-items: start;
-}
-
-:where(.desktop-view) .grievance .grievance-intro p {
-    font-size: var(--type-body-b3-font-size);
-    line-height: var(--type-body-b3-line-height);
-}
-
-:where(.desktop-view) .grievance .grievance-description {
-    font-size: var(--type-body-b3-font-size);
-    line-height: var(--type-body-b3-line-height);
 }
 
 :where(.desktop-view) .grievance.steps .grievance-toggle {
