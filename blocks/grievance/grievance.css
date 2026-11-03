@@ -221,6 +221,79 @@
   gap: var(--spacing-4xl);
 }
 
+/* variant: rbi-approach (complaint routes with numbered sections) */
+.grievance .rbi-approach .grievance-details {
+  gap: var(--spacing-xl);
+  counter-reset: rbi-step;
+}
+
+.grievance .rbi-approach .grievance-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.grievance .rbi-approach .grievance-section.numbered::before {
+  counter-increment: rbi-step;
+  content: counter(rbi-step, decimal-leading-zero) ".";
+  color: var(--color-text-secondary-default-base);
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
+  letter-spacing: var(--type-body-b1-letter-spacing);
+}
+
+.grievance .rbi-approach .grievance-section-title {
+  margin: 0;
+  font-size: var(--type-headline-h4-font-size);
+  font-weight: 500;
+  line-height: var(--type-headline-h4-line-height);
+  letter-spacing: var(--type-headline-h4-letter-spacing);
+  color: var(--color-text-primary-default-base);
+}
+
+.grievance .rbi-approach .grievance-section > p {
+  margin: 0;
+  font-size: var(--type-body-b2-font-size);
+  font-weight: var(--type-body-b2-font-weight);
+  line-height: var(--type-body-b2-line-height);
+  letter-spacing: var(--type-body-b2-letter-spacing);
+  color: var(--color-text-secondary-default-base);
+}
+
+/* black pill button with arrow */
+.grievance .rbi-approach .grievance-section a.button:any-link {
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-xl);
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
+}
+
+.grievance .rbi-approach .grievance-section p.button-wrapper {
+  margin: 0;
+}
+
+.grievance .rbi-approach .grievance-section a:is(.button, .grievance-link)::after {
+  content: "";
+  flex: none;
+  width: 12px;
+  height: 12px;
+  background-color: currentcolor;
+  mask: url("/icons/arrow-up-right.svg") center / contain no-repeat;
+}
+
+/* full-width link with the arrow pushed to the right edge */
+.grievance .rbi-approach .grievance-section a.grievance-link:any-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  color: var(--color-brand-gradient-kotak-blue-default-2);
+  font-size: var(--type-body-b1-font-size);
+  font-weight: 500;
+  line-height: var(--type-body-b1-line-height);
+  text-decoration: underline;
+}
+
 @media (width >= 900px) {
   .grievance {
     display: grid;

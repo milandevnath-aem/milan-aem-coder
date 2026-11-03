@@ -85,6 +85,32 @@ function decorateDetails(details) {
   }
 }
 
+// "Approach RBI" details: intro chip, then sections starting at a heading.
+// H2-H4 are numbered steps, H5/H6 are plain headings (e.g. "Learn more").
+function decorateRbiDetails(details) {
+  let section;
+  [...details.children].forEach((el) => {
+    if (/^H[2-6]$/.test(el.tagName)) {
+      section = document.createElement('div');
+      section.className = 'grievance-section';
+      if (/^H[2-4]$/.test(el.tagName)) section.classList.add('numbered');
+      el.className = 'grievance-section-title';
+      el.before(section);
+      section.append(el);
+    } else if (section) {
+      section.append(el);
+    } else {
+      el.className = 'grievance-group-label';
+    }
+  });
+  details.querySelectorAll('.grievance-section ul').forEach((ul) => {
+    ul.classList.add('grievance-rows');
+    ul.querySelectorAll('li').forEach(decorateRow);
+  });
+  details.querySelectorAll('.grievance-section > p > a:only-child:not(.button)')
+    .forEach((a) => a.classList.add('grievance-link'));
+}
+
 function addToggle(item, details, id, labels) {
   details.id = id;
   details.hidden = true;
@@ -169,7 +195,11 @@ export default function decorate(block) {
       details.className = 'grievance-details';
       moveInstrumentation(detailsCell, details);
       while (detailsCell.firstChild) details.append(detailsCell.firstChild);
-      decorateDetails(details);
+      if (item.classList.contains('rbi-approach') && details.querySelector('h2, h3, h4, h5, h6')) {
+        decorateRbiDetails(details);
+      } else {
+        decorateDetails(details);
+      }
       item.append(details);
       // without an authored button label the details stay visible and no toggle is rendered
       if (isSteps && labels.more) addToggle(item, details, `grievance-${blockCount}-details-${i + 1}`, labels);
