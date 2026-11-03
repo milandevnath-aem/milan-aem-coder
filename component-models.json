@@ -1284,13 +1284,17 @@
       },
       {
         "component": "select",
-        "name": "style",
+        "name": "classes",
         "label": "Variant",
         "valueType": "string",
         "value": "",
         "options": [
           {
-            "name": "Steps (RIB Approach)",
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Steps (RBI Approach)",
             "value": "rbi-approach"
           }
         ]

@@ -55,8 +55,8 @@ function decorateRow(li) {
   labelEl.className = 'grievance-row-label';
   labelEl.textContent = label;
   li.className = 'grievance-row';
-  if (iconName) li.append(createIcon(iconName));
   li.append(labelEl, value);
+  if (iconName) li.prepend(createIcon(iconName));
 }
 
 // label paragraph + list pairs become groups with a chip heading and contact rows
@@ -136,6 +136,8 @@ export default function decorate(block) {
     const [titleCell, descriptionCell, detailsCell] = row.children;
     const item = document.createElement(isSteps ? 'li' : 'div');
     item.className = 'grievance-item';
+    // authored variant (classes field) is carried over from the row
+    item.classList.add(...[...row.classList].filter((c) => c === 'rbi-approach'));
     moveInstrumentation(row, item);
 
     if (isSteps) {
