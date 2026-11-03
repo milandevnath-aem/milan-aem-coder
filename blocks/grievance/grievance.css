@@ -229,10 +229,9 @@
   gap: var(--spacing-4xl);
 }
 
-/* variant: rbi-approach (complaint routes with numbered sections) */
+/* variant: rbi-approach (complaint routes with sections) */
 .grievance .rbi-approach .grievance-details {
   gap: var(--spacing-4xl);
-  counter-reset: rbi-step;
 }
 
 .grievance .rbi-approach .grievance-section {
@@ -242,15 +241,6 @@
   padding-inline: var(--spacing-md);
 }
 
-.grievance .rbi-approach .grievance-section.numbered::before {
-  counter-increment: rbi-step;
-  content: counter(rbi-step, decimal-leading-zero) ".";
-  color: var(--color-text-primary-default-base);
-  font-size: var(--type-body-b1-font-size);
-  line-height: var(--type-body-b1-line-height);
-  letter-spacing: 0.15em;
-}
-
 .grievance .rbi-approach .grievance-section-title {
   margin: 0;
   font-size: var(--type-headline-h4-font-size);
@@ -258,6 +248,17 @@
   line-height: var(--type-headline-h4-line-height);
   letter-spacing: var(--type-headline-h4-letter-spacing);
   color: var(--color-text-primary-default-base);
+}
+
+/* authored step number ("01.") sits on its own line above the title */
+.grievance .rbi-approach .grievance-section-title strong {
+  display: block;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-text-primary-default-base);
+  font-size: var(--type-body-b1-font-size);
+  font-weight: var(--type-body-b1-font-weight);
+  line-height: var(--type-body-b1-line-height);
+  letter-spacing: 0.15em;
 }
 
 .grievance .rbi-approach .grievance-section > p {

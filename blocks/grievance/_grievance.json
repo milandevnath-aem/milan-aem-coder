@@ -91,7 +91,7 @@
           "component": "richtext",
           "name": "details",
           "value": "",
-          "label": "Details (group label paragraph + list; bold text in each list item is the label. Approach RBI: intro paragraph, H4 = numbered step, H5 = plain heading, bold link = button)",
+          "label": "Details (group label paragraph + list; bold text in each list item is the label. Approach RBI: intro paragraph, H4 = section title (start with bold text like 01. for a step number), bold link = button)",
           "valueType": "string"
         },
         {

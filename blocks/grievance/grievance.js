@@ -105,8 +105,9 @@ function isLinkRow(el) {
 }
 
 // "Approach RBI" details: intro chip, then sections starting at a heading.
-// H2-H4 are numbered steps, H5/H6 are plain headings (e.g. "Learn more").
-// A plain paragraph right before a link row also becomes a plain heading.
+// Authors can start a heading with bold text (e.g. "<strong>01.</strong> Title") for a step number.
+// A heading that only holds a link becomes a button; a plain paragraph right before a link row
+// becomes a heading.
 function decorateRbiDetails(details) {
   const children = [...details.children];
   let section;
@@ -128,8 +129,6 @@ function decorateRbiDetails(details) {
         title = document.createElement('h4');
         title.textContent = el.textContent.trim();
         el.replaceWith(title);
-      } else if (/^H[2-4]$/.test(el.tagName)) {
-        section.classList.add('numbered');
       }
       title.className = 'grievance-section-title';
       title.before(section);
