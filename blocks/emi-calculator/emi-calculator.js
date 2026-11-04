@@ -451,11 +451,6 @@ function buildCalculator(types, link) {
       showError(key, false);
       scheduleUpdate();
     });
-    // "change" fires once the slider is released (or a key moved it): the chosen value
-    range.addEventListener('change', trackUse);
-    // the number field counts once a typed value is committed (not a focus and blur alone)
-    let edited = false;
-    input.addEventListener('input', (e) => { if (e.isTrusted) edited = true; });
     // while the pointer moves the thumb, follow it without easing and between steps
     // (few-step sliders such as tenure in years would jump otherwise);
     // on release the knob eases onto the nearest step
