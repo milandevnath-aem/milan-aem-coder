@@ -359,6 +359,28 @@
     ]
   },
   {
+    "id": "article-cards",
+    "fields": [
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Variant",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Media releases cards",
+            "value": "mediaReleasesCards"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "article-card",
     "fields": [
       {

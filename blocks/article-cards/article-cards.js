@@ -35,11 +35,16 @@ export default function decorate(block) {
     const heading = document.createElement('h3');
     heading.className = 'article-cards-title';
     const links = [...(linkCell?.querySelectorAll('a') || [])];
-    const source = links[0];
-    const additionalLink = links[1];
-    const text = (source || linkCell)?.textContent.trim() || '';
+    const [firstLink, secondLink] = links;
+    const additionalImg = linkCell?.querySelector('img');
+    let additionalLink = secondLink;
+    if (!additionalLink && additionalImg) additionalLink = firstLink;
+    const [source] = links.filter((link) => link !== additionalLink);
+    const additionalText = additionalLink?.textContent.trim() || '';
+    const text = source?.textContent.trim()
+      || (linkCell?.textContent.trim() || '').replace(additionalText, '').trim();
     const href = source?.getAttribute('href')?.trim();
-    if (href && href !== '#') {
+    if (href && href !== '#' && text) {
       // the title link covers the whole card (see .article-cards-link::after)
       const link = document.createElement('a');
       link.className = 'article-cards-link';
@@ -63,31 +68,30 @@ export default function decorate(block) {
       body.append(meta);
     }
 
-    const additionalText = additionalLink?.textContent.trim()
-      || (source ? linkCell.textContent.replace(source.textContent, '').trim() : '');
-    const additionalHref = additionalLink?.getAttribute('href')?.trim();
-    const additionalImg = linkCell?.querySelector('img');
-    if (additionalText || additionalImg) {
+    if (additionalLink || additionalImg) {
       const additional = document.createElement('div');
       additional.className = 'article-cards-additional';
 
-      if (additionalImg) {
+      if (additionalLink) {
+        const button = document.createElement('a');
+        button.className = 'article-cards-button';
+        button.setAttribute('href', additionalLink.getAttribute('href') || '#');
+        button.textContent = additionalText;
+        if (additionalLink.target) button.target = additionalLink.target;
+        const ariaLabel = additionalLink.getAttribute('aria-label');
+        if (ariaLabel) button.setAttribute('aria-label', ariaLabel);
+        moveInstrumentation(additionalLink, button);
+        additional.append(button);
+        const icon = additionalImg?.closest('picture') || additionalImg;
+        if (icon) {
+          icon.classList.add('article-cards-additional-image');
+          button.append(icon);
+        }
+      } else if (additionalImg) {
         const picture = createPicture(additionalImg.src, additionalImg.alt, false, [{ width: '200' }]);
         moveInstrumentation(additionalImg, picture.querySelector('img'));
         picture.classList.add('article-cards-additional-image');
         additional.append(picture);
-      }
-
-      if (additionalText) {
-        const additionalLabel = document.createElement(additionalHref && additionalHref !== '#' ? 'a' : 'span');
-        additionalLabel.className = 'article-cards-additional-text';
-        additionalLabel.textContent = additionalText;
-        if (additionalHref && additionalHref !== '#') {
-          additionalLabel.href = additionalHref;
-          if (additionalLink.target) additionalLabel.target = additionalLink.target;
-          moveInstrumentation(additionalLink, additionalLabel);
-        }
-        additional.append(additionalLabel);
       }
 
       body.append(additional);
