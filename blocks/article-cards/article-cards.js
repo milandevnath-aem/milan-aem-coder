@@ -2,17 +2,14 @@ import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createPicture } from '../../scripts/images.js';
 
 /**
- * Article teaser cards. Each row: image, category, title (link), reading time,
- * with optional additional text, link, and image fields.
+ * Article teaser cards. Each row: image, category, title (link), and reading
+ * time, with an optional button grouped into the link cell.
  * @param {Element} block The block element
  */
 export default function decorate(block) {
   const list = document.createElement('ul');
   [...block.children].forEach((row) => {
     const [imageCell, categoryCell, linkCell, metaCell] = row.children;
-    const additionalTextCell = row.children[4];
-    const additionalLinkCell = row.children[5];
-    const additionalImageCell = row.children[6];
     const item = document.createElement('li');
     item.className = 'article-cards-item';
     moveInstrumentation(row, item);
@@ -37,7 +34,9 @@ export default function decorate(block) {
 
     const heading = document.createElement('h3');
     heading.className = 'article-cards-title';
-    const source = linkCell?.querySelector('a');
+    const links = [...(linkCell?.querySelectorAll('a') || [])];
+    const source = links[0];
+    const additionalLink = links[1];
     const text = (source || linkCell)?.textContent.trim() || '';
     const href = source?.getAttribute('href')?.trim();
     if (href && href !== '#') {
@@ -64,10 +63,10 @@ export default function decorate(block) {
       body.append(meta);
     }
 
-    const additionalText = additionalTextCell?.textContent.trim() || '';
-    const additionalLink = additionalLinkCell?.querySelector('a');
+    const additionalText = additionalLink?.textContent.trim()
+      || (source ? linkCell.textContent.replace(source.textContent, '').trim() : '');
     const additionalHref = additionalLink?.getAttribute('href')?.trim();
-    const additionalImg = additionalImageCell?.querySelector('img');
+    const additionalImg = linkCell?.querySelector('img');
     if (additionalText || additionalImg) {
       const additional = document.createElement('div');
       additional.className = 'article-cards-additional';
@@ -87,8 +86,6 @@ export default function decorate(block) {
           additionalLabel.href = additionalHref;
           if (additionalLink.target) additionalLabel.target = additionalLink.target;
           moveInstrumentation(additionalLink, additionalLabel);
-        } else {
-          moveInstrumentation(additionalTextCell, additionalLabel);
         }
         additional.append(additionalLabel);
       }

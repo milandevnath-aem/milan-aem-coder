@@ -76,23 +76,11 @@
           "value": ""
         },
         {
-          "component": "text",
-          "valueType": "string",
-          "name": "additionalText",
-          "label": "Text",
-          "value": ""
-        },
-        {
-          "component": "aem-content",
-          "name": "additionalLink",
-          "label": "Link"
-        },
-        {
-          "component": "reference",
-          "valueType": "string",
-          "name": "additionalImage",
-          "label": "Image",
-          "multi": false
+          "component": "richtext",
+          "name": "link_button",
+          "value": "",
+          "label": "Button",
+          "valueType": "string"
         }
       ]
     }
