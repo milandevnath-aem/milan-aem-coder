@@ -24,6 +24,20 @@ function decorateReadMore(section) {
     const collapsed = content.classList.toggle('is-collapsed');
     button.textContent = collapsed ? 'Read more' : 'Read less';
     button.setAttribute('aria-expanded', !collapsed);
+    // the height change can push the section out of view: center it on screen, or align its top
+    // when it is taller than the screen. html's scroll-padding keeps it clear of the sticky header;
+    // focus stays on the button
+    const html = getComputedStyle(document.documentElement);
+    const top = parseFloat(html.scrollPaddingTop) || 0;
+    const bottom = window.innerHeight - (parseFloat(html.scrollPaddingBottom) || 0);
+    const rect = section.getBoundingClientRect();
+    if (rect.top < top || rect.bottom > bottom) {
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      section.scrollIntoView({
+        block: rect.height <= bottom - top ? 'center' : 'start',
+        behavior: reduced ? 'auto' : 'smooth',
+      });
+    }
   });
   content.after(button);
 
