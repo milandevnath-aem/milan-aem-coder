@@ -163,11 +163,20 @@ function addToggle(item, details, id, labels) {
   const text = document.createElement('span');
   text.textContent = labels.more;
   button.append(text, createIcon('chevron-down'));
-  button.addEventListener('click', () => {
-    const open = button.getAttribute('aria-expanded') !== 'true';
+  const setOpen = (open) => {
     button.setAttribute('aria-expanded', open);
     details.hidden = !open;
     text.textContent = open ? labels.less : labels.more;
+  };
+  button.addEventListener('click', () => {
+    const open = button.getAttribute('aria-expanded') !== 'true';
+    if (open) {
+      // accordion: close the other items in this block
+      item.parentElement.querySelectorAll('.grievance-toggle[aria-expanded="true"]').forEach((other) => {
+        if (other !== button) other.click();
+      });
+    }
+    setOpen(open);
   });
   item.append(button);
 }

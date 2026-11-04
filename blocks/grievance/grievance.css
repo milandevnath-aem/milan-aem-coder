@@ -27,6 +27,7 @@
     margin: 0;
     padding: 0;
     list-style: none;
+    max-width: 660px;
 }
 
 .grievance .grievance-title {
@@ -359,10 +360,19 @@
 }
 
 :where(.desktop-view) .grievance {
-    display: grid;
-    grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
+    flex-direction: row;
     gap: var(--spacing-7xl);
-    align-items: start;
+    align-items: flex-start;
+}
+
+:where(.desktop-view) .grievance > .grievance-intro {
+    flex: 4 1 0;
+    min-width: 0;
+}
+
+:where(.desktop-view) .grievance > .grievance-list {
+    flex: 6 1 0;
+    min-width: 0;
 }
 
 :where(.desktop-view) .grievance.steps .grievance-toggle {
