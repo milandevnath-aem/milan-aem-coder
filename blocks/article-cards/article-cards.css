@@ -16,7 +16,6 @@
 }
 
 .article-cards .article-cards-item {
-  position: relative;
   display: flex;
   align-items: stretch;
   min-height: 136px;
@@ -177,21 +176,9 @@
   filter: brightness(0) invert(1);
 }
 
-.article-cards.mediaReleasesCards .article-cards-link::after {
-  content: none;
-}
-
-/* clickable card: the title link covers the whole card */
 .article-cards .article-cards-link:any-link {
   color: inherit;
   text-decoration: none;
-}
-
-.article-cards .article-cards-link::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
 }
 
 .article-cards .article-cards-clickable:hover .article-cards-link {

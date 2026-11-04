@@ -7,6 +7,7 @@ import { createPicture } from '../../scripts/images.js';
  * @param {Element} block The block element
  */
 export default function decorate(block) {
+  const isMediaReleasesCards = block.classList.contains('mediaReleasesCards');
   const list = document.createElement('ul');
   [...block.children].forEach((row) => {
     const [imageCell, categoryCell, linkCell, metaCell] = row.children;
@@ -47,7 +48,8 @@ export default function decorate(block) {
       link.className = 'article-cards-link';
       link.href = href;
       link.textContent = text;
-      if (source.target) link.target = source.target;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
       moveInstrumentation(source, link);
       heading.append(link);
       item.classList.add('article-cards-clickable');
@@ -55,7 +57,7 @@ export default function decorate(block) {
       heading.textContent = text;
       if (source) moveInstrumentation(source, heading);
     }
-    body.append(heading);
+    if (isMediaReleasesCards) body.append(heading);
 
     if (metaCell?.textContent.trim()) {
       const meta = document.createElement('p');
