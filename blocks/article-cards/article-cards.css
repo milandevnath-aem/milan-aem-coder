@@ -46,7 +46,17 @@
   padding: 12px;
 }
 
-/* Authored text: Headline/H4 */
+/* category: Body/B1 on small screens, Headline/H2 in the desktop view */
+.article-cards .article-cards-category {
+  margin: 0 0 4px;
+  color: var(--muted-color);
+  font-size: var(--type-b1-size);
+  font-weight: 500;
+  line-height: var(--type-b1-line);
+  letter-spacing: var(--type-b1-ls);
+}
+
+/* title: Headline/H4 */
 .article-cards .article-cards-title {
   margin: 0;
   color: var(--text-color);
@@ -54,6 +64,37 @@
   font-weight: var(--type-h4-weight);
   line-height: var(--type-h4-line);
   letter-spacing: 0;
+}
+
+.article-cards .article-cards-additional {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.article-cards .article-cards-additional-image {
+  flex: 0 0 64px;
+}
+
+.article-cards .article-cards-additional-image img {
+  display: block;
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.article-cards .article-cards-additional-text {
+  position: relative;
+  z-index: 1;
+  color: var(--text-color);
+  font-size: var(--type-b1-size);
+  line-height: var(--type-b1-line);
+}
+
+.article-cards a.article-cards-additional-text:hover {
+  text-decoration: underline;
 }
 
 /* clickable card: the title link covers the whole card */
@@ -81,6 +122,22 @@
 .article-cards .article-cards-clickable:has(.article-cards-link:focus-visible) {
   outline: 2px solid var(--text-color);
   outline-offset: 2px;
+}
+
+.article-cards .article-cards-meta {
+  margin: auto 0 0;
+  padding-top: 8px;
+  color: var(--muted-color);
+  font-size: var(--type-b1-size);
+  font-weight: 500;
+  line-height: var(--type-b1-line);
+  letter-spacing: var(--type-b1-ls);
+}
+
+:where(.desktop-view) .article-cards .article-cards-meta {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
 }
 
 :where(.desktop-view) .article-cards > ul {
@@ -111,5 +168,12 @@
 
 :where(.desktop-view) .article-cards .article-cards-body {
   padding: 24px 0;
+}
+
+:where(.desktop-view) .article-cards .article-cards-category {
+  color: var(--text-color);
+  font-size: var(--type-h2-size);
+  font-weight: 600;
+  line-height: var(--type-h2-line);
 }
 
