@@ -38,9 +38,11 @@ export default function decorate(block) {
     const links = [...(linkCell?.querySelectorAll('a') || [])];
     const [source, additionalLink] = links;
     const additionalImg = linkCell?.querySelector('img');
-    const additionalText = additionalLink?.textContent.trim() || '';
-    const text = source?.textContent.trim()
-      || (linkCell?.textContent.trim() || '').replace(additionalText, '').trim();
+    const sourceText = source?.textContent.trim() || '';
+    const linkCellText = linkCell?.textContent.trim() || '';
+    const additionalText = additionalLink?.textContent.trim()
+      || (sourceText ? linkCellText.replace(sourceText, '').trim() : '');
+    const text = sourceText || linkCellText.replace(additionalText, '').trim();
     const href = source?.getAttribute('href')?.trim();
     if (href && href !== '#' && text) {
       // the title link covers the whole card (see .article-cards-link::after)
@@ -67,19 +69,21 @@ export default function decorate(block) {
       body.append(meta);
     }
 
-    if (additionalLink || additionalImg) {
+    if (additionalLink || additionalText || additionalImg) {
       const additional = document.createElement('div');
       additional.className = 'article-cards-additional';
 
-      if (additionalLink) {
-        const button = document.createElement('a');
+      if (additionalLink || additionalText) {
+        const button = document.createElement(additionalLink ? 'a' : 'span');
         button.className = 'article-cards-button';
-        button.setAttribute('href', additionalLink.getAttribute('href') || '#');
         button.textContent = additionalText;
-        if (additionalLink.target) button.target = additionalLink.target;
-        const ariaLabel = additionalLink.getAttribute('aria-label');
-        if (ariaLabel) button.setAttribute('aria-label', ariaLabel);
-        moveInstrumentation(additionalLink, button);
+        if (additionalLink) {
+          button.setAttribute('href', additionalLink.getAttribute('href') || '#');
+          if (additionalLink.target) button.target = additionalLink.target;
+          const ariaLabel = additionalLink.getAttribute('aria-label');
+          if (ariaLabel) button.setAttribute('aria-label', ariaLabel);
+          moveInstrumentation(additionalLink, button);
+        }
         additional.append(button);
         const icon = additionalImg?.closest('picture') || additionalImg;
         if (icon) {
