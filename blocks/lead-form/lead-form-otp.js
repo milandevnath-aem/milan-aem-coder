@@ -1,6 +1,7 @@
 import {
   OTP_LENGTH, OTP_VALID_MS, RESEND_SECONDS, errorMessage,
 } from './lead-api.js';
+import { uniqueId } from '../../scripts/analytics.js';
 
 let uid = 0;
 
@@ -83,6 +84,7 @@ export function createOtpStep({
   const boxes = view.querySelector('.lead-form-otp-boxes');
   const error = view.querySelector('.lead-form-otp-error');
   const validate = view.querySelector('.lead-form-validate');
+  validate.id = uniqueId('lead-form-otp-validate');
   const resend = view.querySelector('.lead-form-resend-button');
   const inputs = [...Array(OTP_LENGTH)].map((_, i) => {
     const input = document.createElement('input');
@@ -226,8 +228,9 @@ export function createOtpStep({
     try {
       result = await verifyOtp(code());
     } catch (e) {
-      e.expired = Date.now() - sentAt > OTP_VALID_MS;
-      message = errorMessage(e, 'verify');
+      const failure = e instanceof Error ? e : new Error(String(e));
+      failure.expired = Date.now() - sentAt > OTP_VALID_MS;
+      message = errorMessage(failure, 'verify');
     }
     busy = false;
     inputs.forEach((input) => { input.readOnly = false; });
@@ -235,6 +238,9 @@ export function createOtpStep({
     refresh();
     if (result) {
       clearInterval(timer);
+      // the lead is created: Validate stays off so it is not sent twice
+      validate.setAttribute('aria-disabled', 'true');
+      busy = true;
       onVerified(result);
     } else if (message) {
       setError(message);

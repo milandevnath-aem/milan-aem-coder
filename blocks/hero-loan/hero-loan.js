@@ -3,11 +3,12 @@ import { createPicture } from '../../scripts/images.js';
 import { createDropdown } from '../../scripts/dropdown.js';
 import { MEDIA } from '../../scripts/viewport.js';
 import {
-  authoredForm, readForms, rememberForms, resolveForm,
+  authoredForm, CATEGORY_PICKED_EVENT, matchCategory, readForms, rememberForms, resolveForm,
 } from '../../scripts/category-forms.js';
 import {
   emailRules, fieldMessages, isPersonName, mobileRules, nameRules, nativeMessages,
 } from '../../scripts/input-rules.js';
+import { analyticsName, trackFormStart, uniqueId } from '../../scripts/analytics.js';
 
 // chips shown in the row; the rest are listed under "More"
 const VISIBLE_CATEGORIES = 4;
@@ -144,8 +145,13 @@ function confirmOnSubmit(form, modalHref, forms = [], categories = []) {
   form.addEventListener('change', update);
 
   form.addEventListener('submit', async (e) => {
-    if (form.getAttribute('action')) return;
+    // never a native submit: it would put the name and mobile number in the URL
     e.preventDefault();
+    const action = form.getAttribute('action');
+    if (action) {
+      window.location.href = action;
+      return;
+    }
     const target = await update();
     if (target) {
       // continue in the full application form, carrying over what was entered
@@ -226,7 +232,7 @@ function buildForm(config, isProduct) {
   const action = actionLink?.getAttribute('href');
   const modalHref = action && isModalLink(action) ? action : '';
   if (action && action !== '#' && !modalHref) form.action = action;
-  form.method = 'get';
+  form.method = 'post';
   form.innerHTML = `
     <div class="hero-loan-fields"></div>
     <fieldset class="hero-loan-categories">
@@ -234,7 +240,12 @@ function buildForm(config, isProduct) {
       <div class="hero-loan-chips"></div>
     </fieldset>
     <button type="submit" class="button primary"></button>`;
-  form.querySelector('button[type="submit"]').textContent = cellText(actionRow) || 'Apply now';
+  const submit = form.querySelector('button[type="submit"]');
+  submit.textContent = cellText(actionRow) || 'Apply now';
+  submit.id = uniqueId('hero-loan-submit');
+  // form_name: the form's heading
+  const formName = () => analyticsName(intro.querySelector('h1, h2, h3')?.textContent) || 'hero_loan';
+  trackFormStart(form, formName, () => String(new FormData(form).get('category') || ''));
 
   const labels = (fieldsText || 'Your name, Mobile number')
     .split(',').map((f) => f.trim()).filter(Boolean);
@@ -265,6 +276,11 @@ function buildForm(config, isProduct) {
     moveInstrumentation(optionsRow, select);
     form.querySelector('.hero-loan-categories').remove();
     form.prepend(select);
+    // a category picked in the lead form (modal) is shown here too
+    document.addEventListener(CATEGORY_PICKED_EVENT, (e) => {
+      const match = matchCategory(e.detail?.category, categories);
+      if (match && match !== select.value) select.setValue(match);
+    });
     confirmOnSubmit(form, modalHref, forms, categories);
     if (actionRow) moveInstrumentation(actionRow, form.querySelector('button[type="submit"]'));
     card.append(form);
@@ -279,6 +295,14 @@ function buildForm(config, isProduct) {
   chips.append(...chipList);
   if (overflow.length) chips.append(buildMore(chips, overflow));
   if (!categories.length) form.querySelector('.hero-loan-categories').remove();
+  // a category picked in the lead form (modal) is shown here too, in the More chip if hidden
+  document.addEventListener(CATEGORY_PICKED_EVENT, (e) => {
+    const match = matchCategory(e.detail?.category, categories);
+    const input = match && chipList[categories.indexOf(match)].querySelector('input');
+    if (!input || input.checked) return;
+    input.checked = true;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  });
 
   moveInstrumentation(optionsRow, form.querySelector('.hero-loan-categories'));
   if (actionRow) moveInstrumentation(actionRow, form.querySelector('button[type="submit"]'));
