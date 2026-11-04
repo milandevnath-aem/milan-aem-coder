@@ -111,7 +111,7 @@
 }
 
 /* bold link (a.primary) is black; plain link keeps the white default */
-.offers .offers-content a.button:has(.primary) {
+.offers .offers-content a.button.primary {
     border-color: #000;
     background-color: var(--color-button-pills-default-bg-base);
     color: #fff;
