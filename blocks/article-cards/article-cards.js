@@ -35,11 +35,8 @@ export default function decorate(block) {
     const heading = document.createElement('h3');
     heading.className = 'article-cards-title';
     const links = [...(linkCell?.querySelectorAll('a') || [])];
-    const [firstLink, secondLink] = links;
+    const [source, additionalLink] = links;
     const additionalImg = linkCell?.querySelector('img');
-    let additionalLink = secondLink;
-    if (!additionalLink && additionalImg) additionalLink = firstLink;
-    const [source] = links.filter((link) => link !== additionalLink);
     const additionalText = additionalLink?.textContent.trim() || '';
     const text = source?.textContent.trim()
       || (linkCell?.textContent.trim() || '').replace(additionalText, '').trim();
