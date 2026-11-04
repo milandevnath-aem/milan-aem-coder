@@ -2,14 +2,13 @@ import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createPicture } from '../../scripts/images.js';
 
 /**
- * Article teaser cards. Each row: image, category, title (link), reading time.
- * A card is clickable only when its title link has a URL ("#" or empty: plain text).
+ * Article teaser cards. Each row: text, link, image.
  * @param {Element} block The block element
  */
 export default function decorate(block) {
   const list = document.createElement('ul');
   [...block.children].forEach((row) => {
-    const [imageCell, categoryCell, linkCell, metaCell] = row.children;
+    const [textCell, linkCell, imageCell] = row.children;
     const item = document.createElement('li');
     item.className = 'article-cards-item';
     moveInstrumentation(row, item);
@@ -24,20 +23,12 @@ export default function decorate(block) {
 
     const body = document.createElement('div');
     body.className = 'article-cards-body';
-    if (categoryCell?.textContent.trim()) {
-      const category = document.createElement('p');
-      category.className = 'article-cards-category';
-      category.textContent = categoryCell.textContent.trim();
-      moveInstrumentation(categoryCell, category);
-      body.append(category);
-    }
-
     const heading = document.createElement('h3');
     heading.className = 'article-cards-title';
     const source = linkCell?.querySelector('a');
-    const text = (source || linkCell)?.textContent.trim() || '';
+    const text = textCell?.textContent.trim() || '';
     const href = source?.getAttribute('href')?.trim();
-    if (href && href !== '#') {
+    if (href && href !== '#' && text) {
       // the title link covers the whole card (see .article-cards-link::after)
       const link = document.createElement('a');
       link.className = 'article-cards-link';
@@ -49,17 +40,9 @@ export default function decorate(block) {
       item.classList.add('article-cards-clickable');
     } else {
       heading.textContent = text;
-      if (source) moveInstrumentation(source, heading);
     }
+    moveInstrumentation(textCell, heading);
     body.append(heading);
-
-    if (metaCell?.textContent.trim()) {
-      const meta = document.createElement('p');
-      meta.className = 'article-cards-meta';
-      meta.textContent = metaCell.textContent.trim();
-      moveInstrumentation(metaCell, meta);
-      body.append(meta);
-    }
 
     item.append(body);
     list.append(item);

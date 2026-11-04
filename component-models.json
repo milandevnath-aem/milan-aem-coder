@@ -362,44 +362,23 @@
     "id": "article-card",
     "fields": [
       {
-        "component": "reference",
-        "valueType": "string",
-        "name": "image",
-        "label": "Image",
-        "multi": false
-      },
-      {
         "component": "text",
         "valueType": "string",
-        "name": "imageAlt",
-        "label": "Alt text",
-        "value": ""
-      },
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "category",
-        "label": "Category",
+        "name": "text",
+        "label": "Text",
         "value": ""
       },
       {
         "component": "aem-content",
         "name": "link",
-        "label": "Article link"
+        "label": "Link"
       },
       {
-        "component": "text",
+        "component": "reference",
         "valueType": "string",
-        "name": "linkText",
-        "label": "Title",
-        "value": ""
-      },
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "readTime",
-        "label": "Reading time",
-        "value": ""
+        "name": "image",
+        "label": "Image",
+        "multi": false
       }
     ]
   },
