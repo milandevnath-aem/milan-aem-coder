@@ -6,6 +6,14 @@
   gap: 20px;
 }
 
+/* beats lead-form's desktop intro rule, which has the same specificity */
+.gst-form.lead-form .lead-form-intro.gst-form-intro p {
+  font-size: var(--type-body-b3-font-size);
+  line-height: var(--type-body-b3-line-height);
+  letter-spacing: var(--type-body-b3-letter-spacing);
+  font-weight: var(--type-body-b3-font-weight);
+}
+
 .gst-form .gst-form-form {
   gap: 16px;
 }
@@ -31,9 +39,10 @@
   border-radius: 8px;
   padding: 8px 12px;
   color: var(--muted-color);
-  font-size: var(--body-font-size-s);
-  font-weight: 500;
-  line-height: 20px;
+  font-size: var(--type-body-b2-font-size);
+  letter-spacing: var(--type-body-b2-letter-spacing);
+  font-weight: var(--type-body-b2-font-weight);
+  line-height: var(--type-body-b2-line-height);
   text-align: center;
   cursor: pointer;
   transition: background-color 0.2s, color 0.2s;

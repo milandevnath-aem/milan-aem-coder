@@ -38,10 +38,10 @@
 .lead-form .lead-form-intro h2 {
   margin: 0 0 8px;
   color: var(--text-color);
-  font-size: 32px;
-  font-weight: 500;
-  line-height: 40px;
-  letter-spacing: -0.8px;
+  font-size: var(--type-display-medium-df-1-font-size);
+  font-weight: var(--type-display-medium-df-1-font-weight);
+  line-height: var(--type-display-medium-df-1-line-height);
+  letter-spacing: var(--type-display-medium-df-1-letter-spacing);
 }
 
 /* Figma Body/B2 on small screens */
@@ -790,13 +790,6 @@
 /* desktop: half width fields (e.g. First name, Last name) share a line */
 :where(.desktop-view) .lead-form .lead-form-item.is-half {
   grid-column: auto;
-}
-
-:where(.desktop-view) .lead-form .lead-form-intro h1,
-:where(.desktop-view) .lead-form .lead-form-intro h2 {
-  font-size: 40px;
-  line-height: 48px;
-  letter-spacing: -1px;
 }
 
 :where(.desktop-view) .lead-form .lead-form-main {
