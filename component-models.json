@@ -330,6 +330,10 @@
           {
             "name": "Section Padding left and right",
             "value": "padding-left-right"
+          },
+          {
+            "name": "Read more (grey disclosure text, collapsed to 3 lines)",
+            "value": "read-more"
           }
         ]
       },
