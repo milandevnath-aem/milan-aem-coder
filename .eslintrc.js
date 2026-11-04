@@ -21,7 +21,7 @@ module.exports = {
     'xwalk/max-cells': ['error', {
       '*': 4,
       // section properties render as key/value section metadata, not block cells
-      section: 5,
+      section: 6,
       // lead form fields: label, type, options, required, half width
       'lead-form-field': 5,
       // lead form: heading, disclaimer, note, button label, category forms
