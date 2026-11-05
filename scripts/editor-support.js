@@ -101,6 +101,9 @@ async function applyChanges(event) {
           await loadSections(parentElement);
           element.remove();
           newSection.style.display = null;
+          if (newSection.matches('.read-more')) {
+            import('./read-more.js').then((m) => m.default(parentElement));
+          }
         } else {
           element.replaceWith(...newElements);
           decorateButtons(parentElement);
