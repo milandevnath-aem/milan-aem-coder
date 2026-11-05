@@ -878,6 +878,11 @@
     background: #eee;
 }
 
+/* long text must not shrink the icon in the row layout */
+.feature-cards.icon-border .feature-cards-icon {
+    flex: none;
+}
+
 .feature-cards.split.icon-border .feature-cards-icon img,
 :where(.desktop-view) .feature-cards.icon-border .feature-cards-icon img {
     width: 40px;
