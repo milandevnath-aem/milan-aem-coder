@@ -852,6 +852,45 @@ main .section.brand p {
   line-height: 24px;
 }
 
+/* disclaimer band under feature cards: only the default content gets the grey box */
+main > .section.bg-disclaimer.feature-cards-container > .default-content-wrapper {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  margin: 32px 24px 0;
+  padding: 24px;
+  border-radius: 24px;
+  background-color: var(--surface-color);
+  color: var(--muted-color);
+}
+
+main > .section.bg-disclaimer.feature-cards-container > .default-content-wrapper p {
+  margin: 0;
+  color: var(--color-text-secondary-default-base);
+  font-size: var(--type-body-b2-font-size);
+  font-weight: var(--type-body-b2-font-weight);
+  line-height: var(--type-body-b2-line-height);
+  letter-spacing: var(--type-body-b2-letter-spacing);
+}
+
+main > .section.bg-disclaimer.feature-cards-container > .default-content-wrapper h3 {
+  margin: 0;
+  color: var(--color-text-primary-default-base);
+  font-size: var(--type-headline-h3-font-size);
+  line-height: var(--type-headline-h3-line-height);
+  letter-spacing: var(--type-headline-h3-letter-spacing);
+  font-weight: var(--type-headline-h3-font-weight);
+}
+
+:where(.desktop-view) main > .section.bg-disclaimer.feature-cards-container > .default-content-wrapper {
+  margin: 36px 92px 0;
+  padding: 32px;
+  border-radius: 32px;
+  flex-direction: row;
+  gap: var(--spacing-5xl);
+}
+
 main > .section.branch-locator-container:last-of-type {
   margin-bottom: 24px;
 }
