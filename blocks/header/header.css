@@ -930,6 +930,21 @@ header .nav-search .nav-search-group ul {
   list-style: none;
 }
 
+header .nav-search .nav-search-group li.is-active {
+  background-color: #f2f2f2;
+  border-radius: 12px; 
+}
+
+header .nav-search .nav-search-group:hover li.is-active {
+  background-color: initial;
+}
+
+header .nav-search .nav-search-group li:hover {
+  background-color: #f2f2f2;
+  border-radius: 12px;
+}
+
+
 header .nav-search-group a:any-link {
   display: flex;
   align-items: center;
@@ -1047,9 +1062,9 @@ header .nav-scrim {
   background-color: var(--surface-color);
 }
 
-:where(.desktop-view) header .nav-search-group li:first-child a {
+/* :where(.desktop-view) header .nav-search-group li:first-child a {
   background-color: var(--surface-color);
-}
+} */
 
 :where(.desktop-view) header .nav-search-label strong {
   color: var(--text-color);

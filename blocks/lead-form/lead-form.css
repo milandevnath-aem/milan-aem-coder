@@ -444,7 +444,7 @@
   width: 100%;
 }
 
-.lead-form button.button.primary:is(.lead-form-submit, .lead-form-validate)[aria-disabled='true'] {
+.lead-form button.button.primary:is(.lead-form-submit:disabled, .lead-form-validate[aria-disabled='true']) {
   border-color: #b2b2b2;
   background-color: #b2b2b2;
   color: var(--muted-color);
