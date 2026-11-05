@@ -84,10 +84,8 @@ export default function decorate(block) {
       link.className = 'article-cards-link';
       link.href = href;
       link.textContent = text;
-      if (isMediaRelease) {
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-      } else if (source.target) link.target = source.target;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
       moveInstrumentation(source, link);
       heading.append(link);
       item.classList.add('article-cards-clickable');
