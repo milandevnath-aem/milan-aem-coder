@@ -1,6 +1,7 @@
 /*
-  Input rules shared by the forms (hero call-back form, lead form): what a name, email,
-  mobile number or PIN code field accepts, and the messages shown when it is blank or wrong.
+  Input rules shared by the forms (hero call-back form, lead form, GST form): what a name,
+  email, mobile number, PIN code, PAN or GSTIN field accepts, and the messages shown when it
+  is blank or wrong.
 */
 
 // longest accepted name (each name field) and email address
@@ -18,20 +19,17 @@ export const isPersonName = (label) => /name|manufacturer/i.test(label)
 export const isNamePart = (label) => /\b(first|given|middle|last|sur|family)\s*name/i.test(label);
 
 /**
- * A person's full name ("Your name", "Name", "Promoter name"): first and last name are both
- * needed, as the lead APIs require a last name. Not a dealership or manufacturer.
- */
-export const isFullName = (label) => isPersonName(label) && !isNamePart(label)
-  && !/\b(dealer(ship)?|manufacturer|brand|shop|firm|showroom)\b/i.test(label);
-
-/**
  * What a field shows when it is left blank (`empty`) or holds a wrong value (`invalid`).
  * @param {string} label the field's label, e.g. "Your name", "City", "Nature of funding"
- * @param {string} kind tel, email, zip, select, search, captcha or text
+ * @param {string} kind tel, email, zip, select, search, captcha, pan, gstin, number,
+ *   alphanumeric or text
  * @returns {{ empty: string, invalid: string }}
  */
 export function fieldMessages(label, kind) {
-  const name = label.toLowerCase().replace(/^(your|select|enter)\s+/, '').trim();
+  // "GST Regn ARN" -> "GST regn ARN": abbreviations stay in capitals
+  const name = label.trim().replace(/^(your|select|enter)\s+/i, '').split(/\s+/)
+    .map((word) => (/^[A-Z0-9/]{2,}$/.test(word) ? word : word.toLowerCase()))
+    .join(' ');
   if (kind === 'tel') {
     return {
       empty: 'Please enter mobile number to proceed!',
@@ -57,10 +55,25 @@ export function fieldMessages(label, kind) {
   if (kind === 'captcha') {
     return { empty: 'Captcha cannot be blank', invalid: 'Invalid captcha please try again!' };
   }
-  if (['text', 'text-half'].includes(kind) && isFullName(label)) {
+  if (kind === 'pan') {
+    return {
+      empty: 'Please enter PAN number to proceed!',
+      invalid: 'Please enter a valid 10-character PAN (e.g. ABCDE1234F) to proceed!',
+    };
+  }
+  if (kind === 'gstin') {
     return {
       empty: `Please enter ${name} to proceed!`,
-      invalid: 'Please enter your first and last name, using letters only, to proceed!',
+      invalid: `Please enter a valid 15-character ${label} (e.g. 27ABCDE1234F1Z5) to proceed!`,
+    };
+  }
+  if (kind === 'number') {
+    return { empty: `Please enter ${name} to proceed!`, invalid: 'Please enter digits only to proceed!' };
+  }
+  if (kind === 'alphanumeric') {
+    return {
+      empty: `Please enter ${name} to proceed!`,
+      invalid: 'Please enter letters and numbers only to proceed!',
     };
   }
   return {
@@ -77,31 +90,23 @@ export function fieldMessages(label, kind) {
  * @param {RegExp} allowed matches one allowed character, e.g. /\d/ (no g flag)
  * @param {number} max maximum length
  * @param {Function} [onReject] called when something typed or pasted was refused, after
- *   the form's own input listeners (so they do not clear the message it shows). A key
- *   pressed once the field is full (a fast typist, a key held down) is refused silently:
- *   the value is complete and stays valid.
+ *   the form's own input listeners (so they do not clear the message it shows)
  */
 export function allowOnly(input, allowed, max, onReject) {
   const keep = (text) => [...text].filter((c) => allowed.test(c)).join('');
   input.addEventListener('beforeinput', (e) => {
-    // phone keyboards that compose send the whole word: it is cleaned on input below
-    if (!e.data || !e.inputType.startsWith('insert') || e.inputType === 'insertCompositionText') return;
+    if (!e.data || !e.inputType.startsWith('insert')) return;
     const room = max - (input.value.length - (input.selectionEnd - input.selectionStart));
     const clean = keep(e.data) === e.data;
-    // a typed character that is not allowed; longer mixed text (a pasted "560 001") goes
-    // through and is cleaned below
-    if (e.data.length === 1 && !clean) {
+    // a typed character that is not allowed, or allowed text with no room left; longer
+    // mixed text (a pasted "560 001") goes through and is cleaned below
+    if ((e.data.length === 1 && !clean) || (clean && e.data.length > room)) {
       e.preventDefault();
       onReject?.();
-    } else if (clean && e.data.length > room) {
-      // allowed text with no room left: one more key is ignored, a longer paste is refused
-      e.preventDefault();
-      if (e.data.length > 1) onReject?.();
     }
   });
   // runs before the form's own input listener, so validation sees the cleaned value
   input.addEventListener('input', () => {
-    const allowedOnly = keep(input.value) === input.value;
     const clean = keep(input.value).slice(0, max);
     if (clean === input.value) return;
     const caret = input.selectionStart ?? input.value.length;
@@ -109,8 +114,7 @@ export function allowOnly(input, allowed, max, onReject) {
     input.value = clean;
     const pos = Math.min(keptBefore, clean.length);
     input.setSelectionRange(pos, pos);
-    // only cut to length (composed or autofilled text): nothing to tell
-    if (onReject && !allowedOnly) setTimeout(onReject);
+    if (onReject) setTimeout(onReject);
   });
 }
 
@@ -118,9 +122,8 @@ export function allowOnly(input, allowed, max, onReject) {
 export const digitsOnly = (input, max, onReject) => allowOnly(input, /\d/, max, onReject);
 
 /**
- * A name, up to NAME_MAX: letters only for a first or last name; letters and spaces for
- * a full name ("Your name"), which must hold a first and a last name ("Shital Rao", not
- * "Shital"); letters and spaces, at least one letter, for any other name (a dealership).
+ * A name, up to NAME_MAX: letters only for a first or last name, letters and spaces for
+ * a full name ("Your name"), which must hold at least one letter (spaces only is blank).
  * The pattern also flags a value set by code (e.g. carried over from another form).
  * @param {HTMLInputElement} input a text input
  * @param {string} label the field's label
@@ -130,9 +133,6 @@ export function nameRules(input, label, onReject) {
   if (isNamePart(label)) {
     input.pattern = `[A-Za-z]{1,${NAME_MAX}}`;
     allowOnly(input, /[A-Za-z]/, NAME_MAX, onReject);
-  } else if (isFullName(label)) {
-    input.pattern = `(?=.{1,${NAME_MAX}}$) *[A-Za-z]+( +[A-Za-z]+)+ *`;
-    allowOnly(input, /[A-Za-z ]/, NAME_MAX, onReject);
   } else {
     input.pattern = `(?=.{1,${NAME_MAX}}$) *[A-Za-z][A-Za-z ]*`;
     allowOnly(input, /[A-Za-z ]/, NAME_MAX, onReject);
@@ -163,6 +163,48 @@ export function mobileRules(input, onReject) {
     type: 'tel', inputMode: 'numeric', pattern: '[6-9][0-9]{9}', autocomplete: 'tel-national',
   });
   digitsOnly(input, 10, onReject);
+}
+
+/**
+ * Letters and numbers only, up to `max`, typed letters shown in capitals (PAN, GSTIN,
+ * reference numbers).
+ * @param {HTMLInputElement} input a text input
+ * @param {number} max maximum length
+ * @param {Function} [onReject] see allowOnly
+ */
+export function upperAlphanumeric(input, max, onReject) {
+  Object.assign(input, {
+    autocapitalize: 'characters', autocomplete: 'off', spellcheck: false, maxLength: max,
+  });
+  allowOnly(input, /[A-Za-z0-9]/, max, onReject);
+  input.addEventListener('input', () => {
+    const upper = input.value.toUpperCase();
+    if (upper === input.value) return;
+    const { selectionStart, selectionEnd } = input;
+    input.value = upper;
+    input.setSelectionRange(selectionStart, selectionEnd);
+  });
+}
+
+/**
+ * PAN: five letters, four digits, one letter (ABCDE1234F).
+ * @param {HTMLInputElement} input
+ * @param {Function} [onReject] see allowOnly
+ */
+export function panRules(input, onReject) {
+  input.pattern = '[A-Z]{5}[0-9]{4}[A-Z]';
+  upperAlphanumeric(input, 10, onReject);
+}
+
+/**
+ * GSTIN, also the format of a GST provisional ID: state code (2 digits), PAN, entity number,
+ * "Z" and a check character (27ABCDE1234F1Z5).
+ * @param {HTMLInputElement} input
+ * @param {Function} [onReject] see allowOnly
+ */
+export function gstinRules(input, onReject) {
+  input.pattern = '[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]';
+  upperAlphanumeric(input, 15, onReject);
 }
 
 /**

@@ -213,6 +213,9 @@ export function decorateMain(main) {
   if (main.querySelector('.columns.dropdown-cta')) {
     import('./text-dropdown.js').then((m) => m.default(main));
   }
+  if (main.querySelector('.section.read-more')) {
+    import('./read-more.js').then((m) => m.default(main));
+  }
   // anchor for search results that link to a page's documents section (#documents)
   const documents = main.querySelector('.requirements.documents')?.closest('.section');
   if (documents && !documents.id && !main.querySelector('#documents')) documents.id = 'documents';
@@ -361,11 +364,6 @@ async function loadLazy(doc) {
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   loadFonts();
-  // analytics: a failed load is logged and never stops the page
-  import('./analytics.js')
-    .then(({ trackContactClicks }) => trackContactClicks())
-    // eslint-disable-next-line no-console
-    .catch((error) => console.warn('analytics: contact tracking could not be started', error));
 }
 
 /**

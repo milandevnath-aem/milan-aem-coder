@@ -82,17 +82,6 @@ export const PRODUCT_BY_CATEGORY = {
 };
 
 /**
- * The cities each API takes: product -> sheet (JSON) with one CITY_COLUMN column. The form's
- * City dropdown lists that sheet as is; a product that is not listed keeps the authored options.
- */
-export const CITY_LISTS = {
-  LAP: '/lap-cities.json',
-  NewCarFinance: '/ncf-cities.json',
-  TWL: '/tw-cities.json',
-};
-export const CITY_COLUMN = 'SUB_CITY_NAME';
-
-/**
  * The `lead` fields each API takes (api.md, "Lead requests and responses"):
  * form value -> key in `lead`. Only these are sent, so an API never receives a field it does
  * not know. Form values are named as in LEAD_FIELD_KEYS, plus FirstName, LastName and Name
