@@ -891,6 +891,25 @@ main > .section.bg-disclaimer.feature-cards-container > .default-content-wrapper
   gap: var(--spacing-5xl);
 }
 
+/* plain disclaimer under feature cards: right-aligned note */
+main > .section.plain-disclaimer.feature-cards-container > .default-content-wrapper {
+  margin-top: 20px;
+}
+
+main > .section.plain-disclaimer.feature-cards-container > .default-content-wrapper p {
+  margin: 0;
+  color: var(--color-text-tertiary-default-base);
+  font-size: var(--type-body-b1-font-size);
+  font-weight: var(--type-body-b1-font-weight);
+  line-height: var(--type-body-b1-line-height);
+  letter-spacing: var(--type-body-b1-letter-spacing);
+  text-align: center;
+}
+
+:where(.desktop-view) main > .section.plain-disclaimer.feature-cards-container > .default-content-wrapper {
+  margin-top: 60px;
+}
+
 main > .section.branch-locator-container:last-of-type {
   margin-bottom: 24px;
 }
