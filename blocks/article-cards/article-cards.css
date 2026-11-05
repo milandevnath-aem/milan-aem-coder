@@ -7,12 +7,8 @@
 }
 
 .article-cards > ul {
-  /* display: grid; */
-
-  /* grid-template-columns: 1fr; */
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 16px;
   margin: 0;
   padding: 0;
@@ -20,6 +16,7 @@
 }
 
 .article-cards .article-cards-item {
+  position: relative;
   display: flex;
   align-items: stretch;
   min-height: 136px;
@@ -61,7 +58,6 @@
 
 /* title: Headline/H4 */
 .article-cards .article-cards-title {
-  display: none;
   margin: 0;
   color: var(--text-color);
   font-size: var(--type-h4-size);
@@ -102,6 +98,19 @@
 }
 
 /* stylelint-disable selector-class-pattern -- required author-selected variant class */
+.article-cards.mediaReleasesCards > ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.article-cards:not(.mediaReleasesCards) .article-cards-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
 .article-cards.mediaReleasesCards .article-cards-item {
   gap: 20px;
   min-height: 180px;
@@ -268,6 +277,10 @@
   padding: 4px 24px 4px 4px;
   border-radius: 28px;
   max-width: initial;
+}
+
+:where(.desktop-view) .article-cards.mediaReleasesCards > ul {
+  display: grid;
 }
 
 :where(.desktop-view) .article-cards.mediaReleasesCards .article-cards-image {

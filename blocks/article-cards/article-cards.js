@@ -71,27 +71,23 @@ export default function decorate(block) {
 
     const heading = document.createElement('h3');
     heading.className = 'article-cards-title';
-    const links = [...(linkCell?.querySelectorAll('a') || [])];
-    let [source, additionalLink] = links;
-    let additionalImg = linkCell?.querySelector('img');
-    const sourceText = source?.textContent.trim() || '';
-    const linkCellText = linkCell?.textContent.trim() || '';
-    let additionalText = additionalLink?.textContent.trim()
-      || (sourceText ? linkCellText.replace(sourceText, '').trim() : '');
-    let text = sourceText || linkCellText.replace(additionalText, '').trim();
-    if (isMediaRelease) {
-      ({
-        source, text, additionalLink, additionalText, additionalImg,
-      } = readMediaReleaseLink(linkCell));
-    }
+    const defaultSource = linkCell?.querySelector('a');
+    const {
+      source, text, additionalLink, additionalText, additionalImg,
+    } = isMediaRelease ? readMediaReleaseLink(linkCell) : {
+      source: defaultSource,
+      text: (defaultSource || linkCell)?.textContent.trim() || '',
+    };
     const href = source?.getAttribute('href')?.trim();
-    if (href && href !== '#' && text) {
+    if (href && href !== '#' && (!isMediaRelease || text)) {
       const link = document.createElement('a');
       link.className = 'article-cards-link';
       link.href = href;
       link.textContent = text;
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
+      if (isMediaRelease) {
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+      } else if (source.target) link.target = source.target;
       moveInstrumentation(source, link);
       heading.append(link);
       item.classList.add('article-cards-clickable');
@@ -109,7 +105,7 @@ export default function decorate(block) {
       body.append(meta);
     }
 
-    if (additionalLink || additionalText || additionalImg) {
+    if (isMediaRelease && (additionalLink || additionalText || additionalImg)) {
       const additional = document.createElement('div');
       additional.className = 'article-cards-additional';
 
