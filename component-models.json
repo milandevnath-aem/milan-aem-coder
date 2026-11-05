@@ -258,6 +258,15 @@
     "fields": [
       {
         "component": "text",
+        "valueType": "string",
+        "name": "id",
+        "label": "Column ID",
+        "required": false,
+        "placeholder": "e.g., my-column",
+        "description": "The column will be linkable via ID entered."
+      },
+      {
+        "component": "text",
         "name": "name",
         "label": "Section Name",
         "description": "The label shown for this section in the Content Tree"
