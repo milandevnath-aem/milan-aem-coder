@@ -64,19 +64,6 @@
     object-position: 25% bottom;
 }
 
-/* small screens without a mobile crop: the desktop picture would sit under the text, so
-   it follows the text instead and fills the rest of the banner edge to edge, cropped
-   around the subject (like the mobile crops: text on top, image below) */
-:where(html:not(.desktop-view))
-    .feature-banner
-    .feature-banner-item:not(.has-mobile-image, .side-image)
-    .feature-banner-image {
-    position: relative;
-    order: 2;
-    flex: 1 0 300px;
-    height: auto;
-}
-
 .feature-banner .feature-banner-content {
     position: relative;
     box-sizing: border-box;
@@ -130,26 +117,6 @@
     border-color: #fff;
     background-color: #fff;
     color: var(--text-color);
-}
-
-/* side image: the picture sits in its own half instead of filling the band */
-.feature-banner .side-image {
-    background-color: var(--background-color);
-}
-
-.feature-banner .side-image .feature-banner-image {
-    position: relative;
-    order: 2;
-    width: 130%;
-    height: auto;
-
-    /* the covered car is wider than the screen and runs off the left edge */
-    margin: auto 0 0 -30%;
-}
-
-.feature-banner .feature-banner-item.side-image .feature-banner-image img {
-    position: static;
-    height: auto;
 }
 
 /* scroll-linked text reveal (section style "animate-text"): each word blends from the
@@ -247,52 +214,6 @@
     line-height: 24px;
 }
 
-/* product pages, small screens: side image banner 672px high, the car drawn large with
-   its rear 15px from the right edge and the front running off the left (Figma) */
-:where(html:not(.desktop-view))
-    main:has(.hero-loan.product)
-    .feature-banner
-    .side-image {
-    min-height: 672px;
-}
-
-:where(html:not(.desktop-view))
-    main:has(.hero-loan.product)
-    .feature-banner
-    .side-image
-    .feature-banner-content {
-    z-index: 1;
-}
-
-:where(html:not(.desktop-view))
-    main:has(.hero-loan.product)
-    .feature-banner
-    .side-image
-    .feature-banner-image {
-    position: absolute;
-    inset: auto -8px 21px auto;
-    width: auto;
-    height: 321px;
-    margin: 0;
-}
-
-:where(html:not(.desktop-view))
-    main:has(.hero-loan.product)
-    .feature-banner
-    .feature-banner-item.side-image
-    .feature-banner-image
-    img {
-    width: auto;
-    max-width: none;
-    height: 100%;
-}
-
-/* product pages: 12px between heading and text, Figma pill buttons (12px + 14px inner) */
-
-/* :where(.desktop-view) main:has(.hero-loan.product) .feature-banner .feature-banner-content p {
-  margin-top: 12px;
-} */
-
 main:has(.hero-loan.product) .feature-banner .feature-banner-content a.button {
     padding: 12px;
     min-width: 124px;
@@ -304,29 +225,4 @@ main:has(.hero-loan.product) .feature-banner .feature-banner-content a.button {
     .feature-banner-content
     a.button {
     padding: 14px 16px;
-}
-
-:where(.desktop-view) .feature-banner .side-image .feature-banner-image {
-    position: absolute;
-    inset: 0 auto 0 0;
-    margin: 0;
-    order: 0;
-    display: flex;
-    align-items: center;
-    width: 51.3%;
-}
-
-:where(.desktop-view)
-    .feature-banner
-    .side-image.text-left
-    .feature-banner-image {
-    inset: 0 0 0 auto;
-}
-
-:where(.desktop-view)
-    .feature-banner
-    .feature-banner-item.side-image
-    .feature-banner-image
-    img {
-    width: 100%;
 }
