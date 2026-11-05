@@ -380,6 +380,28 @@
     ]
   },
   {
+    "id": "article-cards",
+    "fields": [
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Variant",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Media releases cards",
+            "value": "mediaReleasesCards"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "article-card",
     "fields": [
       {
@@ -421,6 +443,13 @@
         "name": "readTime",
         "label": "Reading time",
         "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "link_button",
+        "value": "",
+        "label": "Button",
+        "valueType": "string"
       }
     ]
   },
@@ -1241,6 +1270,92 @@
     ]
   },
   {
+    "id": "grievance",
+    "fields": [
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Variant",
+        "valueType": "string",
+        "value": "steps",
+        "options": [
+          {
+            "name": "Steps (timeline)",
+            "value": "steps"
+          },
+          {
+            "name": "Directory",
+            "value": "directory"
+          }
+        ]
+      },
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Intro",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "readMoreLabel",
+        "value": "",
+        "label": "Read more button label",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "showLessLabel",
+        "value": "",
+        "label": "Show less button label",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "grievance-item",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "title",
+        "label": "Title",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "description",
+        "value": "",
+        "label": "Description",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "details",
+        "value": "",
+        "label": "Details (group label paragraph + list; bold text in each list item is the label. Approach RBI: intro paragraph, H4 = section title (start with bold text like 01. for a step number), bold link = button)",
+        "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Variant",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Steps (RBI Approach)",
+            "value": "rbi-approach"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "gst-form",
     "fields": [
       {
@@ -1855,6 +1970,19 @@
         "value": "",
         "label": "Description",
         "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "classes",
+        "value": "",
+        "label": "CSS Style",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Investors Debt - Relevant Information",
+            "value": "investorsDebt"
+          }
+        ]
       }
     ]
   },
@@ -1939,6 +2067,10 @@
           {
             "name": "Eligibility Smaller font sizes due to larger content",
             "value": "elgb-small-text"
+          },
+          {
+            "name": "Left Title and Right Document Requirement Cards",
+            "value": "left-title-right-documents"
           }
         ]
       },

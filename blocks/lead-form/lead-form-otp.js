@@ -1,6 +1,7 @@
 import {
   OTP_LENGTH, OTP_VALID_MS, RESEND_SECONDS, errorMessage,
 } from './lead-api.js';
+import { uniqueId } from '../../scripts/analytics.js';
 
 let uid = 0;
 
@@ -83,6 +84,7 @@ export function createOtpStep({
   const boxes = view.querySelector('.lead-form-otp-boxes');
   const error = view.querySelector('.lead-form-otp-error');
   const validate = view.querySelector('.lead-form-validate');
+  validate.id = uniqueId('lead-form-otp-validate');
   const resend = view.querySelector('.lead-form-resend-button');
   const inputs = [...Array(OTP_LENGTH)].map((_, i) => {
     const input = document.createElement('input');
