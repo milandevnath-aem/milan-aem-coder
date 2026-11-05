@@ -49,19 +49,6 @@
           "value": "",
           "label": "Description",
           "valueType": "string"
-        },
-        {
-          "component": "select",
-          "name": "classes",
-          "value": "",
-          "label": "CSS Style",
-          "valueType": "string",
-          "options": [
-            {
-              "name": "Investors Debt - Relevant Information",
-              "value": "investorsDebt"
-            }
-          ]
         }
       ]
     },
@@ -95,7 +82,9 @@
   "filters": [
     {
       "id": "partner-list",
-      "components": ["partner-item"]
+      "components": [
+        "partner-item"
+      ]
     }
   ]
 }

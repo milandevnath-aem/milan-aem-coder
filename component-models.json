@@ -1229,88 +1229,129 @@
     ]
   },
   {
-    "id": "grievance",
+    "id": "gst-form",
     "fields": [
-      {
-        "component": "select",
-        "name": "classes",
-        "label": "Variant",
-        "valueType": "string",
-        "value": "steps",
-        "options": [
-          {
-            "name": "Steps (timeline)",
-            "value": "steps"
-          },
-          {
-            "name": "Directory",
-            "value": "directory"
-          }
-        ]
-      },
       {
         "component": "richtext",
         "name": "text",
         "value": "",
-        "label": "Intro",
+        "label": "Heading and text",
         "valueType": "string"
       },
       {
         "component": "text",
-        "name": "readMoreLabel",
+        "valueType": "string",
+        "name": "types",
+        "label": "Form types",
         "value": "",
-        "label": "Read more button label",
-        "valueType": "string"
+        "description": "Comma separated, e.g. \"Customer, Vendor\": shown as a switch above the fields. Leave blank or enter one type for no switch."
       },
       {
         "component": "text",
-        "name": "showLessLabel",
-        "value": "",
-        "label": "Show less button label",
-        "valueType": "string"
+        "valueType": "string",
+        "name": "submitLabel",
+        "label": "Button label",
+        "value": ""
+      },
+      {
+        "component": "aem-content",
+        "name": "link",
+        "label": "Contact Us link"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "linkText",
+        "label": "Contact Us link text",
+        "value": ""
       }
     ]
   },
   {
-    "id": "grievance-item",
+    "id": "gst-form-field",
     "fields": [
       {
         "component": "text",
         "valueType": "string",
-        "name": "title",
-        "label": "Title",
+        "name": "label",
+        "label": "Label",
         "value": ""
       },
       {
-        "component": "richtext",
-        "name": "description",
-        "value": "",
-        "label": "Description",
-        "valueType": "string"
-      },
-      {
-        "component": "richtext",
-        "name": "details",
-        "value": "",
-        "label": "Details (group label paragraph + list; bold text in each list item is the label. Approach RBI: intro paragraph, H4 = section title (start with bold text like 01. for a step number), bold link = button)",
-        "valueType": "string"
-      },
-      {
         "component": "select",
-        "name": "classes",
-        "label": "Variant",
+        "name": "kind",
+        "label": "Field type",
         "valueType": "string",
-        "value": "",
+        "value": "text",
         "options": [
           {
-            "name": "Default",
-            "value": ""
+            "name": "Text",
+            "value": "text"
           },
           {
-            "name": "Steps (RBI Approach)",
-            "value": "rbi-approach"
+            "name": "Number (digits only)",
+            "value": "number"
+          },
+          {
+            "name": "Letters and numbers",
+            "value": "alphanumeric"
+          },
+          {
+            "name": "PAN",
+            "value": "pan"
+          },
+          {
+            "name": "GSTIN / GST provisional ID",
+            "value": "gstin"
+          },
+          {
+            "name": "Mobile number (+91)",
+            "value": "tel"
+          },
+          {
+            "name": "Email",
+            "value": "email"
+          },
+          {
+            "name": "Postal code",
+            "value": "zip"
+          },
+          {
+            "name": "Dropdown",
+            "value": "select"
+          },
+          {
+            "name": "Dropdown with search",
+            "value": "search"
+          },
+          {
+            "name": "Captcha",
+            "value": "captcha"
           }
         ]
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "options",
+        "label": "Options",
+        "description": "Dropdown: comma separated options, a leading * marks the default. Number or Letters and numbers: the exact length (e.g. 2 for a state code), blank for up to 20 characters. A field labelled City lists the cities of the city master.",
+        "value": ""
+      },
+      {
+        "component": "boolean",
+        "valueType": "boolean",
+        "name": "required",
+        "label": "Required",
+        "value": true
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "types",
+        "label": "Shown for",
+        "description": "Form types this field is shown for, comma separated (e.g. \"Customer\"). Leave blank to show it for every type.",
+        "value": ""
       }
     ]
   },
@@ -1802,19 +1843,6 @@
         "value": "",
         "label": "Description",
         "valueType": "string"
-      },
-      {
-        "component": "select",
-        "name": "classes",
-        "value": "",
-        "label": "CSS Style",
-        "valueType": "string",
-        "options": [
-          {
-            "name": "Investors Debt - Relevant Information",
-            "value": "investorsDebt"
-          }
-        ]
       }
     ]
   },
@@ -1899,10 +1927,6 @@
           {
             "name": "Eligibility Smaller font sizes due to larger content",
             "value": "elgb-small-text"
-          },
-          {
-            "name": "Left Title and Right Document Requirement Cards",
-            "value": "left-title-right-documents"
           }
         ]
       },
