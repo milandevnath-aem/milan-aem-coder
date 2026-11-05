@@ -1,8 +1,5 @@
 import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createPicture } from '../../scripts/images.js';
-import {
-  amountBand, analyticsName, pushOnce, safely,
-} from '../../scripts/analytics.js';
 
 const inr = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 });
 
@@ -279,23 +276,6 @@ function buildCalculator(types, link) {
   const tenureText = (v) => (state.unit === 'mo' ? months(v) : years(v));
   const tenureInMonths = () => (state.unit === 'mo' ? state.tenure : state.tenure * TENURE.monthsPerYear);
 
-  /**
-   * calculator_use: once per calculator (loan type tab) per page view, when the visitor
-   * settles on a value (slider released, number entered, unit switched), so the band and
-   * tenure are the ones they chose. The calculation shown on load and tab switches do not count.
-   */
-  const trackUse = () => safely(() => {
-    const calculator = analyticsName(cta.dataset.loanCategory) || 'emi_calculator';
-    const { range } = parts.amount;
-    pushOnce(`calculator_use:${calculator}`, 'calculator_use', {
-      calculator,
-      loan_amount_band: amountBand(state.amount, {
-        min: Number(range.min), max: Number(range.max), step: Number(range.step),
-      }),
-      tenure_months: tenureInMonths(),
-    });
-  });
-
   const display = {
     amount: (v) => inr.format(v),
     rate: (v) => `${v}`,
@@ -471,11 +451,6 @@ function buildCalculator(types, link) {
       showError(key, false);
       scheduleUpdate();
     });
-    // "change" fires once the slider is released (or a key moved it): the chosen value
-    range.addEventListener('change', trackUse);
-    // the number field counts once a typed value is committed (not a focus and blur alone)
-    let edited = false;
-    input.addEventListener('input', (e) => { if (e.isTrusted) edited = true; });
     // while the pointer moves the thumb, follow it without easing and between steps
     // (few-step sliders such as tenure in years would jump otherwise);
     // on release the knob eases onto the nearest step
@@ -556,10 +531,6 @@ function buildCalculator(types, link) {
       state[key] = fixed;
       input.value = display[key](fixed);
       update();
-      if (edited) {
-        edited = false;
-        trackUse();
-      }
     };
     input.addEventListener('change', commit);
     input.addEventListener('blur', commit);
@@ -573,11 +544,7 @@ function buildCalculator(types, link) {
   });
 
   parts.tenure.group.querySelectorAll('.emi-calculator-unit button').forEach((button) => {
-    button.addEventListener('click', () => {
-      if (button.dataset.unit === state.unit) return;
-      setTenureUnit(button.dataset.unit);
-      trackUse();
-    });
+    button.addEventListener('click', () => setTenureUnit(button.dataset.unit));
   });
 
   const selectType = (index) => {
