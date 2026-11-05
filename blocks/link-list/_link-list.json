@@ -45,6 +45,7 @@
           "value": "bg-grey",
           "options": [
             { "name": "Grey background (cards)", "value": "bg-grey" },
+            { "name": "Document list (grey cards with document icon)", "value": "doc-list" },
             { "name": "No background (divider list)", "value": "" }
           ]
         },

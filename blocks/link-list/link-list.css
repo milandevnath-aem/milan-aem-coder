@@ -135,6 +135,66 @@ main > .section > div.link-list-wrapper {
   padding: 8px 28px 8px 8px;
 }
 
+/* document list: grey cards with a leading document icon, e.g. relevant information pdfs */
+.link-list.doc-list .link-list-side h1,
+.link-list.doc-list .link-list-side h2,
+.link-list.doc-list .link-list-side h3 {
+  font-weight: var(--type-display-medium-df-1-font-weight);
+  letter-spacing: var(--type-display-medium-df-1-letter-spacing);
+  color: var(--text-color);
+}
+
+.link-list.doc-list .link-list-side p {
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+  font-weight: var(--type-body-b2-font-weight);
+}
+
+.link-list.doc-list .link-list-main > ul {
+  gap: 12px;
+}
+
+.link-list.doc-list .link-list-item + .link-list-item {
+  border-top: 0;
+}
+
+.link-list.doc-list .link-list-row,
+.link-list.doc-list .link-list-has-image .link-list-row {
+  align-items: flex-start;
+  padding: 20px 24px;
+  border-radius: 24px;
+  background-color: var(--light-color);
+  transition: background-color 0.2s ease;
+}
+
+.link-list.doc-list .link-list-row::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 20px;
+  height: 24px;
+  background-color: currentcolor;
+  mask: url("../../icons/document.svg") center / 20px no-repeat;
+}
+
+.link-list.doc-list .link-list-title {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 600;
+}
+
+.link-list.doc-list .link-list-media,
+.link-list.doc-list .link-list-icon {
+  display: none;
+}
+
+.link-list.doc-list a.link-list-row:hover {
+  background-color: var(--color-background-2-default-hover);
+}
+
+.link-list.doc-list a.link-list-row:hover .link-list-title {
+  text-decoration: underline;
+}
+
 .link-list .link-list-note{
   display: none;
 }
