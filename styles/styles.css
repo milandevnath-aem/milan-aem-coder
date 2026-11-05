@@ -868,3 +868,74 @@ main > .section.padding-left-right{
 :where(.desktop-view) main > .section.padding-left-right{
   padding-inline: 92px;
 }
+
+/* read more (section style): grey disclosure text collapsed to 3 lines, see scripts/read-more.js */
+main > .section.read-more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px 24px;
+  background-color: var(--surface-color);
+  text-align: center;
+}
+
+:where(.desktop-view) main > .section.read-more {
+  gap: 16px;
+  padding: 48px 92px;
+}
+
+main > .section.read-more > .default-content-wrapper {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 660px;
+  margin: 0;
+  padding: 0;
+  color: var(--muted-color);
+  font-size: var(--type-b1-size);
+  font-weight: 500;
+  line-height: var(--type-b1-line);
+  letter-spacing: var(--type-b1-ls);
+}
+
+main > .section.read-more .read-more-content p {
+  margin: 0;
+}
+
+main > .section.read-more .read-more-content p + p {
+  margin-top: var(--type-b1-line);
+}
+
+main > .section.read-more .read-more-content a:any-link {
+  color: var(--accent-color);
+}
+
+main > .section.read-more .read-more-content.is-collapsed {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+
+main > .section.read-more .read-more-toggle {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-color);
+  font: inherit;
+  font-size: var(--type-b1-size);
+  font-weight: 600;
+  line-height: var(--type-b1-line);
+  cursor: pointer;
+}
+
+main > .section.read-more .read-more-toggle[hidden] {
+  display: none;
+}
+
+main > .section.read-more .read-more-toggle:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}

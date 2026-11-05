@@ -32,7 +32,7 @@
       "team",
       "branch-locator",
       "lead-form",
-      "grievance"
+      "gst-form"
     ]
   },
   {
@@ -93,9 +93,9 @@
     ]
   },
   {
-    "id": "grievance",
+    "id": "gst-form",
     "components": [
-      "grievance-item"
+      "gst-form-field"
     ]
   },
   {

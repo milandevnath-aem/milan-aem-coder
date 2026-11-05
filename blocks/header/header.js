@@ -419,98 +419,23 @@ async function openAccessibility() {
 async function loadSearchIndex() {
   const resp = await fetch(SEARCH_INDEX);
   if (!resp.ok) throw new Error('Unable to load search results');
-
   const { data = [] } = await resp.json();
-
-  // use the below data hardcoded array to simulate the search index
-  // const data = [
-  //   {
-  //     path: '/home',
-  //     title: 'Kotak Prime Loans | Car, Two-Wheeler & Property Loans',
-  //     description: 'c #emi-calculator - Loan against property',
-  //     robots: 'index, follow',
-  //   },
-  //   {
-  //     path: '/car-loan',
-  //     title: 'Car Loan | Kotak Prime Loans',
-  //     description: 'Apply for a new car loan with Kotak Prime Loans.',
-  //     robots: 'index, follow',
-  //   },
-  //   {
-  //     path: '/used-car-loan',
-  //     title: 'Used Car Loan | Kotak Prime Loans',
-  //     description: 'Get finance for your used car.',
-  //     robots: 'index, follow',
-  //   },
-  //   {
-  //     path: '/two-wheeler-loan',
-  //     title: 'Two Wheeler Loan | Kotak Prime Loans',
-  //     description: 'Apply for a two wheeler loan.',
-  //     robots: 'index, follow',
-  //   },
-  //   {
-  //     path: '/loan-against-property',
-  //     title: 'Loan Against Property | Kotak Prime Loans',
-  //     description: 'Borrow against your home, shop or office.',
-  //     robots: 'index, follow',
-  //   },
-  //   {
-  //     path: '/dealer-finance',
-  //     title: 'Dealer Finance | Kotak Prime Loans',
-  //     description: 's. #feature-cards - Feature Cards',
-  //     robots: 'index, follow',
-  //   },
-  //   {
-  //     path: '/careers',
-  //     title: 'Careers | Kotak Prime Loans',
-  //     description: 'Explore career opportunities at Kotak Prime.',
-  //     robots: 'index, follow',
-  //   },
-  //   {
-  //     path: '/about-us',
-  //     title: 'About Us | Kotak Prime Loans',
-  //     description: 'Learn more about Kotak Mahindra Prime Limited.',
-  //     robots: 'index, follow',
-  //   },
-  // ];
   const entries = [];
   const paths = new Set();
-
   data.forEach(({
     path, title = '', description = '', robots = '',
   }) => {
     if (typeof path !== 'string' || !path.startsWith('/') || path.startsWith('//')
       || SEARCH_SKIP.test(path) || /noindex/i.test(robots) || paths.has(path)) return;
-
     const name = typeof title === 'string' ? title.trim() : '';
     if (!name) return;
-
     paths.add(path);
-
-    const components = [];
-    const componentPattern = /#([a-z0-9_-]+)\s*-\s*([^_]+?)(?=\s*__|$)/gi;
-
-    [...description.matchAll(componentPattern)].forEach((component) => {
-      components.push({
-        id: component[1],
-        title: component[2].trim(),
-        href: `${path}#${component[2].trim().toLowerCase().replace(/\s+/g, '')}`,
-      });
-    });
-
-    const cleanDescription = description
-      .replace(componentPattern, '')
-      .replace(/__/g, ' ')
-      .trim();
-
     entries.push({
       title: name,
       href: path,
-      text: cleanDescription.toLowerCase(),
-      components,
+      text: typeof description === 'string' ? description.toLowerCase() : '',
     });
   });
-
   return entries;
 }
 
@@ -566,25 +491,6 @@ function buildSearch(placeholder) {
   const empty = search.querySelector('.nav-search-empty');
   let matches = [];
 
-  let activeIndex = -1;
-
-  const setActiveResult = (nextIndex) => {
-    const items = [...list.querySelectorAll(':scope > li')];
-
-    if (!items.length) {
-      activeIndex = -1;
-      return;
-    }
-
-    activeIndex = Math.max(0, Math.min(nextIndex, items.length - 1));
-
-    items.forEach((item, i) => {
-      item.classList.toggle('is-active', i === activeIndex);
-    });
-
-    items[activeIndex].scrollIntoView({ block: 'nearest' });
-  };
-
   /**
    * A calculator or #anchor link to the page already open is handled in place
    * (tab select / smooth scroll) instead of reloading.
@@ -595,11 +501,7 @@ function buildSearch(placeholder) {
     if (url.origin !== window.location.origin
       || url.pathname !== window.location.pathname) return false;
     const calculator = url.searchParams.get('calculator');
-    // const target = !calculator && url.hash ? document.getElementById(url.hash.slice(1)) : null;
-    const target = !calculator && url.hash
-      ? document.getElementById(url.hash.slice(1))
-        || document.querySelector(`[data-block-name="${CSS.escape(url.hash.slice(1))}"]`)
-      : null;
+    const target = !calculator && url.hash ? document.getElementById(url.hash.slice(1)) : null;
     if (!calculator && !target) return false;
     window.history.pushState(null, '', url);
     if (calculator) {
@@ -619,69 +521,24 @@ function buildSearch(placeholder) {
     const q = query.toLowerCase();
     const words = q.split(/\s+/).filter(Boolean);
     matches = words.length ? index
-      .map((entry) => {
-        const pageScore = scoreEntry(entry, words);
-
-        const componentMatches = entry.components
-          .map((component) => ({
-            ...component,
-            score: scoreEntry({ title: component.title, text: '' }, words),
-          }))
-          .filter((component) => component.score);
-
-        return {
-          entry,
-          score: Math.max(pageScore, ...componentMatches.map((c) => c.score)),
-          pageScore,
-          componentMatches,
-        };
-      })
+      .map((entry) => ({ entry, score: scoreEntry(entry, words) }))
       .filter(({ score }) => score)
-      .sort((a, b) => b.score - a.score) : [];
+      .sort((a, b) => b.score - a.score)
+      .map(({ entry }) => entry) : [];
     list.textContent = '';
-    matches.slice(0, SEARCH_LIMIT).forEach((match) => {
-      const { entry, componentMatches } = match;
-
+    matches.slice(0, SEARCH_LIMIT).forEach((entry) => {
       const li = document.createElement('li');
-
-      // Parent page result
       const a = document.createElement('a');
       a.href = entry.href;
-
       const label = document.createElement('span');
       label.className = 'nav-search-label';
-
       const name = entry.title.toLowerCase();
-      const highlightQuery = name.includes(q)
-        ? q
-        : words.find((word) => name.includes(word));
-
+      const highlightQuery = name.includes(q) ? q : words.find((word) => name.includes(word));
       highlight(label, entry.title, highlightQuery);
       a.append(label);
       li.append(a);
-
-      // Matching component results as independent search results
-      componentMatches.forEach((component) => {
-        const componentLi = document.createElement('li');
-        const componentLink = document.createElement('a');
-
-        componentLink.href = component.id === 'emi-calculator'
-          ? `${entry.href}?calculator=${encodeURIComponent(component.title)}#emi-calculator`
-          : `${entry.href}#${component.id}`;
-
-        const componentLabel = document.createElement('span');
-        componentLabel.className = 'nav-search-label';
-
-        highlight(componentLabel, component.title, q);
-
-        componentLink.append(componentLabel);
-        componentLi.append(componentLink);
-        list.append(componentLi);
-      });
-
       list.append(li);
     });
-    setActiveResult(0);
     results.hidden = !q;
     const noMatch = !!q && !matches.length;
     title.hidden = noMatch;
@@ -696,30 +553,6 @@ function buildSearch(placeholder) {
     }
   };
   input.addEventListener('input', render);
-  input.addEventListener('keydown', (e) => {
-    const items = list.querySelectorAll(':scope > li');
-
-    if (!items.length) return;
-
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      setActiveResult(activeIndex + 1);
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      setActiveResult(activeIndex - 1);
-    }
-  });
-  list.addEventListener('mousemove', (e) => {
-    const item = e.target.closest('li');
-    if (!item || !list.contains(item)) return;
-
-    const items = [...list.querySelectorAll(':scope > li')];
-    const itemIndex = items.indexOf(item);
-
-    if (itemIndex !== -1) {
-      setActiveResult(itemIndex);
-    }
-  });
   results.addEventListener('click', (e) => {
     const a = e.target.closest('a[href]');
     if (a && !e.metaKey && !e.ctrlKey && !e.shiftKey && openOnPage(a.href)) e.preventDefault();
@@ -731,13 +564,8 @@ function buildSearch(placeholder) {
   });
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-
-    const selected = results.querySelector('li.is-active a[href]')
-      || results.querySelector('a[href]');
-
-    if (selected && !openOnPage(selected.href)) {
-      window.location.href = selected.href;
-    }
+    const first = matches[0];
+    if (first && !openOnPage(first.href)) window.location.href = first.href;
   });
   search.reset = () => {
     input.value = '';
@@ -1026,43 +854,3 @@ export default async function decorate(block) {
   navWrapper.append(nav, search, scrim);
   block.append(navWrapper);
 }
-
-function handlePageHash() {
-  const hash = decodeURIComponent(window.location.hash.slice(1));
-  if (!hash) return;
-
-  const findTarget = () => document.getElementById(hash)
-    || document.querySelector(
-      `[data-block-name="${CSS.escape(hash)}"]`,
-    );
-
-  const scrollToTarget = () => {
-    const target = findTarget();
-    if (!target) return false;
-
-    target.scrollIntoView({
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        ? 'auto'
-        : 'smooth',
-    });
-
-    return true;
-  };
-
-  if (scrollToTarget()) return;
-
-  const observer = new MutationObserver(() => {
-    if (scrollToTarget()) observer.disconnect();
-  });
-
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-  });
-
-  window.addEventListener('pagehide', () => observer.disconnect(), {
-    once: true,
-  });
-}
-
-handlePageHash();

@@ -4,7 +4,7 @@ import { createDropdown } from '../../scripts/dropdown.js';
 import {
   CAPTCHA_LENGTH, createLeadSession, errorMessage as apiErrorMessage, generateCaptcha,
 } from './lead-api.js';
-import { CITY_COLUMN, CITY_LISTS, MESSAGES } from './lead-api-config.js';
+import { MESSAGES } from './lead-api-config.js';
 import { buildLead, productFor } from './lead-payload.js';
 import {
   createOtpStep, createSuccessStep, setLoading, spinner,
@@ -15,9 +15,6 @@ import {
 import {
   digitsOnly, emailRules, fieldMessages, isPersonName, mobileRules, nameRules,
 } from '../../scripts/input-rules.js';
-import {
-  analyticsName, productType, pushEvent, safely, trackFormStart, uniqueId,
-} from '../../scripts/analytics.js';
 
 function iconButton(name, label) {
   const button = document.createElement('button');
@@ -31,7 +28,7 @@ function iconButton(name, label) {
 /**
  * "A, B: description, *C" -> options; a leading * marks the default.
  */
-function parseOptions(text) {
+export function parseOptions(text) {
   let value = '';
   const options = text.split(',').map((part) => part.trim()).filter(Boolean).map((part) => {
     const isDefault = part.startsWith('*');
@@ -43,30 +40,6 @@ function parseOptions(text) {
   return { options, value };
 }
 
-// city sheet URL -> promise of its city names, so a form opened again does not refetch
-const citySheets = {};
-
-/**
- * The cities the API of a loan category takes (CITY_LISTS in lead-api-config.js), in sheet
- * order and as written there. Resolves to [] when the category has no sheet or it cannot be read.
- * @param {string} category loan category
- * @returns {Promise<string[]>}
- */
-function loadCities(category) {
-  const url = CITY_LISTS[productFor(category)];
-  if (!url) return Promise.resolve([]);
-  citySheets[url] ||= fetch(url)
-    .then((resp) => (resp.ok ? resp.json() : {}))
-    .then(({ data = [] }) => [...new Set(data
-      .map((row) => String(row[CITY_COLUMN] ?? '').trim())
-      .filter(Boolean))])
-    .catch(() => []);
-  return citySheets[url].then((names) => {
-    if (!names.length) delete citySheets[url]; // tried again next time
-    return names;
-  });
-}
-
 let errorCount = 0;
 
 /**
@@ -76,7 +49,7 @@ let errorCount = 0;
  * @returns {{ el: HTMLParagraphElement, show: Function }} show(invalid, text): text replaces
  *   the message once (e.g. an API error), the next call shows the default message again
  */
-function fieldError(control, message) {
+export function fieldError(control, message) {
   errorCount += 1;
   const el = document.createElement('p');
   el.className = 'lead-form-error';
@@ -98,9 +71,9 @@ function fieldError(control, message) {
  * Something typed or pasted was refused by the input rules: the form shows the field's
  * "invalid" message (an "input-rejected" event, see decorate).
  */
-const rejected = (input) => () => input.dispatchEvent(new CustomEvent('input-rejected', { bubbles: true }));
+export const rejected = (input) => () => input.dispatchEvent(new CustomEvent('input-rejected', { bubbles: true }));
 
-function textField(label, kind, required) {
+export function textField(label, kind, required) {
   const field = document.createElement('label');
   field.className = `lead-form-input lead-form-${kind}`;
   const input = document.createElement(kind === 'textarea' ? 'textarea' : 'input');
@@ -188,7 +161,7 @@ function textareaField(label, required, max) {
  * @param {string} label field label
  * @returns {HTMLDivElement & { load: Function, isValid: Function, input: HTMLInputElement }}
  */
-function captchaField(label) {
+export function captchaField(label) {
   const field = document.createElement('div');
   field.className = 'lead-form-captcha';
   const frame = document.createElement('div');
@@ -426,7 +399,6 @@ export default function decorate(block) {
   const dropdowns = [];
   const checks = [];
   let captcha;
-  let cityField;
 
   fieldRows.forEach((row) => {
     const [labelCell, kindCell, optionsCell, requiredCell, halfCell] = row.children;
@@ -435,8 +407,8 @@ export default function decorate(block) {
     const optionsText = optionsCell?.textContent.trim() || '';
     // fields left as plain text: a description is multi-line, a field with a list of
     // options is a dropdown (searchable when the list is long)
-    // a city field lists the cities of the category's API (see loadCities), searchable; its
-    // authored options are kept when the category has no city sheet
+    // a city field lists the cities of the city master (placeholders "city-master"),
+    // searchable; its authored options are kept only when the city master is not available
     const isCity = /\bcity\b/i.test(label) && ['text', 'select', 'search'].includes(kind);
     if (isCity) kind = 'search';
     else if (kind === 'text' && /descri|message|comment|remark/i.test(label)) kind = 'textarea';
@@ -466,8 +438,17 @@ export default function decorate(block) {
       field.defaultValue = value;
       dropdowns.push(field);
       if (isCity) {
-        cityField = field;
-        cityField.authoredOptions = options;
+        const city = field;
+        import('../../scripts/city-locator.js')
+          .then(({ loadCityMaster }) => loadCityMaster())
+          .then((cities) => {
+            // one entry per city, even when the city master lists several branches of it
+            const names = [...new Set(cities.map((c) => c.name))];
+            if (!names.length) return;
+            city.setOptions(names.map((n) => ({ value: n, label: n })));
+            city.optionValues = names;
+          })
+          .catch(() => {}); // the authored options stay
       }
     } else if (kind === 'captcha') {
       field = captchaField(label);
@@ -517,7 +498,6 @@ export default function decorate(block) {
   const submit = document.createElement('button');
   submit.type = 'submit';
   submit.className = 'button primary lead-form-submit';
-  submit.id = uniqueId('lead-form-submit');
   submit.textContent = submitRow?.textContent.trim() || 'Apply now';
   if (submitRow) moveInstrumentation(submitRow, submit);
   // a failed request (OTP not sent) is shown above the button
@@ -543,10 +523,10 @@ export default function decorate(block) {
       || check.field.querySelector('.lead-form-input') || check.field;
     box.classList.toggle('is-invalid', invalid);
   };
-  // the button is disabled until every field is valid: a click (or Enter in a field) does
-  // nothing; each field says what is wrong when the visitor leaves it
+  // the button stays focusable while the form is incomplete (aria-disabled, not disabled);
+  // submitting then lists what is missing
   const refresh = () => {
-    submit.disabled = !isValid();
+    submit.setAttribute('aria-disabled', !isValid());
   };
   form.addEventListener('input', refresh);
   form.addEventListener('change', refresh);
@@ -654,22 +634,6 @@ export default function decorate(block) {
     refresh();
   };
 
-  /** the picked loan category, else the page's own product */
-  const currentCategory = (data = Object.fromEntries(new FormData(form))) => {
-    const categoryKey = Object.keys(data).find((k) => k.endsWith('category'));
-    return String((categoryKey && data[categoryKey]) || pageCategory() || '');
-  };
-  /**
-   * form_name of the analytics events: the modal page the form is opened from
-   * ("/modals/two-wheeler-form" -> "two_wheeler_form"), else the form's heading
-   */
-  const formName = () => {
-    const page = (block.closest('dialog')?.dataset.modalPath || '').split('/').filter(Boolean).pop() || '';
-    return analyticsName(page.replace(/(\.plain)?\.html$/, ''))
-      || analyticsName(intro.querySelector('h1, h2')?.textContent) || 'lead_form';
-  };
-  trackFormStart(form, formName, currentCategory);
-
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (submit.classList.contains('is-loading')) return;
@@ -683,17 +647,8 @@ export default function decorate(block) {
     const data = Object.fromEntries(new FormData(form));
     const mobile = String(form.querySelector('input[type="tel"]')?.value || '').trim();
     // the category picks the API product (lead-api-config.js)
-    const category = currentCategory(data);
-    // analytics: no personal data, the city is the only field sent; a tracking error never
-    // stops the lead (safely: logged, the events are then sent without these fields)
-    const tracked = safely(() => {
-      const cityKey = Object.keys(data).find((k) => /\b(city|location)\b/.test(k.replace(/-/g, ' ')));
-      return {
-        form_name: formName(),
-        product_type: productType(category),
-        city: (cityKey && String(data[cityKey]).trim()) || undefined,
-      };
-    }, {});
+    const categoryKey = Object.keys(data).find((k) => k.endsWith('category'));
+    const category = String((categoryKey && data[categoryKey]) || pageCategory() || '');
     let session;
     try {
       session = createLeadSession({
@@ -734,7 +689,6 @@ export default function decorate(block) {
       showSubmitFailure(failure);
       return;
     }
-    pushEvent('lead_form_submit', tracked);
 
     block.querySelector('.lead-form-otp')?.remove();
     const otp = createOtpStep({
@@ -756,9 +710,7 @@ export default function decorate(block) {
         }
       },
       // the lead is created by verifyOtp
-      onVerified: (lead) => {
-        // the server's lead reference, never the mobile number
-        pushEvent('generate_lead', { ...tracked, lead_id: lead?.leadId || undefined });
+      onVerified: () => {
         // the lead exists now: tidying up must not keep the visitor from the success step
         try {
           clearForm();
@@ -807,27 +759,9 @@ export default function decorate(block) {
   };
   selectCategory(pageCategory());
   refresh();
-
-  // city: the cities of the selected category's API (the last pick wins when sheets load slowly)
-  let cityRequest = 0;
-  const updateCities = (category) => {
-    if (!cityField) return;
-    cityRequest += 1;
-    const request = cityRequest;
-    loadCities(category).then((names) => {
-      if (request !== cityRequest) return;
-      const options = names.length
-        ? names.map((n) => ({ value: n, label: n }))
-        : cityField.authoredOptions;
-      cityField.setOptions(options);
-      cityField.optionValues = options.map((option) => option.value);
-    });
-  };
-  updateCities(categoryDropdown?.value || pageCategory());
   // picking another product in a modal opens that product's form
   categoryDropdown?.addEventListener('change', (e) => {
     if (!e.detail?.byUser || !categoryDropdown.value) return;
-    updateCities(categoryDropdown.value);
     // the short form follows the pick, so it shows it once the modal is closed
     document.dispatchEvent(new CustomEvent(CATEGORY_PICKED_EVENT, {
       detail: { category: categoryDropdown.value },

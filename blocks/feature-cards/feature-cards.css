@@ -176,10 +176,6 @@
     max-width: 386px;
 }
 
-.feature-cards.numbered.expand-card-width .feature-cards-card{
-    max-width: 100%;
-}
-
 /* numbered */
 :where(.desktop-view) .feature-cards.numbered .feature-cards-card{
     height: 272px;
@@ -884,8 +880,4 @@
     height: 40px;
     padding: 8px;
     border-width: 1px;
-}
-
-.feature-cards-container .default-content-wrapper > h2 + p{
-    max-width: 660px;
 }
