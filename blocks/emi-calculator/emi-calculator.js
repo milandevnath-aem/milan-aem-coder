@@ -616,7 +616,10 @@ function buildCalculator(types, link) {
   };
 
   // "car-loan" matches the tab "Car loans"
-  const normalize = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, '').replace(/s$/, '');
+  const normalize = (text) => text.toLowerCase()
+    .replace(/\b(?:emi|calculators?)\b/g, '')
+    .replace(/[^a-z0-9]+/g, '')
+    .replace(/s$/, '');
   const findType = (name) => {
     if (!name) return undefined;
     const index = types.findIndex((type) => normalize(type.title) === normalize(name));

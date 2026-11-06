@@ -199,7 +199,6 @@
 
 .feature-cards.numbered .feature-cards-body h3 {
     margin-top: auto;
-    padding-top: 40px;
     font-size: 16px;
     line-height: 24px;
     letter-spacing: 0;
@@ -886,6 +885,11 @@
     border: 0.8px solid #dedede;
     border-radius: 8px;
     background: #eee;
+}
+
+/* long text must not shrink the icon in the row layout */
+.feature-cards.icon-border .feature-cards-icon {
+    flex: none;
 }
 
 .feature-cards.split.icon-border .feature-cards-icon img,
