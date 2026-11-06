@@ -79,16 +79,23 @@ export async function createModal(contentNodes, { className = '', label = '' } =
   });
 
   document.body.append(dialog);
+  // forms on small screens open below the header (it stays visible, the page is inert);
+  // re-measured on resize since iOS Safari's toolbar can collapse/expand after the tap
+  // that opened the modal, leaving the first measurement stale
+  const updateTop = () => {
+    const nav = document.querySelector('header nav');
+    const top = nav ? Math.max(0, Math.round(nav.getBoundingClientRect().bottom)) : 0;
+    dialog.style.setProperty('--modal-top', `${top}px`);
+  };
   return {
     dialog,
     showModal: () => {
-      // forms on small screens open below the header (it stays visible, the page is inert)
-      const nav = document.querySelector('header nav');
-      const top = nav ? Math.max(0, Math.round(nav.getBoundingClientRect().bottom)) : 0;
-      dialog.style.setProperty('--modal-top', `${top}px`);
+      updateTop();
       dialog.showModal();
       document.body.classList.add('modal-open');
       content.scrollTop = 0;
+      window.addEventListener('resize', updateTop);
+      dialog.addEventListener('close', () => window.removeEventListener('resize', updateTop), { once: true });
     },
     close: () => animateClose(dialog),
   };
