@@ -551,7 +551,7 @@ function buildSearch(placeholder) {
       <div class="nav-search-columns">
         <div class="nav-search-group"><ul id="nav-search-options" role="listbox" aria-label="Search suggestions"></ul></div>
       </div>
-      <p class="nav-search-empty" hidden>No results found</p>
+      <p class="nav-search-empty" hidden>No results found. Try different keywords.</p>
     </div>
     <p class="nav-search-status visually-hidden" role="status" aria-live="polite" aria-atomic="true"></p>`;
   const form = search.querySelector('form');
@@ -705,7 +705,7 @@ function buildSearch(placeholder) {
     } else if (failed) {
       empty.textContent = 'Search is unavailable. Please try again.';
     } else {
-      empty.textContent = 'No results found';
+      empty.textContent = 'No results found. Try different keywords.';
     }
     const announcement = pending || failed || noMatch
       ? empty.textContent
