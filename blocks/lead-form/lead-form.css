@@ -121,10 +121,10 @@
   padding: 0;
   background: transparent;
   color: var(--text-color);
-  font-size: var(--type-headline-h4-font-size);
-  font-weight: var(--type-headline-h4-font-weight);
-  line-height: var(--type-headline-h4-line-height);
-  letter-spacing: var(--type-headline-h4-letter-spacing);
+  font-size: var(--type-headline-h5-font-size);
+  font-weight: var(--type-headline-h5-font-weight);
+  line-height: var(--type-headline-h5-line-height);
+  letter-spacing: var(--type-headline-h5-letter-spacing);
   outline: none;
   box-shadow: none;
 }
