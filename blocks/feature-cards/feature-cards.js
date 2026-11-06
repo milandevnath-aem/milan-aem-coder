@@ -3,6 +3,25 @@ import { moveInstrumentation } from '../../scripts/scripts.js';
 // split-culture / split-insurance are listed first: they also get the split class at runtime
 const VARIANTS = ['split-culture', 'split-insurance', 'numbered', 'split', 'info', 'about-us'];
 const SPLIT_VARIANTS = ['split', 'split-culture', 'split-insurance'];
+// a phone value uses only digits, spaces, brackets, dashes and an optional leading +
+const PHONE_CHARS = /^\+?[\d\s()-]+$/;
+// Indian numbers: 10-digit mobile, 11 with STD/toll-free code, 12 with +91
+const PHONE_DIGITS = { min: 10, max: 12 };
+
+/** Makes a phone-number value clickable (skipped for fax numbers). */
+function linkPhone(value) {
+  const strong = value.querySelector('strong');
+  const text = strong.textContent.trim();
+  const label = value.previousElementSibling?.textContent || '';
+  const digits = text.replace(/\D/g, '');
+  const isPhone = PHONE_CHARS.test(text)
+    && digits.length >= PHONE_DIGITS.min && digits.length <= PHONE_DIGITS.max;
+  if (!isPhone || /fax/i.test(label) || strong.querySelector('a')) return;
+  const link = document.createElement('a');
+  link.href = `tel:${text.startsWith('+') ? '+' : ''}${digits}`;
+  link.append(...strong.childNodes);
+  strong.append(link);
+}
 
 function buildCard(row) {
   const [imageCell, textCell, layoutCell, numberCell] = row.children;
@@ -39,6 +58,7 @@ function buildCard(row) {
     body.querySelectorAll('p').forEach((p) => {
       if (p.querySelector('strong') && p.textContent.trim() === p.querySelector('strong').textContent.trim()) {
         p.classList.add('feature-cards-value');
+        linkPhone(p);
       }
     });
     // split-insurance: a card with a list (e.g. add-ons) is drawn taller, with tick bullets
