@@ -1,3 +1,20 @@
+html.header-anchor-scroll {
+  --header-anchor-scroll-duration: 1000ms;
+
+  scroll-behavior: smooth;
+  scroll-padding-top: 70px;
+}
+
+html.header-anchor-scroll.header-anchor-animating {
+  scroll-behavior: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.header-anchor-scroll {
+    scroll-behavior: auto;
+  }
+}
+
 /* header and nav layout */
 header .nav-wrapper {
   --nav-bar-height: 60px;
@@ -886,6 +903,9 @@ header .nav-search-bar input::-webkit-search-cancel-button {
 header .nav-search-clear {
   display: flex;
   align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  min-height: 24px;
   margin: 0;
   border: 0;
   padding: 0;
@@ -896,6 +916,12 @@ header .nav-search-clear {
 
 header .nav-search-clear[hidden] {
   display: none;
+}
+
+header .nav-search-clear:focus-visible,
+header .nav-search-group a:focus-visible {
+  outline: 2px solid var(--text-color);
+  outline-offset: 2px;
 }
 
 header .nav-search-results {

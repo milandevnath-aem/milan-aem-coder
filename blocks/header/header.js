@@ -543,16 +543,17 @@ function buildSearch(placeholder) {
   search.hidden = true;
   search.innerHTML = `
     <form class="nav-search-bar" role="search">
-      <input type="search" name="q" autocomplete="off" aria-label="Search" aria-controls="nav-search-results">
+      <input type="search" name="q" autocomplete="off" role="combobox" aria-label="Search" aria-autocomplete="list" aria-haspopup="listbox" aria-expanded="false" aria-controls="nav-search-options">
       <button type="button" class="nav-search-clear" hidden>Clear</button>
     </form>
     <div class="nav-search-results" id="nav-search-results" hidden>
       <p class="nav-search-title">Suggested results</p>
       <div class="nav-search-columns">
-        <div class="nav-search-group"><ul></ul></div>
+        <div class="nav-search-group"><ul id="nav-search-options" role="listbox" aria-label="Search suggestions"></ul></div>
       </div>
-      <p class="nav-search-empty" role="status" hidden>No results found</p>
-    </div>`;
+      <p class="nav-search-empty" hidden>No results found</p>
+    </div>
+    <p class="nav-search-status visually-hidden" role="status" aria-live="polite" aria-atomic="true"></p>`;
   const form = search.querySelector('form');
   const input = form.querySelector('input');
   input.placeholder = placeholder;
@@ -564,6 +565,7 @@ function buildSearch(placeholder) {
   const title = search.querySelector('.nav-search-title');
   const columns = search.querySelector('.nav-search-columns');
   const empty = search.querySelector('.nav-search-empty');
+  const status = search.querySelector('.nav-search-status');
   let matches = [];
 
   let activeIndex = -1;
@@ -573,6 +575,7 @@ function buildSearch(placeholder) {
 
     if (!items.length) {
       activeIndex = -1;
+      input.removeAttribute('aria-activedescendant');
       return;
     }
 
@@ -580,8 +583,10 @@ function buildSearch(placeholder) {
 
     items.forEach((item, i) => {
       item.classList.toggle('is-active', i === activeIndex);
+      item.querySelector('a').setAttribute('aria-selected', i === activeIndex);
     });
 
+    input.setAttribute('aria-activedescendant', items[activeIndex].querySelector('a').id);
     items[activeIndex].scrollIntoView({ block: 'nearest' });
   };
 
@@ -681,8 +686,16 @@ function buildSearch(placeholder) {
 
       list.append(li);
     });
+    [...list.children].forEach((item, position) => {
+      item.setAttribute('role', 'none');
+      const link = item.querySelector('a');
+      link.id = `nav-search-option-${position}`;
+      link.setAttribute('role', 'option');
+    });
     setActiveResult(0);
     results.hidden = !q;
+    input.setAttribute('aria-expanded', !!q && !!list.children.length);
+    list.setAttribute('aria-busy', pending);
     const noMatch = !!q && !matches.length;
     title.hidden = noMatch;
     columns.hidden = noMatch;
@@ -694,9 +707,20 @@ function buildSearch(placeholder) {
     } else {
       empty.textContent = 'No results found';
     }
+    const announcement = pending || failed || noMatch
+      ? empty.textContent
+      : `${list.children.length} search suggestions available.`;
+    status.textContent = q ? announcement : '';
   };
   input.addEventListener('input', render);
+  search.addEventListener('pointerdown', () => search.classList.remove('is-keyboard-search'));
+  search.addEventListener('keydown', (e) => {
+    if (!e.isComposing && ['Tab', 'ArrowDown', 'ArrowUp'].includes(e.key)) {
+      search.classList.add('is-keyboard-search');
+    }
+  });
   input.addEventListener('keydown', (e) => {
+    if (e.isComposing) return;
     const items = list.querySelectorAll(':scope > li');
 
     if (!items.length) return;
@@ -708,6 +732,17 @@ function buildSearch(placeholder) {
       e.preventDefault();
       setActiveResult(activeIndex - 1);
     }
+  });
+  list.addEventListener('focusin', (e) => {
+    const items = [...list.children];
+    const position = items.indexOf(e.target.closest('li'));
+    if (position >= 0) setActiveResult(position);
+  });
+  list.addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+    e.preventDefault();
+    setActiveResult(activeIndex + (e.key === 'ArrowDown' ? 1 : -1));
+    list.children[activeIndex]?.querySelector('a').focus();
   });
   list.addEventListener('mousemove', (e) => {
     const item = e.target.closest('li');
@@ -722,7 +757,8 @@ function buildSearch(placeholder) {
   });
   results.addEventListener('click', (e) => {
     const a = e.target.closest('a[href]');
-    if (a && !e.metaKey && !e.ctrlKey && !e.shiftKey && openOnPage(a.href)) e.preventDefault();
+    if (a && e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey
+      && !e.altKey && openOnPage(a.href)) e.preventDefault();
   });
   clear.addEventListener('click', () => {
     input.value = '';
@@ -731,6 +767,7 @@ function buildSearch(placeholder) {
   });
   form.addEventListener('submit', (e) => {
     e.preventDefault();
+    if (results.hidden) return;
 
     const selected = results.querySelector('li.is-active a[href]')
       || results.querySelector('a[href]');
@@ -749,6 +786,7 @@ function buildSearch(placeholder) {
     if (!loading) {
       pending = true;
       failed = false;
+      render();
       loading = loadSearchIndex()
         .then((entries) => { index = entries; })
         .catch(() => {
@@ -960,6 +998,7 @@ export default async function decorate(block) {
   scrim.className = 'nav-scrim';
   scrim.hidden = true;
   const setSearch = (isOpen) => {
+    search.classList.remove('is-keyboard-search');
     search.hidden = !isOpen;
     scrim.hidden = !isOpen;
     block.classList.toggle('is-searching', isOpen);
@@ -984,14 +1023,21 @@ export default async function decorate(block) {
     searchLink.addEventListener('click', (e) => {
       e.preventDefault();
       setSearch(search.hidden);
+      if (!search.hidden && e.detail === 0) search.classList.add('is-keyboard-search');
     });
   }
   search.id = 'nav-search';
   search.addEventListener('search:close', () => setSearch(false));
   scrim.addEventListener('click', () => setSearch(false));
 
-  /* closing behaviour */
+  /* keyboard shortcuts and closing behaviour */
   window.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.shiftKey && !e.altKey && !e.metaKey && e.key.toLowerCase() === 'f') {
+      e.preventDefault();
+      setSearch(search.hidden);
+      if (!search.hidden) search.classList.add('is-keyboard-search');
+      return;
+    }
     if (e.key !== 'Escape') return;
     const expanded = desktopMenu?.querySelector('[aria-expanded="true"]');
     if (expanded) {
@@ -1037,13 +1083,48 @@ function handlePageHash() {
     );
 
   const scrollToTarget = () => {
+    const main = document.querySelector('main');
+    if (!main || [...main.children].some((section) => section.dataset.sectionStatus !== 'loaded')) {
+      return false;
+    }
     const target = findTarget();
     if (!target) return false;
 
-    target.scrollIntoView({
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        ? 'auto'
-        : 'smooth',
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const root = document.documentElement;
+        const rootStyles = getComputedStyle(root);
+        const duration = parseFloat(rootStyles
+          .getPropertyValue('--header-anchor-scroll-duration')) || 1000;
+        const offset = parseFloat(rootStyles.scrollPaddingTop) || 0;
+        const destination = Math.max(0, Math.min(
+          target.getBoundingClientRect().top + window.scrollY - offset,
+          root.scrollHeight - window.innerHeight,
+        ));
+        root.classList.add('header-anchor-animating');
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        let started;
+        let frame;
+        const stop = () => {
+          cancelAnimationFrame(frame);
+          root.classList.remove('header-anchor-animating');
+          window.removeEventListener('wheel', stop);
+          window.removeEventListener('touchstart', stop);
+          window.removeEventListener('keydown', stop);
+        };
+        const animate = (timestamp) => {
+          if (started === undefined) started = timestamp;
+          const progress = Math.min((timestamp - started) / duration, 1);
+          const eased = progress * progress * (3 - 2 * progress);
+          window.scrollTo({ top: destination * eased, behavior: 'instant' });
+          if (progress < 1) frame = requestAnimationFrame(animate);
+          else stop();
+        };
+        window.addEventListener('wheel', stop, { passive: true });
+        window.addEventListener('touchstart', stop, { passive: true });
+        window.addEventListener('keydown', stop);
+        frame = requestAnimationFrame(animate);
+      });
     });
 
     return true;
@@ -1058,6 +1139,8 @@ function handlePageHash() {
   observer.observe(document.body, {
     childList: true,
     subtree: true,
+    attributes: true,
+    attributeFilter: ['data-section-status'],
   });
 
   window.addEventListener('pagehide', () => observer.disconnect(), {
@@ -1065,4 +1148,5 @@ function handlePageHash() {
   });
 }
 
+document.documentElement.classList.add('header-anchor-scroll');
 handlePageHash();
