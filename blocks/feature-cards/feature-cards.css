@@ -247,6 +247,15 @@
     letter-spacing: -0.4px;
 }
 
+/* keep iOS auto-detected / tel: links looking like the value text */
+.feature-cards .feature-cards-value a[x-apple-data-detectors],
+.feature-cards .feature-cards-value a[href^="tel"] {
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    text-decoration: none;
+}
+
 .feature-cards.info .feature-cards-body p.feature-cards-value:not(:last-child) {
     margin-bottom: 24px;
     padding-bottom: 24px;

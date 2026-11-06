@@ -64,6 +64,11 @@
     object-position: 25% bottom;
 }
 
+/* tablet portrait: the mobile crop is too narrow to cover the wide banner, show it whole */
+:where([data-viewport='tablet-portrait']) .feature-banner .feature-banner-image img {
+    object-position: center bottom;
+}
+
 .feature-banner .feature-banner-content {
     position: relative;
     box-sizing: border-box;
