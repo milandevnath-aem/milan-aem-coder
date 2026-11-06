@@ -226,23 +226,46 @@ export default function decorate(block) {
     status.classList.toggle('is-loading', loading);
   };
 
-  let mapTimer;
-  const loadMap = (city) => {
-    clearTimeout(mapTimer);
-    // load the embed after the page has settled; it is not needed for LCP
-    mapTimer = setTimeout(() => {
-      const iframe = document.createElement('iframe');
-      iframe.title = `Map: Kotak Mahindra Prime, ${city.name}`;
-      iframe.loading = 'lazy';
+  // warm up the connection to the map host while the cities load
+  const preconnect = document.createElement('link');
+  preconnect.rel = 'preconnect';
+  preconnect.href = 'https://maps.google.com';
+  document.head.append(preconnect);
+
+  // one iframe, reused for every city, so the map does not flash blank on a change
+  let iframe;
+  let selected;
+  let pageLoaded = false;
+  const renderMap = () => {
+    if (!iframe) {
+      iframe = document.createElement('iframe');
       iframe.referrerPolicy = 'no-referrer-when-downgrade';
-      const address = city.details.find((d) => d.key === 'address')?.value;
-      // coordinates pin the branch exactly; the address is a fallback for rows without them
-      const q = city.position
-        ? `${city.position.lat},${city.position.lng}`
-        : encodeURIComponent(`Kotak Mahindra Prime ${address || `${city.name} ${city.region}`}`);
-      iframe.src = `https://maps.google.com/maps?q=${q}&z=15&output=embed`;
-      map.replaceChildren(iframe);
-    }, map.childElementCount ? 0 : 2500);
+      iframe.addEventListener('load', () => {
+        map.classList.remove('is-loading');
+        map.classList.add('is-loaded');
+      });
+      map.append(iframe);
+    }
+    const city = selected;
+    iframe.title = `Map: Kotak Mahindra Prime, ${city.name}`;
+    const address = city.details.find((d) => d.key === 'address')?.value;
+    // coordinates pin the branch exactly; the address is a fallback for rows without them
+    const q = city.position
+      ? `${city.position.lat},${city.position.lng}`
+      : encodeURIComponent(`Kotak Mahindra Prime ${address || `${city.name} ${city.region}`}`);
+    map.classList.add('is-loading');
+    iframe.src = `https://maps.google.com/maps?q=${q}&z=15&output=embed`;
+  };
+
+  // the first map waits for the page load (not a fixed delay), so it never competes with LCP
+  afterPageLoad(() => {
+    pageLoaded = true;
+    if (selected) renderMap();
+  });
+  const loadMap = (city) => {
+    selected = city;
+    map.classList.add('is-loading');
+    if (pageLoaded) renderMap();
   };
 
   /** renders the city's details in the card and the map, then tells the page */
