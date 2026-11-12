@@ -417,3 +417,19 @@ dialog.modal.modal-details .default-content-wrapper p.button-wrapper:last-child 
   line-height: 44px;
   letter-spacing: -0.8px;
 }
+
+/* desktop (1680px and up): modal copy steps up one size (Headline/H7, Body/B2, Button/BT-3) */
+:where([data-viewport='desktop']) dialog.modal .default-content-wrapper h2 {
+  font-size: var(--type-headline-h7-font-size);
+  line-height: var(--type-headline-h7-line-height);
+}
+
+:where([data-viewport='desktop']) dialog.modal .default-content-wrapper p {
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+}
+
+:where([data-viewport='desktop']) dialog.modal .default-content-wrapper p.button-wrapper:last-child .button {
+  font-size: var(--type-button-bt-3-font-size);
+  line-height: var(--type-button-bt-3-line-height);
+}

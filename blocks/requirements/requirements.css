@@ -449,3 +449,46 @@
   padding:0;
   margin:0;
 }
+
+/*
+ * desktop (1680px and up, also the 1920 / 2560 designs): the type steps up to the DLS desktop
+ * values (Figma 1680 / 1920 frames)
+ */
+:where([data-viewport='desktop']) .requirements .requirements-tabs button,
+:where([data-viewport='desktop']) .requirements.eligibility .requirements-tabs button {
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+}
+
+/* eligibility cards: 280px tall with the larger value text, still 386px wide */
+:where([data-viewport='desktop']) .requirements.eligibility .requirements-card {
+  min-height: 280px;
+  max-height: 280px;
+}
+
+:where([data-viewport='desktop']) .requirements .requirements-title {
+  font-size: var(--type-body-b3-font-size);
+  line-height: var(--type-body-b3-line-height);
+}
+
+:where([data-viewport='desktop']) .requirements .requirements-text p {
+  font-size: var(--type-headline-h7-font-size);
+  line-height: var(--type-headline-h7-line-height);
+  letter-spacing: var(--type-headline-h7-letter-spacing);
+}
+
+/* documents: Headline/H4 card title, Body/B2 list */
+:where([data-viewport='desktop']) .requirements.documents .requirements-title {
+  font-size: var(--type-headline-h4-font-size);
+  line-height: var(--type-headline-h4-line-height);
+  letter-spacing: var(--type-headline-h4-letter-spacing);
+}
+
+:where([data-viewport='desktop']) .requirements.documents .requirements-text li {
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+}
+
+:where([data-viewport='desktop']) .requirements.documents .requirements-text li::before {
+  top: 4px;
+}

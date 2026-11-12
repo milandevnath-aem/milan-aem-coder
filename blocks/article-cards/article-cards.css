@@ -318,3 +318,26 @@
   line-height: var(--type-h2-line);
 }
 
+
+/*
+ * desktop (1680px and up): reading time steps up to Body/B1 16/24 (Figma 1680 / 1920 frames);
+ * category and title follow the global --type-h2 / --type-h4 tokens
+ */
+:where([data-viewport='desktop']) .article-cards .article-cards-meta {
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
+}
+
+/* stylelint-disable selector-class-pattern -- required author-selected variant class */
+
+/* desktop (1680px and up): media release cards step up one size like the regulatory cards */
+:where([data-viewport='desktop']) .article-cards.mediaReleasesCards .article-cards-title {
+  font-size: var(--type-headline-h4-font-size);
+  line-height: var(--type-headline-h4-line-height);
+}
+
+:where([data-viewport='desktop']) .article-cards.mediaReleasesCards .article-cards-button {
+  font-size: var(--type-headline-h1-font-size);
+  line-height: var(--type-headline-h1-line-height);
+}
+/* stylelint-enable selector-class-pattern */

@@ -903,3 +903,83 @@
 .feature-cards-container .default-content-wrapper > h2 + p{
     max-width: 660px;
 }
+
+/*
+ * desktop (1680px and up, also the 1920 / 2560 designs): every text style steps up one size to
+ * the DLS desktop values, as in the Figma 1680 / 1920 frames (40/48 to 44/52, 28/36 to 32/40,
+ * 20/28 to 24/32, 16/24 to 20/28, 14/18 to 16/24, 12/16 to 14/20); the layout is unchanged
+ */
+:where([data-viewport='desktop']) .feature-cards .feature-cards-body h3,
+:where([data-viewport='desktop']) .feature-cards .feature-cards-body h4,
+:where([data-viewport='desktop']) .feature-cards.numbered .feature-cards-body h3,
+:where([data-viewport='desktop']) .feature-cards.numbered .feature-cards-number {
+    font-size: var(--type-headline-h4-font-size);
+    line-height: var(--type-headline-h4-line-height);
+    letter-spacing: var(--type-headline-h4-letter-spacing);
+}
+
+:where([data-viewport='desktop']) .feature-cards .feature-cards-body p,
+:where([data-viewport='desktop']) .feature-cards.numbered .feature-cards-body p {
+    font-size: var(--type-body-b2-font-size);
+    line-height: var(--type-body-b2-line-height);
+}
+
+:where([data-viewport='desktop']) .feature-cards.about-us .feature-cards-body p {
+    font-size: var(--type-body-b1-font-size);
+    line-height: var(--type-body-b1-line-height);
+}
+
+:where([data-viewport='desktop']) .feature-cards.about-us .feature-cards-body p.feature-cards-value {
+    font-size: var(--type-body-b3-font-size);
+    line-height: var(--type-body-b3-line-height);
+}
+
+/* split variants */
+:where([data-viewport='desktop']) .feature-cards.split .feature-cards-aside h2,
+:where([data-viewport='desktop']) .feature-cards.split .feature-cards-aside h3,
+:where([data-viewport='desktop']) .feature-cards.split-culture .feature-cards-aside > h2,
+:where([data-viewport='desktop']) .feature-cards.split-culture .feature-cards-aside > h3,
+:where([data-viewport='desktop']) .feature-cards.split-insurance .feature-cards-header h2,
+:where([data-viewport='desktop']) .feature-cards.split-insurance .feature-cards-header h3 {
+    font-size: var(--type-display-size);
+    line-height: var(--type-display-line);
+    letter-spacing: var(--type-display-ls);
+}
+
+:where([data-viewport='desktop']) .feature-cards.split .feature-cards-body h3,
+:where([data-viewport='desktop']) .feature-cards.split .feature-cards-body h4,
+:where([data-viewport='desktop']) .feature-cards.split-culture .feature-cards-body h3,
+:where([data-viewport='desktop']) .feature-cards.split-culture .feature-cards-body h4,
+:where([data-viewport='desktop']) .feature-cards.split-insurance .feature-cards-main .feature-cards-body h3,
+:where([data-viewport='desktop']) .feature-cards.split-insurance .feature-cards-main .feature-cards-body h4,
+:where([data-viewport='desktop']) .feature-cards.split-culture .feature-cards-aside > p,
+:where([data-viewport='desktop']) .feature-cards.split-insurance .feature-cards-header p {
+    font-size: var(--type-body-b2-font-size);
+    line-height: var(--type-body-b2-line-height);
+}
+
+:where([data-viewport='desktop']) .feature-cards.split .feature-cards-body p,
+:where([data-viewport='desktop']) .feature-cards.split .feature-cards-footer p:not(.button-wrapper),
+:where([data-viewport='desktop']) .feature-cards.split-culture .feature-cards-body p,
+:where([data-viewport='desktop']) .feature-cards.split-insurance .feature-cards-body p,
+:where([data-viewport='desktop']) .feature-cards.split-insurance .feature-cards-body li,
+:where([data-viewport='desktop']) .feature-cards.split-insurance .feature-cards-note p {
+    font-size: var(--type-body-b1-font-size);
+    line-height: var(--type-body-b1-line-height);
+}
+
+:where([data-viewport='desktop']) .feature-cards.split-culture .is-media .feature-cards-body p {
+    font-size: var(--type-body-b3-font-size);
+    line-height: var(--type-body-b3-line-height);
+}
+
+:where([data-viewport='desktop']) .feature-cards.split-insurance .is-media .feature-cards-body h3,
+:where([data-viewport='desktop']) .feature-cards.split-insurance .is-media .feature-cards-body h4 {
+    font-size: var(--type-headline-h6-font-size);
+    line-height: var(--type-headline-h6-line-height);
+}
+
+:where([data-viewport='desktop']) .feature-cards.split-insurance .feature-cards-main .feature-cards-number {
+    font-size: var(--type-headline-h1-font-size);
+    line-height: var(--type-headline-h1-line-height);
+}

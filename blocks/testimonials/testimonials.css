@@ -142,3 +142,8 @@
   padding: 0;
   scroll-padding: 0;
 }
+
+/* desktop (1680px and up): 60px from the quote to the author (Figma 1680 / 1920 frames) */
+:where([data-viewport='desktop']) .testimonials .testimonials-item {
+  gap: 60px;
+}

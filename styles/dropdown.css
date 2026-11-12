@@ -263,3 +263,22 @@
   padding: 12px;
   color: var(--muted-color);
 }
+
+/*
+ * desktop (1680px and up): the open list steps up with the field (Body/B2 options, Body/B1
+ * descriptions); blocks that size their own dropdown set the variables themselves
+ */
+:where([data-viewport='desktop']) .dropdown {
+  --dropdown-value-size: 20px;
+  --dropdown-value-line: 28px;
+}
+
+:where([data-viewport='desktop']) .dropdown-option-desc {
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
+}
+
+:where([data-viewport='desktop']) .dropdown-search input {
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+}

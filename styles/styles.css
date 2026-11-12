@@ -152,6 +152,35 @@
   --gb-max-width: var(--grid-max-width);
   --grid-limit: var(--grid-max-width);
   --gb-offset: calc((100vw - var(--grid-max-width)) / 2);
+
+  /*
+   * type styles step up to the DLS desktop mode (Figma 1680 / 1920 / 2560 frames); the same
+   * values as styles/variables/typography.css at >= 1680px. Section Title (eyebrow) and
+   * Symbol S1 / S3 keep their laptop values.
+   */
+  --type-display-size: 44px; /* Display/Medium/DF-1 */
+  --type-display-line: 52px;
+  --type-display-ls: -0.44px;
+  --type-b1-size: 16px; /* Body/B1 */
+  --type-b1-line: 24px;
+  --type-b2-size: 20px; /* Body/B2 */
+  --type-b2-line: 28px;
+  --type-b3-size: 24px; /* Body/B3 */
+  --type-b3-line: 32px;
+  --type-h2-size: 16px; /* Headline/H2 */
+  --type-h2-line: 24px;
+  --type-a1-size: 24px; /* Amount/A1 */
+  --type-a1-line: 24px;
+  --type-a1-ls: -0.96px;
+  --type-a5-size: 40px; /* Amount/A5 */
+  --type-a5-line: 40px;
+  --type-a5-ls: -2px;
+  --type-bt1-size: 16px; /* Button/BT-2 in Figma */
+  --type-bt1-line: 24px;
+  --type-bt2-size: 20px; /* Button/BT-3 in Figma (pill CTAs) */
+  --type-bt2-line: 28px;
+  --type-h4-size: 24px; /* Headline/H4 */
+  --type-h4-line: 32px;
 }
 
 /* fallback fonts */
@@ -340,6 +369,13 @@ button.button {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* desktop (1680px and up): pill CTAs use Button/BT-3 (20/28), 56px tall */
+:where([data-viewport='desktop']) a.button:any-link,
+:where([data-viewport='desktop']) button.button {
+  font-size: var(--type-bt2-size);
+  line-height: var(--type-bt2-line);
 }
 
 a.button[aria-disabled="true"],
@@ -685,6 +721,27 @@ main .default-content-wrapper > h2 + p {
   line-height: 28px;
 }
 
+/* desktop (1680px and up): Display/Medium/DF-1 heading, Body/B3 subheading */
+:where([data-viewport='desktop']) main .section .default-content-wrapper > h2:has(+ p) {
+  font-size: var(--type-display-size);
+  line-height: var(--type-display-line);
+  letter-spacing: var(--type-display-ls);
+}
+
+:where([data-viewport='desktop']) main .default-content-wrapper > h2 + p {
+  font-size: var(--type-b3-size);
+  line-height: var(--type-b3-line);
+}
+
+/*
+ * desktop (1680px and up): body copy in sections steps up to Body/B2 20/28 (set on the wrapper
+ * so sections that style their own copy keep it)
+ */
+:where([data-viewport='desktop']) main .default-content-wrapper {
+  font-size: var(--type-b2-size);
+  line-height: 1.4; /* 28px at 20px, relative so children with their own size keep their rhythm */
+}
+
 /* section metadata */
 main .section.light,
 main .section.highlight {
@@ -850,6 +907,11 @@ main .section.brand p {
 :where(.desktop-view) main .section.brand p {
   font-size: var(--body-font-size-m);
   line-height: 24px;
+}
+
+:where([data-viewport='desktop']) main .section.brand p {
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
 }
 
 /* disclaimer band under feature cards: only the default content gets the grey box */

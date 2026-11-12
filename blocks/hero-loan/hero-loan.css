@@ -672,3 +672,97 @@
 :where(.desktop-view) .hero-loan .hero-loan-sticky {
   display: none;
 }
+
+/*
+ * desktop (1680px and up, also the 1920 / 2560 designs): the type steps up to the DLS desktop
+ * values, the form card is 604px wide and the hero grows with it (574px on the home page)
+ */
+:where([data-viewport='desktop']) .hero-loan {
+  --hero-loan-min-height: 574px;
+}
+
+:where([data-viewport='desktop']) .hero-loan .hero-loan-content h1,
+:where([data-viewport='desktop']) .hero-loan .hero-loan-content h2 {
+  font-size: var(--type-display-size);
+  line-height: var(--type-display-line);
+  letter-spacing: var(--type-display-ls);
+}
+
+:where([data-viewport='desktop']) .hero-loan .hero-loan-content p,
+:where([data-viewport='desktop']) .hero-loan.product .hero-loan-content p:not(.button-wrapper) {
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+}
+
+:where([data-viewport='desktop']) .hero-loan .hero-loan-form,
+:where([data-viewport='desktop']) .hero-loan.product .hero-loan-form {
+  width: 604px;
+}
+
+/* form: Headline/H5 title, Body/B2 intro, Body/B3 fields, Body/B1 labels, Body/B2 chips */
+:where([data-viewport='desktop']) .hero-loan .hero-loan-form-intro h2 {
+  font-size: var(--type-headline-h5-font-size);
+  line-height: var(--type-headline-h5-line-height);
+  letter-spacing: var(--type-headline-h5-letter-spacing);
+}
+
+:where([data-viewport='desktop']) .hero-loan .hero-loan-form-intro p {
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+}
+
+/* fields stay 68px tall with the larger text */
+:where([data-viewport='desktop']) .hero-loan .hero-loan-input {
+  padding-block: 18px;
+  font-size: var(--type-body-b3-font-size);
+  line-height: var(--type-body-b3-line-height);
+}
+
+:where([data-viewport='desktop']) .hero-loan .hero-loan-categories legend,
+:where([data-viewport='desktop']) .hero-loan .hero-loan-select.is-filled .dropdown-label {
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
+}
+
+:where([data-viewport='desktop']) .hero-loan .hero-loan-chip {
+  padding-block: 7px;
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+}
+
+/* product form: 24px between the fields, 32px above the button */
+:where([data-viewport='desktop']) .hero-loan.product .hero-loan-form form,
+:where([data-viewport='desktop']) .hero-loan.product .hero-loan-fields {
+  gap: 24px;
+}
+
+:where([data-viewport='desktop']) .hero-loan.product .hero-loan-form form button[type='submit'] {
+  margin-top: 8px;
+}
+
+/* stat badges (About us) step up one size as well */
+:where([data-viewport='desktop']) .hero-loan .hero-loan-stats small {
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
+}
+
+:where([data-viewport='desktop']) .hero-loan .hero-loan-stats strong {
+  font-size: var(--type-body-b3-font-size);
+  line-height: var(--type-body-b3-line-height);
+}
+
+:where([data-viewport='desktop']) .hero-loan.plain .hero-loan-stats strong {
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+}
+
+/* open lists follow the larger fields: category dropdown and the "More" chip menu */
+:where([data-viewport='desktop']) .hero-loan .hero-loan-select {
+  --dropdown-value-size: 24px;
+  --dropdown-value-line: 32px;
+}
+
+:where([data-viewport='desktop']) .hero-loan .hero-loan-more-menu button {
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
+}

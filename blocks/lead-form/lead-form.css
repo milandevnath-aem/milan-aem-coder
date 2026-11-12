@@ -891,3 +891,59 @@
 :where(.desktop-view) .lead-form .lead-form-note {
   margin-top: 20px;
 }
+
+/*
+ * desktop (1680px and up, also the 1920 / 2560 designs): the type steps up one size to the DLS
+ * desktop values, as in the Figma 1680 / 1920 reference frames; the layout is unchanged
+ */
+:where([data-viewport='desktop']) .lead-form {
+  --lead-form-text: 20px;
+  --lead-form-line: 28px;
+}
+
+:where([data-viewport='desktop']) .lead-form .lead-form-error {
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
+}
+
+/* intro, disclaimer and note copy step up one size as well */
+:where([data-viewport='desktop']) .lead-form .lead-form-intro p,
+:where([data-viewport='desktop']) .lead-form .lead-form-otp-title p,
+:where([data-viewport='desktop']) .lead-form .lead-form-success-status p {
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+}
+
+:where([data-viewport='desktop']) .lead-form .lead-form-disclaimer,
+:where([data-viewport='desktop']) .lead-form .lead-form-more,
+:where([data-viewport='desktop']) .lead-form .lead-form-note,
+:where([data-viewport='desktop']) .lead-form .lead-form-goback {
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
+}
+
+:where([data-viewport='desktop']) .lead-form .lead-form-disclaimer {
+  --lead-form-disclaimer-line: 24px;
+}
+
+/* OTP and success steps */
+:where([data-viewport='desktop']) .lead-form .lead-form-otp-title h2 {
+  font-size: var(--type-headline-h7-font-size);
+  line-height: var(--type-headline-h7-line-height);
+  letter-spacing: var(--type-headline-h7-letter-spacing);
+}
+
+:where([data-viewport='desktop']) .lead-form .lead-form-success-status h2 {
+  font-size: var(--type-headline-h6-font-size);
+  line-height: var(--type-headline-h6-line-height);
+}
+
+:where([data-viewport='desktop']) .lead-form .lead-form-success-actions .button {
+  font-size: var(--type-button-bt-3-font-size);
+  line-height: var(--type-button-bt-3-line-height);
+}
+
+:where([data-viewport='desktop']) .lead-form .lead-form-count {
+  font-size: var(--type-headline-h1-font-size);
+  line-height: var(--type-headline-h1-line-height);
+}

@@ -558,3 +558,40 @@
   flex: 0 0 192px;
   padding: 11px;
 }
+
+/*
+ * desktop (1680px and up, also the 1920 / 2560 designs): the type follows the global tokens
+ * (B2 labels, A1 / A5 amounts, B1 bounds), the card is 780px wide with three equal loan tabs
+ * and the car grows 8% (Figma 1680 / 1920 frames)
+ */
+:where([data-viewport='desktop']) .emi-calculator .emi-calculator-card {
+  box-sizing: border-box;
+  flex: 0 0 780px;
+  max-width: none;
+}
+
+:where([data-viewport='desktop']) .emi-calculator .emi-calculator-tabs button {
+  flex: 1 1 0;
+}
+
+:where([data-viewport='desktop']) .emi-calculator .emi-calculator-image img {
+  width: 702px;
+}
+
+/* value pills: 50px tall (48px with the year / month switch) with the A1 24px amount */
+:where([data-viewport='desktop']) .emi-calculator .emi-calculator-value {
+  padding-block: 12px;
+}
+
+:where([data-viewport='desktop']) .emi-calculator .emi-calculator-value input {
+  height: var(--type-a1-line);
+}
+
+:where([data-viewport='desktop']) .emi-calculator .emi-calculator-value:has(.emi-calculator-unit) {
+  padding-block: 5px;
+}
+
+/* 12px between the slider knob and the bounds row */
+:where([data-viewport='desktop']) .emi-calculator .emi-calculator-slider {
+  margin-bottom: 12px;
+}

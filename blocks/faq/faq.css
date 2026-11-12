@@ -387,3 +387,20 @@
     letter-spacing: var(--type-body-b2-letter-spacing);
     overflow-wrap: anywhere;
 }
+
+/*
+ * desktop (1680px and up, also the 1920 / 2560 designs): the question list takes the rest of
+ * the 1440px row (916px) after a 444px intro, answers stay at a 667px measure; the
+ * questions keep Body/B3 20/28 (Figma 1680 / 1920 frames)
+ */
+:where([data-viewport='desktop']) .faq .faq-intro {
+    flex: 0 0 444px;
+}
+
+:where([data-viewport='desktop']) .faq .faq-list {
+    flex: 1 1 auto;
+}
+
+:where([data-viewport='desktop']) .faq .faq-answer {
+    max-width: calc(667px + 40px);
+}
