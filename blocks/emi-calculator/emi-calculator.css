@@ -125,7 +125,7 @@
   overflow: hidden;
   padding: 11px 19px;
   border: 1px solid var(--border-light-color);
-  border-radius: 12px;
+  border-radius: 16px;
   color: var(--text-color);
   font-size: var(--type-a1-size);
   font-weight: 700;
@@ -152,7 +152,7 @@
   border-color: var(--text-color);
 }
 
-.emi-calculator .emi-calculator-value:has(input:focus-visible) {
+.emi-calculator .emi-calculator-field:not(.is-invalid) .emi-calculator-value:has(input:focus-visible) {
   outline: 2px solid var(--text-color);
 }
 
