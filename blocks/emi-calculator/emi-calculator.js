@@ -433,16 +433,12 @@ function buildCalculator(types, link) {
     showError('tenure', false);
   };
 
-  /**
-   * Switches the tenure between years and months. Months start at the authored default
-   * months; without one, and when going back to years, the same loan period is kept.
-   */
   const setTenureUnit = (unit) => {
     if (unit === state.unit) return;
     const monthCount = tenureInMonths();
     state.unit = unit;
     state.tenure = unit === 'mo'
-      ? tenureLimits.mo.value ?? monthCount
+      ? monthCount
       : Math.round(monthCount / TENURE.monthsPerYear);
     applyTenureUnit();
     update();
@@ -480,6 +476,8 @@ function buildCalculator(types, link) {
     // (few-step sliders such as tenure in years would jump otherwise);
     // on release the knob eases onto the nearest step
     range.addEventListener('pointerdown', () => {
+      const active = document.activeElement;
+      if (card.contains(active) && active.matches('.emi-calculator-value input')) active.blur();
       range.step = 'any';
       const start = () => slider.classList.add('is-dragging');
       const end = () => {
