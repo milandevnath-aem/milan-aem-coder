@@ -83,6 +83,27 @@
   color: var(--inverse-color);
 }
 
+:root:not(.desktop-view) .emi-calculator .emi-calculator-tabs.has-overflow[data-selected-position='first'] {
+  /* stylelint-disable property-no-vendor-prefix */
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent 100%);
+  mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent 100%);
+  /* stylelint-enable property-no-vendor-prefix */
+}
+
+:root:not(.desktop-view) .emi-calculator .emi-calculator-tabs.has-overflow[data-selected-position='middle'] {
+  /* stylelint-disable property-no-vendor-prefix */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+  /* stylelint-enable property-no-vendor-prefix */
+}
+
+:root:not(.desktop-view) .emi-calculator .emi-calculator-tabs.has-overflow[data-selected-position='last'] {
+  /* stylelint-disable property-no-vendor-prefix */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 100%);
+  /* stylelint-enable property-no-vendor-prefix */
+}
+
 .emi-calculator .emi-calculator-fields {
   display: flex;
   flex-direction: column;
