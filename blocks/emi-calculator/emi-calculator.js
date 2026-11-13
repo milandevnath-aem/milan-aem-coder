@@ -184,6 +184,9 @@ function buildCalculator(types, link) {
   tablist.className = 'emi-calculator-tabs';
   tablist.setAttribute('role', 'tablist');
   tablist.setAttribute('aria-label', 'Loan type');
+  const updateTabOverflow = () => {
+    tablist.classList.toggle('has-overflow', tablist.scrollWidth > tablist.clientWidth);
+  };
   types.forEach((type, i) => {
     const tab = document.createElement('button');
     tab.type = 'button';
@@ -580,6 +583,14 @@ function buildCalculator(types, link) {
 
   const selectType = (index) => {
     const type = types[index];
+    if (index === 0) {
+      tablist.dataset.selectedPosition = 'first';
+    } else if (index === types.length - 1) {
+      tablist.dataset.selectedPosition = 'last';
+    } else {
+      tablist.dataset.selectedPosition = 'middle';
+    }
+    updateTabOverflow();
     // the apply link opens the form for the selected loan type
     cta.dataset.loanCategory = type.title;
     [...tablist.children].forEach((tab, i) => {
@@ -695,5 +706,8 @@ export default function decorate(block) {
     types.push(parseLoanType(fallback));
   }
 
-  block.replaceChildren(intro, buildCalculator(types, linkRow?.querySelector('a')));
+  const calculator = buildCalculator(types, linkRow?.querySelector('a'));
+  block.replaceChildren(intro, calculator);
+  const tablist = calculator.querySelector('.emi-calculator-tabs');
+  if (tablist) tablist.classList.toggle('has-overflow', tablist.scrollWidth > tablist.clientWidth);
 }
