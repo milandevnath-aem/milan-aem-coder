@@ -14,6 +14,7 @@ import {
 } from '../../scripts/category-forms.js';
 import {
   digitsOnly, emailRules, fieldMessages, isPersonName, mobileRules, nameRules,
+  rejectedErrorMessage, valueErrorMessage,
 } from '../../scripts/input-rules.js';
 import {
   analyticsName, productType, pushEvent, safely, trackFormStart, uniqueId,
@@ -98,7 +99,9 @@ export function fieldError(control, message) {
  * Something typed or pasted was refused by the input rules: the form shows the field's
  * "invalid" message (an "input-rejected" event, see decorate).
  */
-export const rejected = (input) => () => input.dispatchEvent(new CustomEvent('input-rejected', { bubbles: true }));
+export const rejected = (input) => (characters) => input.dispatchEvent(new CustomEvent('input-rejected', {
+  bubbles: true, detail: characters,
+}));
 
 export function textField(label, kind, required) {
   const field = document.createElement('label');
@@ -490,7 +493,7 @@ export default function decorate(block) {
       if (isDropdown) valid = () => !field.dataset.required || Boolean(field.value);
       const isEmpty = isDropdown ? () => !field.value : () => !control.value.trim();
       checks.push({
-        field, control, error, valid, messages, isEmpty,
+        field, control, error, valid, messages, isEmpty, label, kind,
       });
       item.append(error.el);
     }
@@ -538,7 +541,8 @@ export default function decorate(block) {
   // message: an API error to show instead of the field's own message (blank or invalid)
   const setState = (check, invalid, message) => {
     const { empty, invalid: wrong } = check.messages;
-    check.error.show(invalid, message || (check.isEmpty() ? empty : wrong));
+    const valueMessage = valueErrorMessage(check.label, check.kind, check.control.value || '', wrong);
+    check.error.show(invalid, message || (check.isEmpty() ? empty : valueMessage));
     const box = check.field.closest('.lead-form-input')
       || check.field.querySelector('.lead-form-input') || check.field;
     box.classList.toggle('is-invalid', invalid);
@@ -567,7 +571,13 @@ export default function decorate(block) {
   // typed, and the field says why
   form.addEventListener('input-rejected', (e) => {
     const check = checks.find((c) => c.control === e.target);
-    if (check) setState(check, true, check.messages.invalid);
+    if (!check) return;
+    if (document.activeElement !== check.control) {
+      setState(check, Boolean(check.control.value) && !check.valid());
+      return;
+    }
+    const message = rejectedErrorMessage(check.label, check.kind, e.detail);
+    setState(check, true, message || check.messages.invalid);
   });
   dropdowns.forEach((d) => d.addEventListener('change', () => {
     const check = checks.find((c) => c.field === d);
