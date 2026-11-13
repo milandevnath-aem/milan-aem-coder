@@ -188,9 +188,11 @@ function buildField(label, index) {
   input.required = true;
   input.name = label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || `field-${index}`;
   const isEmail = /e-?mail/i.test(label);
-  // the browser's validation bubble shows the form's messages; a refused character shows
-  // the "invalid" one at once
-  const reject = nativeMessages(input, fieldMessages(label, (isPhone && 'tel') || (isEmail && 'email') || 'text'));
+  const showInvalid = nativeMessages(input, fieldMessages(label, (isPhone && 'tel') || (isEmail && 'email') || 'text'));
+  const reject = () => {
+    input.setCustomValidity('');
+    if (!input.validity.valid) showInvalid();
+  };
   if (isPhone) {
     mobileRules(input, reject);
   } else if (isEmail) {
