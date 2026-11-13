@@ -580,9 +580,13 @@ function buildCalculator(types, link) {
 
   const selectType = (index) => {
     const type = types[index];
-    tablist.dataset.selectedPosition = index === 0
-      ? 'first'
-      : index === types.length - 1 ? 'last' : 'middle';
+    if (index === 0) {
+      tablist.dataset.selectedPosition = 'first';
+    } else if (index === types.length - 1) {
+      tablist.dataset.selectedPosition = 'last';
+    } else {
+      tablist.dataset.selectedPosition = 'middle';
+    }
     tablist.classList.toggle('has-overflow', tablist.scrollWidth > tablist.clientWidth);
     // the apply link opens the form for the selected loan type
     cta.dataset.loanCategory = type.title;
