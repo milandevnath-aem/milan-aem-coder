@@ -176,16 +176,18 @@ main > .section > div.link-list-wrapper {
 .link-list.doc-list .link-list-row::before {
   content: "";
   flex: 0 0 auto;
-  width: 20px;
+  width: 24px;
   height: 24px;
+  padding: var(--spacing-xxs);
   background-color: currentcolor;
-  mask: url("../../icons/document.svg") center / 20px no-repeat;
+  mask: url("../../icons/document.svg") center / 24px no-repeat;
 }
 
 .link-list.doc-list .link-list-title {
-  font-size: 1rem;
-  line-height: 1.5rem;
-  font-weight: 600;
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+  font-weight: var(--type-body-b2-font-weight);
+  letter-spacing: var(--type-body-b2-letter-spacing);
 }
 
 .link-list.doc-list .link-list-media,
