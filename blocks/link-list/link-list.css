@@ -151,7 +151,7 @@ main > .section > div.link-list-wrapper {
 }
 
 .link-list.doc-list .link-list-main > ul {
-  gap: 12px;
+  gap: var(--spacing-md);
 }
 
 .link-list.doc-list .link-list-item + .link-list-item {
@@ -161,10 +161,16 @@ main > .section > div.link-list-wrapper {
 .link-list.doc-list .link-list-row,
 .link-list.doc-list .link-list-has-image .link-list-row {
   align-items: flex-start;
-  padding: 20px 24px;
-  border-radius: 24px;
-  background-color: var(--light-color);
+  padding: var(--spacing-2xl) var(--spacing-xl);
+  border-radius: var(--radius-2xl);
+  background-color: var(--color-background-2-default-base);
   transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.link-list.doc-list .link-list-row:hover,
+.link-list.doc-list .link-list-has-image .link-list-row:hover {
+  background-color: var(--color-background-2-default-hover);
 }
 
 .link-list.doc-list .link-list-row::before {
@@ -202,7 +208,7 @@ main > .section > div.link-list-wrapper {
 :where(.desktop-view) .link-list .link-list-note {
   display:block;
   margin-top: 40px;
-  padding: 16px 18px;
+  padding: var(--spacing-xl) 18px;
   border-radius: 12px;
   background-color: var(--surface-color);
 }
@@ -232,4 +238,9 @@ main > .section > div.link-list-wrapper {
 :where(.desktop-view) .link-list .link-list-main {
   grid-column: 2;
   grid-row: 1;
+}
+
+:where(.desktop-view) .link-list.doc-list .link-list-row,
+:where(.desktop-view) .link-list.doc-list .link-list-has-image .link-list-row {
+  padding: var(--spacing-2xl) var(--spacing-3xl);
 }
