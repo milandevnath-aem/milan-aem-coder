@@ -6,10 +6,6 @@
   margin-top: 40px;
 }
 
-main > .section > div.link-list-wrapper {
-  padding: 0 8px;
-}
-
 :where(.desktop-view) main > .section > div.link-list-wrapper {
   padding: 0 var(--gb-margin);
 }
@@ -176,11 +172,12 @@ main > .section > div.link-list-wrapper {
 .link-list.doc-list .link-list-row::before {
   content: "";
   flex: 0 0 auto;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   padding: var(--spacing-xxs);
   background-color: currentcolor;
-  mask: url("../../icons/document.svg") center / 24px no-repeat;
+  aspect-ratio: 1/1;
+  mask: url("../../icons/document.svg") center / 20px no-repeat;
 }
 
 .link-list.doc-list .link-list-title {
@@ -210,7 +207,7 @@ main > .section > div.link-list-wrapper {
 .link-list .link-list-toggle {
   display: block;
   width: 100%;
-  margin-top: var(--spacing-xl);
+  margin-top: var(--spacing-4xl);
   padding: 10px 24px;
   border: 1px solid var(--text-color);
   border-radius: 24px;
