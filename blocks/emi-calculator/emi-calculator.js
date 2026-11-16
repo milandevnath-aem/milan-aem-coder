@@ -184,6 +184,9 @@ function buildCalculator(types, link) {
   tablist.className = 'emi-calculator-tabs';
   tablist.setAttribute('role', 'tablist');
   tablist.setAttribute('aria-label', 'Loan type');
+  const updateTabOverflow = () => {
+    tablist.classList.toggle('has-overflow', tablist.scrollWidth > tablist.clientWidth);
+  };
   types.forEach((type, i) => {
     const tab = document.createElement('button');
     tab.type = 'button';
@@ -433,16 +436,12 @@ function buildCalculator(types, link) {
     showError('tenure', false);
   };
 
-  /**
-   * Switches the tenure between years and months. Months start at the authored default
-   * months; without one, and when going back to years, the same loan period is kept.
-   */
   const setTenureUnit = (unit) => {
     if (unit === state.unit) return;
     const monthCount = tenureInMonths();
     state.unit = unit;
     state.tenure = unit === 'mo'
-      ? tenureLimits.mo.value ?? monthCount
+      ? monthCount
       : Math.round(monthCount / TENURE.monthsPerYear);
     applyTenureUnit();
     update();
@@ -480,6 +479,8 @@ function buildCalculator(types, link) {
     // (few-step sliders such as tenure in years would jump otherwise);
     // on release the knob eases onto the nearest step
     range.addEventListener('pointerdown', () => {
+      const active = document.activeElement;
+      if (card.contains(active) && active.matches('.emi-calculator-value input')) active.blur();
       range.step = 'any';
       const start = () => slider.classList.add('is-dragging');
       const end = () => {
@@ -582,6 +583,14 @@ function buildCalculator(types, link) {
 
   const selectType = (index) => {
     const type = types[index];
+    if (index === 0) {
+      tablist.dataset.selectedPosition = 'first';
+    } else if (index === types.length - 1) {
+      tablist.dataset.selectedPosition = 'last';
+    } else {
+      tablist.dataset.selectedPosition = 'middle';
+    }
+    updateTabOverflow();
     // the apply link opens the form for the selected loan type
     cta.dataset.loanCategory = type.title;
     [...tablist.children].forEach((tab, i) => {
@@ -616,7 +625,10 @@ function buildCalculator(types, link) {
   };
 
   // "car-loan" matches the tab "Car loans"
-  const normalize = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, '').replace(/s$/, '');
+  const normalize = (text) => text.toLowerCase()
+    .replace(/\b(?:emi|calculators?)\b/g, '')
+    .replace(/[^a-z0-9]+/g, '')
+    .replace(/s$/, '');
   const findType = (name) => {
     if (!name) return undefined;
     const index = types.findIndex((type) => normalize(type.title) === normalize(name));
@@ -694,5 +706,8 @@ export default function decorate(block) {
     types.push(parseLoanType(fallback));
   }
 
-  block.replaceChildren(intro, buildCalculator(types, linkRow?.querySelector('a')));
+  const calculator = buildCalculator(types, linkRow?.querySelector('a'));
+  block.replaceChildren(intro, calculator);
+  const tablist = calculator.querySelector('.emi-calculator-tabs');
+  if (tablist) tablist.classList.toggle('has-overflow', tablist.scrollWidth > tablist.clientWidth);
 }

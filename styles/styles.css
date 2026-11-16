@@ -790,6 +790,13 @@ main .section.bg-grey {
 
 main .section.bg-grey .default-content-wrapper {
   max-width: 660px;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+:where(.desktop-view) main .section.bg-grey .default-content-wrapper {
   padding: 0;
 }
 
@@ -799,6 +806,18 @@ main .section.bg-grey.text-align-left {
 
 main .section.bg-grey p {
   margin: 0;
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
+  letter-spacing: var(--type-body-b1-letter-spacing);
+  font-weight: var(--type-body-b1-font-weight);
+}
+
+main .section.bg-grey p strong{
+  font-size: var(--type-section-title-s-font-size);
+  line-height: var(--type-section-title-s-line-height);
+  letter-spacing: var(--type-section-title-s-letter-spacing);
+  font-weight: var(--type-section-title-s-font-weight);
+  text-transform: uppercase;
 }
 
 main .section.brand.has-background {
@@ -831,6 +850,64 @@ main .section.brand p {
 :where(.desktop-view) main .section.brand p {
   font-size: var(--body-font-size-m);
   line-height: 24px;
+}
+
+/* disclaimer band under feature cards: only the default content gets the grey box */
+main > .section.bg-disclaimer.feature-cards-container > .default-content-wrapper {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  margin: 32px 24px 0;
+  padding: 24px;
+  border-radius: 24px;
+  background-color: var(--surface-color);
+  color: var(--muted-color);
+}
+
+main > .section.bg-disclaimer.feature-cards-container > .default-content-wrapper p {
+  margin: 0;
+  color: var(--color-text-secondary-default-base);
+  font-size: var(--type-body-b2-font-size);
+  font-weight: var(--type-body-b2-font-weight);
+  line-height: var(--type-body-b2-line-height);
+  letter-spacing: var(--type-body-b2-letter-spacing);
+}
+
+main > .section.bg-disclaimer.feature-cards-container > .default-content-wrapper h3 {
+  margin: 0;
+  color: var(--color-text-primary-default-base);
+  font-size: var(--type-headline-h3-font-size);
+  line-height: var(--type-headline-h3-line-height);
+  letter-spacing: var(--type-headline-h3-letter-spacing);
+  font-weight: var(--type-headline-h3-font-weight);
+}
+
+:where(.desktop-view) main > .section.bg-disclaimer.feature-cards-container > .default-content-wrapper {
+  margin: 36px 92px 0;
+  padding: 32px;
+  border-radius: 32px;
+  flex-direction: row;
+  gap: var(--spacing-5xl);
+}
+
+/* plain disclaimer under feature cards: right-aligned note */
+main > .section.plain-disclaimer.feature-cards-container > .default-content-wrapper {
+  margin-top: 20px;
+}
+
+main > .section.plain-disclaimer.feature-cards-container > .default-content-wrapper p {
+  margin: 0;
+  color: var(--color-text-tertiary-default-base);
+  font-size: var(--type-body-b1-font-size);
+  font-weight: var(--type-body-b1-font-weight);
+  line-height: var(--type-body-b1-line-height);
+  letter-spacing: var(--type-body-b1-letter-spacing);
+  text-align: center;
+}
+
+:where(.desktop-view) main > .section.plain-disclaimer.feature-cards-container > .default-content-wrapper {
+  margin-top: 60px;
 }
 
 main > .section.branch-locator-container:last-of-type {

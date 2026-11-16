@@ -95,6 +95,29 @@ export function fieldMessages(label, kind) {
   };
 }
 
+export function valueErrorMessage(label, kind, value, fallback) {
+  if (['text', 'text-half'].includes(kind) && isFullName(label) && /^[a-zA-Z]+$/.test(value.trim())) {
+    return 'Please enter your first and last name to proceed!';
+  }
+  return fallback;
+}
+
+export function rejectedErrorMessage(label, kind, characters) {
+  const isPhone = kind === 'tel';
+  if (!isPhone && (!['text', 'text-half'].includes(kind) || !isPersonName(label))) return '';
+  if (!characters) {
+    return isPhone ? 'Mobile number cannot exceed 10 digits.' : `Name cannot exceed ${NAME_MAX} characters.`;
+  }
+  if (isPhone) {
+    return /[^a-zA-Z0-9]/.test(characters)
+      ? 'Special characters are not allowed in mobile numbers.'
+      : 'Only numbers are allowed in mobile numbers.';
+  }
+  return /[^a-zA-Z0-9 ]/.test(characters)
+    ? 'Special characters are not allowed in names.'
+    : 'Only letters are allowed in names.';
+}
+
 /**
  * Keeps an input to the characters `allowed` matches, up to a length: other typed
  * characters are blocked, pasted, dropped or autofilled text is cleaned (the caret stays
@@ -118,7 +141,7 @@ export function allowOnly(input, allowed, max, onReject) {
     // through and is cleaned below
     if (e.data.length === 1 && !clean) {
       e.preventDefault();
-      onReject?.();
+      onReject?.(e.data);
     } else if (clean && e.data.length > room) {
       // allowed text with no room left: one more key is ignored, a longer paste is refused
       e.preventDefault();
@@ -127,6 +150,7 @@ export function allowOnly(input, allowed, max, onReject) {
   });
   // runs before the form's own input listener, so validation sees the cleaned value
   input.addEventListener('input', () => {
+    const refused = [...input.value].filter((c) => !allowed.test(c)).join('');
     const allowedOnly = keep(input.value) === input.value;
     const clean = keep(input.value).slice(0, max);
     if (clean === input.value) return;
@@ -136,7 +160,7 @@ export function allowOnly(input, allowed, max, onReject) {
     const pos = Math.min(keptBefore, clean.length);
     input.setSelectionRange(pos, pos);
     // only cut to length (composed or autofilled text): nothing to tell
-    if (onReject && !allowedOnly) setTimeout(onReject);
+    if (onReject && !allowedOnly) setTimeout(() => onReject(refused));
   });
 }
 

@@ -106,6 +106,14 @@
             {
               "name": "Read more (grey disclosure text, collapsed to 3 lines)",
               "value": "read-more"
+            },
+            { 
+              "name": "Background Grey disclaimer for feature card", 
+              "value": "bg-disclaimer" 
+            },
+            { 
+              "name": "Plain disclaimer for feature card", 
+              "value": "plain-disclaimer" 
             }
           ]
         },
