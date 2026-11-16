@@ -206,16 +206,18 @@
 
 .link-list .link-list-toggle {
   display: block;
+  box-sizing: border-box;
   width: 100%;
   margin-top: var(--spacing-4xl);
-  padding: 10px 24px;
-  border: 1px solid var(--text-color);
-  border-radius: 24px;
+  padding: 14px var(--spacing-lg);
+  border: 1px solid var(--color-button-pills-stroke-default-stroke-base);
+  border-radius: 100px;
   background: none;
   color: var(--text-color);
-  font: inherit;
-  font-size: var(--type-body-b2-font-size);
-  font-weight: 600;
+  font-size: var(--type-button-bt-3-font-size);
+  line-height: var(--type-button-bt-3-line-height);
+  font-weight: var(--type-button-bt-3-font-weight);
+  letter-spacing: var(--type-button-bt-3-letter-spacing);
   text-align: center;
   cursor: pointer;
 }
