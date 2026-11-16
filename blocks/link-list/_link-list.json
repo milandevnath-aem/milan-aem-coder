@@ -38,7 +38,7 @@
       "id": "link-list",
       "fields": [
         {
-          "component": "select",
+          "component": "multiselect",
           "name": "classes",
           "label": "Background",
           "valueType": "string",
@@ -46,7 +46,8 @@
           "options": [
             { "name": "Grey background (cards)", "value": "bg-grey" },
             { "name": "Document list (grey cards with document icon)", "value": "doc-list" },
-            { "name": "No background (divider list)", "value": "" }
+            { "name": "No background (divider list)", "value": "" },
+            { "name": "Buttons (Read all / Read less toggle)", "value": "buttons" }
           ]
         },
         {
@@ -71,6 +72,22 @@
           "value": "",
           "label": "Note",
           "description": "Grey note box shown below the list.",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "name": "readAll",
+          "value": "",
+          "label": "Read all button text",
+          "description": "Used with the Buttons class. Defaults to 'Read all'.",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "name": "readLess",
+          "value": "",
+          "label": "Read less button text",
+          "description": "Used with the Buttons class. Defaults to 'Read less'.",
           "valueType": "string"
         }
       ]
