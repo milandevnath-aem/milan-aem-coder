@@ -276,7 +276,7 @@ export function createSuccessStep({ emiHref, onDone }) {
     <div class="lead-form-success-status">
       ${iconImg('verified', 48, 'png')}
       <h2 id="${id}-title" tabindex="-1">You’re all set!</h2>
-      <p>Thank you for sharing the details. We will get back to you.</p>
+      <p>Thank you for choosing Kotak Mahindra Prime!<br>Our team will contact you shortly.</p>
     </div>
     <div class="lead-form-success-actions">
       <a class="button secondary lead-form-emi"></a>
