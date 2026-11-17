@@ -214,6 +214,10 @@
   --nav-height: 112px;
 }
 
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
   display: none;
   margin: 0;
