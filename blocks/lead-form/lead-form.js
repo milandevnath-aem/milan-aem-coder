@@ -720,6 +720,37 @@ export default function decorate(block) {
       return;
     }
 
+    // the success step: the lead exists (or, for a category without an API, is let through)
+    const finish = (lead) => {
+      // the server's lead reference, never the mobile number
+      pushEvent('generate_lead', { ...tracked, lead_id: lead?.leadId || undefined });
+      // the lead exists now: tidying up must not keep the visitor from the success step
+      try {
+        clearForm();
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.warn('lead-form: the form could not be cleared', error);
+      }
+      const success = createSuccessStep({
+        emiHref: document.querySelector('main .emi-calculator') ? '#emi-calculator' : `${siteRoot()}/home#emi-calculator`,
+        onDone: close,
+      });
+      success.querySelector('.lead-form-emi').addEventListener('click', (ev) => {
+        if (!ev.currentTarget.getAttribute('href').startsWith('#')) return;
+        ev.preventDefault();
+        close();
+        document.getElementById('emi-calculator')?.scrollIntoView();
+      });
+      block.querySelector('.lead-form-otp')?.remove();
+      block.append(success);
+      showStep(success);
+      nameDialog(success.titleId);
+      success.focusTitle();
+    };
+    // Car Lease and Dealer Finance have no lead API yet (see PRODUCT_BY_CATEGORY): whatever
+    // the server answers, the visitor reaches the success step. Remove once they have one.
+    const lenient = !productFor(category);
+
     // verifying the captcha, then sending the OTP: button spinner (desktop), full view
     // spinner (small screens)
     showSubmitError('');
@@ -740,6 +771,12 @@ export default function decorate(block) {
     }
     if (failure) {
       if (failure?.kind === 'cancelled') return;
+      if (lenient) {
+        // eslint-disable-next-line no-console
+        console.warn('lead-form: no lead API for this category, continuing to success', failure);
+        finish({});
+        return;
+      }
       // the captcha was used up by the attempt: a new one, then the error (loading clears it)
       captcha?.load();
       showSubmitFailure(failure);
@@ -751,7 +788,18 @@ export default function decorate(block) {
     const otp = createOtpStep({
       mobile,
       sendOtp: session.sendOtp,
-      verifyOtp: session.verifyOtp,
+      // a category without an API goes on to success whatever the answer (an empty lead)
+      verifyOtp: lenient
+        ? async (code) => {
+          try {
+            return (await session.verifyOtp(code)) || {};
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.warn('lead-form: no lead API for this category, continuing to success', error);
+            return {};
+          }
+        }
+        : session.verifyOtp,
       announce,
       // back to the form, values kept: a new OTP needs a new captcha
       // `message`: why the visitor is sent back (e.g. captcha expired on resend), shown under
@@ -771,32 +819,7 @@ export default function decorate(block) {
         }
       },
       // the lead is created by verifyOtp
-      onVerified: (lead) => {
-        // the server's lead reference, never the mobile number
-        pushEvent('generate_lead', { ...tracked, lead_id: lead?.leadId || undefined });
-        // the lead exists now: tidying up must not keep the visitor from the success step
-        try {
-          clearForm();
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.warn('lead-form: the form could not be cleared', error);
-        }
-        const success = createSuccessStep({
-          emiHref: document.querySelector('main .emi-calculator') ? '#emi-calculator' : `${siteRoot()}/home#emi-calculator`,
-          onDone: close,
-        });
-        success.querySelector('.lead-form-emi').addEventListener('click', (ev) => {
-          if (!ev.currentTarget.getAttribute('href').startsWith('#')) return;
-          ev.preventDefault();
-          close();
-          document.getElementById('emi-calculator')?.scrollIntoView();
-        });
-        otp.remove();
-        block.append(success);
-        showStep(success);
-        nameDialog(success.titleId);
-        success.focusTitle();
-      },
+      onVerified: finish,
     });
     // closing the modal ends the journey: no resend countdown or request left running
     dialog()?.addEventListener('close', () => {
