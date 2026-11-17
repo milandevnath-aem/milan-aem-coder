@@ -196,6 +196,12 @@ export function createOtpStep({
     try {
       await sendOtp();
     } catch (e) {
+      // the token is expired, used or not for this mobile: back to the form, which says why
+      if (e?.code === 'CAPTCHA_REQUIRED') {
+        clearInterval(timer);
+        onBack(errorMessage(e, 'resend'));
+        return;
+      }
       const message = errorMessage(e, 'resend');
       if (message) setError(message);
       resend.setAttribute('aria-disabled', 'false');

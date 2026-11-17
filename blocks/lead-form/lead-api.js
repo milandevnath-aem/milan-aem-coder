@@ -298,7 +298,14 @@ export function createLeadSession({
     if (!MOBILE_PATTERN.test(mobile)) {
       throw new LeadApiError('invalid-input', 'mobile must be 10 digits starting with 6-9');
     }
-    const data = record(await post('otpGenerate', { mobile }, controller.signal));
+    // a resend (an OTP was already generated in this session) sends the transactionId and
+    // token of that OTP, so the API does not ask for the captcha again
+    const body = { mobile };
+    if (journey?.transactionId && journey.token) {
+      body.transactionId = journey.transactionId;
+      body.token = journey.token;
+    }
+    const data = record(await post('otpGenerate', body, controller.signal));
     // both are needed to validate the OTP later: without them the OTP could not be checked
     const transactionId = text(data.transactionId);
     const token = text(data.token);

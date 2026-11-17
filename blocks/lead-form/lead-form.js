@@ -753,15 +753,19 @@ export default function decorate(block) {
       verifyOtp: session.verifyOtp,
       announce,
       // back to the form, values kept: a new OTP needs a new captcha
-      onBack: () => {
+      // `message`: why the visitor is sent back (e.g. captcha expired on resend), shown under
+      // the captcha (load() clears the field synchronously, so the error is set after it)
+      onBack: (message) => {
         session.cancel();
         otp.remove();
         showStep(main);
         nameDialog(intro.querySelector('h1, h2')?.id);
         if (captcha) {
           captcha.load();
+          if (typeof message === 'string' && message) captcha.onError(message);
           captcha.input.focus();
         } else {
+          if (typeof message === 'string' && message) showSubmitError(message);
           submit.focus();
         }
       },
