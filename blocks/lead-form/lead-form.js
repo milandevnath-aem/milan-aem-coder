@@ -559,7 +559,8 @@ export default function decorate(block) {
   // mark fields the user left with an invalid value; clear the message while correcting
   form.addEventListener('focusout', (e) => {
     const check = checks.find((c) => c.control === e.target);
-    if (!check || !e.target.value) return;
+    // a blank required field says it is required; an optional one stays quiet
+    if (!check || (!e.target.value && !e.target.required)) return;
     setState(check, !check.valid());
   });
   form.addEventListener('input', (e) => {
@@ -863,7 +864,17 @@ export default function decorate(block) {
     const inputs = [...form.querySelectorAll('input[name]')].filter((i) => i.type !== 'hidden');
     const first = inputs.find((i) => i.autocomplete === 'given-name');
     const last = inputs.find((i) => i.autocomplete === 'family-name');
+    // separate first and last name carried into one full name field: joined with a space
+    const fullInput = !(first && last) && inputs.find((i) => i.autocomplete === 'name');
+    const isFirstKey = (k) => /^(your-)?(first|given)-?name$/.test(k);
+    const isLastKey = (k) => /^(your-)?(last|sur|family)-?name$/.test(k);
+    if (fullInput) {
+      const part = (test) => String(Object.entries(data).find(([k]) => test(k))?.[1] ?? '').trim();
+      const joined = [part(isFirstKey), part(isLastKey)].filter(Boolean).join(' ');
+      if (joined) fullInput.value = joined;
+    }
     Object.entries(data).forEach(([key, raw]) => {
+      if (fullInput && (isFirstKey(key) || isLastKey(key))) return;
       const candidates = [].concat(raw).map((v) => String(v ?? '').trim()).filter(Boolean);
       const [value] = candidates;
       if (!value) return;

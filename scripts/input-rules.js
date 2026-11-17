@@ -23,7 +23,7 @@ export const isNamePart = (label) => /\b(first|given|middle|last|sur|family)\s*n
  * needed, as the lead APIs require a last name. Not a dealership or manufacturer.
  */
 export const isFullName = (label) => isPersonName(label) && !isNamePart(label)
-  && !/\b(dealer(ship)?|manufacturer|brand|shop|firm|showroom)\b/i.test(label);
+  && !/\b(dealer(ship)?|manufacturer|brand|shop|firm|showroom|promoter)\b/i.test(label);
 
 /**
  * What a field shows when it is left blank (`empty`) or holds a wrong value (`invalid`).
@@ -190,8 +190,9 @@ export function nameRules(input, label, onReject) {
 }
 
 /**
- * Email, up to EMAIL_MAX: a name, "@" and a domain with an extension (abc@test.com, not
- * abc@test). maxLength stops typing and pasting; the pattern also flags a value set by code.
+ * Email, up to EMAIL_MAX: a name, "@" and a domain ending in .com or .in (abc@test.com,
+ * not abc@test or abc@test.om). maxLength stops typing and pasting; the pattern also flags
+ * a value set by code.
  * @param {HTMLInputElement} input
  */
 export function emailRules(input) {
@@ -199,7 +200,7 @@ export function emailRules(input) {
     type: 'email',
     autocomplete: 'email',
     maxLength: EMAIL_MAX,
-    pattern: `(?=.{1,${EMAIL_MAX}}$)[A-Za-z0-9._%+\\-]+@[A-Za-z0-9\\-]+(\\.[A-Za-z0-9\\-]+)*\\.[A-Za-z]{2,}`,
+    pattern: `(?=.{1,${EMAIL_MAX}}$)[A-Za-z0-9._%+\\-]+@[A-Za-z0-9\\-]+(\\.[A-Za-z0-9\\-]+)*\\.([cC][oO][mM]|[iI][nN])`,
   });
 }
 
