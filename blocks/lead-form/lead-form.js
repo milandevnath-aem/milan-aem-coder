@@ -5,7 +5,7 @@ import {
   CAPTCHA_LENGTH, createLeadSession, errorMessage as apiErrorMessage, generateCaptcha,
 } from './lead-api.js';
 import { CITY_COLUMN, CITY_LISTS, MESSAGES } from './lead-api-config.js';
-import { buildLead, productFor } from './lead-payload.js';
+import { buildLead, contactOf, productFor } from './lead-payload.js';
 import {
   createOtpStep, createSuccessStep, setLoading, spinner,
 } from './lead-form-otp.js';
@@ -708,6 +708,8 @@ export default function decorate(block) {
     try {
       session = createLeadSession({
         mobile,
+        // sent with the first OTP request only (otp-generate)
+        ...contactOf(form),
         product: productFor(category),
         lead: buildLead(form, category),
         loanCategory: category,
@@ -747,24 +749,34 @@ export default function decorate(block) {
     pushEvent('lead_form_submit', tracked);
 
     block.querySelector('.lead-form-otp')?.remove();
-    const otp = createOtpStep({
+    let otp;
+    /**
+     * Back to the form, values kept: a new OTP needs a new captcha.
+     * @param {string} [message] why (CAPTCHA_REQUIRED), shown at the captcha
+     */
+    const backToForm = (message) => {
+      session.cancel();
+      otp.remove();
+      showStep(main);
+      nameDialog(intro.querySelector('h1, h2')?.id);
+      if (captcha) {
+        captcha.load();
+        // after load(), which clears the captcha's error
+        if (message) setState(captchaCheck, true, message);
+        captcha.input.focus();
+      } else {
+        if (message) showSubmitError(message);
+        submit.focus();
+      }
+    };
+    otp = createOtpStep({
       mobile,
       sendOtp: session.sendOtp,
       verifyOtp: session.verifyOtp,
       announce,
-      // back to the form, values kept: a new OTP needs a new captcha
-      onBack: () => {
-        session.cancel();
-        otp.remove();
-        showStep(main);
-        nameDialog(intro.querySelector('h1, h2')?.id);
-        if (captcha) {
-          captcha.load();
-          captcha.input.focus();
-        } else {
-          submit.focus();
-        }
-      },
+      onBack: () => backToForm(),
+      // the session or the OTP's token expired: a new captcha, then Send OTP again
+      onCaptchaRequired: (message) => backToForm(message),
       // the lead is created by verifyOtp
       onVerified: (lead) => {
         // the server's lead reference, never the mobile number

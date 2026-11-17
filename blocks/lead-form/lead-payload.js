@@ -59,19 +59,12 @@ export function splitName(fullName) {
 }
 
 /**
- * The lead of a filled-in form.
- * Name fields are recognised by their autocomplete value, set from the label in lead-form.js:
- * "First name" = given-name, "Last name" = family-name, "Your name" = name. An "Account name"
- * is a company (organization), so it is sent as a field of its own.
- * Only the fields the category's API takes are kept, under its keys (LEAD_KEYS_BY_PRODUCT).
+ * Every sent field of a filled-in form under its API key (leadKey), plus FirstName,
+ * LastName and Name (the full name), see buildLead.
  * @param {HTMLFormElement} form
- * @param {string} category the picked loan category, adds its fields (see categoryFields)
- *   except `product`, which is sent next to the lead as its `category` (see lead-api.js)
- * @returns {Object<string, string>} e.g. New Car Finance: { FirstName, LastName, Location,
- *   Pincode, Email, Product: "New CAR" }; TWL: { firstName, lastName, businessLocation };
- *   LAP: { Name, Email, City }
+ * @returns {Object<string, string>}
  */
-export function buildLead(form, category) {
+function readForm(form) {
   const fields = {};
   const name = { given: '', family: '', full: '' };
   [...form.elements].forEach((el) => {
@@ -87,7 +80,24 @@ export function buildLead(form, category) {
   const names = name.given || name.family
     ? { FirstName: name.given, LastName: name.family }
     : splitName(name.full);
-  const all = { ...fields, ...names, Name: [names.FirstName, names.LastName].filter(Boolean).join(' ') };
+  return { ...fields, ...names, Name: [names.FirstName, names.LastName].filter(Boolean).join(' ') };
+}
+
+/**
+ * The lead of a filled-in form.
+ * Name fields are recognised by their autocomplete value, set from the label in lead-form.js:
+ * "First name" = given-name, "Last name" = family-name, "Your name" = name. An "Account name"
+ * is a company (organization), so it is sent as a field of its own.
+ * Only the fields the category's API takes are kept, under its keys (LEAD_KEYS_BY_PRODUCT).
+ * @param {HTMLFormElement} form
+ * @param {string} category the picked loan category, adds its fields (see categoryFields)
+ *   except `product`, which is sent next to the lead as its `category` (see lead-api.js)
+ * @returns {Object<string, string>} e.g. New Car Finance: { FirstName, LastName, Location,
+ *   Pincode, Email, Product: "New CAR" }; TWL: { firstName, lastName, businessLocation };
+ *   LAP: { Name, Email, City }
+ */
+export function buildLead(form, category) {
+  const all = readForm(form);
   // the category's fields (Product) last, so no form field can override them
   const { product, ...extra } = categoryFields(category);
   const keys = LEAD_KEYS_BY_PRODUCT[product];
@@ -98,4 +108,15 @@ export function buildLead(form, category) {
     if (all[from]) lead[to] = all[from];
   });
   return { ...lead, ...extra };
+}
+
+/**
+ * The name and email sent with the first OTP request (otp-generate), whatever the product:
+ * the backend keeps them with the OTP's token, so a resend does not send them again.
+ * @param {HTMLFormElement} form
+ * @returns {{ name: string, email: string }} '' for a field the form does not have
+ */
+export function contactOf(form) {
+  const all = readForm(form);
+  return { name: all.Name || '', email: all.Email || '' };
 }
