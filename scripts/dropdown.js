@@ -42,6 +42,8 @@ export function highlight(el, text, query) {
  * @param {boolean} [config.search] show a search box
  * @param {string} [config.searchPlaceholder]
  * @param {boolean} [config.pinSelected] list the selected option first when reopened
+ * @param {boolean} [config.scrollToSelected] on open, scroll the list so the selected option
+ *   is the first one visible, right under the search box (the full list stays available)
  * @param {boolean} [config.required]
  * @param {string} [config.boundary] selector of an ancestor (e.g. a banner) the open
  *   panel must stay inside: the list is shortened and scrolls instead of overflowing it
@@ -50,7 +52,7 @@ export function highlight(el, text, query) {
  */
 export function createDropdown({
   label, name, options, value = '', search = false, searchPlaceholder = 'Search',
-  pinSelected = false, required = false, boundary = '',
+  pinSelected = false, scrollToSelected = false, required = false, boundary = '',
 }) {
   if (!cssLoaded) cssLoaded = loadCSS(`${window.hlx.codeBasePath}/styles/dropdown.css`);
   idCounter += 1;
@@ -255,6 +257,12 @@ export function createDropdown({
     placePanel();
     const selectedIndex = visibleOptions().findIndex((li) => li.dataset.value === input.value);
     if (selectedIndex >= 0) setActive(selectedIndex);
+    if (scrollToSelected && selectedIndex >= 0) {
+      // the list is the scroller: the selected option goes to its top edge, whole (the option
+      // is measured from the panel, the list's own offset is taken off)
+      const selectedItem = visibleOptions()[selectedIndex];
+      list.scrollTop = selectedItem.offsetTop - list.offsetTop;
+    }
     if (searchInput) {
       searchInput.parentElement.querySelector('.dropdown-clear').hidden = true;
       searchInput.focus({ preventScroll: true });
