@@ -183,6 +183,7 @@
 /* numbered */
 :where(.desktop-view) .feature-cards.numbered .feature-cards-card{
     height: 272px;
+    max-width: 470px;
 }
 
 :where(.desktop-view) .feature-cards.numbered .feature-cards-number {
@@ -501,6 +502,7 @@
 :where(.desktop-view) .feature-cards.split {
     flex-direction: row;
     gap: 80px;
+    justify-content: space-between;
 }
 
 :where(.desktop-view) .feature-cards.split .feature-cards-aside{
