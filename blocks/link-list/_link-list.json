@@ -104,6 +104,11 @@
           "multi": false
         },
         {
+          "name": "imageMimeType",
+          "component": "hidden",
+          "valueType": "image/png"
+        },
+        {
           "component": "text",
           "valueType": "string",
           "name": "imageAlt",
@@ -130,6 +135,11 @@
           "label": "Arrow icon",
           "description": "Right-hand icon (SVG recommended). Shown only when authored.",
           "multi": false
+        },
+        {
+          "name": "iconMimeType",
+          "component": "hidden",
+          "valueType": "image/png"
         }
       ]
     }

@@ -66,6 +66,11 @@
           "label": "Decorative image",
           "description": "Optional artwork shown behind the top-right corner.",
           "multi": false
+        },
+        {
+          "name": "imageMimeType",
+          "component": "hidden",
+          "valueType": "image/png"
         }
       ]
     },
@@ -87,6 +92,11 @@
           "label": "Icon",
           "description": "Eligibility cards only.",
           "multi": false
+        },
+        {
+          "name": "imageMimeType",
+          "component": "hidden",
+          "valueType": "image/png"
         },
         {
           "component": "text",
