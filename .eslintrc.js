@@ -30,6 +30,8 @@ module.exports = {
       'gst-form-field': 5,
       // hero: heading, options, submit link, link text, category forms
       'hero-loan': 5,
+      // EMI calculator loan type: title, amount, rate, tenure, image
+      'emi-loan-type': 5,
       // link list: classes, side, intro, note, read all label, read less label
       'link-list': 6,
     }],
