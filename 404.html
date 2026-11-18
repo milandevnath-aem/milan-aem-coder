@@ -18,10 +18,14 @@
   <script nonce="aem" src="/scripts/scripts.js" type="module"></script>
   <script nonce="aem" type="module">
     // "Go to home" follows the header logo's link (the site's home page, e.g. /home);
-    // /home stays when the header has none
+    // /home stays when the header has none; a placeholder link ("#", empty) is not a home
+    // page: it would resolve to this very 404 page
     const home = document.querySelector('.error-button-home');
     const setHome = () => {
-      const link = document.querySelector('header .nav-brand a[href]');
+      const link = [...document.querySelectorAll('header .nav-brand a[href]')].find((a) => {
+        const target = a.getAttribute('href').trim();
+        return target && !target.startsWith('#');
+      });
       if (link) home.href = link.href;
       return Boolean(link);
     };
@@ -29,7 +33,9 @@
     if (home && header && !setHome()) {
       new MutationObserver((_, observer) => {
         if (setHome()) observer.disconnect();
-      }).observe(header, { childList: true, subtree: true });
+      }).observe(header, {
+        childList: true, subtree: true, attributes: true, attributeFilter: ['href'],
+      });
     }
   </script>
   <script nonce="aem" type="module">
