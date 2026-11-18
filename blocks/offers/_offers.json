@@ -63,6 +63,11 @@
           "multi": false
         },
         {
+          "name": "imageMimeType",
+          "component": "hidden",
+          "valueType": "image/png"
+        },
+        {
           "component": "text",
           "valueType": "string",
           "name": "imageAlt",
