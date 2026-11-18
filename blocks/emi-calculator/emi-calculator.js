@@ -709,7 +709,8 @@ export default function decorate(block) {
   // one image per loan type, shown while its tab is selected; a loan type without one
   // shows the block's fallback image. Hidden pictures are lazy, so only the shown one loads.
   const toPicture = (img) => {
-    const picture = createPicture(img.src, img.alt, false, [{ width: '1300' }]);
+    // full-bleed section background on desktop (hidden on small screens)
+    const picture = createPicture(img.src, img.alt, false, [{ width: '2000' }]);
     moveInstrumentation(img, picture.querySelector('img'));
     picture.classList.add('emi-calculator-image');
     picture.hidden = true;

@@ -541,29 +541,33 @@
   gap: 0;
 }
 
+/* not positioned: the image below is placed on the section */
 :where(.desktop-view) .emi-calculator .emi-calculator-intro {
-  position: relative;
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
   padding: 0;
 }
 
+/* the selected loan type's image is the full-bleed background of the section, behind the
+   heading and the card (the section is the containing block, see styles.css) */
 :where(.desktop-view) .emi-calculator .emi-calculator-image {
   display: block;
-  margin: auto 0 -96px calc(-1 * var(--gb-offset));
-  max-width: calc(100% + var(--gb-offset));
+  position: absolute;
+  inset: 0;
+  z-index: -1;
 }
 
+/* the images of the other loan types */
 :where(.desktop-view) .emi-calculator .emi-calculator-image[hidden] {
   display: none;
 }
 
 :where(.desktop-view) .emi-calculator .emi-calculator-image img {
   display: block;
-  width: 650px;
-  max-width: 100%;
-  height: auto;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 :where(.desktop-view) .emi-calculator .emi-calculator-card {
