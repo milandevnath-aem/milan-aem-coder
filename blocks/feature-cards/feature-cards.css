@@ -199,7 +199,6 @@
 
 .feature-cards.numbered .feature-cards-body h3 {
     margin-top: auto;
-    padding-top: 40px;
     font-size: 16px;
     line-height: 24px;
     letter-spacing: 0;
@@ -246,6 +245,15 @@
     line-height: var(--type-headline-h4-line-height);
     font-weight: var(--type-headline-h4-font-weight);
     letter-spacing: -0.4px;
+}
+
+/* keep iOS auto-detected / tel: links looking like the value text */
+.feature-cards .feature-cards-value a[x-apple-data-detectors],
+.feature-cards .feature-cards-value a[href^="tel"] {
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    text-decoration: none;
 }
 
 .feature-cards.info .feature-cards-body p.feature-cards-value:not(:last-child) {
@@ -877,6 +885,11 @@
     border: 0.8px solid #dedede;
     border-radius: 8px;
     background: #eee;
+}
+
+/* long text must not shrink the icon in the row layout */
+.feature-cards.icon-border .feature-cards-icon {
+    flex: none;
 }
 
 .feature-cards.split.icon-border .feature-cards-icon img,

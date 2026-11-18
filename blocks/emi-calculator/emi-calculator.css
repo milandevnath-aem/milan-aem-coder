@@ -83,6 +83,27 @@
   color: var(--inverse-color);
 }
 
+:root:not(.desktop-view) .emi-calculator .emi-calculator-tabs.has-overflow[data-selected-position='first'] {
+  /* stylelint-disable property-no-vendor-prefix */
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent 100%);
+  mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent 100%);
+  /* stylelint-enable property-no-vendor-prefix */
+}
+
+:root:not(.desktop-view) .emi-calculator .emi-calculator-tabs.has-overflow[data-selected-position='middle'] {
+  /* stylelint-disable property-no-vendor-prefix */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+  /* stylelint-enable property-no-vendor-prefix */
+}
+
+:root:not(.desktop-view) .emi-calculator .emi-calculator-tabs.has-overflow[data-selected-position='last'] {
+  /* stylelint-disable property-no-vendor-prefix */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 100%);
+  /* stylelint-enable property-no-vendor-prefix */
+}
+
 .emi-calculator .emi-calculator-fields {
   display: flex;
   flex-direction: column;
@@ -125,7 +146,7 @@
   overflow: hidden;
   padding: 11px 19px;
   border: 1px solid var(--border-light-color);
-  border-radius: 12px;
+  border-radius: 16px;
   color: var(--text-color);
   font-size: var(--type-a1-size);
   font-weight: 700;
@@ -152,7 +173,7 @@
   border-color: var(--text-color);
 }
 
-.emi-calculator .emi-calculator-value:has(input:focus-visible) {
+.emi-calculator .emi-calculator-field:not(.is-invalid) .emi-calculator-value:has(input:focus-visible) {
   outline: 2px solid var(--text-color);
 }
 
@@ -246,7 +267,6 @@
   border-radius: 8px;
   font-size: var(--type-b1-size);
   letter-spacing: 0;
-  background-color:#f5f5f5;
 }
 
 .emi-calculator .emi-calculator-unit button {
@@ -261,12 +281,6 @@
   line-height: var(--type-b1-line);
   cursor: pointer;
   transition: background-color 150ms ease, color 150ms ease;
-  height:32px;
-  width:40px;
-}
-
-:where(.desktop-view) .emi-calculator .emi-calculator-unit button {
-  height: 34px;
 }
 
 .emi-calculator .emi-calculator-unit button[aria-pressed='true'] {
@@ -559,7 +573,6 @@
   font-weight: 700;
   line-height: var(--type-a1-line);
   letter-spacing: var(--type-a1-ls);
-  padding:5px 5px 5px 21px;
 }
 
 :where(.desktop-view) .emi-calculator a.emi-calculator-cta {

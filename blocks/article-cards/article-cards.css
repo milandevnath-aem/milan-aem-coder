@@ -66,17 +66,144 @@
   letter-spacing: 0;
 }
 
-/* clickable card: the title link covers the whole card */
-.article-cards .article-cards-link:any-link {
-  color: inherit;
-  text-decoration: none;
+.article-cards .article-cards-additional {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
 }
 
-.article-cards .article-cards-link::after {
+.article-cards .article-cards-additional-image {
+  flex: 0 0 64px;
+}
+
+.article-cards .article-cards-additional-image img {
+  display: block;
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.article-cards .article-cards-additional-text {
+  position: relative;
+  z-index: 1;
+  color: var(--text-color);
+  font-size: var(--type-b1-size);
+  line-height: var(--type-b1-line);
+}
+
+.article-cards a.article-cards-additional-text:hover {
+  text-decoration: underline;
+}
+
+/* stylelint-disable selector-class-pattern -- required author-selected variant class */
+.article-cards.mediaReleasesCards > ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.article-cards:not(.mediaReleasesCards) .article-cards-link::after {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
+}
+
+.article-cards.mediaReleasesCards .article-cards-item {
+  gap: 20px;
+  min-height: 180px;
+  padding: 8px;
+  border-radius: 28px;
+  background-color: #eee;
+  max-width: 359px;
+}
+
+.article-cards.mediaReleasesCards .article-cards-image {
+  flex: 0 0 27.86%;
+  padding: 0;
+  min-width: 100px;
+}
+
+.article-cards.mediaReleasesCards .article-cards-image img {
+  width: 100%;
+  height: 100%;
+  min-height: 172px;
+  aspect-ratio: 1;
+  border-radius: 24px;
+  max-width: 100px;
+}
+
+.article-cards.mediaReleasesCards .article-cards-body {
+  padding: 4px 4px 4px 0;
+}
+
+.article-cards.mediaReleasesCards .article-cards-title {
+  display: block;
+  color: #111;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  overflow-wrap: anywhere;
+}
+
+.article-cards.mediaReleasesCards .article-cards-additional {
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+.article-cards.mediaReleasesCards .article-cards-button {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  box-sizing: border-box;
+  min-height: 32px;
+  max-width: 100%;
+  padding: 8px 24px;
+  border-radius: 999px;
+  background-color: #111;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.article-cards.mediaReleasesCards .article-cards-button:hover {
+  background-color: #333;
+  text-decoration: none;
+}
+
+.article-cards.mediaReleasesCards .article-cards-button:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 3px;
+}
+
+.article-cards.mediaReleasesCards .article-cards-additional-image {
+  flex: 0 0 12px;
+  width: 12px;
+  height: 12px;
+}
+
+.article-cards.mediaReleasesCards img.article-cards-additional-image,
+.article-cards.mediaReleasesCards .article-cards-additional-image img {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 0;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.article-cards .article-cards-link:any-link {
+  color: inherit;
+  text-decoration: none;
 }
 
 .article-cards .article-cards-clickable:hover .article-cards-link {
@@ -110,6 +237,7 @@
 }
 
 :where(.desktop-view) .article-cards > ul {
+  display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
 }
@@ -137,7 +265,51 @@
 
 :where(.desktop-view) .article-cards .article-cards-body {
   padding: 24px 0;
+
+  /* max-width: 231px; */
 }
+
+:where(.desktop-view) .article-cards.mediaReleasesCards .article-cards-item {
+  gap: 32px;
+  min-height: 288px;
+  max-height: 288px;
+  box-sizing: border-box;
+  padding: 4px 24px 4px 4px;
+  border-radius: 28px;
+  max-width: initial;
+}
+
+:where(.desktop-view) .article-cards.mediaReleasesCards > ul {
+  display: grid;
+}
+
+:where(.desktop-view) .article-cards.mediaReleasesCards .article-cards-image {
+  /* flex: 0 0 min(290px, 60%); */
+  width: 49.91%;
+  flex: initial;
+  max-width: 290px;
+}
+
+:where(.desktop-view) .article-cards.mediaReleasesCards .article-cards-image img {
+  width: 100%;
+  max-width: 290px;
+
+  /* min-width: 290px; */
+  height: 280px;
+  min-height: 0;
+  border-radius: 28px;
+}
+
+:where(.desktop-view) .article-cards.mediaReleasesCards .article-cards-body {
+  padding: 24px 0;
+  width:39.76%;
+}
+
+:where(.desktop-view) .article-cards.mediaReleasesCards .article-cards-title {
+  font-size: 20px;
+  line-height: 28px;
+}
+/* stylelint-enable selector-class-pattern */
 
 :where(.desktop-view) .article-cards .article-cards-category {
   color: var(--text-color);
@@ -145,3 +317,4 @@
   font-weight: 600;
   line-height: var(--type-h2-line);
 }
+

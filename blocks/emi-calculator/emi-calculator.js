@@ -1,5 +1,8 @@
 import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createPicture } from '../../scripts/images.js';
+import {
+  amountBand, analyticsName, pushOnce, safely,
+} from '../../scripts/analytics.js';
 
 const inr = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 });
 
@@ -181,6 +184,9 @@ function buildCalculator(types, link) {
   tablist.className = 'emi-calculator-tabs';
   tablist.setAttribute('role', 'tablist');
   tablist.setAttribute('aria-label', 'Loan type');
+  const updateTabOverflow = () => {
+    tablist.classList.toggle('has-overflow', tablist.scrollWidth > tablist.clientWidth);
+  };
   types.forEach((type, i) => {
     const tab = document.createElement('button');
     tab.type = 'button';
@@ -258,9 +264,40 @@ function buildCalculator(types, link) {
     };
   });
 
+  // raw slider position while a pointer drags it; the value itself stays on the step
+  const dragPos = {};
+
+  /** Rounds a slider position to the field's step (counted from the minimum), within the limits. */
+  const snap = (key, raw) => {
+    const { range } = parts[key];
+    const min = Number(range.min);
+    const max = Number(range.max);
+    const step = Number(range.dataset.step) || 1;
+    const decimals = (String(step).split('.')[1] || '').length;
+    const value = min + Math.round((raw - min) / step) * step;
+    return Number(Math.min(max, Math.max(min, value)).toFixed(decimals));
+  };
+
   const months = (v) => `${v} ${v === 1 ? 'month' : 'months'}`;
   const tenureText = (v) => (state.unit === 'mo' ? months(v) : years(v));
   const tenureInMonths = () => (state.unit === 'mo' ? state.tenure : state.tenure * TENURE.monthsPerYear);
+
+  /**
+   * calculator_use: once per calculator (loan type tab) per page view, when the visitor
+   * settles on a value (slider released, number entered, unit switched), so the band and
+   * tenure are the ones they chose. The calculation shown on load and tab switches do not count.
+   */
+  const trackUse = () => safely(() => {
+    const calculator = analyticsName(cta.dataset.loanCategory) || 'emi_calculator';
+    const { range } = parts.amount;
+    pushOnce(`calculator_use:${calculator}`, 'calculator_use', {
+      calculator,
+      loan_amount_band: amountBand(state.amount, {
+        min: Number(range.min), max: Number(range.max), step: Number(range.step),
+      }),
+      tenure_months: tenureInMonths(),
+    });
+  });
 
   const display = {
     amount: (v) => inr.format(v),
@@ -312,9 +349,12 @@ function buildCalculator(types, link) {
     els.interest.textContent = `₹${inr.format(Math.round(total - state.amount))}`;
     els.total.textContent = `₹${inr.format(total)}`;
     Object.entries(parts).forEach(([key, { range, slider, input }]) => {
-      const pct = (state[key] - range.min) / (range.max - range.min || 1);
+      // while dragged, the knob follows the finger; otherwise it sits on the value
+      const dragging = dragPos[key] !== undefined;
+      const position = dragging ? dragPos[key] : state[key];
+      const pct = (position - range.min) / (range.max - range.min || 1);
       slider.style.setProperty('--pct', Math.min(1, Math.max(0, pct)));
-      if (Number(range.value) !== state[key]) range.value = state[key];
+      if (!dragging && Number(range.value) !== state[key]) range.value = state[key];
       range.setAttribute('aria-valuetext', bounds[key](state[key]));
       if (document.activeElement !== input) input.value = display[key](state[key]);
       input.size = Math.max(1, input.value.length);
@@ -375,6 +415,8 @@ function buildCalculator(types, link) {
     range.min = min;
     range.max = max;
     range.step = step;
+    // kept for snapping while a drag sets the step to "any"
+    range.dataset.step = step;
     const [lo, hi] = group.querySelectorAll('.emi-calculator-bounds span');
     lo.textContent = bounds[key](min);
     hi.textContent = bounds[key](max);
@@ -394,16 +436,12 @@ function buildCalculator(types, link) {
     showError('tenure', false);
   };
 
-  /**
-   * Switches the tenure between years and months. Months start at the authored default
-   * months; without one, and when going back to years, the same loan period is kept.
-   */
   const setTenureUnit = (unit) => {
     if (unit === state.unit) return;
     const monthCount = tenureInMonths();
     state.unit = unit;
     state.tenure = unit === 'mo'
-      ? tenureLimits.mo.value ?? monthCount
+      ? monthCount
       : Math.round(monthCount / TENURE.monthsPerYear);
     applyTenureUnit();
     update();
@@ -426,15 +464,30 @@ function buildCalculator(types, link) {
       range, slider, input, trigger,
     } = parts[key];
     range.addEventListener('input', () => {
-      state[key] = Number(range.value);
+      const raw = Number(range.value);
+      if (range.step === 'any') dragPos[key] = raw;
+      state[key] = snap(key, raw);
       showError(key, false);
       scheduleUpdate();
     });
-    // while the pointer moves the thumb, follow it without easing
+    // "change" fires once the slider is released (or a key moved it): the chosen value
+    range.addEventListener('change', trackUse);
+    // the number field counts once a typed value is committed (not a focus and blur alone)
+    let edited = false;
+    input.addEventListener('input', (e) => { if (e.isTrusted) edited = true; });
+    // while the pointer moves the thumb, follow it without easing and between steps
+    // (few-step sliders such as tenure in years would jump otherwise);
+    // on release the knob eases onto the nearest step
     range.addEventListener('pointerdown', () => {
+      const active = document.activeElement;
+      if (card.contains(active) && active.matches('.emi-calculator-value input')) active.blur();
+      range.step = 'any';
       const start = () => slider.classList.add('is-dragging');
       const end = () => {
         slider.classList.remove('is-dragging');
+        range.step = range.dataset.step;
+        delete dragPos[key];
+        update();
         window.removeEventListener('pointermove', start);
         window.removeEventListener('pointerup', end);
         window.removeEventListener('pointercancel', end);
@@ -504,6 +557,10 @@ function buildCalculator(types, link) {
       state[key] = fixed;
       input.value = display[key](fixed);
       update();
+      if (edited) {
+        edited = false;
+        trackUse();
+      }
     };
     input.addEventListener('change', commit);
     input.addEventListener('blur', commit);
@@ -517,11 +574,23 @@ function buildCalculator(types, link) {
   });
 
   parts.tenure.group.querySelectorAll('.emi-calculator-unit button').forEach((button) => {
-    button.addEventListener('click', () => setTenureUnit(button.dataset.unit));
+    button.addEventListener('click', () => {
+      if (button.dataset.unit === state.unit) return;
+      setTenureUnit(button.dataset.unit);
+      trackUse();
+    });
   });
 
   const selectType = (index) => {
     const type = types[index];
+    if (index === 0) {
+      tablist.dataset.selectedPosition = 'first';
+    } else if (index === types.length - 1) {
+      tablist.dataset.selectedPosition = 'last';
+    } else {
+      tablist.dataset.selectedPosition = 'middle';
+    }
+    updateTabOverflow();
     // the apply link opens the form for the selected loan type
     cta.dataset.loanCategory = type.title;
     [...tablist.children].forEach((tab, i) => {
@@ -556,7 +625,10 @@ function buildCalculator(types, link) {
   };
 
   // "car-loan" matches the tab "Car loans"
-  const normalize = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, '').replace(/s$/, '');
+  const normalize = (text) => text.toLowerCase()
+    .replace(/\b(?:emi|calculators?)\b/g, '')
+    .replace(/[^a-z0-9]+/g, '')
+    .replace(/s$/, '');
   const findType = (name) => {
     if (!name) return undefined;
     const index = types.findIndex((type) => normalize(type.title) === normalize(name));
@@ -634,5 +706,8 @@ export default function decorate(block) {
     types.push(parseLoanType(fallback));
   }
 
-  block.replaceChildren(intro, buildCalculator(types, linkRow?.querySelector('a')));
+  const calculator = buildCalculator(types, linkRow?.querySelector('a'));
+  block.replaceChildren(intro, calculator);
+  const tablist = calculator.querySelector('.emi-calculator-tabs');
+  if (tablist) tablist.classList.toggle('has-overflow', tablist.scrollWidth > tablist.clientWidth);
 }

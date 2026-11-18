@@ -258,6 +258,15 @@
     "fields": [
       {
         "component": "text",
+        "valueType": "string",
+        "name": "id",
+        "label": "Column ID",
+        "required": false,
+        "placeholder": "e.g., my-column",
+        "description": "The column will be linkable via ID entered."
+      },
+      {
+        "component": "text",
         "name": "name",
         "label": "Section Name",
         "description": "The label shown for this section in the Content Tree"
@@ -276,7 +285,7 @@
             "value": "brand"
           },
           {
-            "name": "Brand (grey, centered text)",
+            "name": "Brand (grey, centered text, fixed width)",
             "value": "bg-grey"
           },
           {
@@ -330,6 +339,18 @@
           {
             "name": "Section Padding left and right",
             "value": "padding-left-right"
+          },
+          {
+            "name": "Read more (grey disclosure text, collapsed to 3 lines)",
+            "value": "read-more"
+          },
+          {
+            "name": "Background Grey disclaimer for feature card",
+            "value": "bg-disclaimer"
+          },
+          {
+            "name": "Plain disclaimer for feature card",
+            "value": "plain-disclaimer"
           }
         ]
       },
@@ -355,6 +376,28 @@
         "label": "Background image (mobile)",
         "description": "Optional. Used on small screens instead of the desktop image.",
         "multi": false
+      }
+    ]
+  },
+  {
+    "id": "article-cards",
+    "fields": [
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Variant",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Media releases cards",
+            "value": "mediaReleasesCards"
+          }
+        ]
       }
     ]
   },
@@ -400,6 +443,13 @@
         "name": "readTime",
         "label": "Reading time",
         "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "link_button",
+        "value": "",
+        "label": "Button",
+        "valueType": "string"
       }
     ]
   },
@@ -523,6 +573,10 @@
           {
             "name": "About Us (sticky heading, website link with icon)",
             "value": "about-us"
+          },
+          {
+            "name": "Dropdown + CTA (list of links becomes a dropdown, button opens the selected link)",
+            "value": "dropdown-cta"
           }
         ]
       }
@@ -1216,6 +1270,219 @@
     ]
   },
   {
+    "id": "grievance",
+    "fields": [
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Variant",
+        "valueType": "string",
+        "value": "steps",
+        "options": [
+          {
+            "name": "Steps (timeline)",
+            "value": "steps"
+          },
+          {
+            "name": "Directory",
+            "value": "directory"
+          }
+        ]
+      },
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Intro",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "readMoreLabel",
+        "value": "",
+        "label": "Read more button label",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "showLessLabel",
+        "value": "",
+        "label": "Show less button label",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "grievance-item",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "title",
+        "label": "Title",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "description",
+        "value": "",
+        "label": "Description",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "details",
+        "value": "",
+        "label": "Details (group label paragraph + list; bold text in each list item is the label. Approach RBI: intro paragraph, H4 = section title (start with bold text like 01. for a step number), bold link = button)",
+        "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Variant",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Steps (RBI Approach)",
+            "value": "rbi-approach"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gst-form",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Heading and text",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "types",
+        "label": "Form types",
+        "value": "",
+        "description": "Comma separated, e.g. \"Customer, Vendor\": shown as a switch above the fields. Leave blank or enter one type for no switch."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "submitLabel",
+        "label": "Button label",
+        "value": ""
+      },
+      {
+        "component": "aem-content",
+        "name": "link",
+        "label": "Contact Us link"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "linkText",
+        "label": "Contact Us link text",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "gst-form-field",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "label",
+        "label": "Label",
+        "value": ""
+      },
+      {
+        "component": "select",
+        "name": "kind",
+        "label": "Field type",
+        "valueType": "string",
+        "value": "text",
+        "options": [
+          {
+            "name": "Text",
+            "value": "text"
+          },
+          {
+            "name": "Number (digits only)",
+            "value": "number"
+          },
+          {
+            "name": "Letters and numbers",
+            "value": "alphanumeric"
+          },
+          {
+            "name": "PAN",
+            "value": "pan"
+          },
+          {
+            "name": "GSTIN / GST provisional ID",
+            "value": "gstin"
+          },
+          {
+            "name": "Mobile number (+91)",
+            "value": "tel"
+          },
+          {
+            "name": "Email",
+            "value": "email"
+          },
+          {
+            "name": "Postal code",
+            "value": "zip"
+          },
+          {
+            "name": "Dropdown",
+            "value": "select"
+          },
+          {
+            "name": "Dropdown with search",
+            "value": "search"
+          },
+          {
+            "name": "Captcha",
+            "value": "captcha"
+          }
+        ]
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "options",
+        "label": "Options",
+        "description": "Dropdown: comma separated options, a leading * marks the default. Number or Letters and numbers: the exact length (e.g. 2 for a state code), blank for up to 20 characters. A field labelled City lists the cities of the city master.",
+        "value": ""
+      },
+      {
+        "component": "boolean",
+        "valueType": "boolean",
+        "name": "required",
+        "label": "Required",
+        "value": true
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "types",
+        "label": "Shown for",
+        "description": "Form types this field is shown for, comma separated (e.g. \"Customer\"). Leave blank to show it for every type.",
+        "value": ""
+      }
+    ]
+  },
+  {
     "id": "hero-loan",
     "fields": [
       {
@@ -1477,7 +1744,7 @@
     "id": "link-list",
     "fields": [
       {
-        "component": "select",
+        "component": "multiselect",
         "name": "classes",
         "label": "Background",
         "valueType": "string",
@@ -1488,8 +1755,16 @@
             "value": "bg-grey"
           },
           {
+            "name": "Document list (grey cards with document icon)",
+            "value": "doc-list"
+          },
+          {
             "name": "No background (divider list)",
             "value": ""
+          },
+          {
+            "name": "Buttons (Read all / Read less toggle)",
+            "value": "buttons"
           }
         ]
       },
@@ -1515,6 +1790,22 @@
         "value": "",
         "label": "Note",
         "description": "Grey note box shown below the list.",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "readAll",
+        "value": "",
+        "label": "Read all button text",
+        "description": "Used with the Buttons class. Defaults to 'Read all'.",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "readLess",
+        "value": "",
+        "label": "Read less button text",
+        "description": "Used with the Buttons class. Defaults to 'Read less'.",
         "valueType": "string"
       }
     ]

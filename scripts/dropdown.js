@@ -42,6 +42,8 @@ export function highlight(el, text, query) {
  * @param {boolean} [config.search] show a search box
  * @param {string} [config.searchPlaceholder]
  * @param {boolean} [config.pinSelected] list the selected option first when reopened
+ * @param {boolean} [config.scrollToSelected] on open, scroll the list so the selected option
+ *   is the first one visible, right under the search box (the full list stays available)
  * @param {boolean} [config.required]
  * @param {string} [config.boundary] selector of an ancestor (e.g. a banner) the open
  *   panel must stay inside: the list is shortened and scrolls instead of overflowing it
@@ -50,7 +52,7 @@ export function highlight(el, text, query) {
  */
 export function createDropdown({
   label, name, options, value = '', search = false, searchPlaceholder = 'Search',
-  pinSelected = false, required = false, boundary = '',
+  pinSelected = false, scrollToSelected = false, required = false, boundary = '',
 }) {
   if (!cssLoaded) cssLoaded = loadCSS(`${window.hlx.codeBasePath}/styles/dropdown.css`);
   idCounter += 1;
@@ -194,12 +196,19 @@ export function createDropdown({
     }
     const scroller = el && el !== document.body;
     const rect = scroller ? el.getBoundingClientRect() : { top: 0, bottom: Infinity };
-    return { top: Math.max(rect.top, 0), bottom: Math.min(rect.bottom, window.innerHeight) };
+    return {
+      top: Math.max(rect.top, 0),
+      bottom: Math.min(rect.bottom, window.innerHeight),
+      scrolls: Boolean(scroller),
+    };
   };
 
-  // opens the panel above the field when there is not enough room below it (e.g. the last
-  // field of a modal), and keeps its height while the list is filtered, so the search box
-  // stays where it is as the visitor types
+  // opens the panel below the field, scrolling the page up under the header when there is not
+  // enough room (smooth, instant for visitors who prefer reduced motion). Opens above it only
+  // when the page cannot scroll far enough or a modal clips the panel (e.g. the last field of
+  // a modal).
+  // The height is kept while the list is filtered, so the search box stays where it is as
+  // the visitor types
   const placePanel = () => {
     panel.classList.remove('is-above');
     panel.style.minHeight = '';
@@ -208,8 +217,19 @@ export function createDropdown({
     if (!boundary) {
       const area = visibleArea();
       const rect = field.getBoundingClientRect();
-      const below = area.bottom - rect.bottom - 16;
-      const above = rect.top - area.top - 16;
+      let shift = 0;
+      if (panel.offsetHeight > area.bottom - rect.bottom - 16 && !area.scrolls) {
+        // html's scroll-padding-top keeps the field clear of the fixed header; the distance is
+        // worked out here because a smooth scroll has not moved the field yet
+        const html = document.documentElement;
+        const clearance = parseFloat(getComputedStyle(html).scrollPaddingTop) || 0;
+        const scrollLeft = html.scrollHeight - window.innerHeight - window.scrollY;
+        shift = Math.max(0, Math.min(rect.top - clearance, scrollLeft));
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (shift) window.scrollBy({ top: shift, behavior: reduced ? 'auto' : 'smooth' });
+      }
+      const below = area.bottom - (rect.bottom - shift) - 16;
+      const above = rect.top - shift - area.top - 16;
       const openAbove = panel.offsetHeight > below && above > below;
       panel.classList.toggle('is-above', openAbove);
       room = openAbove ? above : below;
@@ -237,11 +257,17 @@ export function createDropdown({
     placePanel();
     const selectedIndex = visibleOptions().findIndex((li) => li.dataset.value === input.value);
     if (selectedIndex >= 0) setActive(selectedIndex);
+    if (scrollToSelected && selectedIndex >= 0) {
+      // the list is the scroller: the selected option goes to its top edge, whole (the option
+      // is measured from the panel, the list's own offset is taken off)
+      const selectedItem = visibleOptions()[selectedIndex];
+      list.scrollTop = selectedItem.offsetTop - list.offsetTop;
+    }
     if (searchInput) {
       searchInput.parentElement.querySelector('.dropdown-clear').hidden = true;
-      searchInput.focus();
+      searchInput.focus({ preventScroll: true });
     } else {
-      list.focus();
+      list.focus({ preventScroll: true });
       if (selectedIndex < 0) setActive(0);
     }
   };

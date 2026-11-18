@@ -259,9 +259,16 @@
   gap: 12px;
 }
 
-.hero-loan .hero-loan-input {
+.hero-loan .hero-loan-field {
   display: flex;
   flex: 1 1 0;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.hero-loan .hero-loan-input {
+  display: flex;
   align-items: center;
   gap: 8px;
   min-width: 0;
@@ -275,6 +282,34 @@
 
 .hero-loan .hero-loan-input:focus-within {
   outline: 2px solid var(--text-color);
+}
+
+.hero-loan .hero-loan-input.is-invalid {
+  background-color: #fff6f6;
+  box-shadow: inset 0 0 0 1px #ff3938;
+}
+
+.hero-loan .hero-loan-error {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  color: #ff3938;
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.hero-loan .hero-loan-error[hidden] {
+  display: none;
+}
+
+.hero-loan .hero-loan-error::before {
+  content: '';
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  background: url('../../icons/alert.svg') center / contain no-repeat;
 }
 
 .hero-loan .hero-loan-input input {

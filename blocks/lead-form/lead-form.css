@@ -38,10 +38,10 @@
 .lead-form .lead-form-intro h2 {
   margin: 0 0 8px;
   color: var(--text-color);
-  font-size: 32px;
-  font-weight: 500;
-  line-height: 40px;
-  letter-spacing: -0.8px;
+  font-size: var(--type-display-medium-df-1-font-size);
+  font-weight: var(--type-display-medium-df-1-font-weight);
+  line-height: var(--type-display-medium-df-1-line-height);
+  letter-spacing: var(--type-display-medium-df-1-letter-spacing);
 }
 
 /* Figma Body/B2 on small screens */
@@ -121,10 +121,10 @@
   padding: 0;
   background: transparent;
   color: var(--text-color);
-  font-size: var(--type-headline-h4-font-size);
-  font-weight: var(--type-headline-h4-font-weight);
-  line-height: var(--type-headline-h4-line-height);
-  letter-spacing: var(--type-headline-h4-letter-spacing);
+  font-size: var(--type-headline-h5-font-size);
+  font-weight: var(--type-headline-h5-font-weight);
+  line-height: var(--type-headline-h5-line-height);
+  letter-spacing: var(--type-headline-h5-letter-spacing);
   outline: none;
   box-shadow: none;
 }
@@ -261,9 +261,10 @@
   border-right: 1px solid #dedede;
   padding-right: 8px;
   color: var(--text-color);
-  font-size: var(--lead-form-text);
-  font-weight: 500;
-  line-height: var(--lead-form-line);
+  font-size: var(--type-body-b3-font-size);
+  font-weight: var(--type-body-b3-font-weight);
+  line-height: var(--type-body-b3-line-height);
+  letter-spacing: var(--type-body-b3-letter-spacing);
 }
 
 /* captcha: small screens image and tools on one row, the code field below */
@@ -790,13 +791,6 @@
 /* desktop: half width fields (e.g. First name, Last name) share a line */
 :where(.desktop-view) .lead-form .lead-form-item.is-half {
   grid-column: auto;
-}
-
-:where(.desktop-view) .lead-form .lead-form-intro h1,
-:where(.desktop-view) .lead-form .lead-form-intro h2 {
-  font-size: 40px;
-  line-height: 48px;
-  letter-spacing: -1px;
 }
 
 :where(.desktop-view) .lead-form .lead-form-main {

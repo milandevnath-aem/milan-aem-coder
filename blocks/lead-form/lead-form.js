@@ -14,7 +14,11 @@ import {
 } from '../../scripts/category-forms.js';
 import {
   digitsOnly, emailRules, fieldMessages, isPersonName, mobileRules, nameRules,
+  rejectedErrorMessage, valueErrorMessage,
 } from '../../scripts/input-rules.js';
+import {
+  analyticsName, productType, pushEvent, safely, trackFormStart, uniqueId,
+} from '../../scripts/analytics.js';
 
 function iconButton(name, label) {
   const button = document.createElement('button');
@@ -28,7 +32,7 @@ function iconButton(name, label) {
 /**
  * "A, B: description, *C" -> options; a leading * marks the default.
  */
-function parseOptions(text) {
+export function parseOptions(text) {
   let value = '';
   const options = text.split(',').map((part) => part.trim()).filter(Boolean).map((part) => {
     const isDefault = part.startsWith('*');
@@ -73,7 +77,7 @@ let errorCount = 0;
  * @returns {{ el: HTMLParagraphElement, show: Function }} show(invalid, text): text replaces
  *   the message once (e.g. an API error), the next call shows the default message again
  */
-function fieldError(control, message) {
+export function fieldError(control, message) {
   errorCount += 1;
   const el = document.createElement('p');
   el.className = 'lead-form-error';
@@ -95,9 +99,11 @@ function fieldError(control, message) {
  * Something typed or pasted was refused by the input rules: the form shows the field's
  * "invalid" message (an "input-rejected" event, see decorate).
  */
-const rejected = (input) => () => input.dispatchEvent(new CustomEvent('input-rejected', { bubbles: true }));
+export const rejected = (input) => (characters) => input.dispatchEvent(new CustomEvent('input-rejected', {
+  bubbles: true, detail: characters,
+}));
 
-function textField(label, kind, required) {
+export function textField(label, kind, required) {
   const field = document.createElement('label');
   field.className = `lead-form-input lead-form-${kind}`;
   const input = document.createElement(kind === 'textarea' ? 'textarea' : 'input');
@@ -185,7 +191,7 @@ function textareaField(label, required, max) {
  * @param {string} label field label
  * @returns {HTMLDivElement & { load: Function, isValid: Function, input: HTMLInputElement }}
  */
-function captchaField(label) {
+export function captchaField(label) {
   const field = document.createElement('div');
   field.className = 'lead-form-captcha';
   const frame = document.createElement('div');
@@ -487,7 +493,7 @@ export default function decorate(block) {
       if (isDropdown) valid = () => !field.dataset.required || Boolean(field.value);
       const isEmpty = isDropdown ? () => !field.value : () => !control.value.trim();
       checks.push({
-        field, control, error, valid, messages, isEmpty,
+        field, control, error, valid, messages, isEmpty, label, kind,
       });
       item.append(error.el);
     }
@@ -514,6 +520,7 @@ export default function decorate(block) {
   const submit = document.createElement('button');
   submit.type = 'submit';
   submit.className = 'button primary lead-form-submit';
+  submit.id = uniqueId('lead-form-submit');
   submit.textContent = submitRow?.textContent.trim() || 'Apply now';
   if (submitRow) moveInstrumentation(submitRow, submit);
   // a failed request (OTP not sent) is shown above the button
@@ -534,7 +541,8 @@ export default function decorate(block) {
   // message: an API error to show instead of the field's own message (blank or invalid)
   const setState = (check, invalid, message) => {
     const { empty, invalid: wrong } = check.messages;
-    check.error.show(invalid, message || (check.isEmpty() ? empty : wrong));
+    const valueMessage = valueErrorMessage(check.label, check.kind, check.control.value || '', wrong);
+    check.error.show(invalid, message || (check.isEmpty() ? empty : valueMessage));
     const box = check.field.closest('.lead-form-input')
       || check.field.querySelector('.lead-form-input') || check.field;
     box.classList.toggle('is-invalid', invalid);
@@ -551,7 +559,8 @@ export default function decorate(block) {
   // mark fields the user left with an invalid value; clear the message while correcting
   form.addEventListener('focusout', (e) => {
     const check = checks.find((c) => c.control === e.target);
-    if (!check || !e.target.value) return;
+    // a blank required field says it is required; an optional one stays quiet
+    if (!check || (!e.target.value && !e.target.required)) return;
     setState(check, !check.valid());
   });
   form.addEventListener('input', (e) => {
@@ -563,7 +572,13 @@ export default function decorate(block) {
   // typed, and the field says why
   form.addEventListener('input-rejected', (e) => {
     const check = checks.find((c) => c.control === e.target);
-    if (check) setState(check, true, check.messages.invalid);
+    if (!check) return;
+    if (document.activeElement !== check.control) {
+      setState(check, Boolean(check.control.value) && !check.valid());
+      return;
+    }
+    const message = rejectedErrorMessage(check.label, check.kind, e.detail);
+    setState(check, true, message || check.messages.invalid);
   });
   dropdowns.forEach((d) => d.addEventListener('change', () => {
     const check = checks.find((c) => c.field === d);
@@ -650,6 +665,22 @@ export default function decorate(block) {
     refresh();
   };
 
+  /** the picked loan category, else the page's own product */
+  const currentCategory = (data = Object.fromEntries(new FormData(form))) => {
+    const categoryKey = Object.keys(data).find((k) => k.endsWith('category'));
+    return String((categoryKey && data[categoryKey]) || pageCategory() || '');
+  };
+  /**
+   * form_name of the analytics events: the modal page the form is opened from
+   * ("/modals/two-wheeler-form" -> "two_wheeler_form"), else the form's heading
+   */
+  const formName = () => {
+    const page = (block.closest('dialog')?.dataset.modalPath || '').split('/').filter(Boolean).pop() || '';
+    return analyticsName(page.replace(/(\.plain)?\.html$/, ''))
+      || analyticsName(intro.querySelector('h1, h2')?.textContent) || 'lead_form';
+  };
+  trackFormStart(form, formName, currentCategory);
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (submit.classList.contains('is-loading')) return;
@@ -663,8 +694,17 @@ export default function decorate(block) {
     const data = Object.fromEntries(new FormData(form));
     const mobile = String(form.querySelector('input[type="tel"]')?.value || '').trim();
     // the category picks the API product (lead-api-config.js)
-    const categoryKey = Object.keys(data).find((k) => k.endsWith('category'));
-    const category = String((categoryKey && data[categoryKey]) || pageCategory() || '');
+    const category = currentCategory(data);
+    // analytics: no personal data, the city is the only field sent; a tracking error never
+    // stops the lead (safely: logged, the events are then sent without these fields)
+    const tracked = safely(() => {
+      const cityKey = Object.keys(data).find((k) => /\b(city|location)\b/.test(k.replace(/-/g, ' ')));
+      return {
+        form_name: formName(),
+        product_type: productType(category),
+        city: (cityKey && String(data[cityKey]).trim()) || undefined,
+      };
+    }, {});
     let session;
     try {
       session = createLeadSession({
@@ -679,6 +719,37 @@ export default function decorate(block) {
       showSubmitError(MESSAGES.formFailed);
       return;
     }
+
+    // the success step: the lead exists (or, for a category without an API, is let through)
+    const finish = (lead) => {
+      // the server's lead reference, never the mobile number
+      pushEvent('generate_lead', { ...tracked, lead_id: lead?.leadId || undefined });
+      // the lead exists now: tidying up must not keep the visitor from the success step
+      try {
+        clearForm();
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.warn('lead-form: the form could not be cleared', error);
+      }
+      const success = createSuccessStep({
+        emiHref: document.querySelector('main .emi-calculator') ? '#emi-calculator' : `${siteRoot()}/home#emi-calculator`,
+        onDone: close,
+      });
+      success.querySelector('.lead-form-emi').addEventListener('click', (ev) => {
+        if (!ev.currentTarget.getAttribute('href').startsWith('#')) return;
+        ev.preventDefault();
+        close();
+        document.getElementById('emi-calculator')?.scrollIntoView();
+      });
+      block.querySelector('.lead-form-otp')?.remove();
+      block.append(success);
+      showStep(success);
+      nameDialog(success.titleId);
+      success.focusTitle();
+    };
+    // Car Lease and Dealer Finance have no lead API yet (see PRODUCT_BY_CATEGORY): whatever
+    // the server answers, the visitor reaches the success step. Remove once they have one.
+    const lenient = !productFor(category);
 
     // verifying the captcha, then sending the OTP: button spinner (desktop), full view
     // spinner (small screens)
@@ -700,56 +771,55 @@ export default function decorate(block) {
     }
     if (failure) {
       if (failure?.kind === 'cancelled') return;
+      if (lenient) {
+        // eslint-disable-next-line no-console
+        console.warn('lead-form: no lead API for this category, continuing to success', failure);
+        finish({});
+        return;
+      }
       // the captcha was used up by the attempt: a new one, then the error (loading clears it)
       captcha?.load();
       showSubmitFailure(failure);
       return;
     }
+    pushEvent('lead_form_submit', tracked);
 
     block.querySelector('.lead-form-otp')?.remove();
     const otp = createOtpStep({
       mobile,
       sendOtp: session.sendOtp,
-      verifyOtp: session.verifyOtp,
+      // a category without an API goes on to success whatever the answer (an empty lead)
+      verifyOtp: lenient
+        ? async (code) => {
+          try {
+            return (await session.verifyOtp(code)) || {};
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.warn('lead-form: no lead API for this category, continuing to success', error);
+            return {};
+          }
+        }
+        : session.verifyOtp,
       announce,
       // back to the form, values kept: a new OTP needs a new captcha
-      onBack: () => {
+      // `message`: why the visitor is sent back (e.g. captcha expired on resend), shown under
+      // the captcha (load() clears the field synchronously, so the error is set after it)
+      onBack: (message) => {
         session.cancel();
         otp.remove();
         showStep(main);
         nameDialog(intro.querySelector('h1, h2')?.id);
         if (captcha) {
           captcha.load();
+          if (typeof message === 'string' && message) captcha.onError(message);
           captcha.input.focus();
         } else {
+          if (typeof message === 'string' && message) showSubmitError(message);
           submit.focus();
         }
       },
       // the lead is created by verifyOtp
-      onVerified: () => {
-        // the lead exists now: tidying up must not keep the visitor from the success step
-        try {
-          clearForm();
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.warn('lead-form: the form could not be cleared', error);
-        }
-        const success = createSuccessStep({
-          emiHref: document.querySelector('main .emi-calculator') ? '#emi-calculator' : `${siteRoot()}/home#emi-calculator`,
-          onDone: close,
-        });
-        success.querySelector('.lead-form-emi').addEventListener('click', (ev) => {
-          if (!ev.currentTarget.getAttribute('href').startsWith('#')) return;
-          ev.preventDefault();
-          close();
-          document.getElementById('emi-calculator')?.scrollIntoView();
-        });
-        otp.remove();
-        block.append(success);
-        showStep(success);
-        nameDialog(success.titleId);
-        success.focusTitle();
-      },
+      onVerified: finish,
     });
     // closing the modal ends the journey: no resend countdown or request left running
     dialog()?.addEventListener('close', () => {
@@ -817,7 +887,17 @@ export default function decorate(block) {
     const inputs = [...form.querySelectorAll('input[name]')].filter((i) => i.type !== 'hidden');
     const first = inputs.find((i) => i.autocomplete === 'given-name');
     const last = inputs.find((i) => i.autocomplete === 'family-name');
+    // separate first and last name carried into one full name field: joined with a space
+    const fullInput = !(first && last) && inputs.find((i) => i.autocomplete === 'name');
+    const isFirstKey = (k) => /^(your-)?(first|given)-?name$/.test(k);
+    const isLastKey = (k) => /^(your-)?(last|sur|family)-?name$/.test(k);
+    if (fullInput) {
+      const part = (test) => String(Object.entries(data).find(([k]) => test(k))?.[1] ?? '').trim();
+      const joined = [part(isFirstKey), part(isLastKey)].filter(Boolean).join(' ');
+      if (joined) fullInput.value = joined;
+    }
     Object.entries(data).forEach(([key, raw]) => {
+      if (fullInput && (isFirstKey(key) || isLastKey(key))) return;
       const candidates = [].concat(raw).map((v) => String(v ?? '').trim()).filter(Boolean);
       const [value] = candidates;
       if (!value) return;

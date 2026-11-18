@@ -6,8 +6,10 @@ import {
   authoredForm, CATEGORY_PICKED_EVENT, matchCategory, readForms, rememberForms, resolveForm,
 } from '../../scripts/category-forms.js';
 import {
-  emailRules, fieldMessages, isPersonName, mobileRules, nameRules, nativeMessages,
+  emailRules, fieldMessages, isPersonName, mobileRules, nameRules, rejectedErrorMessage,
+  valueErrorMessage,
 } from '../../scripts/input-rules.js';
+import { analyticsName, trackFormStart, uniqueId } from '../../scripts/analytics.js';
 
 // chips shown in the row; the rest are listed under "More"
 const VISIBLE_CATEGORIES = 4;
@@ -144,8 +146,13 @@ function confirmOnSubmit(form, modalHref, forms = [], categories = []) {
   form.addEventListener('change', update);
 
   form.addEventListener('submit', async (e) => {
-    if (form.getAttribute('action')) return;
+    // never a native submit: it would put the name and mobile number in the URL
     e.preventDefault();
+    const action = form.getAttribute('action');
+    if (action) {
+      window.location.href = action;
+      return;
+    }
     const target = await update();
     if (target) {
       // continue in the full application form, carrying over what was entered
@@ -165,8 +172,13 @@ function confirmOnSubmit(form, modalHref, forms = [], categories = []) {
   });
 }
 
-function buildField(label, index) {
+let fieldErrorCount = 0;
+
+function buildField(label, index, form) {
   const isPhone = /mobile|phone/i.test(label);
+  let edited = false;
+  const item = document.createElement('div');
+  item.className = 'hero-loan-field';
   const field = document.createElement('div');
   field.className = `hero-loan-input${isPhone ? ' hero-loan-mobile' : ''}`;
   if (isPhone) {
@@ -182,9 +194,32 @@ function buildField(label, index) {
   input.required = true;
   input.name = label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || `field-${index}`;
   const isEmail = /e-?mail/i.test(label);
-  // the browser's validation bubble shows the form's messages; a refused character shows
-  // the "invalid" one at once
-  const reject = nativeMessages(input, fieldMessages(label, (isPhone && 'tel') || (isEmail && 'email') || 'text'));
+  const kind = (isPhone && 'tel') || (isEmail && 'email') || 'text';
+  const messages = fieldMessages(label, kind);
+  const error = document.createElement('p');
+  error.className = 'hero-loan-error';
+  fieldErrorCount += 1;
+  error.id = uniqueId(`hero-loan-error-${fieldErrorCount}`);
+  error.hidden = true;
+  input.setAttribute('aria-describedby', error.id);
+  const showError = (message) => {
+    error.textContent = message;
+    error.hidden = !message;
+    field.classList.toggle('is-invalid', Boolean(message));
+    if (message) input.setAttribute('aria-invalid', 'true');
+    else input.removeAttribute('aria-invalid');
+  };
+  const validate = () => {
+    if (input.checkValidity()) showError('');
+  };
+  const reject = (characters) => {
+    edited = true;
+    if (document.activeElement !== input) {
+      validate();
+      return;
+    }
+    showError(rejectedErrorMessage(label, kind, characters));
+  };
   if (isPhone) {
     mobileRules(input, reject);
   } else if (isEmail) {
@@ -195,9 +230,22 @@ function buildField(label, index) {
     // names: letters only (and spaces in a full name)
     if (isPersonName(label)) nameRules(input, label, reject);
   }
+  input.addEventListener('invalid', () => {
+    const value = input.value.trim();
+    showError(value ? valueErrorMessage(label, kind, value, messages.invalid) : messages.empty);
+  });
+  input.addEventListener('input', () => {
+    edited = true;
+    showError('');
+  });
+  input.addEventListener('blur', () => {
+    if (edited || input.value || !error.hidden) validate();
+  });
+  form.addEventListener('reset', () => { edited = false; });
   field.append(input);
   field.addEventListener('click', () => input.focus());
-  return field;
+  item.append(field, error);
+  return item;
 }
 
 function buildForm(config, isProduct) {
@@ -226,7 +274,8 @@ function buildForm(config, isProduct) {
   const action = actionLink?.getAttribute('href');
   const modalHref = action && isModalLink(action) ? action : '';
   if (action && action !== '#' && !modalHref) form.action = action;
-  form.method = 'get';
+  form.method = 'post';
+  form.noValidate = true;
   form.innerHTML = `
     <div class="hero-loan-fields"></div>
     <fieldset class="hero-loan-categories">
@@ -234,13 +283,29 @@ function buildForm(config, isProduct) {
       <div class="hero-loan-chips"></div>
     </fieldset>
     <button type="submit" class="button primary"></button>`;
-  form.querySelector('button[type="submit"]').textContent = cellText(actionRow) || 'Apply now';
+  const submit = form.querySelector('button[type="submit"]');
+  submit.textContent = cellText(actionRow) || 'Apply now';
+  submit.id = uniqueId('hero-loan-submit');
+  // form_name: the form's heading
+  const formName = () => analyticsName(intro.querySelector('h1, h2, h3')?.textContent) || 'hero_loan';
+  trackFormStart(form, formName, () => String(new FormData(form).get('category') || ''));
 
   const labels = (fieldsText || 'Your name, Mobile number')
     .split(',').map((f) => f.trim()).filter(Boolean);
   const fields = form.querySelector('.hero-loan-fields');
-  labels.forEach((label, i) => fields.append(buildField(label, i)));
-
+  form.addEventListener('reset', () => {
+    fields.querySelectorAll('input').forEach((input) => input.dispatchEvent(new Event('input')));
+  });
+  labels.forEach((label, i) => fields.append(buildField(label, i, form)));
+  form.addEventListener('submit', (event) => {
+    const inputs = [...fields.querySelectorAll('input')];
+    const invalid = inputs.filter((input) => !input.checkValidity());
+    if (invalid.length) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      invalid[0].focus();
+    }
+  });
   // a lead created in the lead form ("kmp:lead-created", see LEAD_CREATED_EVENT in
   // lead-form/lead-api-config.js) clears what was entered here, so it is not carried over
   // into the next application. The category dropdown of product pages keeps its product.

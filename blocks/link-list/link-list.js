@@ -1,6 +1,8 @@
 import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createPicture } from '../../scripts/images.js';
 
+const VISIBLE_ITEMS = 5;
+
 function buildItem(row) {
   const [imageCell, textCell, linkCell, iconCell] = row.children;
   const source = linkCell?.querySelector('a');
@@ -65,7 +67,7 @@ function takeCell(row, className) {
 export default function decorate(block) {
   const rows = [...block.children];
   const single = rows.filter((row) => row.children.length === 1);
-  const [sideRow, introRow, noteRow] = single;
+  const [sideRow, introRow, noteRow, readAllRow, readLessRow] = single;
   const itemRows = rows.filter((row) => !single.includes(row));
 
   const side = takeCell(sideRow, 'link-list-side');
@@ -77,7 +79,27 @@ export default function decorate(block) {
 
   const main = document.createElement('div');
   main.className = 'link-list-main';
-  main.append(...[intro, list, note].filter(Boolean));
+  main.append(...[intro, list].filter(Boolean));
+
+  const useButtons = block.classList.contains('buttons');
+  if (useButtons) {
+    const readAll = readAllRow?.textContent.trim() || 'Read all';
+    const readLess = readLessRow?.textContent.trim() || 'Read less';
+    const collapsible = list.children.length > VISIBLE_ITEMS;
+    list.classList.toggle('link-list-collapsed', collapsible);
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'link-list-toggle';
+    toggle.textContent = readAll;
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.addEventListener('click', () => {
+      const collapsed = list.classList.toggle('link-list-collapsed');
+      toggle.textContent = collapsed ? readAll : readLess;
+      toggle.setAttribute('aria-expanded', String(!collapsed));
+    });
+    main.append(toggle);
+  }
+  if (note) main.append(note);
 
   block.replaceChildren(...[side, main].filter(Boolean));
 }

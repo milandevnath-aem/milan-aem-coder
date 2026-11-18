@@ -21,7 +21,10 @@ export const ENDPOINTS = {
   captchaGenerate: '/content/kotakmahindraprime-aem/in/en/home.captcha-generate.json',
   /** { captcha } -> { data: { verified } }, sets the kmp_captcha_ok cookie */
   captchaVerify: '/content/kotakmahindraprime-aem/in/en/home.captcha-verify.json',
-  /** { mobile } -> { data: { transactionId, token } }, needs kmp_captcha_ok */
+  /**
+   * { mobile } -> { data: { transactionId, token } }, needs kmp_captcha_ok.
+   * Resend: { mobile, transactionId, token } of the previous OTP, no captcha needed.
+   */
   otpGenerate: '/content/kotakmahindraprime-aem/in/en.otp-generate.json',
   /**
    * { transactionId, otp, token, category, lead } -> { data: lead API response }
@@ -136,9 +139,11 @@ export const MESSAGES = {
   CAPTCHA_REQUIRED: 'Captcha cannot be blank',
   INVALID_OTP: 'The OTP you have entered is incorrect.',
   OTP_EXPIRED: 'OTP expired. Please regenerate.',
+  RESEND_TOO_SOON: 'Please wait a little before asking for a new OTP.',
+  RESEND_LIMIT: 'You have reached the limit of OTP resends. Please try again later.',
   captchaLoadFailed: 'We couldn’t load the captcha. Tap refresh to try again.',
   captchaAudioFailed: 'We couldn’t play the audio. Tap refresh for a new captcha.',
-  resendNeedsCaptcha: 'Please go back and complete the captcha to get a new OTP.',
+  resendNeedsCaptcha: 'Captcha expired. Please enter the captcha again to get a new OTP.',
   wrongOtp: 'The OTP you have entered is incorrect.',
   sendFailed: 'We couldn’t send the OTP. Please try again.',
   submitFailed: 'We couldn’t submit your details. Please try again.',
