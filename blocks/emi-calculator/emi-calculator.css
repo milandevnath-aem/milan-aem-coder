@@ -555,6 +555,10 @@
   max-width: calc(100% + var(--gb-offset));
 }
 
+:where(.desktop-view) .emi-calculator .emi-calculator-image[hidden] {
+  display: none;
+}
+
 :where(.desktop-view) .emi-calculator .emi-calculator-image img {
   display: block;
   width: 650px;

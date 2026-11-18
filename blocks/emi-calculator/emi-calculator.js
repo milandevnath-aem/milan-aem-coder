@@ -125,10 +125,12 @@ export function calculateEmi(principal, annualRate, tenureYears) {
 }
 
 function parseLoanType(row) {
-  const [title, amount, rate, tenure] = row.children;
+  const [title, amount, rate, tenure, image] = row.children;
   return {
     row,
     title: title?.textContent.trim() || 'Loan',
+    // the loan type's own image (last cell); null when not authored
+    img: image?.querySelector('img') || null,
     amount: readRange(amount, DEFAULTS.amount),
     rate: readRange(rate, DEFAULTS.rate),
     tenure: readRange(tenure, DEFAULTS.tenure),
@@ -171,7 +173,12 @@ function sliderGroup(id, label, { unitToggle = false } = {}) {
   return group;
 }
 
-function buildCalculator(types, link) {
+/**
+ * @param {Object[]} types loan types (see parseLoanType)
+ * @param {Element} [link] the apply link
+ * @param {Function} [onSelect] called with the index of the loan type shown
+ */
+function buildCalculator(types, link, onSelect) {
   idCounter += 1;
   const uid = `emi-calculator-${idCounter}`;
   const card = document.createElement('div');
@@ -617,6 +624,7 @@ function buildCalculator(types, link) {
       applyTenureUnit();
     });
     update();
+    onSelect?.(index);
     // keep the selected tab in view when the tab row scrolls (small screens)
     const tab = tablist.children[index];
     if (tab && tablist.scrollWidth > tablist.clientWidth) {
@@ -691,14 +699,6 @@ export default function decorate(block) {
     while (text.firstChild) intro.append(text.firstChild);
   }
 
-  const img = imageRow?.querySelector('img');
-  if (img) {
-    const picture = createPicture(img.src, img.alt, false, [{ width: '1300' }]);
-    moveInstrumentation(img, picture.querySelector('img'));
-    picture.classList.add('emi-calculator-image');
-    intro.append(picture);
-  }
-
   const types = typeRows.map(parseLoanType);
   if (!types.length) {
     const fallback = document.createElement('div');
@@ -706,7 +706,26 @@ export default function decorate(block) {
     types.push(parseLoanType(fallback));
   }
 
-  const calculator = buildCalculator(types, linkRow?.querySelector('a'));
+  // one image per loan type, shown while its tab is selected; a loan type without one
+  // shows the block's fallback image. Hidden pictures are lazy, so only the shown one loads.
+  const toPicture = (img) => {
+    const picture = createPicture(img.src, img.alt, false, [{ width: '1300' }]);
+    moveInstrumentation(img, picture.querySelector('img'));
+    picture.classList.add('emi-calculator-image');
+    picture.hidden = true;
+    intro.append(picture);
+    return picture;
+  };
+  const fallbackImg = imageRow?.querySelector('img');
+  const fallbackPicture = fallbackImg ? toPicture(fallbackImg) : null;
+  const pictures = types.map((type) => (type.img ? toPicture(type.img) : fallbackPicture));
+  const showImage = (index) => {
+    intro.querySelectorAll('.emi-calculator-image').forEach((picture) => {
+      picture.hidden = picture !== pictures[index];
+    });
+  };
+
+  const calculator = buildCalculator(types, linkRow?.querySelector('a'), showImage);
   block.replaceChildren(intro, calculator);
   const tablist = calculator.querySelector('.emi-calculator-tabs');
   if (tablist) tablist.classList.toggle('has-overflow', tablist.scrollWidth > tablist.clientWidth);
