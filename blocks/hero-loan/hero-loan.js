@@ -318,11 +318,20 @@ function buildForm(config, isProduct) {
 
   const categories = categoriesText.split(',').map((c) => c.trim()).filter(Boolean);
   if (isProduct && categories.length) {
-    // product pages: compact dropdown, first category preselected
+    // product pages: compact dropdown, first category preselected.
+    // "Category forms": a /modals/ page is the form Apply now opens for that category; any
+    // other page makes the category a link to that page (picked = the visitor goes there).
+    // Apply now never opens such a page, it keeps its own form for those categories.
+    const here = window.location.pathname.replace(/\.html$/, '');
+    const pageOf = (i) => {
+      const path = forms[i];
+      return path && !isModalLink(path) && path.replace(/\.html$/, '') !== here ? path : '';
+    };
+    const modalForms = forms.map((path) => (isModalLink(path) ? path : ''));
     const select = createDropdown({
       label: 'Select loan category',
       name: 'category',
-      options: categories.map((c) => ({ value: c, label: c })),
+      options: categories.map((c, i) => ({ value: c, label: c, href: pageOf(i) || undefined })),
       value: categories[0],
       boundary: '.hero-loan',
     });
@@ -335,7 +344,7 @@ function buildForm(config, isProduct) {
       const match = matchCategory(e.detail?.category, categories);
       if (match && match !== select.value) select.setValue(match);
     });
-    confirmOnSubmit(form, modalHref, forms, categories);
+    confirmOnSubmit(form, modalHref, modalForms, categories);
     if (actionRow) moveInstrumentation(actionRow, form.querySelector('button[type="submit"]'));
     card.append(form);
     return card;
