@@ -236,7 +236,7 @@
 /* field errors: text under the field, not colour alone (Figma error text: Body/B2) */
 .lead-form .lead-form-error {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 4px;
   margin: 0;
   color: #ff3938;
@@ -254,6 +254,7 @@
   flex-shrink: 0;
   width: 16px;
   height: 16px;
+  margin-top: 2px;
   background: url('../../icons/alert.svg') center / contain no-repeat;
 }
 
