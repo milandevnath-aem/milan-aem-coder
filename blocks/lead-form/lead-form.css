@@ -121,10 +121,10 @@
   padding: 0;
   background: transparent;
   color: var(--text-color);
-  font-size: var(--type-headline-h5-font-size);
-  font-weight: var(--type-headline-h5-font-weight);
-  line-height: var(--type-headline-h5-line-height);
-  letter-spacing: var(--type-headline-h5-letter-spacing);
+  font-size: var(--type-headline-h4-font-size);
+  font-weight: var(--type-headline-h4-font-weight);
+  line-height: var(--type-headline-h4-line-height);
+  letter-spacing: var(--type-headline-h4-letter-spacing);
   outline: none;
   box-shadow: none;
 }
@@ -209,7 +209,7 @@
 .lead-form .lead-form-textarea textarea {
   flex: 1 1 auto;
   min-height: 72px;
-  max-height: calc(var(--lead-form-line) * 6);
+  max-height: calc(var(--type-headline-h4-line-height) * 6);
   margin: 0;
   font-family: inherit;
   resize: vertical;
@@ -236,7 +236,7 @@
 /* field errors: text under the field, not colour alone (Figma error text: Body/B2) */
 .lead-form .lead-form-error {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 4px;
   margin: 0;
   color: #ff3938;
@@ -254,6 +254,7 @@
   flex-shrink: 0;
   width: 16px;
   height: 16px;
+  margin-top: 2px;
   background: url('../../icons/alert.svg') center / contain no-repeat;
 }
 
@@ -290,7 +291,6 @@
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
 }
 
 .lead-form .lead-form-captcha-frame .lead-form-spinner {
@@ -451,10 +451,12 @@
   color: var(--muted-color);
 }
 
-/* loading: spinner in place of the label */
-.lead-form button.button.primary.is-loading {
+/* loading: spinner in place of the label, stays black (beats the grey aria-disabled state) */
+.lead-form button.button.primary.is-loading,
+.lead-form button.button.primary.is-loading[aria-disabled='true'] {
   border-color: var(--text-color);
   background-color: var(--text-color);
+  color: #fff;
   pointer-events: none;
 }
 
@@ -570,22 +572,31 @@
 .lead-form .lead-form-otp-title h2 {
   margin: 0 0 8px;
   color: var(--text-color);
-  font-size: 32px;
-  font-weight: 500;
-  line-height: 40px;
-  letter-spacing: -0.8px;
+  font-size: var(--type-headline-h7-font-size);
+  font-weight: var(--type-headline-h7-font-weight);
+  line-height: var(--type-headline-h7-line-height);
+  letter-spacing: var(--type-headline-h7-letter-spacing);
+}
+
+:where(.desktop-view) .lead-form .lead-form-otp-title h2 {
+  font-size: var(--type-display-medium-df-1-font-size);
+  font-weight: var(--type-display-medium-df-1-font-weight);
+  line-height: var(--type-display-medium-df-1-line-height);
+  letter-spacing: var(--type-display-medium-df-1-letter-spacing);
 }
 
 .lead-form .lead-form-otp-title h2:focus {
   outline: none;
 }
 
+/* Figma Body/B2 (mobile): 14px / 20px, 500, #666 */
 .lead-form .lead-form-otp-title p {
   margin: 0;
   color: var(--muted-color);
-  font-size: var(--body-font-size-m);
+  font-size: 14px;
   font-weight: 500;
-  line-height: 24px;
+  line-height: 20px;
+  letter-spacing: 0;
 }
 
 .lead-form .lead-form-otp-number {
@@ -673,6 +684,21 @@
   line-height: 24px;
 }
 
+/* Figma loading state: #121212 pill, padding 15px 12px, spinner centred (same 52px height) */
+.lead-form .lead-form-validate.is-loading {
+  flex-direction: column;
+  gap: 4px;
+  border-radius: 56px;
+  padding: 15px 12px;
+}
+
+.lead-form .lead-form-validate.is-loading .lead-form-spinner {
+  width: 22px;
+  height: 22px;
+  border-color: rgb(255 255 255 / 70%);
+  border-top-color: transparent;
+}
+
 .lead-form .lead-form-resend {
   margin: 0;
   color: var(--muted-color);
@@ -718,8 +744,9 @@
 }
 
 .lead-form .lead-form-success-status img {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
+  padding: 4px;
 }
 
 .lead-form .lead-form-success-status h2 {
@@ -737,9 +764,10 @@
 .lead-form .lead-form-success-status p {
   margin: 0;
   color: var(--muted-color);
-  font-size: var(--body-font-size-m);
-  font-weight: 500;
-  line-height: 24px;
+  font-size: var(--type-headline-h3-font-size);
+  font-weight: var(--type-headline-h3-font-weight);
+  line-height: var(--type-headline-h3-line-height);
+  letter-spacing: var(--type-headline-h3-letter-spacing);
 }
 
 .lead-form .lead-form-success-actions {
@@ -849,6 +877,12 @@
 
 :where(.desktop-view) .lead-form .lead-form-otp-title {
   text-align: center;
+}
+
+/* Figma Body/B3 (desktop): 16px / 24px */
+:where(.desktop-view) .lead-form .lead-form-otp-title p {
+  font-size: 16px;
+  line-height: 24px;
 }
 
 :where(.desktop-view) .lead-form .lead-form-otp-boxes {

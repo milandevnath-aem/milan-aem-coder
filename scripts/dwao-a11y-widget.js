@@ -1250,6 +1250,8 @@
     function (e) {
       var el = e.target;
       if (!el || !el.getBoundingClientRect || el === document.body) return;
+      // a click on blank space focuses the tall tabindex=-1 <main>: never scroll for that
+      if (el.matches && !el.matches(":focus-visible")) return;
       var covered = widgetOverlays().some(function (o) {
         if (o.contains(el)) return false;
         var a = el.getBoundingClientRect();
