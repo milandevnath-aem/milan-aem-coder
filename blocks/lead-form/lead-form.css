@@ -721,6 +721,7 @@
 .lead-form .lead-form-success-status img {
   width: 40px;
   height: 40px;
+  padding: 4px;
 }
 
 .lead-form .lead-form-success-status h2 {
@@ -738,9 +739,10 @@
 .lead-form .lead-form-success-status p {
   margin: 0;
   color: var(--muted-color);
-  font-size: var(--body-font-size-m);
-  font-weight: 500;
-  line-height: 24px;
+  font-size: var(--type-headline-h3-font-size);
+  font-weight: var(--type-headline-h3-font-weight);
+  line-height: var(--type-headline-h3-line-height);
+  letter-spacing: var(--type-headline-h3-letter-spacing);
 }
 
 .lead-form .lead-form-success-actions {
