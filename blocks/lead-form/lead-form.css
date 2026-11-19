@@ -571,10 +571,17 @@
 .lead-form .lead-form-otp-title h2 {
   margin: 0 0 8px;
   color: var(--text-color);
-  font-size: 32px;
-  font-weight: 500;
-  line-height: 40px;
-  letter-spacing: -0.8px;
+  font-size: var(--type-headline-h7-font-size);
+  font-weight: var(--type-headline-h7-font-weight);
+  line-height: var(--type-headline-h7-line-height);
+  letter-spacing: var(--type-headline-h7-letter-spacing);
+}
+
+:where(.desktop-view) .lead-form .lead-form-otp-title h2 {
+  font-size: var(--type-display-medium-df-1-font-size);
+  font-weight: var(--type-display-medium-df-1-font-weight);
+  line-height: var(--type-display-medium-df-1-line-height);
+  letter-spacing: var(--type-display-medium-df-1-letter-spacing);
 }
 
 .lead-form .lead-form-otp-title h2:focus {
