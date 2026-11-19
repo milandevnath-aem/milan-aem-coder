@@ -559,7 +559,8 @@ export default function decorate(block) {
   // mark fields the user left with an invalid value; clear the message while correcting
   form.addEventListener('focusout', (e) => {
     const check = checks.find((c) => c.control === e.target);
-    if (!check || !e.target.value) return;
+    // a blank required field says it is required; an optional one stays quiet
+    if (!check || (!e.target.value && !e.target.required)) return;
     setState(check, !check.valid());
   });
   form.addEventListener('input', (e) => {
@@ -721,6 +722,37 @@ export default function decorate(block) {
       return;
     }
 
+    // the success step: the lead exists (or, for a category without an API, is let through)
+    const finish = (lead) => {
+      // the server's lead reference, never the mobile number
+      pushEvent('generate_lead', { ...tracked, lead_id: lead?.leadId || undefined });
+      // the lead exists now: tidying up must not keep the visitor from the success step
+      try {
+        clearForm();
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.warn('lead-form: the form could not be cleared', error);
+      }
+      const success = createSuccessStep({
+        emiHref: document.querySelector('main .emi-calculator') ? '#emi-calculator' : `${siteRoot()}/home#emi-calculator`,
+        onDone: close,
+      });
+      success.querySelector('.lead-form-emi').addEventListener('click', (ev) => {
+        if (!ev.currentTarget.getAttribute('href').startsWith('#')) return;
+        ev.preventDefault();
+        close();
+        document.getElementById('emi-calculator')?.scrollIntoView();
+      });
+      block.querySelector('.lead-form-otp')?.remove();
+      block.append(success);
+      showStep(success);
+      nameDialog(success.titleId);
+      success.focusTitle();
+    };
+    // Car Lease and Dealer Finance have no lead API yet (see PRODUCT_BY_CATEGORY): whatever
+    // the server answers, the visitor reaches the success step. Remove once they have one.
+    const lenient = !productFor(category);
+
     // verifying the captcha, then sending the OTP: button spinner (desktop), full view
     // spinner (small screens)
     showSubmitError('');
@@ -741,6 +773,12 @@ export default function decorate(block) {
     }
     if (failure) {
       if (failure?.kind === 'cancelled') return;
+      if (lenient) {
+        // eslint-disable-next-line no-console
+        console.warn('lead-form: no lead API for this category, continuing to success', failure);
+        finish({});
+        return;
+      }
       // the captcha was used up by the attempt: a new one, then the error (loading clears it)
       captcha?.load();
       showSubmitFailure(failure);
@@ -772,38 +810,24 @@ export default function decorate(block) {
     otp = createOtpStep({
       mobile,
       sendOtp: session.sendOtp,
-      verifyOtp: session.verifyOtp,
+      // a category without an API goes on to success whatever the answer (an empty lead)
+      verifyOtp: lenient
+        ? async (code) => {
+          try {
+            return (await session.verifyOtp(code)) || {};
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.warn('lead-form: no lead API for this category, continuing to success', error);
+            return {};
+          }
+        }
+        : session.verifyOtp,
       announce,
       onBack: () => backToForm(),
       // the session or the OTP's token expired: a new captcha, then Send OTP again
       onCaptchaRequired: (message) => backToForm(message),
       // the lead is created by verifyOtp
-      onVerified: (lead) => {
-        // the server's lead reference, never the mobile number
-        pushEvent('generate_lead', { ...tracked, lead_id: lead?.leadId || undefined });
-        // the lead exists now: tidying up must not keep the visitor from the success step
-        try {
-          clearForm();
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.warn('lead-form: the form could not be cleared', error);
-        }
-        const success = createSuccessStep({
-          emiHref: document.querySelector('main .emi-calculator') ? '#emi-calculator' : `${siteRoot()}/home#emi-calculator`,
-          onDone: close,
-        });
-        success.querySelector('.lead-form-emi').addEventListener('click', (ev) => {
-          if (!ev.currentTarget.getAttribute('href').startsWith('#')) return;
-          ev.preventDefault();
-          close();
-          document.getElementById('emi-calculator')?.scrollIntoView();
-        });
-        otp.remove();
-        block.append(success);
-        showStep(success);
-        nameDialog(success.titleId);
-        success.focusTitle();
-      },
+      onVerified: finish,
     });
     // closing the modal ends the journey: no resend countdown or request left running
     dialog()?.addEventListener('close', () => {
@@ -871,7 +895,17 @@ export default function decorate(block) {
     const inputs = [...form.querySelectorAll('input[name]')].filter((i) => i.type !== 'hidden');
     const first = inputs.find((i) => i.autocomplete === 'given-name');
     const last = inputs.find((i) => i.autocomplete === 'family-name');
+    // separate first and last name carried into one full name field: joined with a space
+    const fullInput = !(first && last) && inputs.find((i) => i.autocomplete === 'name');
+    const isFirstKey = (k) => /^(your-)?(first|given)-?name$/.test(k);
+    const isLastKey = (k) => /^(your-)?(last|sur|family)-?name$/.test(k);
+    if (fullInput) {
+      const part = (test) => String(Object.entries(data).find(([k]) => test(k))?.[1] ?? '').trim();
+      const joined = [part(isFirstKey), part(isLastKey)].filter(Boolean).join(' ');
+      if (joined) fullInput.value = joined;
+    }
     Object.entries(data).forEach(([key, raw]) => {
+      if (fullInput && (isFirstKey(key) || isLastKey(key))) return;
       const candidates = [].concat(raw).map((v) => String(v ?? '').trim()).filter(Boolean);
       const [value] = candidates;
       if (!value) return;

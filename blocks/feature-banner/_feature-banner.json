@@ -62,6 +62,11 @@
           "multi": false
         },
         {
+          "name": "imageMimeType",
+          "component": "hidden",
+          "valueType": "image/png"
+        },
+        {
           "component": "text",
           "valueType": "string",
           "name": "imageAlt",
@@ -75,6 +80,11 @@
           "label": "Mobile image",
           "description": "Optional portrait crop used below 900px.",
           "multi": false
+        },
+        {
+          "name": "mobileImageMimeType",
+          "component": "hidden",
+          "valueType": "image/png"
         },
         {
           "component": "richtext",

@@ -151,9 +151,9 @@
       {
         "component": "textarea",
         "valueType": "string",
-        "name": "schema-script",
+        "name": "json-ld",
         "label": "Schema script (JSON-LD)",
-        "description": "JSON-LD markup, with or without the surrounding <script> tag."
+        "description": "Plain JSON only (object or @graph): no <script> tag, no surrounding quotes. Rendered in the page head as a script tag."
       }
     ]
   },
@@ -165,6 +165,11 @@
         "name": "image",
         "label": "Image",
         "multi": false
+      },
+      {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       },
       {
         "component": "text",
@@ -370,12 +375,22 @@
         "multi": false
       },
       {
+        "name": "backgroundMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
+      },
+      {
         "component": "reference",
         "valueType": "string",
         "name": "backgroundMobile",
         "label": "Background image (mobile)",
         "description": "Optional. Used on small screens instead of the desktop image.",
         "multi": false
+      },
+      {
+        "name": "backgroundMobileMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       }
     ]
   },
@@ -410,6 +425,11 @@
         "name": "image",
         "label": "Image",
         "multi": false
+      },
+      {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       },
       {
         "component": "text",
@@ -534,6 +554,11 @@
         "multi": false
       },
       {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
+      },
+      {
         "component": "richtext",
         "name": "text",
         "value": "",
@@ -597,9 +622,14 @@
         "component": "reference",
         "valueType": "string",
         "name": "image",
-        "label": "Image",
-        "description": "Decorative image shown beside the calculator on desktop.",
+        "label": "Fallback image",
+        "description": "Shown beside the calculator on desktop for a loan type that has no image of its own. Set each loan type's image on the loan type itself.",
         "multi": false
+      },
+      {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       },
       {
         "component": "text",
@@ -970,6 +1000,22 @@
             }
           ]
         }
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Image",
+        "description": "Shown beside the calculator on desktop while this loan type is selected. Leave empty to use the calculator's fallback image.",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Alt text",
+        "description": "Describe the image. Leave empty if it is decorative.",
+        "value": ""
       }
     ]
   },
@@ -1062,6 +1108,11 @@
         "multi": false
       },
       {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
+      },
+      {
         "component": "text",
         "valueType": "string",
         "name": "imageAlt",
@@ -1075,6 +1126,11 @@
         "label": "Mobile image",
         "description": "Optional portrait crop used below 900px.",
         "multi": false
+      },
+      {
+        "name": "mobileImageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       },
       {
         "component": "richtext",
@@ -1216,6 +1272,11 @@
         "name": "image",
         "label": "Image or icon",
         "multi": false
+      },
+      {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       },
       {
         "component": "text",
@@ -1564,6 +1625,11 @@
         "multi": false
       },
       {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
+      },
+      {
         "component": "text",
         "valueType": "string",
         "name": "imageAlt",
@@ -1577,6 +1643,11 @@
         "label": "Mobile image",
         "description": "Optional portrait crop used below 900px.",
         "multi": false
+      },
+      {
+        "name": "mobileImageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       },
       {
         "component": "richtext",
@@ -1597,6 +1668,11 @@
         "name": "image",
         "label": "Image",
         "multi": false
+      },
+      {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       },
       {
         "component": "text",
@@ -1822,6 +1898,11 @@
         "multi": false
       },
       {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
+      },
+      {
         "component": "text",
         "valueType": "string",
         "name": "imageAlt",
@@ -1848,6 +1929,11 @@
         "label": "Arrow icon",
         "description": "Right-hand icon (SVG recommended). Shown only when authored.",
         "multi": false
+      },
+      {
+        "name": "iconMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       }
     ]
   },
@@ -1877,6 +1963,11 @@
         "name": "image",
         "label": "Background image",
         "multi": false
+      },
+      {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       },
       {
         "component": "text",
@@ -2021,6 +2112,11 @@
         "multi": false
       },
       {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
+      },
+      {
         "component": "text",
         "valueType": "string",
         "name": "imageAlt",
@@ -2052,6 +2148,11 @@
         "name": "image",
         "label": "Image",
         "multi": false
+      },
+      {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       },
       {
         "component": "text",
@@ -2117,6 +2218,11 @@
         "label": "Decorative image",
         "description": "Optional artwork shown behind the top-right corner.",
         "multi": false
+      },
+      {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       }
     ]
   },
@@ -2138,6 +2244,11 @@
         "label": "Icon",
         "description": "Eligibility cards only.",
         "multi": false
+      },
+      {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       },
       {
         "component": "text",
@@ -2179,6 +2290,11 @@
         "label": "Background image",
         "description": "Optional. Fills the tile behind the title.",
         "multi": false
+      },
+      {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       },
       {
         "component": "text",
@@ -2226,6 +2342,11 @@
         "multi": false
       },
       {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
+      },
+      {
         "component": "text",
         "valueType": "string",
         "name": "imageAlt",
@@ -2258,6 +2379,11 @@
         "name": "image",
         "label": "Avatar",
         "multi": false
+      },
+      {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       },
       {
         "component": "text",

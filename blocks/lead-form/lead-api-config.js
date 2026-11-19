@@ -22,12 +22,10 @@ export const ENDPOINTS = {
   /** { captcha } -> { data: { verified } }, sets the kmp_captcha_ok cookie */
   captchaVerify: '/content/kotakmahindraprime-aem/in/en/home.captcha-verify.json',
   /**
-   * Send: { mobile, name, email } -> { data: { transactionId, token } }, needs kmp_captcha_ok.
-   * Resend is the same endpoint with { mobile, transactionId, token } (the latest pair; the
-   * token is what makes it a resend, so no captcha). Its answer's pair replaces the old one:
-   * each token works for one resend only.
+   * { mobile } -> { data: { transactionId, token } }, needs kmp_captcha_ok.
+   * Resend: { mobile, transactionId, token } of the previous OTP, no captcha needed.
    */
-  otpGenerate: '/content/kotakmahindraprime-aem/in/en/home.otp-generate.json',
+  otpGenerate: '/content/kotakmahindraprime-aem/in/en.otp-generate.json',
   /**
    * { transactionId, otp, token, category, lead } -> { data: lead API response }
    * One endpoint for every product (LAP, NewCarFinance, TWL): `category` picks the lead API
@@ -135,9 +133,11 @@ export const MESSAGES = {
   CAPTCHA_REQUIRED: 'Captcha cannot be blank',
   INVALID_OTP: 'The OTP you have entered is incorrect.',
   OTP_EXPIRED: 'OTP expired. Please regenerate.',
+  RESEND_TOO_SOON: 'Please wait a little before asking for a new OTP.',
+  RESEND_LIMIT: 'You have reached the limit of OTP resends. Please try again later.',
   captchaLoadFailed: 'We couldn’t load the captcha. Tap refresh to try again.',
   captchaAudioFailed: 'We couldn’t play the audio. Tap refresh for a new captcha.',
-  resendNeedsCaptcha: 'Please go back and complete the captcha to get a new OTP.',
+  resendNeedsCaptcha: 'Captcha expired. Please enter the captcha again to get a new OTP.',
   wrongOtp: 'The OTP you have entered is incorrect.',
   sendFailed: 'We couldn’t send the OTP. Please try again.',
   submitFailed: 'We couldn’t submit your details. Please try again.',
@@ -146,8 +146,6 @@ export const MESSAGES = {
   network: 'Check your internet connection and try again.',
   // the OTP step's own codes (fallbacks: the backend's message is shown when it sends one)
   OTP_ATTEMPTS_EXCEEDED: 'Too many incorrect attempts. Please tap Resend OTP to get a new OTP.',
-  RESEND_TOO_SOON: 'Please wait a few seconds before requesting a new OTP.',
-  RESEND_LIMIT: 'You have reached the maximum number of OTP requests.',
 };
 
 /**

@@ -214,6 +214,10 @@
   --nav-height: 112px;
 }
 
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
   display: none;
   margin: 0;
@@ -577,6 +581,12 @@ main > .section > .emi-calculator-wrapper {
 
 :where(.desktop-view) main > .section > .emi-calculator-wrapper {
   padding: 0 var(--gb-margin);
+}
+
+/* the calculator's image is the full-bleed background of its section (desktop view) */
+:where(.desktop-view) main > .section:has(> .emi-calculator-wrapper .emi-calculator-image) {
+  position: relative;
+  isolation: isolate;
 }
 
 /* regulatory updates: adaptive bound on small screens, grid bound in the desktop view */

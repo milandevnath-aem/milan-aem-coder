@@ -295,11 +295,11 @@ export default function decorate(block) {
     const next = createDropdown({
       label: 'Select City',
       name: 'city',
-      options: cities.map(({
-        key, name, region, note,
-      }) => ({ value: key, label: name, description: region || note })),
+      // city names only: the state is not shown in the list
+      options: cities.map(({ key, name }) => ({ value: key, label: name })),
       search: cities.length > 6,
       searchPlaceholder: 'Search city',
+      scrollToSelected: true,
     });
     next.classList.add('branch-locator-select');
     next.addEventListener('change', (e) => {

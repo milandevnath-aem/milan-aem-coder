@@ -398,9 +398,15 @@ export function errorMessage(error, action) {
   if (serverMessage && SERVER_MESSAGE_CODES.includes(code)) return serverMessage;
   // the visitor's input was refused (4xx or status "error"), not a server failure
   const refused = kind === 'rejected' || (kind === 'http' && status < 500);
+  // a refused OTP shows the API's own message (e.g. "Invalid or expired OTP.")
+  if (action === 'verify' && refused && serverMessage) return serverMessage;
   // an expired OTP: said so by the server, or refused after OTP_VALID_MS (error.expired,
   // set by the OTP step) when the server does not tell expired from wrong
-  const expired = /EXPIRED/i.test(code) || /expire/i.test(serverMessage)
+  // "Invalid or expired OTP." names both, so it says nothing: only a message that is
+  // about expiry alone counts
+  const messageSaysExpired = /expire/i.test(serverMessage)
+    && !/invalid|incorrect|wrong/i.test(serverMessage);
+  const expired = /EXPIRED/i.test(code) || messageSaysExpired
     || (refused && error.expired === true);
   if (action === 'verify' && expired) return MESSAGES.OTP_EXPIRED;
   // API codes are upper case keys of MESSAGES; the others are this file's own texts
