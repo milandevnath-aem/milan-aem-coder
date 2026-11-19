@@ -7,8 +7,8 @@ let uid = 0;
 
 const iconImg = (name, size = 24, ext = 'svg') => `<img src="${window.hlx.codeBasePath}/icons/${name}.${ext}" alt="" width="${size}" height="${size}">`;
 
-/** "******0679" */
-export const maskMobile = (mobile) => `******${String(mobile).slice(-4)}`;
+/** "+91 ******0679" */
+export const maskMobile = (mobile) => `+91 ******${String(mobile).slice(-4)}`;
 
 /**
  * Loading spinner (decorative; the state is announced separately).
@@ -66,7 +66,7 @@ export function createOtpStep({
       <div class="lead-form-otp-top">
         <div class="lead-form-otp-title">
           <h2 id="${id}-title" tabindex="-1">Enter OTP</h2>
-          <p id="${id}-desc"><span class="lead-form-otp-intro">Please enter the OTP that was sent to your mobile number</span> <span class="lead-form-otp-number"></span></p>
+          <p id="${id}-desc"><span class="lead-form-otp-intro">Enter the ${OTP_LENGTH}-digit code we texted to</span> <span class="lead-form-otp-number"></span></p>
         </div>
         <div class="lead-form-otp-group">
           <div class="lead-form-otp-boxes" role="group" aria-labelledby="${id}-title" aria-describedby="${id}-desc"></div>
@@ -210,7 +210,7 @@ export function createOtpStep({
       busy = false;
     }
     sentAt = Date.now();
-    view.querySelector('.lead-form-otp-intro').textContent = 'Please enter the OTP which was re-sent to your mobile number';
+    view.querySelector('.lead-form-otp-intro').textContent = `Enter the ${OTP_LENGTH}-digit code we re-sent to`;
     inputs.forEach((input) => { input.value = ''; });
     setError('');
     refresh();

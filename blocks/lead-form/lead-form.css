@@ -450,10 +450,12 @@
   color: var(--muted-color);
 }
 
-/* loading: spinner in place of the label */
-.lead-form button.button.primary.is-loading {
+/* loading: spinner in place of the label, stays black (beats the grey aria-disabled state) */
+.lead-form button.button.primary.is-loading,
+.lead-form button.button.primary.is-loading[aria-disabled='true'] {
   border-color: var(--text-color);
   background-color: var(--text-color);
+  color: #fff;
   pointer-events: none;
 }
 
@@ -579,12 +581,14 @@
   outline: none;
 }
 
+/* Figma Body/B2 (mobile): 14px / 20px, 500, #666 */
 .lead-form .lead-form-otp-title p {
   margin: 0;
   color: var(--muted-color);
-  font-size: var(--body-font-size-m);
+  font-size: 14px;
   font-weight: 500;
-  line-height: 24px;
+  line-height: 20px;
+  letter-spacing: 0;
 }
 
 .lead-form .lead-form-otp-number {
@@ -670,6 +674,21 @@
   font-size: var(--body-font-size-m);
   font-weight: 600;
   line-height: 24px;
+}
+
+/* Figma loading state: #121212 pill, padding 15px 12px, spinner centred (same 52px height) */
+.lead-form .lead-form-validate.is-loading {
+  flex-direction: column;
+  gap: 4px;
+  border-radius: 56px;
+  padding: 15px 12px;
+}
+
+.lead-form .lead-form-validate.is-loading .lead-form-spinner {
+  width: 22px;
+  height: 22px;
+  border-color: rgb(255 255 255 / 70%);
+  border-top-color: transparent;
 }
 
 .lead-form .lead-form-resend {
@@ -848,6 +867,12 @@
 
 :where(.desktop-view) .lead-form .lead-form-otp-title {
   text-align: center;
+}
+
+/* Figma Body/B3 (desktop): 16px / 24px */
+:where(.desktop-view) .lead-form .lead-form-otp-title p {
+  font-size: 16px;
+  line-height: 24px;
 }
 
 :where(.desktop-view) .lead-form .lead-form-otp-boxes {
