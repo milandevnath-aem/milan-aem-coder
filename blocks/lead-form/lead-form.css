@@ -121,10 +121,10 @@
   padding: 0;
   background: transparent;
   color: var(--text-color);
-  font-size: var(--type-headline-h5-font-size);
-  font-weight: var(--type-headline-h5-font-weight);
-  line-height: var(--type-headline-h5-line-height);
-  letter-spacing: var(--type-headline-h5-letter-spacing);
+  font-size: var(--type-headline-h4-font-size);
+  font-weight: var(--type-headline-h4-font-weight);
+  line-height: var(--type-headline-h4-line-height);
+  letter-spacing: var(--type-headline-h4-letter-spacing);
   outline: none;
   box-shadow: none;
 }
@@ -209,7 +209,7 @@
 .lead-form .lead-form-textarea textarea {
   flex: 1 1 auto;
   min-height: 72px;
-  max-height: calc(var(--lead-form-line) * 6);
+  max-height: calc(var(--type-headline-h4-line-height) * 6);
   margin: 0;
   font-family: inherit;
   resize: vertical;
