@@ -8,7 +8,10 @@
                                                         // refresh; audio is '' when not sent
     const product = productFor('New Car Finance');      // 'NewCarFinance'
     const lead = buildLead(form, 'New Car Finance');    // the API's fields + Product 'New CAR'
-    const session = createLeadSession({ mobile: '8097475810', product, lead });
+    const { name, email } = contactOf(form);           // sent with the first OTP only
+    const session = createLeadSession({
+      mobile: '8097475810', name, email, product, lead,
+    });
     try {
       await session.submit('aB3dE');                    // verifies the captcha, texts the OTP
       await session.verifyOtp('214589');                // checks it, creates the lead
@@ -16,13 +19,15 @@
       showError(errorMessage(error, 'verify'));         // LeadApiError -> visitor text
     }
 
-  Between submit and verifyOtp, the journey's data (transactionId, token, mobile, category,
-  lead) is kept in window[LEAD_STORE_KEY]; verifyOtp sends the session's own copy, so another
-  form's journey is never sent, and an OTP that created a lead is not sent twice.
+  The OTP's transactionId and token are secrets of the journey: they are kept only in the
+  session's closure (never on window, in Web Storage, cookies, the DOM, the URL or the
+  console), sent only to otp-generate (on resend) and otp-verify, and wiped on cancel and
+  once a lead is created. Each session has its own pair, so another form's journey is never
+  sent, and an OTP that created a lead is not sent twice.
 */
 import {
-  ENDPOINTS, LEAD_CREATED_EVENT, LEAD_RESULT_KEY,
-  LEAD_STORE_KEY, MESSAGES, OTP_LENGTH, REQUEST_HEADERS, REQUEST_TIMEOUT_MS,
+  ENDPOINTS, LEAD_CREATED_EVENT, LEAD_RESULT_KEY, MESSAGES, OTP_LENGTH,
+  REQUEST_HEADERS, REQUEST_TIMEOUT_MS, SERVER_MESSAGE_CODES,
 } from './lead-api-config.js';
 
 export {
@@ -255,15 +260,13 @@ function keepCreatedLead(lead) {
   return created;
 }
 
-/** Removes the journey's data from window (when it is still `journey`, if given). */
-export function clearJourney(journey) {
-  if (!journey || window[LEAD_STORE_KEY] === journey) delete window[LEAD_STORE_KEY];
-}
-
 /**
  * One OTP journey of one form submission. Create a new session for every submit.
  * @param {Object} options
  * @param {string} options.mobile ten-digit mobile number
+ * @param {string} [options.name] full name, sent with the first OTP request (not on resend:
+ *   the backend reads it from the token)
+ * @param {string} [options.email] sent with the first OTP request, like the name
  * @param {string} options.product backend product (LAP, TWL, NewCarFinance), '' when the
  *   category has no API yet (sent as is: the server refuses the lead)
  * @param {Object<string, string>} options.lead see buildLead in lead-payload.js
@@ -271,48 +274,48 @@ export function clearJourney(journey) {
  *   "Used Car & Re-finance", kept with the created lead for analytics
  * @returns {{
  *   submit: (captcha: string|null) => Promise<void>,
- *   sendOtp: () => Promise<void>,
+ *   sendOtp: () => Promise<void>, // the first OTP, then a resend with its transactionId/token
  *   verifyOtp: (otp: string) => Promise<{ leadId: string, category: string,
  *     loanCategory: string, createdAt: string, stage: string, data: Object }>,
  *   cancel: () => void,
  * }}
  */
 export function createLeadSession({
-  mobile, product, lead, loanCategory = '',
+  mobile, name = '', email = '', product, lead, loanCategory = '',
 }) {
   if (!product) {
     // eslint-disable-next-line no-console
     console.warn('lead-api: this category has no product in PRODUCT_BY_CATEGORY (lead-api-config.js)');
   }
   const controller = new AbortController();
-  let journey = null; // what this session put in window[LEAD_STORE_KEY]
+  // the OTP's credentials { transactionId, token }: only in this closure, so no other script,
+  // extension-readable storage or later page can read them
+  let otpCredentials = null;
 
-  const keep = (otpRequest) => {
-    journey = {
-      ...otpRequest, mobile, category: product, lead,
-    };
-    window[LEAD_STORE_KEY] = journey;
-  };
+  /** The transactionId and token of an otp-generate/resend answer ('' when missing). */
+  const credentialsOf = (data) => ({
+    transactionId: text(data.transactionId), token: text(data.token),
+  });
 
   const sendOtp = singleFlight(async () => {
     if (!MOBILE_PATTERN.test(mobile)) {
       throw new LeadApiError('invalid-input', 'mobile must be 10 digits starting with 6-9');
     }
-    // a resend (an OTP was already generated in this session) sends the transactionId and
-    // token of that OTP, so the API does not ask for the captcha again
-    const body = { mobile };
-    if (journey?.transactionId && journey.token) {
-      body.transactionId = journey.transactionId;
-      body.token = journey.token;
-    }
+    const previous = otpCredentials;
+    // first send: mobile, name and email; resend: the latest pair instead (the token tells
+    // the backend it is a resend, and it holds the name and email)
+    const body = previous
+      ? { mobile, transactionId: previous.transactionId, token: previous.token }
+      : { mobile, name: text(name), email: text(email) };
     const data = record(await post('otpGenerate', body, controller.signal));
-    // both are needed to validate the OTP later: without them the OTP could not be checked
-    const transactionId = text(data.transactionId);
-    const token = text(data.token);
-    if (!transactionId || !token) {
+    // cancelled or used meanwhile: nothing is kept
+    if (otpCredentials !== previous) return;
+    // both are needed for otp-verify and the next resend; the old token is used up by a resend
+    const fresh = credentialsOf(data);
+    if (!fresh.transactionId || !fresh.token) {
       throw new LeadApiError('bad-response', 'otp-generate: transactionId or token missing');
     }
-    keep({ transactionId, token });
+    otpCredentials = Object.freeze(fresh);
   });
 
   // the form's submit: captcha first, the OTP only once it is accepted
@@ -338,27 +341,25 @@ export function createLeadSession({
     if (!new RegExp(`^\\d{${OTP_LENGTH}}$`).test(otp)) {
       throw new LeadApiError('invalid-input', `the OTP must be ${OTP_LENGTH} digits`);
     }
-    // the data kept when this session's OTP was generated (window[LEAD_STORE_KEY] may hold
-    // another form's journey); none after a cancel or once it created a lead
-    const stored = journey;
-    if (!stored?.transactionId || !stored.token) {
+    // none before an OTP was generated, after a cancel or once it created a lead
+    const credentials = otpCredentials;
+    if (!credentials) {
       throw new LeadApiError('invalid-input', 'no OTP was generated');
     }
     const data = await post('otpVerify', {
-      transactionId: stored.transactionId,
-      token: stored.token,
+      transactionId: credentials.transactionId,
+      token: credentials.token,
       otp,
-      category: stored.category,
-      lead: stored.lead || {},
+      category: product,
+      lead: lead || {},
     }, controller.signal);
     // the server answers success only when the lead API created the lead (Result "Success",
     // a Salesforce composite without errors, or a 2xx answer); otherwise 502 LEAD_FAILED.
     // `data` is the lead API's answer as it is.
-    clearJourney(stored);
-    // this OTP is used up: a second validate is refused here instead of sent again
-    journey = null;
+    // this OTP is used up: its credentials are wiped, a second validate is refused here
+    if (otpCredentials === credentials) otpCredentials = null;
     const created = keepCreatedLead({
-      leadId: leadIdOf(data), category: stored.category, loanCategory,
+      leadId: leadIdOf(data), category: product, loanCategory,
     });
     return { ...created, stage: text(record(data).Stage), data };
   });
@@ -369,9 +370,7 @@ export function createLeadSession({
     verifyOtp,
     cancel: () => {
       controller.abort();
-      // only this session's own data (none yet: another form's is left alone)
-      if (journey) clearJourney(journey);
-      journey = null;
+      otpCredentials = null;
     },
   };
 }
@@ -394,6 +393,9 @@ export function errorMessage(error, action) {
   }
   if (action === 'captcha-load') return MESSAGES.captchaLoadFailed;
   if (action === 'resend' && code === 'CAPTCHA_REQUIRED') return MESSAGES.resendNeedsCaptcha;
+  // the backend's messages for these are written for visitors ("Incorrect OTP. 2 attempts
+  // left."): the backend counts the attempts, so its text is shown as it is
+  if (serverMessage && SERVER_MESSAGE_CODES.includes(code)) return serverMessage;
   // the visitor's input was refused (4xx or status "error"), not a server failure
   const refused = kind === 'rejected' || (kind === 'http' && status < 500);
   // a refused OTP shows the API's own message (e.g. "Invalid or expired OTP.")
