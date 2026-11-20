@@ -152,9 +152,9 @@
         {
           "component": "textarea",
           "valueType": "string",
-          "name": "schema-script",
+          "name": "json-ld",
           "label": "Schema script (JSON-LD)",
-          "description": "JSON-LD markup, with or without the surrounding <script> tag."
+          "description": "Plain JSON only (object or @graph): no <script> tag, no surrounding quotes. Rendered in the page head as a script tag."
         }
       ]
     }

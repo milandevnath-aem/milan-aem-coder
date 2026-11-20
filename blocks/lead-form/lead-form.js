@@ -5,7 +5,7 @@ import {
   CAPTCHA_LENGTH, createLeadSession, errorMessage as apiErrorMessage, generateCaptcha,
 } from './lead-api.js';
 import { CITY_COLUMN, CITY_LISTS, MESSAGES } from './lead-api-config.js';
-import { buildLead, productFor } from './lead-payload.js';
+import { buildLead, contactOf, productFor } from './lead-payload.js';
 import {
   createOtpStep, createSuccessStep, setLoading, spinner,
 } from './lead-form-otp.js';
@@ -14,6 +14,7 @@ import {
 } from '../../scripts/category-forms.js';
 import {
   digitsOnly, emailRules, fieldMessages, isPersonName, mobileRules, nameRules,
+  rejectedErrorMessage, valueErrorMessage,
 } from '../../scripts/input-rules.js';
 import {
   analyticsName, productType, pushEvent, safely, trackFormStart, uniqueId,
@@ -98,7 +99,9 @@ export function fieldError(control, message) {
  * Something typed or pasted was refused by the input rules: the form shows the field's
  * "invalid" message (an "input-rejected" event, see decorate).
  */
-export const rejected = (input) => () => input.dispatchEvent(new CustomEvent('input-rejected', { bubbles: true }));
+export const rejected = (input) => (characters) => input.dispatchEvent(new CustomEvent('input-rejected', {
+  bubbles: true, detail: characters,
+}));
 
 export function textField(label, kind, required) {
   const field = document.createElement('label');
@@ -490,7 +493,7 @@ export default function decorate(block) {
       if (isDropdown) valid = () => !field.dataset.required || Boolean(field.value);
       const isEmpty = isDropdown ? () => !field.value : () => !control.value.trim();
       checks.push({
-        field, control, error, valid, messages, isEmpty,
+        field, control, error, valid, messages, isEmpty, label, kind,
       });
       item.append(error.el);
     }
@@ -538,7 +541,8 @@ export default function decorate(block) {
   // message: an API error to show instead of the field's own message (blank or invalid)
   const setState = (check, invalid, message) => {
     const { empty, invalid: wrong } = check.messages;
-    check.error.show(invalid, message || (check.isEmpty() ? empty : wrong));
+    const valueMessage = valueErrorMessage(check.label, check.kind, check.control.value || '', wrong);
+    check.error.show(invalid, message || (check.isEmpty() ? empty : valueMessage));
     const box = check.field.closest('.lead-form-input')
       || check.field.querySelector('.lead-form-input') || check.field;
     box.classList.toggle('is-invalid', invalid);
@@ -555,7 +559,8 @@ export default function decorate(block) {
   // mark fields the user left with an invalid value; clear the message while correcting
   form.addEventListener('focusout', (e) => {
     const check = checks.find((c) => c.control === e.target);
-    if (!check || !e.target.value) return;
+    // a blank required field says it is required; an optional one stays quiet
+    if (!check || (!e.target.value && !e.target.required)) return;
     setState(check, !check.valid());
   });
   form.addEventListener('input', (e) => {
@@ -567,7 +572,13 @@ export default function decorate(block) {
   // typed, and the field says why
   form.addEventListener('input-rejected', (e) => {
     const check = checks.find((c) => c.control === e.target);
-    if (check) setState(check, true, check.messages.invalid);
+    if (!check) return;
+    if (document.activeElement !== check.control) {
+      setState(check, Boolean(check.control.value) && !check.valid());
+      return;
+    }
+    const message = rejectedErrorMessage(check.label, check.kind, e.detail);
+    setState(check, true, message || check.messages.invalid);
   });
   dropdowns.forEach((d) => d.addEventListener('change', () => {
     const check = checks.find((c) => c.field === d);
@@ -698,6 +709,8 @@ export default function decorate(block) {
     try {
       session = createLeadSession({
         mobile,
+        // sent with the first OTP request only (otp-generate)
+        ...contactOf(form),
         product: productFor(category),
         lead: buildLead(form, category),
         loanCategory: category,
@@ -708,6 +721,37 @@ export default function decorate(block) {
       showSubmitError(MESSAGES.formFailed);
       return;
     }
+
+    // the success step: the lead exists (or, for a category without an API, is let through)
+    const finish = (lead) => {
+      // the server's lead reference, never the mobile number
+      pushEvent('generate_lead', { ...tracked, lead_id: lead?.leadId || undefined });
+      // the lead exists now: tidying up must not keep the visitor from the success step
+      try {
+        clearForm();
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.warn('lead-form: the form could not be cleared', error);
+      }
+      const success = createSuccessStep({
+        emiHref: document.querySelector('main .emi-calculator') ? '#emi-calculator' : `${siteRoot()}/home#emi-calculator`,
+        onDone: close,
+      });
+      success.querySelector('.lead-form-emi').addEventListener('click', (ev) => {
+        if (!ev.currentTarget.getAttribute('href').startsWith('#')) return;
+        ev.preventDefault();
+        close();
+        document.getElementById('emi-calculator')?.scrollIntoView();
+      });
+      block.querySelector('.lead-form-otp')?.remove();
+      block.append(success);
+      showStep(success);
+      nameDialog(success.titleId);
+      success.focusTitle();
+    };
+    // Car Lease and Dealer Finance have no lead API yet (see PRODUCT_BY_CATEGORY): whatever
+    // the server answers, the visitor reaches the success step. Remove once they have one.
+    const lenient = !productFor(category);
 
     // verifying the captcha, then sending the OTP: button spinner (desktop), full view
     // spinner (small screens)
@@ -729,6 +773,12 @@ export default function decorate(block) {
     }
     if (failure) {
       if (failure?.kind === 'cancelled') return;
+      if (lenient) {
+        // eslint-disable-next-line no-console
+        console.warn('lead-form: no lead API for this category, continuing to success', failure);
+        finish({});
+        return;
+      }
       // the captcha was used up by the attempt: a new one, then the error (loading clears it)
       captcha?.load();
       showSubmitFailure(failure);
@@ -737,51 +787,47 @@ export default function decorate(block) {
     pushEvent('lead_form_submit', tracked);
 
     block.querySelector('.lead-form-otp')?.remove();
-    const otp = createOtpStep({
+    let otp;
+    /**
+     * Back to the form, values kept: a new OTP needs a new captcha.
+     * @param {string} [message] why (CAPTCHA_REQUIRED), shown at the captcha
+     */
+    const backToForm = (message) => {
+      session.cancel();
+      otp.remove();
+      showStep(main);
+      nameDialog(intro.querySelector('h1, h2')?.id);
+      if (captcha) {
+        captcha.load();
+        // after load(), which clears the captcha's error
+        if (message) setState(captchaCheck, true, message);
+        captcha.input.focus();
+      } else {
+        if (message) showSubmitError(message);
+        submit.focus();
+      }
+    };
+    otp = createOtpStep({
       mobile,
       sendOtp: session.sendOtp,
-      verifyOtp: session.verifyOtp,
+      // a category without an API goes on to success whatever the answer (an empty lead)
+      verifyOtp: lenient
+        ? async (code) => {
+          try {
+            return (await session.verifyOtp(code)) || {};
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.warn('lead-form: no lead API for this category, continuing to success', error);
+            return {};
+          }
+        }
+        : session.verifyOtp,
       announce,
-      // back to the form, values kept: a new OTP needs a new captcha
-      onBack: () => {
-        session.cancel();
-        otp.remove();
-        showStep(main);
-        nameDialog(intro.querySelector('h1, h2')?.id);
-        if (captcha) {
-          captcha.load();
-          captcha.input.focus();
-        } else {
-          submit.focus();
-        }
-      },
+      onBack: () => backToForm(),
+      // the session or the OTP's token expired: a new captcha, then Send OTP again
+      onCaptchaRequired: (message) => backToForm(message),
       // the lead is created by verifyOtp
-      onVerified: (lead) => {
-        // the server's lead reference, never the mobile number
-        pushEvent('generate_lead', { ...tracked, lead_id: lead?.leadId || undefined });
-        // the lead exists now: tidying up must not keep the visitor from the success step
-        try {
-          clearForm();
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.warn('lead-form: the form could not be cleared', error);
-        }
-        const success = createSuccessStep({
-          emiHref: document.querySelector('main .emi-calculator') ? '#emi-calculator' : `${siteRoot()}/home#emi-calculator`,
-          onDone: close,
-        });
-        success.querySelector('.lead-form-emi').addEventListener('click', (ev) => {
-          if (!ev.currentTarget.getAttribute('href').startsWith('#')) return;
-          ev.preventDefault();
-          close();
-          document.getElementById('emi-calculator')?.scrollIntoView();
-        });
-        otp.remove();
-        block.append(success);
-        showStep(success);
-        nameDialog(success.titleId);
-        success.focusTitle();
-      },
+      onVerified: finish,
     });
     // closing the modal ends the journey: no resend countdown or request left running
     dialog()?.addEventListener('close', () => {
@@ -849,7 +895,17 @@ export default function decorate(block) {
     const inputs = [...form.querySelectorAll('input[name]')].filter((i) => i.type !== 'hidden');
     const first = inputs.find((i) => i.autocomplete === 'given-name');
     const last = inputs.find((i) => i.autocomplete === 'family-name');
+    // separate first and last name carried into one full name field: joined with a space
+    const fullInput = !(first && last) && inputs.find((i) => i.autocomplete === 'name');
+    const isFirstKey = (k) => /^(your-)?(first|given)-?name$/.test(k);
+    const isLastKey = (k) => /^(your-)?(last|sur|family)-?name$/.test(k);
+    if (fullInput) {
+      const part = (test) => String(Object.entries(data).find(([k]) => test(k))?.[1] ?? '').trim();
+      const joined = [part(isFirstKey), part(isLastKey)].filter(Boolean).join(' ');
+      if (joined) fullInput.value = joined;
+    }
     Object.entries(data).forEach(([key, raw]) => {
+      if (fullInput && (isFirstKey(key) || isLastKey(key))) return;
       const candidates = [].concat(raw).map((v) => String(v ?? '').trim()).filter(Boolean);
       const [value] = candidates;
       if (!value) return;

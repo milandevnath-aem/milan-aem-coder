@@ -65,9 +65,14 @@
           "component": "reference",
           "valueType": "string",
           "name": "image",
-          "label": "Image",
-          "description": "Decorative image shown beside the calculator on desktop.",
+          "label": "Fallback image",
+          "description": "Shown beside the calculator on desktop for a loan type that has no image of its own. Set each loan type's image on the loan type itself.",
           "multi": false
+        },
+        {
+          "name": "imageMimeType",
+          "component": "hidden",
+          "valueType": "image/png"
         },
         {
           "component": "text",
@@ -438,6 +443,22 @@
               }
             ]
           }
+        },
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "image",
+          "label": "Image",
+          "description": "Shown beside the calculator on desktop while this loan type is selected. Leave empty to use the calculator's fallback image.",
+          "multi": false
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "imageAlt",
+          "label": "Alt text",
+          "description": "Describe the image. Leave empty if it is decorative.",
+          "value": ""
         }
       ]
     }

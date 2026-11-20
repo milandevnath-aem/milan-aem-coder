@@ -133,12 +133,22 @@
           "multi": false
         },
         {
+          "name": "backgroundMimeType",
+          "component": "hidden",
+          "valueType": "image/png"
+        },
+        {
           "component": "reference",
           "valueType": "string",
           "name": "backgroundMobile",
           "label": "Background image (mobile)",
           "description": "Optional. Used on small screens instead of the desktop image.",
           "multi": false
+        },
+        {
+          "name": "backgroundMobileMimeType",
+          "component": "hidden",
+          "valueType": "image/png"
         }
       ]
     }

@@ -37,11 +37,14 @@ export function highlight(el, text, query) {
  * @param {Object} config
  * @param {string} config.label field label, also the placeholder
  * @param {string} config.name form field name
- * @param {{ value: string, label: string, description?: string }[]} config.options
+ * @param {{ value: string, label: string, description?: string, href?: string }[]}
+ *   config.options an option with href is a link: picking it opens that page
  * @param {string} [config.value] preselected value
  * @param {boolean} [config.search] show a search box
  * @param {string} [config.searchPlaceholder]
  * @param {boolean} [config.pinSelected] list the selected option first when reopened
+ * @param {boolean} [config.scrollToSelected] on open, scroll the list so the selected option
+ *   is the first one visible, right under the search box (the full list stays available)
  * @param {boolean} [config.required]
  * @param {string} [config.boundary] selector of an ancestor (e.g. a banner) the open
  *   panel must stay inside: the list is shortened and scrolls instead of overflowing it
@@ -50,7 +53,7 @@ export function highlight(el, text, query) {
  */
 export function createDropdown({
   label, name, options, value = '', search = false, searchPlaceholder = 'Search',
-  pinSelected = false, required = false, boundary = '',
+  pinSelected = false, scrollToSelected = false, required = false, boundary = '',
 }) {
   if (!cssLoaded) cssLoaded = loadCSS(`${window.hlx.codeBasePath}/styles/dropdown.css`);
   idCounter += 1;
@@ -149,7 +152,17 @@ export function createDropdown({
       const optionLabel = document.createElement('span');
       optionLabel.className = 'dropdown-option-label';
       highlight(optionLabel, option.label, q);
-      text.append(optionLabel);
+      if (option.href) {
+        // an option that leads to a page is a real link (picking it opens that page)
+        const link = document.createElement('a');
+        link.className = 'dropdown-option-link';
+        link.href = option.href;
+        link.tabIndex = -1;
+        link.append(optionLabel);
+        text.append(link);
+      } else {
+        text.append(optionLabel);
+      }
       if (option.description) {
         const desc = document.createElement('span');
         desc.className = 'dropdown-option-desc';
@@ -255,6 +268,12 @@ export function createDropdown({
     placePanel();
     const selectedIndex = visibleOptions().findIndex((li) => li.dataset.value === input.value);
     if (selectedIndex >= 0) setActive(selectedIndex);
+    if (scrollToSelected && selectedIndex >= 0) {
+      // the list is the scroller: the selected option goes to its top edge, whole (the option
+      // is measured from the panel, the list's own offset is taken off)
+      const selectedItem = visibleOptions()[selectedIndex];
+      list.scrollTop = selectedItem.offsetTop - list.offsetTop;
+    }
     if (searchInput) {
       searchInput.parentElement.querySelector('.dropdown-clear').hidden = true;
       searchInput.focus({ preventScroll: true });
@@ -286,8 +305,17 @@ export function createDropdown({
     if (notify) root.dispatchEvent(new CustomEvent('change', { bubbles: true, detail: { byUser } }));
   };
 
-  const choose = (li) => {
+  // navigate: false when the click already follows the option's link
+  const choose = (li, navigate = true) => {
     if (!li?.dataset.value) return;
+    const href = li.querySelector('.dropdown-option-link')?.href;
+    if (href) {
+      // the option opens its page: show it as picked while the page loads
+      setValue(li.dataset.value, false);
+      close(true);
+      if (navigate) window.location.href = href;
+      return;
+    }
     setValue(li.dataset.value, true, true);
     close(true);
   };
@@ -299,7 +327,12 @@ export function createDropdown({
   panel.addEventListener('mousedown', (e) => {
     if (e.target !== searchInput) e.preventDefault();
   });
-  list.addEventListener('click', (e) => choose(e.target.closest('[role="option"]')));
+  list.addEventListener('click', (e) => {
+    const link = e.target.closest('.dropdown-option-link');
+    // ctrl/cmd/shift-click opens the page elsewhere: this one stays as it is
+    if (link && (e.ctrlKey || e.metaKey || e.shiftKey)) return;
+    choose(e.target.closest('[role="option"]'), !link);
+  });
   list.addEventListener('mousemove', (e) => {
     const li = e.target.closest('[role="option"]');
     if (li) setActive(visibleOptions().indexOf(li));

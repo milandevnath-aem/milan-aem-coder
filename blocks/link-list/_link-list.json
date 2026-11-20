@@ -38,14 +38,16 @@
       "id": "link-list",
       "fields": [
         {
-          "component": "select",
+          "component": "multiselect",
           "name": "classes",
           "label": "Background",
           "valueType": "string",
           "value": "bg-grey",
           "options": [
             { "name": "Grey background (cards)", "value": "bg-grey" },
-            { "name": "No background (divider list)", "value": "" }
+            { "name": "Document list (grey cards with document icon)", "value": "doc-list" },
+            { "name": "No background (divider list)", "value": "" },
+            { "name": "Buttons (Read all / Read less toggle)", "value": "buttons" }
           ]
         },
         {
@@ -71,6 +73,22 @@
           "label": "Note",
           "description": "Grey note box shown below the list.",
           "valueType": "string"
+        },
+        {
+          "component": "text",
+          "name": "readAll",
+          "value": "",
+          "label": "Read all button text",
+          "description": "Used with the Buttons class. Defaults to 'Read all'.",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "name": "readLess",
+          "value": "",
+          "label": "Read less button text",
+          "description": "Used with the Buttons class. Defaults to 'Read less'.",
+          "valueType": "string"
         }
       ]
     },
@@ -84,6 +102,11 @@
           "label": "Image",
           "description": "Optional thumbnail. Shown only when authored.",
           "multi": false
+        },
+        {
+          "name": "imageMimeType",
+          "component": "hidden",
+          "valueType": "image/png"
         },
         {
           "component": "text",
@@ -112,6 +135,11 @@
           "label": "Arrow icon",
           "description": "Right-hand icon (SVG recommended). Shown only when authored.",
           "multi": false
+        },
+        {
+          "name": "iconMimeType",
+          "component": "hidden",
+          "valueType": "image/png"
         }
       ]
     }

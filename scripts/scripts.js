@@ -222,8 +222,8 @@ export function decorateMain(main) {
 }
 
 /**
- * Adds head tags the server doesn't render from page metadata: hreflang,
- * authored <meta>/<link> tags and JSON-LD.
+ * Adds head tags the server doesn't render from page metadata: hreflang and
+ * authored <meta>/<link> tags. JSON-LD comes from the "json-ld" metadata (server-rendered).
  */
 function decorateSeo() {
   const { head } = document;
@@ -250,21 +250,6 @@ function decorateSeo() {
         .forEach(({ name, value }) => tag.setAttribute(name, value));
       head.append(tag);
     });
-  }
-
-  const rawSchema = getMetadata('schema-script');
-  if (rawSchema) {
-    const json = rawSchema.replace(/^\s*<script[^>]*>/i, '').replace(/<\/script>\s*$/i, '');
-    try {
-      JSON.parse(json);
-      const script = document.createElement('script');
-      script.type = 'application/ld+json';
-      script.textContent = json;
-      head.append(script);
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.warn('Invalid JSON-LD in schema-script metadata', e);
-    }
   }
 }
 

@@ -23,7 +23,7 @@ export const isNamePart = (label) => /\b(first|given|middle|last|sur|family)\s*n
  * needed, as the lead APIs require a last name. Not a dealership or manufacturer.
  */
 export const isFullName = (label) => isPersonName(label) && !isNamePart(label)
-  && !/\b(dealer(ship)?|manufacturer|brand|shop|firm|showroom)\b/i.test(label);
+  && !/\b(dealer(ship)?|manufacturer|brand|shop|firm|showroom|promoter)\b/i.test(label);
 
 /**
  * What a field shows when it is left blank (`empty`) or holds a wrong value (`invalid`).
@@ -95,6 +95,29 @@ export function fieldMessages(label, kind) {
   };
 }
 
+export function valueErrorMessage(label, kind, value, fallback) {
+  if (['text', 'text-half'].includes(kind) && isFullName(label) && /^[a-zA-Z]+$/.test(value.trim())) {
+    return 'Please enter your first and last name to proceed!';
+  }
+  return fallback;
+}
+
+export function rejectedErrorMessage(label, kind, characters) {
+  const isPhone = kind === 'tel';
+  if (!isPhone && (!['text', 'text-half'].includes(kind) || !isPersonName(label))) return '';
+  if (!characters) {
+    return isPhone ? 'Mobile number cannot exceed 10 digits.' : `Name cannot exceed ${NAME_MAX} characters.`;
+  }
+  if (isPhone) {
+    return /[^a-zA-Z0-9]/.test(characters)
+      ? 'Special characters are not allowed in mobile numbers.'
+      : 'Only numbers are allowed in mobile numbers.';
+  }
+  return /[^a-zA-Z0-9 ]/.test(characters)
+    ? 'Special characters are not allowed in names.'
+    : 'Only letters are allowed in names.';
+}
+
 /**
  * Keeps an input to the characters `allowed` matches, up to a length: other typed
  * characters are blocked, pasted, dropped or autofilled text is cleaned (the caret stays
@@ -118,7 +141,7 @@ export function allowOnly(input, allowed, max, onReject) {
     // through and is cleaned below
     if (e.data.length === 1 && !clean) {
       e.preventDefault();
-      onReject?.();
+      onReject?.(e.data);
     } else if (clean && e.data.length > room) {
       // allowed text with no room left: one more key is ignored, a longer paste is refused
       e.preventDefault();
@@ -127,6 +150,7 @@ export function allowOnly(input, allowed, max, onReject) {
   });
   // runs before the form's own input listener, so validation sees the cleaned value
   input.addEventListener('input', () => {
+    const refused = [...input.value].filter((c) => !allowed.test(c)).join('');
     const allowedOnly = keep(input.value) === input.value;
     const clean = keep(input.value).slice(0, max);
     if (clean === input.value) return;
@@ -136,7 +160,7 @@ export function allowOnly(input, allowed, max, onReject) {
     const pos = Math.min(keptBefore, clean.length);
     input.setSelectionRange(pos, pos);
     // only cut to length (composed or autofilled text): nothing to tell
-    if (onReject && !allowedOnly) setTimeout(onReject);
+    if (onReject && !allowedOnly) setTimeout(() => onReject(refused));
   });
 }
 
@@ -166,8 +190,9 @@ export function nameRules(input, label, onReject) {
 }
 
 /**
- * Email, up to EMAIL_MAX: a name, "@" and a domain with an extension (abc@test.com, not
- * abc@test). maxLength stops typing and pasting; the pattern also flags a value set by code.
+ * Email, up to EMAIL_MAX: a name, "@" and a domain ending in .com or .in (abc@test.com,
+ * not abc@test or abc@test.om). maxLength stops typing and pasting; the pattern also flags
+ * a value set by code.
  * @param {HTMLInputElement} input
  */
 export function emailRules(input) {
@@ -175,7 +200,7 @@ export function emailRules(input) {
     type: 'email',
     autocomplete: 'email',
     maxLength: EMAIL_MAX,
-    pattern: `(?=.{1,${EMAIL_MAX}}$)[A-Za-z0-9._%+\\-]+@[A-Za-z0-9\\-]+(\\.[A-Za-z0-9\\-]+)*\\.[A-Za-z]{2,}`,
+    pattern: `(?=.{1,${EMAIL_MAX}}$)[A-Za-z0-9._%+\\-]+@[A-Za-z0-9\\-]+(\\.[A-Za-z0-9\\-]+)*\\.([cC][oO][mM]|[iI][nN])`,
   });
 }
 

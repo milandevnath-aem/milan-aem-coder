@@ -323,6 +323,23 @@ dialog.modal .default-content-wrapper p.button-wrapper:last-child .button {
   background-color: transparent;
 }
 
+/* iOS Safari: with the keyboard open, the visual viewport scrolls past the bottom of the
+   layout viewport, where this fixed dialog ends, and the page (e.g. the sticky CTA) would
+   show in the gap above the keyboard. The sheet continues below its bottom edge to cover it.
+   iOS only (-webkit-touch-callout is supported by iOS Safari/WebKit alone): Android untouched. */
+@supports (-webkit-touch-callout: none) {
+  :where(html:not(.desktop-view)) dialog.modal.modal-form::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    background-color: var(--background-color);
+    pointer-events: none;
+  }
+}
+
 :where(html:not(.desktop-view)) dialog.modal.modal-form .modal-close {
   display: none;
 }

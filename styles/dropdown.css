@@ -237,6 +237,13 @@
   line-height: var(--dropdown-value-line);
 }
 
+/* an option that opens a page: looks like any other option */
+.dropdown-option-link,
+.dropdown-option-link:hover {
+  color: inherit;
+  text-decoration: none;
+}
+
 .dropdown-option-label.is-match {
   color: var(--muted-color);
 }
