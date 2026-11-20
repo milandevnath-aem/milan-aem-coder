@@ -22,10 +22,12 @@ export const ENDPOINTS = {
   /** { captcha } -> { data: { verified } }, sets the kmp_captcha_ok cookie */
   captchaVerify: '/content/kotakmahindraprime-aem/in/en/home.captcha-verify.json',
   /**
-   * { mobile } -> { data: { transactionId, token } }, needs kmp_captcha_ok.
-   * Resend: { mobile, transactionId, token } of the previous OTP, no captcha needed.
+   * Send: { mobile, name, email } -> { data: { transactionId, token } }, needs kmp_captcha_ok.
+   * Resend is the same endpoint with { mobile, transactionId, token } (the latest pair; the
+   * token is what makes it a resend, so no captcha). Its answer's pair replaces the old one:
+   * each token works for one resend only.
    */
-  otpGenerate: '/content/kotakmahindraprime-aem/in/en.otp-generate.json',
+  otpGenerate: '/content/kotakmahindraprime-aem/in/en/home.otp-generate.json',
   /**
    * { transactionId, otp, token, category, lead } -> { data: lead API response }
    * One endpoint for every product (LAP, NewCarFinance, TWL): `category` picks the lead API
