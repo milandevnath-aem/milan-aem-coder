@@ -354,3 +354,48 @@ dialog.modal .branch-locator-permission h2 {
   line-height: 20px;
   cursor: pointer;
 }
+
+/*
+ * desktop (1680px and up, also the 1920 / 2560 designs): the type steps up one size to the DLS
+ * desktop values, as in the Figma 1680 / 1920 reference frames; the layout is unchanged
+ */
+:where([data-viewport='desktop']) .branch-locator .branch-locator-intro h1,
+:where([data-viewport='desktop']) .branch-locator .branch-locator-intro h2 {
+  font-size: var(--type-headline-h7-font-size);
+  line-height: var(--type-headline-h7-line-height);
+  letter-spacing: var(--type-headline-h7-letter-spacing);
+}
+
+:where([data-viewport='desktop']) .branch-locator .branch-locator-intro p,
+:where([data-viewport='desktop']) .branch-locator .branch-locator-select .dropdown-label,
+:where([data-viewport='desktop']) .branch-locator .branch-locator-row dd {
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
+}
+
+:where([data-viewport='desktop']) .branch-locator .branch-locator-select .dropdown-value {
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+}
+
+:where([data-viewport='desktop']) .branch-locator .branch-locator-row dt {
+  font-size: var(--type-headline-h1-font-size);
+  line-height: var(--type-headline-h1-line-height);
+}
+
+/* city list follows the larger field; the location prompt steps up one size */
+:where([data-viewport='desktop']) .branch-locator .branch-locator-select {
+  --dropdown-value-size: 24px;
+  --dropdown-value-line: 32px;
+}
+
+:where([data-viewport='desktop']) dialog.modal .branch-locator-permission h2 {
+  font-size: var(--type-headline-h5-font-size);
+  line-height: var(--type-headline-h5-line-height);
+}
+
+:where([data-viewport='desktop']) .branch-locator-permission .branch-locator-hint,
+:where([data-viewport='desktop']) .branch-locator-permission .branch-locator-skip {
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
+}

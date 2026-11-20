@@ -292,3 +292,40 @@
 :where(.desktop-view) .columns.dropdown-cta p.button-wrapper:hover {
     border-color: inherit;
 }
+
+/*
+ * desktop (1680px and up, also the 1920 / 2560 designs): the type steps up one size to the DLS
+ * desktop values, as in the Figma 1680 / 1920 reference frames; the layout is unchanged
+ */
+:where([data-viewport='desktop']) .columns.columns-split > div > div:first-child h2,
+:where([data-viewport='desktop']) .columns.columns-split > div > div:first-child h3 {
+    letter-spacing: var(--type-display-medium-df-1-letter-spacing);
+}
+
+:where([data-viewport='desktop']) .columns.about-us.columns.columns-split > div > div:first-child h2,
+:where([data-viewport='desktop']) .columns.about-us.columns.columns-split > div > div:first-child h3 {
+    line-height: 44px;
+    letter-spacing: var(--type-display-medium-df-1-letter-spacing);
+}
+
+:where([data-viewport='desktop']) .columns.columns-split p,
+:where([data-viewport='desktop']) .columns.columns-split li {
+    font-size: var(--type-body-b3-font-size);
+    line-height: var(--type-body-b3-line-height);
+}
+
+:where([data-viewport='desktop']) .section.columns-container:has(.columns.dropdown-cta) .default-content-wrapper :is(h1, h2, h3, h4, h5, h6) {
+    font-size: var(--type-display-size);
+    line-height: var(--type-display-line);
+    letter-spacing: var(--type-display-ls);
+}
+
+:where([data-viewport='desktop']) .section.columns-container:has(.columns.dropdown-cta) .default-content-wrapper p {
+    font-size: var(--type-body-b2-font-size);
+    line-height: var(--type-body-b2-line-height);
+}
+
+:where([data-viewport='desktop']) .columns.dropdown-cta .columns-dropdown .dropdown-label {
+    font-size: var(--type-headline-h1-font-size);
+    line-height: var(--type-headline-h1-line-height);
+}

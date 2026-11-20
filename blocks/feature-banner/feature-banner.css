@@ -231,3 +231,32 @@ main:has(.hero-loan.product) .feature-banner .feature-banner-content a.button {
     a.button {
     padding: 14px 16px;
 }
+
+/*
+ * desktop (1680px and up, also the 1920 / 2560 designs): Headline/H7 heading, Body/B3 text and
+ * a Button/BT-3 pill (Figma 1680 / 1920 frames); the layout is unchanged
+ */
+:where([data-viewport='desktop']) .feature-banner .feature-banner-content h2,
+:where([data-viewport='desktop']) .feature-banner .feature-banner-content h3 {
+    font-size: var(--type-headline-h7-font-size);
+    line-height: var(--type-headline-h7-line-height);
+    letter-spacing: var(--type-headline-h7-letter-spacing);
+}
+
+:where([data-viewport='desktop']) .feature-banner .feature-banner-content p {
+    font-size: var(--type-body-b3-font-size);
+    line-height: var(--type-body-b3-line-height);
+}
+
+:where([data-viewport='desktop']) .feature-banner .feature-banner-content a.button {
+    font-size: var(--type-button-bt-3-font-size);
+    line-height: var(--type-button-bt-3-line-height);
+}
+
+:where([data-viewport='desktop'])
+    main:has(.hero-loan.product)
+    .feature-banner
+    .feature-banner-content
+    a.button {
+    padding: 14px 26px;
+}

@@ -283,3 +283,30 @@
     padding-left:0;
     padding-right:0;
 }
+
+/*
+ * desktop (1680px and up, also the 1920 / 2560 designs): the type follows the global tokens
+ * (DF-1 title, BT-3 CTA, H2 disclaimer); CTAs stay 56px tall with the larger text and the
+ * half cards use their full text width (Figma 1680 / 1920 frames)
+ */
+:where([data-viewport='desktop']) .offers .offers-content a.button {
+    padding-block: 13px;
+}
+
+:where([data-viewport='desktop'])
+    .offers
+    .offers-short
+    .offers-content
+    .offers-buttons
+    a.button {
+    padding: 13px 26px;
+}
+
+:where([data-viewport='desktop']) .offers .offers-short .offers-content h2 {
+    letter-spacing: var(--type-display-ls);
+}
+
+:where([data-viewport='desktop']) .offers .offers-half .offers-content {
+    width: 100%;
+    max-width: none;
+}
