@@ -228,12 +228,6 @@ main > .section.branch-locator-container {
   margin-top: 20px;
 }
 
-:where(.desktop-view) .branch-locator .branch-locator-select .dropdown-label {
-  font-size: 14px;
-  line-height: 18px;
-  letter-spacing: 0;
-}
-
 :where(.desktop-view) .branch-locator .branch-locator-card {
   padding: 24px;
   gap: 12px;

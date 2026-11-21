@@ -578,13 +578,6 @@
   letter-spacing: var(--type-headline-h7-letter-spacing);
 }
 
-:where(.desktop-view) .lead-form .lead-form-otp-title h2 {
-  font-size: var(--type-display-medium-df-1-font-size);
-  font-weight: var(--type-display-medium-df-1-font-weight);
-  line-height: var(--type-display-medium-df-1-line-height);
-  letter-spacing: var(--type-display-medium-df-1-letter-spacing);
-}
-
 .lead-form .lead-form-otp-title h2:focus {
   outline: none;
 }
