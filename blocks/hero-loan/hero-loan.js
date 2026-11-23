@@ -14,6 +14,9 @@ import { analyticsName, trackFormStart, uniqueId } from '../../scripts/analytics
 // chips shown in the row; the rest are listed under "More"
 const VISIBLE_CATEGORIES = 4;
 
+// time each slide stays on screen before the carousel advances (ms)
+const AUTOPLAY_DELAY = 5000;
+
 function cellText(row) {
   return row?.textContent.trim() || '';
 }
@@ -451,11 +454,44 @@ function buildSlides(rows) {
     dot.type = 'button';
     dot.className = 'hero-loan-dot';
     dot.setAttribute('aria-label', `Show slide ${i + 1}`);
-    dot.addEventListener('click', () => show(i));
+    dot.addEventListener('click', () => {
+      show(i);
+      restart(); // eslint-disable-line no-use-before-define
+    });
     dots.append(dot);
   });
-  // no autoplay: slides change only when the visitor selects a dot
   show(0);
+
+  // autoplay: advances on its own, paused while hovered/focused, off-screen/hidden tab,
+  // and not at all for visitors who prefer reduced motion
+  let timer;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const stop = () => {
+    clearInterval(timer);
+    timer = null;
+  };
+  const start = () => {
+    if (reduceMotion || timer || document.hidden) return;
+    timer = setInterval(() => show(current + 1), AUTOPLAY_DELAY);
+  };
+  function restart() {
+    stop();
+    start();
+  }
+  let inView = true;
+  const sync = () => (inView && !document.hidden ? start() : stop());
+  const container = [slides, dots];
+  container.forEach((el) => {
+    el.addEventListener('mouseenter', stop);
+    el.addEventListener('mouseleave', sync);
+    el.addEventListener('focusin', stop);
+    el.addEventListener('focusout', sync);
+  });
+  document.addEventListener('visibilitychange', sync);
+  new IntersectionObserver(([entry]) => {
+    inView = entry.isIntersecting;
+    sync();
+  }).observe(slides);
 
   slides.dots = dots;
   return slides;
