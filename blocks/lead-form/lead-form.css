@@ -106,12 +106,12 @@
 
 /* an invalid field stays red while focused (no blue / dark focus ring) */
 .lead-form .lead-form-input.is-invalid:focus-within {
-  outline: 0px solid #ff3938;
+  outline: 0 solid #ff3938;
   outline-offset: 1px;
 }
 
 .lead-form .dropdown.is-invalid .dropdown-field:focus-visible {
-  outline: 0px solid #ff3938;
+  outline: 0 solid #ff3938;
   outline-offset: 1px;
 }
 
