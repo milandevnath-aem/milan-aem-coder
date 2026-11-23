@@ -32,6 +32,8 @@ module.exports = {
       'hero-loan': 5,
       // EMI calculator loan type: title, amount, rate, tenure, image
       'emi-loan-type': 5,
+      // feature banner item: image, mobile image, text, style, tablet image
+      'feature-banner-item': 5,
       // link list: classes, side, intro, note, read all label, read less label
       'link-list': 6,
     }],
