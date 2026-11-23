@@ -245,10 +245,6 @@ main:has(.hero-loan.product) .feature-banner .feature-banner-content a.button {
     padding: 14px 16px;
 }
 
-:where(.desktop-view) .feature-banner .feature-banner-content h6 {
-    margin: 44px 0 0;
-}
-
 /*
  * desktop (1680px and up, also the 1920 / 2560 designs): Headline/H7 heading, Body/B3 text and
  * a Button/BT-3 pill (Figma 1680 / 1920 frames); the layout is unchanged
