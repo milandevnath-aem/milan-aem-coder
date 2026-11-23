@@ -206,3 +206,14 @@
 :where(.desktop-view) .product-tabs a.product-tabs-card-link:hover {
   transform: translateY(-2px);
 }
+
+/*
+ * desktop (1680px and up): the tabs step up to Body/B2 20/28 through the global tokens, the
+ * product cards keep their laptop type (Figma 1680 / 1920 frames)
+ */
+:where([data-viewport='desktop']) .product-tabs .product-tabs-cards {
+  --type-b2-size: 16px;
+  --type-b2-line: 24px;
+  --type-b1-size: 14px;
+  --type-b1-line: 18px;
+}

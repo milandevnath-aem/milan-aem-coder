@@ -5,7 +5,7 @@ import {
   CAPTCHA_LENGTH, createLeadSession, errorMessage as apiErrorMessage, generateCaptcha,
 } from './lead-api.js';
 import { CITY_COLUMN, CITY_LISTS, MESSAGES } from './lead-api-config.js';
-import { buildLead, productFor } from './lead-payload.js';
+import { buildLead, contactOf, productFor } from './lead-payload.js';
 import {
   createOtpStep, createSuccessStep, setLoading, spinner,
 } from './lead-form-otp.js';
@@ -66,6 +66,18 @@ function loadCities(category) {
     if (!names.length) delete citySheets[url]; // tried again next time
     return names;
   });
+}
+
+/** "NEW DELHI" -> "New Delhi" (names already in mixed case are left as written) */
+function cityLabel(name) {
+  const text = String(name || '').trim();
+  if (text !== text.toUpperCase()) return text;
+  return text.toLowerCase().replace(/(^|[\s(/-])([a-z])/g, (m, sep, c) => sep + c.toUpperCase());
+}
+
+/** City options show the city only: first letter capital, no state / description */
+function cityOption({ value, label }) {
+  return { value, label: cityLabel(label) };
 }
 
 let errorCount = 0;
@@ -454,7 +466,9 @@ export default function decorate(block) {
     if (kind === 'text-half' || halfCell?.textContent.trim() === 'true') item.classList.add('is-half');
     let field;
     if (kind === 'select' || kind === 'search') {
-      const { options, value } = parseOptions(optionsText);
+      const parsed = parseOptions(optionsText);
+      const { value } = parsed;
+      const options = isCity ? parsed.options.map(cityOption) : parsed.options;
       field = createDropdown({
         label,
         name: slug(label),
@@ -709,6 +723,8 @@ export default function decorate(block) {
     try {
       session = createLeadSession({
         mobile,
+        // sent with the first OTP request only (otp-generate)
+        ...contactOf(form),
         product: productFor(category),
         lead: buildLead(form, category),
         loanCategory: category,
@@ -785,7 +801,27 @@ export default function decorate(block) {
     pushEvent('lead_form_submit', tracked);
 
     block.querySelector('.lead-form-otp')?.remove();
-    const otp = createOtpStep({
+    let otp;
+    /**
+     * Back to the form, values kept: a new OTP needs a new captcha.
+     * @param {string} [message] why (CAPTCHA_REQUIRED), shown at the captcha
+     */
+    const backToForm = (message) => {
+      session.cancel();
+      otp.remove();
+      showStep(main);
+      nameDialog(intro.querySelector('h1, h2')?.id);
+      if (captcha) {
+        captcha.load();
+        // after load(), which clears the captcha's error
+        if (message) setState(captchaCheck, true, message);
+        captcha.input.focus();
+      } else {
+        if (message) showSubmitError(message);
+        submit.focus();
+      }
+    };
+    otp = createOtpStep({
       mobile,
       sendOtp: session.sendOtp,
       // a category without an API goes on to success whatever the answer (an empty lead)
@@ -801,23 +837,9 @@ export default function decorate(block) {
         }
         : session.verifyOtp,
       announce,
-      // back to the form, values kept: a new OTP needs a new captcha
-      // `message`: why the visitor is sent back (e.g. captcha expired on resend), shown under
-      // the captcha (load() clears the field synchronously, so the error is set after it)
-      onBack: (message) => {
-        session.cancel();
-        otp.remove();
-        showStep(main);
-        nameDialog(intro.querySelector('h1, h2')?.id);
-        if (captcha) {
-          captcha.load();
-          if (typeof message === 'string' && message) captcha.onError(message);
-          captcha.input.focus();
-        } else {
-          if (typeof message === 'string' && message) showSubmitError(message);
-          submit.focus();
-        }
-      },
+      onBack: () => backToForm(),
+      // the session or the OTP's token expired: a new captcha, then Send OTP again
+      onCaptchaRequired: (message) => backToForm(message),
       // the lead is created by verifyOtp
       onVerified: finish,
     });
@@ -855,7 +877,7 @@ export default function decorate(block) {
     loadCities(category).then((names) => {
       if (request !== cityRequest) return;
       const options = names.length
-        ? names.map((n) => ({ value: n, label: n }))
+        ? names.map((n) => cityOption({ value: n, label: n }))
         : cityField.authoredOptions;
       cityField.setOptions(options);
       cityField.optionValues = options.map((option) => option.value);

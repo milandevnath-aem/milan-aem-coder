@@ -462,3 +462,82 @@ footer .footer-breadcrumb li + li::before {
 footer .footer-card .footer-breadcrumb li a:any-link {
   color: var(--muted-color);
 }
+
+/*
+ * desktop (1680px and up, also the 1920 / 2560 designs): the white card is 1440px wide and
+ * centered on the red band with an 80px gutter, and the type steps up to the DLS desktop values
+ */
+:where([data-viewport='desktop']) footer .footer-brand p {
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+}
+
+:where([data-viewport='desktop']) footer .footer-card {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--grid-max-width);
+  margin-inline: auto;
+  padding: 80px 80px 40px;
+}
+
+:where([data-viewport='desktop']) footer .footer-links .footer-heading {
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
+}
+
+/* links: Headline/H2 and Link Button/L-1, both 16/24 */
+:where([data-viewport='desktop']) footer .footer-other li,
+:where([data-viewport='desktop']) footer .footer-bottom li,
+:where([data-viewport='desktop']) footer .footer-links li li {
+  font-size: var(--type-headline-h2-font-size);
+  line-height: var(--type-headline-h2-line-height);
+}
+
+:where([data-viewport='desktop']) footer .footer-other a:any-link {
+  letter-spacing: 0;
+}
+
+/* "Kotak Group Companies": Body/B2 in a 36px chip */
+:where([data-viewport='desktop']) footer .footer-dropdown summary {
+  gap: 2px;
+  padding: 3px 12px;
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+}
+
+:where([data-viewport='desktop']) footer .footer-dropdown summary::after {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+}
+
+/* copyright: Headline/H1 */
+:where([data-viewport='desktop']) footer .footer-bottom .default-content-wrapper > p {
+  font-size: var(--type-headline-h1-font-size);
+  line-height: var(--type-headline-h1-line-height);
+}
+
+:where([data-viewport='desktop']) footer .footer-bottom .default-content-wrapper > ul:last-child {
+  padding-top: 0;
+}
+
+/* breadcrumb: Headline/H3 with a 14px chevron */
+:where([data-viewport='desktop']) footer .footer-breadcrumb ol {
+  font-size: var(--type-headline-h3-font-size);
+  line-height: var(--type-headline-h3-line-height);
+}
+
+:where([data-viewport='desktop']) footer .footer-breadcrumb li + li::before {
+  width: 14px;
+  height: 14px;
+}
+
+/* "Kotak Group Companies" list: Body/B2 like its chip, widened so every name stays on one line */
+:where([data-viewport='desktop']) footer .footer-dropdown li a:any-link {
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+}
+
+:where([data-viewport='desktop']) footer .footer-card .footer-bottom .footer-dropdown > ul {
+  width: 380px;
+}

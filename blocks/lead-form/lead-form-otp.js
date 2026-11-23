@@ -7,8 +7,8 @@ let uid = 0;
 
 const iconImg = (name, size = 24, ext = 'svg') => `<img src="${window.hlx.codeBasePath}/icons/${name}.${ext}" alt="" width="${size}" height="${size}">`;
 
-/** "******0679" */
-export const maskMobile = (mobile) => `******${String(mobile).slice(-4)}`;
+/** "+91 ******0679" */
+export const maskMobile = (mobile) => `+91 ******${String(mobile).slice(-4)}`;
 
 /**
  * Loading spinner (decorative; the state is announced separately).
@@ -49,12 +49,15 @@ export function setLoading(button, loading, busyLabel = 'Please wait') {
  * @param {Function} options.sendOtp sends a new OTP (session.sendOtp, see lead-api.js)
  * @param {Function} options.verifyOtp checks the OTP, resolves with the lead (session.verifyOtp)
  * @param {Function} options.onBack back to the form
+ * @param {Function} [options.onCaptchaRequired] back to the form for a new captcha, called
+ *   with the message to show there (CAPTCHA_REQUIRED: the session or token expired);
+ *   onBack when not given
  * @param {Function} options.onVerified called with the verifyOtp result once the OTP is accepted
  * @param {Function} options.announce polite screen reader message
  * @returns {HTMLDivElement & { focusFirst: Function, titleId: string, stop: Function }}
  */
 export function createOtpStep({
-  mobile, sendOtp, verifyOtp, onBack, onVerified, announce,
+  mobile, sendOtp, verifyOtp, onBack, onCaptchaRequired = onBack, onVerified, announce,
 }) {
   uid += 1;
   const id = `lead-form-otp-${uid}`;
@@ -66,7 +69,7 @@ export function createOtpStep({
       <div class="lead-form-otp-top">
         <div class="lead-form-otp-title">
           <h2 id="${id}-title" tabindex="-1">Enter OTP</h2>
-          <p id="${id}-desc"><span class="lead-form-otp-intro">Please enter the OTP that was sent to your mobile number</span> <span class="lead-form-otp-number"></span></p>
+          <p id="${id}-desc"><span class="lead-form-otp-intro">Enter the ${OTP_LENGTH}-digit code we texted to</span> <span class="lead-form-otp-number"></span></p>
         </div>
         <div class="lead-form-otp-group">
           <div class="lead-form-otp-boxes" role="group" aria-labelledby="${id}-title" aria-describedby="${id}-desc"></div>
@@ -99,6 +102,8 @@ export function createOtpStep({
 
   const code = () => inputs.map((input) => input.value).join('');
   let busy = false;
+  // OTP_ATTEMPTS_EXCEEDED: this OTP is blocked by the backend until a resend
+  let blocked = false;
   // when the current OTP was sent, to tell an expired OTP from a wrong one
   let sentAt = Date.now();
 
@@ -117,7 +122,7 @@ export function createOtpStep({
     });
   };
   const refresh = () => {
-    validate.setAttribute('aria-disabled', code().length < OTP_LENGTH || busy);
+    validate.setAttribute('aria-disabled', code().length < OTP_LENGTH || busy || blocked);
     inputs.forEach((input) => input.classList.toggle('is-filled', Boolean(input.value)));
   };
 
@@ -137,14 +142,15 @@ export function createOtpStep({
       const digits = input.value.replace(/\D/g, '');
       input.value = '';
       if (digits) fill(i, digits);
-      setError('');
+      // a blocked OTP keeps its message until a resend
+      if (!blocked) setError('');
       refresh();
     });
     input.addEventListener('paste', (e) => {
       e.preventDefault();
       const digits = (e.clipboardData?.getData('text') || '').replace(/\D/g, '');
       if (digits) fill(i, digits);
-      setError('');
+      if (!blocked) setError('');
       refresh();
     });
     input.addEventListener('keydown', (e) => {
@@ -188,6 +194,35 @@ export function createOtpStep({
       }
     }, 1000);
   };
+  const clearDigits = () => {
+    inputs.forEach((input) => { input.value = ''; });
+    refresh();
+  };
+  /**
+   * What the OTP step does about a failed request beyond showing its message.
+   * @returns {boolean} true when the step is left (back to the captcha)
+   */
+  const handleCode = (failure, message) => {
+    const failureCode = typeof failure?.code === 'string' ? failure.code : '';
+    if (failureCode === 'CAPTCHA_REQUIRED') {
+      // the session (5 minutes) or the token expired: start again from the captcha
+      clearInterval(timer);
+      onCaptchaRequired(message);
+      return true;
+    }
+    if (failureCode === 'RESEND_TOO_SOON') startTimer();
+    if (failureCode === 'RESEND_LIMIT') {
+      clearInterval(timer);
+      resend.closest('.lead-form-resend').hidden = true;
+    }
+    if (failureCode === 'OTP_ATTEMPTS_EXCEEDED') {
+      blocked = true;
+      clearDigits();
+    }
+    if (failureCode === 'INVALID_OTP') clearDigits();
+    return false;
+  };
+
   resend.addEventListener('click', async () => {
     if (seconds > 0 || busy) return;
     busy = true;
@@ -203,14 +238,18 @@ export function createOtpStep({
         return;
       }
       const message = errorMessage(e, 'resend');
+      busy = false;
+      if (handleCode(e, message)) return;
       if (message) setError(message);
-      resend.setAttribute('aria-disabled', 'false');
+      // RESEND_TOO_SOON restarted the countdown, which keeps the button off
+      if (seconds <= 0) resend.setAttribute('aria-disabled', 'false');
       return;
     } finally {
       busy = false;
     }
+    blocked = false;
     sentAt = Date.now();
-    view.querySelector('.lead-form-otp-intro').textContent = 'Please enter the OTP which was re-sent to your mobile number';
+    view.querySelector('.lead-form-otp-intro').textContent = `Enter the ${OTP_LENGTH}-digit code we re-sent to`;
     inputs.forEach((input) => { input.value = ''; });
     setError('');
     refresh();
@@ -220,7 +259,7 @@ export function createOtpStep({
   });
 
   validate.addEventListener('click', async () => {
-    if (busy) return;
+    if (busy || blocked) return;
     if (code().length < OTP_LENGTH) {
       inputs.find((input) => !input.value)?.focus();
       return;
@@ -231,10 +270,11 @@ export function createOtpStep({
     refresh();
     let result;
     let message = '';
+    let failure;
     try {
       result = await verifyOtp(code());
     } catch (e) {
-      const failure = e instanceof Error ? e : new Error(String(e));
+      failure = e instanceof Error ? e : new Error(String(e));
       failure.expired = Date.now() - sentAt > OTP_VALID_MS;
       message = errorMessage(failure, 'verify');
     }
@@ -248,9 +288,11 @@ export function createOtpStep({
       validate.setAttribute('aria-disabled', 'true');
       busy = true;
       onVerified(result);
-    } else if (message) {
+    } else if (failure && !handleCode(failure, message) && message) {
       setError(message);
-      inputs[0].focus();
+      // blocked: the way on is Resend OTP (focused once its countdown allows it)
+      if (blocked && seconds <= 0) resend.focus();
+      else inputs[0].focus();
     }
   });
 

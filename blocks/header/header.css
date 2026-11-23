@@ -283,7 +283,7 @@ header .nav-popover-menu {
   margin: 0;
   border: 1px solid var(--surface-color);
   border-radius: 12px;
-  padding: 4px;
+  padding-block: 4px !important;
   background-color: var(--background-color);
   box-shadow: 0 1px 2px rgb(18 18 18 / 4%), 0 8px 24px rgb(18 18 18 / 8%);
   list-style: none;
@@ -1265,4 +1265,43 @@ html.a11y-line body * {
 
 :where([data-viewport='tablet-landscape']) header .nav-topbar .nav-utility li:nth-child(2) {
   margin-right: 0;
+}
+
+/*
+ * desktop (1680px and up, also the 1920 / 2560 designs): the layout stays at 1440px and only
+ * the type steps up to the DLS desktop values; the mega menu panel widens to 1146px.
+ */
+:where([data-viewport='desktop']) header .nav-topbar .nav-announcement {
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
+}
+
+:where([data-viewport='desktop']) header .nav-topbar .nav-popover-toggle {
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
+}
+
+:where([data-viewport='desktop']) header .nav-menu-toggle {
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+}
+
+:where([data-viewport='desktop']) header nav .nav-tools a.button {
+  font-size: var(--type-button-bt-2-font-size);
+  line-height: var(--type-button-bt-2-line-height);
+}
+
+:where([data-viewport='desktop']) header .nav-menu-item.nav-mega .nav-panel {
+  width: 1146px;
+}
+
+/* language menu steps up with its toggle */
+:where([data-viewport='desktop']) header .nav-popover-menu a:any-link {
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
+}
+
+:where([data-viewport='desktop']) header .nav-popover-menu small {
+  font-size: var(--type-headline-h1-font-size);
+  line-height: var(--type-headline-h1-line-height);
 }

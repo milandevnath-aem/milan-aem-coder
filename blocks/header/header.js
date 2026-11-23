@@ -219,7 +219,7 @@ function buildAccordion(menus) {
     toggle.className = 'nav-accordion-toggle';
     toggle.setAttribute('aria-expanded', 'false');
     toggle.setAttribute('aria-controls', `nav-accordion-${uid}`);
-    toggle.append(row.label, icon('chevron-down', 20));
+    toggle.append(row.label, icon('megamenu-chevron-down', 17));
     const panel = linkList(row.items);
     panel.id = `nav-accordion-${uid}`;
     panel.hidden = true;

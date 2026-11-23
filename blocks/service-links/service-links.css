@@ -158,3 +158,13 @@
 :where(.desktop-view) .service-links .service-links-tall .service-links-tile {
   min-height: 220px;
 }
+
+/*
+ * desktop (1680px and up): the two large tiles (image and highlight) step up to Body/B4 28/36;
+ * the link rows keep 24/32 (Figma 1680 / 1920 frames)
+ */
+:where([data-viewport='desktop']) .service-links .service-links-has-image .service-links-title,
+:where([data-viewport='desktop']) .service-links .service-links-highlight .service-links-title {
+  font-size: var(--type-body-b4-font-size);
+  line-height: var(--type-body-b4-line-height);
+}

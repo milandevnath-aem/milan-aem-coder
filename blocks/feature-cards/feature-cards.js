@@ -56,7 +56,16 @@ function buildCard(row) {
     while (textCell.firstChild) body.append(textCell.firstChild);
     // info cards: a plain paragraph followed by a bold one is a label/value pair
     body.querySelectorAll('p').forEach((p) => {
-      if (p.querySelector('strong') && p.textContent.trim() === p.querySelector('strong').textContent.trim()) {
+      if (p.textContent.trim() === p.querySelector('strong, a.button')?.textContent.trim()) {
+        // undo the global button decoration of authored links (e.g. phone numbers)
+        const btn = p.querySelector('a.button');
+        if (btn) {
+          const strong = document.createElement('strong');
+          btn.removeAttribute('class');
+          btn.replaceWith(strong);
+          strong.append(btn);
+          p.classList.remove('button-wrapper');
+        }
         p.classList.add('feature-cards-value');
         linkPhone(p);
       }

@@ -80,3 +80,16 @@
     line-height: 20px;
   }
 }
+
+/*
+ * desktop (1680px and up, also the 1920 / 2560 designs): the type steps up one size to the DLS
+ * desktop values, as in the Figma 1680 / 1920 reference frames; the layout is unchanged
+ */
+:where([data-viewport='desktop']) .partner-list .partner-list-title {
+  font-size: var(--type-display-size);
+}
+
+:where([data-viewport='desktop']) .partner-list .partner-list-description p {
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
+}
