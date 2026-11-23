@@ -1,6 +1,16 @@
 import { moveInstrumentation } from '../../scripts/scripts.js';
 import { createPicture } from '../../scripts/images.js';
-import { MEDIA, isDesktop } from '../../scripts/viewport.js';
+import { BREAKPOINTS, MEDIA, isDesktop } from '../../scripts/viewport.js';
+
+const TABLET_MEDIA = `(min-width: ${BREAKPOINTS.tabletPortrait}px) and (max-width: ${BREAKPOINTS.desktop}px)`;
+
+function prependImageSources(picture, img, media, width) {
+  const responsive = createPicture(img.src, '', false, [{ width }]);
+  const sources = [...responsive.querySelectorAll('source')];
+  sources.forEach((source) => { source.media = media; });
+  picture.prepend(...sources);
+  moveInstrumentation(img, sources[0]);
+}
 
 function styleTokens(cell) {
   if (!cell) return [];
@@ -81,7 +91,8 @@ function revealText(item) {
 
 /**
  * Full-width image + text rows.
- * Each row: image, optional mobile image, text, style (text side, text colour, image mode).
+ * Each row: image, mobile image, text, style, optional tablet image.
+ * Empty tablet image cells keep the existing fallback.
  * @param {Element} block The block element
  */
 export default function decorate(block) {
@@ -90,7 +101,7 @@ export default function decorate(block) {
     || Boolean(block.closest('.section.animate-text'));
   const list = document.createElement('ul');
   [...block.children].forEach((row, i) => {
-    const [imageCell, mobileCell, textCell, styleCell] = row.children;
+    const [imageCell, mobileCell, textCell, styleCell, tabletCell] = row.children;
     const item = document.createElement('li');
     item.className = 'feature-banner-item';
     moveInstrumentation(row, item);
@@ -109,13 +120,12 @@ export default function decorate(block) {
       ]);
       const mobileImg = mobileCell?.querySelector('img');
       if (mobileImg) {
-        const mobile = createPicture(mobileImg.src, '', false, [{ width: '900' }]);
-        mobile.querySelectorAll('source').forEach((source) => {
-          source.media = MEDIA.mobile;
-          picture.prepend(source);
-        });
-        moveInstrumentation(mobileImg, picture.querySelector('source'));
+        prependImageSources(picture, mobileImg, MEDIA.mobile, '900');
         item.classList.add('has-mobile-image');
+      }
+      const tabletImg = tabletCell?.querySelector('img');
+      if (tabletImg) {
+        prependImageSources(picture, tabletImg, TABLET_MEDIA, '1600');
       }
       moveInstrumentation(img, picture.querySelector('img'));
       picture.classList.add('feature-banner-image');

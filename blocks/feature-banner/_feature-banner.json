@@ -78,7 +78,7 @@
           "valueType": "string",
           "name": "mobileImage",
           "label": "Mobile image",
-          "description": "Optional portrait crop used below 900px.",
+          "description": "Optional portrait crop used below 1024px. A selected tablet image takes priority from 600px to 1024px.",
           "multi": false
         },
         {
@@ -126,6 +126,19 @@
             { "name": "Full-width background", "value": "background" },
             { "name": "Beside the text", "value": "side" }
           ]
+        },
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "tabletImage",
+          "label": "Tablet image",
+          "description": "Optional crop used from 600px to 1024px. Leave empty to keep the existing mobile/desktop image behaviour.",
+          "multi": false
+        },
+        {
+          "name": "tabletImageMimeType",
+          "component": "hidden",
+          "valueType": "image/png"
         }
       ]
     }

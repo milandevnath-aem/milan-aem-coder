@@ -68,6 +68,18 @@ function loadCities(category) {
   });
 }
 
+/** "NEW DELHI" -> "New Delhi" (names already in mixed case are left as written) */
+function cityLabel(name) {
+  const text = String(name || '').trim();
+  if (text !== text.toUpperCase()) return text;
+  return text.toLowerCase().replace(/(^|[\s(/-])([a-z])/g, (m, sep, c) => sep + c.toUpperCase());
+}
+
+/** City options show the city only: first letter capital, no state / description */
+function cityOption({ value, label }) {
+  return { value, label: cityLabel(label) };
+}
+
 let errorCount = 0;
 
 /**
@@ -454,7 +466,9 @@ export default function decorate(block) {
     if (kind === 'text-half' || halfCell?.textContent.trim() === 'true') item.classList.add('is-half');
     let field;
     if (kind === 'select' || kind === 'search') {
-      const { options, value } = parseOptions(optionsText);
+      const parsed = parseOptions(optionsText);
+      const { value } = parsed;
+      const options = isCity ? parsed.options.map(cityOption) : parsed.options;
       field = createDropdown({
         label,
         name: slug(label),
@@ -863,7 +877,7 @@ export default function decorate(block) {
     loadCities(category).then((names) => {
       if (request !== cityRequest) return;
       const options = names.length
-        ? names.map((n) => ({ value: n, label: n }))
+        ? names.map((n) => cityOption({ value: n, label: n }))
         : cityField.authoredOptions;
       cityField.setOptions(options);
       cityField.optionValues = options.map((option) => option.value);
