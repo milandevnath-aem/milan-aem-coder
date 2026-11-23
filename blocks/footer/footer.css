@@ -308,8 +308,8 @@ footer .footer-bottom .icon {
 }
 
 :where(.desktop-view) footer .footer-brand img {
-  width: 223px;
-  height: 46.873px;
+  width: auto;
+  height: 37px;
 }
 
 :where(.desktop-view) footer .footer-brand p {
