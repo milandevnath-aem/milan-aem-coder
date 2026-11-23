@@ -402,11 +402,12 @@ dialog.modal.modal-details .default-content-wrapper p.button-wrapper:last-child 
   margin: auto calc(-1 * var(--modal-padding)) 0;
 }
 
-/* desktop: 580px card, 32px from the top, 48px free below */
+/* desktop: 580px card, 32px from the top, 48px free below. Figma: 540x574 content inside
+   20px padding = 614px card, plus the 40px close-button strip above it */
 :where(.desktop-view) dialog.modal.modal-details {
   inset: 32px 0 auto;
   width: 580px;
-  height: min(calc(100dvh - 80px), 720px);
+  height: min(calc(100dvh - 80px), 654px);
   max-height: none;
   margin: 0 auto;
   padding-top: 40px;

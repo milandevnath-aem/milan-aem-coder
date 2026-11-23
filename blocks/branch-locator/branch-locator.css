@@ -229,13 +229,17 @@ main > .section.branch-locator-container {
 }
 
 :where(.desktop-view) .branch-locator .branch-locator-card {
-  padding: 24px;
+  box-sizing: border-box;
+  justify-content: space-between;
   gap: 12px;
+  min-height: 345px; /* Figma: 583 x 345, padding included */
+  padding: 24px;
 }
 
+/* Figma: details card is 583px wide, the map takes the rest */
 :where(.desktop-view) .branch-locator .branch-locator-main {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 583px);
   align-items: stretch;
   gap: 12px;
 }
@@ -249,7 +253,9 @@ main > .section.branch-locator-container {
 :where(.desktop-view) .branch-locator .branch-locator-map {
   flex: 1;
   height: auto;
-  min-height: 268px;
+
+  /* the details card sets the row height (Figma 345px); the map fills what is left */
+  min-height: 0;
 }
 
 :where(.desktop-view) .branch-locator .branch-locator-row {
@@ -373,8 +379,9 @@ dialog.modal .branch-locator-permission h2 {
 }
 
 :where([data-viewport='desktop']) .branch-locator .branch-locator-row dt {
-  font-size: var(--type-headline-h1-font-size);
-  line-height: var(--type-headline-h1-line-height);
+  font-size: var(--type-body-b1-font-size);
+  font-weight: var(--type-body-b1-font-weight);
+  line-height: var(--type-body-b1-line-height);
 }
 
 /* city list follows the larger field; the location prompt steps up one size */
