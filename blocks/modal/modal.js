@@ -90,12 +90,25 @@ export async function createModal(contentNodes, { className = '', label = '' } =
   return {
     dialog,
     showModal: () => {
+      // lock the page first: on iPhone / iPad the sticky header shifts when the scroll is
+      // locked, so a measurement taken before that leaves a gap under the header
+      document.body.classList.add('modal-open');
       updateTop();
       dialog.showModal();
-      document.body.classList.add('modal-open');
       content.scrollTop = 0;
+      // measure again once iOS has settled (toolbar, scroll lock, sticky header)
+      requestAnimationFrame(updateTop);
+      const settle = setTimeout(updateTop, 350);
+      const vv = window.visualViewport;
       window.addEventListener('resize', updateTop);
-      dialog.addEventListener('close', () => window.removeEventListener('resize', updateTop), { once: true });
+      vv?.addEventListener('resize', updateTop);
+      vv?.addEventListener('scroll', updateTop);
+      dialog.addEventListener('close', () => {
+        clearTimeout(settle);
+        window.removeEventListener('resize', updateTop);
+        vv?.removeEventListener('resize', updateTop);
+        vv?.removeEventListener('scroll', updateTop);
+      }, { once: true });
     },
     close: () => animateClose(dialog),
   };
