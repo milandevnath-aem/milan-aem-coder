@@ -124,6 +124,14 @@
     color: var(--text-color);
 }
 
+.feature-banner .feature-banner-content h6{
+    font-size: var(--type-headline-h2-font-size);
+    line-height: var(--type-headline-h2-line-height);
+    font-weight: var(--type-headline-h2-font-weight);
+    letter-spacing: var(--type-headline-h2-letter-spacing);
+    margin: var(--spacing-2xl) 0 0;
+}
+
 /* scroll-linked text reveal (section style "animate-text"): each word blends from the
    start colour to its final colour as --reveal goes from 0 to 1 */
 .feature-banner
@@ -222,6 +230,10 @@
 main:has(.hero-loan.product) .feature-banner .feature-banner-content a.button {
     padding: 12px;
     min-width: 124px;
+}
+
+:where(.desktop-view) .feature-banner .feature-banner-content h6{
+    margin: 44px 0 0;
 }
 
 :where(.desktop-view)
