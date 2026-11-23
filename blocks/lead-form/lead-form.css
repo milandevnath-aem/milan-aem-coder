@@ -104,6 +104,17 @@
   box-shadow: inset 0 0 0 1px #ff3938;
 }
 
+/* an invalid field stays red while focused (no blue / dark focus ring) */
+.lead-form .lead-form-input.is-invalid:focus-within {
+  outline: 0px solid #ff3938;
+  outline-offset: 1px;
+}
+
+.lead-form .dropdown.is-invalid .dropdown-field:focus-visible {
+  outline: 0px solid #ff3938;
+  outline-offset: 1px;
+}
+
 /* raised label 4px above the value */
 .lead-form .lead-form-control {
   position: relative;
