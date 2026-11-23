@@ -33,54 +33,54 @@
   --heading-font-family: manrope, manrope-fallback, sans-serif;
 
   /* body sizes */
-  --body-font-size-m: 16px;
-  --body-font-size-s: 14px;
-  --body-font-size-xs: 12px;
+  --body-font-size-m: 1rem;
+  --body-font-size-s: 0.875rem;
+  --body-font-size-xs: 0.75rem;
 
   /* heading sizes */
-  --heading-font-size-xxl: 32px;
-  --heading-font-size-xl: 28px;
-  --heading-font-size-l: 24px;
-  --heading-font-size-m: 20px;
-  --heading-font-size-s: 18px;
-  --heading-font-size-xs: 16px;
+  --heading-font-size-xxl: 2rem;
+  --heading-font-size-xl: 1.75rem;
+  --heading-font-size-l: 1.5rem;
+  --heading-font-size-m: 1.25rem;
+  --heading-font-size-s: 1.125rem;
+  --heading-font-size-xs: 1rem;
 
   /*
    * type styles from the design system ("Web Breakpoint/…" in Figma): mobile values here,
    * desktop view values below. Each style is size / line height / letter spacing (+ weight).
    */
-  --type-display-size: 32px; /* Display/Medium/DF-1 */
-  --type-display-line: 40px;
-  --type-display-ls: -0.8px;
-  --type-b1-size: 12px; /* Body/B1 */
-  --type-b1-line: 16px;
-  --type-b1-ls: 0.24px;
-  --type-b2-size: 14px; /* Body/B2 */
-  --type-b2-line: 20px;
+  --type-display-size: 2rem; /* Display/Medium/DF-1 */
+  --type-display-line: 2.5rem;
+  --type-display-ls: -0.05rem;
+  --type-b1-size: 0.75rem; /* Body/B1 */
+  --type-b1-line: 1rem;
+  --type-b1-ls: 0.015rem;
+  --type-b2-size: 0.875rem; /* Body/B2 */
+  --type-b2-line: 1.25rem;
   --type-b2-ls: 0;
-  --type-b3-size: 16px; /* Body/B3 */
-  --type-b3-line: 24px;
-  --type-h2-size: 12px; /* Headline/H2, semibold */
-  --type-h2-line: 16px;
-  --type-eyebrow-size: 12px; /* Section Title/S, semibold uppercase */
-  --type-eyebrow-line: 16px;
-  --type-eyebrow-ls: 1.98px;
-  --type-a1-size: 14px; /* Amount/A1, bold */
-  --type-a1-line: 14px;
-  --type-a1-ls: -0.42px;
-  --type-a5-size: 28px; /* Amount/A5, bold */
-  --type-a5-line: 28px;
-  --type-a5-ls: -1.4px;
-  --type-s1-size: 14px; /* Symbol/S1 (currency in value pills), semibold */
-  --type-s1-line: 18px;
-  --type-s3-size: 20px; /* currency next to A5, semibold */
-  --type-s3-line: 28px;
-  --type-bt1-size: 12px; /* Button/BT-1, semibold */
-  --type-bt1-line: 16px;
-  --type-bt2-size: 14px; /* Button/BT-2 (pill CTAs), semibold */
-  --type-bt2-line: 20px;
-  --type-h4-size: 16px; /* Headline/H4 (card titles) */
-  --type-h4-line: 24px;
+  --type-b3-size: 1rem; /* Body/B3 */
+  --type-b3-line: 1.5rem;
+  --type-h2-size: 0.75rem; /* Headline/H2, semibold */
+  --type-h2-line: 1rem;
+  --type-eyebrow-size: 0.75rem; /* Section Title/S, semibold uppercase */
+  --type-eyebrow-line: 1rem;
+  --type-eyebrow-ls: 0.1238rem;
+  --type-a1-size: 0.875rem; /* Amount/A1, bold */
+  --type-a1-line: 0.875rem;
+  --type-a1-ls: -0.0262rem;
+  --type-a5-size: 1.75rem; /* Amount/A5, bold */
+  --type-a5-line: 1.75rem;
+  --type-a5-ls: -0.0875rem;
+  --type-s1-size: 0.875rem; /* Symbol/S1 (currency in value pills), semibold */
+  --type-s1-line: 1.125rem;
+  --type-s3-size: 1.25rem; /* currency next to A5, semibold */
+  --type-s3-line: 1.75rem;
+  --type-bt1-size: 0.75rem; /* Button/BT-1, semibold */
+  --type-bt1-line: 1rem;
+  --type-bt2-size: 0.875rem; /* Button/BT-2 (pill CTAs), semibold */
+  --type-bt2-line: 1.25rem;
+  --type-h4-size: 1rem; /* Headline/H4 (card titles) */
+  --type-h4-line: 1.5rem;
   --type-h4-weight: 500;
 
   /*
@@ -88,14 +88,14 @@
    * by scripts/viewport.js. Mobile values below, tablet / laptop / desktop overrides follow.
    */
   --grid-columns: 4;
-  --grid-gutter: 12px;
-  --grid-max-width: 1440px;
+  --grid-gutter: 0.75rem;
+  --grid-max-width: 90rem;
 
   /* section margins: full bleed (FB), grid bound (GB), adaptive bound (AB) and footer */
-  --fb-margin: 4px;
-  --gb-margin: 24px;
-  --ab-margin: 8px;
-  --footer-padding: 20px;
+  --fb-margin: 0.25rem;
+  --gb-margin: 1.5rem;
+  --ab-margin: 0.5rem;
+  --footer-padding: 1.25rem;
 
   /* container width for grid bound / adaptive bound blocks and the content limit (desktop only) */
   --gb-max-width: none;
@@ -106,36 +106,36 @@
    * text by --fb-inset so it lines up with the grid
    */
   --gb-offset: var(--gb-margin);
-  --fb-inset: 24px; /* inner padding of full bleed blocks on small screens (Figma) */
-  --section-spacing: 80px;
+  --fb-inset: 1.5rem; /* inner padding of full bleed blocks on small screens (Figma) */
+  --section-spacing: 5rem;
 
   /* nav height: announcement bar + nav bar */
-  --topbar-height: 32px;
-  --nav-height: 92px;
+  --topbar-height: 2rem;
+  --nav-height: 5.75rem;
 }
 
 /* tablet portrait: 600px up to the desktop view */
 :root[data-viewport='tablet-portrait'] {
-  --grid-columns: 8px;
-  --fb-margin: 8px;
+  --grid-columns: 0.5rem;
+  --fb-margin: 0.5rem;
 }
 
 /* tablet landscape: desktop view up to 1280px */
 :root[data-viewport='tablet-landscape'] {
-  --grid-columns: 12px;
-  --fb-margin: 8px;
-  --gb-margin: 48px;
-  --footer-padding: 36px;
+  --grid-columns: 0.75rem;
+  --fb-margin: 0.5rem;
+  --gb-margin: 3rem;
+  --footer-padding: 2.25rem;
 }
 
 /* laptop: 1281px to 1679px, fluid */
 :root[data-viewport='laptop'] {
-  --grid-columns: 12px;
-  --grid-gutter: 16px;
-  --fb-margin: 12px;
-  --gb-margin: 92px;
-  --ab-margin: 12px;
-  --footer-padding: 80px;
+  --grid-columns: 0.75rem;
+  --grid-gutter: 1rem;
+  --fb-margin: 0.75rem;
+  --gb-margin: 5.75rem;
+  --ab-margin: 0.75rem;
+  --footer-padding: 5rem;
 }
 
 /*
@@ -144,11 +144,11 @@
  */
 :root[data-viewport='desktop'] {
   --grid-columns: 12;
-  --grid-gutter: 16px;
-  --fb-margin: 12px;
-  --gb-margin: 0px;
-  --ab-margin: 0px;
-  --footer-padding: 80px;
+  --grid-gutter: 1rem;
+  --fb-margin: 0.75rem;
+  --gb-margin: 0;
+  --ab-margin: 0;
+  --footer-padding: 5rem;
   --gb-max-width: var(--grid-max-width);
   --grid-limit: var(--grid-max-width);
   --gb-offset: calc((100vw - var(--grid-max-width)) / 2);
@@ -158,29 +158,29 @@
    * values as styles/variables/typography.css at >= 1680px. Section Title (eyebrow) and
    * Symbol S1 / S3 keep their laptop values.
    */
-  --type-display-size: 44px; /* Display/Medium/DF-1 */
-  --type-display-line: 52px;
-  --type-display-ls: -0.44px;
-  --type-b1-size: 16px; /* Body/B1 */
-  --type-b1-line: 24px;
-  --type-b2-size: 20px; /* Body/B2 */
-  --type-b2-line: 28px;
-  --type-b3-size: 24px; /* Body/B3 */
-  --type-b3-line: 32px;
-  --type-h2-size: 16px; /* Headline/H2 */
-  --type-h2-line: 24px;
-  --type-a1-size: 24px; /* Amount/A1 */
-  --type-a1-line: 24px;
-  --type-a1-ls: -0.96px;
-  --type-a5-size: 40px; /* Amount/A5 */
-  --type-a5-line: 40px;
-  --type-a5-ls: -2px;
-  --type-bt1-size: 16px; /* Button/BT-2 in Figma */
-  --type-bt1-line: 24px;
-  --type-bt2-size: 20px; /* Button/BT-3 in Figma (pill CTAs) */
-  --type-bt2-line: 28px;
-  --type-h4-size: 24px; /* Headline/H4 */
-  --type-h4-line: 32px;
+  --type-display-size: 2.75rem; /* Display/Medium/DF-1 */
+  --type-display-line: 3.25rem;
+  --type-display-ls: -0.0275rem;
+  --type-b1-size: 1rem; /* Body/B1 */
+  --type-b1-line: 1.5rem;
+  --type-b2-size: 1.25rem; /* Body/B2 */
+  --type-b2-line: 1.75rem;
+  --type-b3-size: 1.5rem; /* Body/B3 */
+  --type-b3-line: 2rem;
+  --type-h2-size: 1rem; /* Headline/H2 */
+  --type-h2-line: 1.5rem;
+  --type-a1-size: 1.5rem; /* Amount/A1 */
+  --type-a1-line: 1.5rem;
+  --type-a1-ls: -0.06rem;
+  --type-a5-size: 2.5rem; /* Amount/A5 */
+  --type-a5-line: 2.5rem;
+  --type-a5-ls: -0.125rem;
+  --type-bt1-size: 1rem; /* Button/BT-2 in Figma */
+  --type-bt1-line: 1.5rem;
+  --type-bt2-size: 1.25rem; /* Button/BT-3 in Figma (pill CTAs) */
+  --type-bt2-line: 1.75rem;
+  --type-h4-size: 1.5rem; /* Headline/H4 */
+  --type-h4-line: 2rem;
 }
 
 /* fallback fonts */
@@ -192,55 +192,55 @@
 
 :root:where(.desktop-view) {
   /* heading sizes */
-  --heading-font-size-xxl: 40px;
-  --heading-font-size-xl: 32px;
-  --heading-font-size-l: 24px;
-  --heading-font-size-m: 20px;
-  --heading-font-size-s: 18px;
-  --heading-font-size-xs: 16px;
+  --heading-font-size-xxl: 2.5rem;
+  --heading-font-size-xl: 2rem;
+  --heading-font-size-l: 1.5rem;
+  --heading-font-size-m: 1.25rem;
+  --heading-font-size-s: 1.125rem;
+  --heading-font-size-xs: 1rem;
 
 
   /* type styles (desktop view) */
-  --type-display-size: 40px;
-  --type-display-line: 48px;
+  --type-display-size: 2.5rem;
+  --type-display-line: 3rem;
   --type-display-ls: -1px;
-  --type-b1-size: 14px;
-  --type-b1-line: 18px;
+  --type-b1-size: 0.875rem;
+  --type-b1-line: 1.125rem;
   --type-b1-ls: 0;
-  --type-b2-size: 16px;
-  --type-b2-line: 24px;
-  --type-b3-size: 20px;
-  --type-b3-line: 28px;
-  --type-h2-size: 14px;
-  --type-h2-line: 20px;
-  --type-eyebrow-size: 16px;
-  --type-eyebrow-line: 24px;
-  --type-eyebrow-ls: 2.64px;
-  --type-a1-size: 20px;
-  --type-a1-line: 20px;
+  --type-b2-size: 1rem;
+  --type-b2-line: 1.5rem;
+  --type-b3-size: 1.25rem;
+  --type-b3-line: 1.75rem;
+  --type-h2-size: 0.875rem;
+  --type-h2-line: 1.25rem;
+  --type-eyebrow-size: 1rem;
+  --type-eyebrow-line: 1.5rem;
+  --type-eyebrow-ls: 0.165rem;
+  --type-a1-size: 1.25rem;
+  --type-a1-line: 1.25rem;
   --type-a1-ls: -1px;
-  --type-a5-size: 36px;
-  --type-a5-line: 36px;
-  --type-a5-ls: -1.8px;
-  --type-s1-size: 16px;
-  --type-s1-line: 22px;
-  --type-s3-size: 24px;
-  --type-s3-line: 32px;
-  --type-bt1-size: 14px;
-  --type-bt1-line: 20px;
-  --type-bt2-size: 16px;
-  --type-bt2-line: 24px;
-  --type-h4-size: 20px;
-  --type-h4-line: 28px;
+  --type-a5-size: 2.25rem;
+  --type-a5-line: 2.25rem;
+  --type-a5-ls: -0.1125rem;
+  --type-s1-size: 1rem;
+  --type-s1-line: 1.375rem;
+  --type-s3-size: 1.5rem;
+  --type-s3-line: 2rem;
+  --type-bt1-size: 0.875rem;
+  --type-bt1-line: 1.25rem;
+  --type-bt2-size: 1rem;
+  --type-bt2-line: 1.5rem;
+  --type-h4-size: 1.25rem;
+  --type-h4-line: 1.75rem;
   --type-h4-weight: 600;
 
   /* layout: full bleed blocks pad their text to the grid line */
-  --section-spacing: 124px;
+  --section-spacing: 7.75rem;
   --fb-inset: calc(var(--gb-offset) - var(--fb-margin));
 
   /* nav height: announcement bar + nav bar */
-  --topbar-height: 44px;
-  --nav-height: 112px;
+  --topbar-height: 2.75rem;
+  --nav-height: 7rem;
 }
 
 * {
@@ -292,7 +292,7 @@ h6 {
   font-weight: 500;
   line-height: 1.25;
   letter-spacing: -0.025em;
-  scroll-margin: 40px;
+  scroll-margin: var(--spacing-5xl);
 }
 
 h1 { font-size: var(--heading-font-size-xxl); }
@@ -318,15 +318,15 @@ pre {
 }
 
 pre {
-  padding: 16px;
-  border-radius: 8px;
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-md);
   background-color: var(--light-color);
   overflow-x: auto;
   white-space: pre;
 }
 
 main > div {
-  margin: 40px 16px;
+  margin: var(--spacing-5xl) var(--spacing-xl);
 }
 
 input,
@@ -350,7 +350,7 @@ a:hover {
 
 /* buttons */
 p.button-wrapper {
-  margin: 12px 0;
+  margin: var(--spacing-lg) 0;
 }
 
 a.button:any-link,
@@ -362,12 +362,12 @@ button.button {
   max-width: 100%;
   margin: 0;
   border: 1px solid transparent;
-  border-radius: 100px;
-  padding: 13px 32px;
+  border-radius: 6.25rem;
+  padding: 0.8125rem var(--spacing-4xl);
   font: inherit;
   font-size: var(--body-font-size-m);
   font-weight: 600;
-  line-height: 24px;
+  line-height: 1.5rem;
   text-decoration: none;
   cursor: pointer;
   overflow: hidden;
@@ -477,8 +477,8 @@ main img {
 
 .icon {
   display: inline-block;
-  height: 24px;
-  width: 24px;
+  height: 1.5rem;
+  width: 1.5rem;
 }
 
 .icon img {
@@ -518,18 +518,18 @@ main > .section:first-of-type {
 
 /* sticky header and bottom bars never cover the focused element (WCAG 2.4.11) */
 html {
-  scroll-padding-top: calc(var(--nav-height) + 16px);
-  scroll-padding-bottom: 96px;
+  scroll-padding-top: calc(var(--nav-height) + var(--spacing-xl));
+  scroll-padding-bottom: 6rem;
 }
 
 /* skip link: first focusable element, shown on focus */
 .skip-link {
   position: fixed;
-  top: 8px;
-  left: 8px;
+  top: 0.5rem;
+  left: 0.5rem;
   z-index: 1000;
-  padding: 12px 20px;
-  border-radius: 100px;
+  padding: var(--spacing-lg) var(--spacing-2xl);
+  border-radius: 6.25rem;
   background-color: var(--text-color);
   color: #fff;
   font-weight: 600;
@@ -587,7 +587,7 @@ main > .section > .feature-banner-wrapper{
 
 /* product pages: eligibility and documents sections */
 main > .section.requirements-container .default-content-wrapper > h2 + p {
-  margin-bottom: 32px;
+  margin-bottom: var(--spacing-4xl);
 }
 
 /* product pages and the edge-to-edge variant: feature banners run edge to edge
@@ -635,7 +635,7 @@ main > .section > .article-cards-wrapper {
 }
 
 main > .section.article-cards-container .default-content-wrapper > h2:first-child {
-  margin-bottom: 16px;
+  margin-bottom: var(--spacing-xl);
 }
 
 :where(.desktop-view) main > .section.article-cards-container .default-content-wrapper > h2:first-child {
@@ -684,7 +684,7 @@ main > .section.highlight + .section.offers-container {
 
 /* eyebrow paragraph directly above a section heading (Body/B2) */
 main .default-content-wrapper > p:has(+ h2) {
-  margin: 0 0 8px;
+  margin: 0 0 var(--spacing-md);
   color: var(--text-color);
   font-size: var(--type-b2-size);
   font-weight: 500;
@@ -694,7 +694,7 @@ main .default-content-wrapper > p:has(+ h2) {
 /* section heading (Display/Medium/DF-1) */
 main .default-content-wrapper > p + h2,
 main .default-content-wrapper > h2:first-child {
-  margin: 0 0 32px;
+  margin: 0 0 var(--spacing-4xl);
   font-size: var(--type-display-size);
   font-weight: 500;
   line-height: var(--type-display-line);
@@ -703,32 +703,32 @@ main .default-content-wrapper > h2:first-child {
 }
 
 :where(.desktop-view) main .default-content-wrapper > h2:only-child {
-  margin-bottom: 40px;
+  margin-bottom: var(--spacing-5xl);
 }
 
 /* heading with a subheading line below it (product pages) */
 main .section .default-content-wrapper > h2:has(+ p) {
-  margin: 0 0 8px;
+  margin: 0 0 var(--spacing-md);
 }
 
 main .default-content-wrapper > h2 + p {
-  margin: 0 0 24px;
+  margin: 0 0 var(--spacing-3xl);
   color: var(--muted-color);
   font-size: var(--body-font-size-m);
   font-weight: 500;
-  line-height: 24px;
+  line-height: 1.5rem;
 }
 
 :where(.desktop-view) main .section .default-content-wrapper > h2:has(+ p) {
   font-size: var(--heading-font-size-xxl);
-  line-height: 48px;
+  line-height: 3rem;
   letter-spacing: -1px;
 }
 
 :where(.desktop-view) main .default-content-wrapper > h2 + p {
-  margin-bottom: 32px;
+  margin-bottom: var(--spacing-4xl);
   font-size: var(--heading-font-size-m);
-  line-height: 28px;
+  line-height: 1.75rem;
 }
 
 /* desktop (1680px and up): Display/Medium/DF-1 heading, Body/B3 subheading */
@@ -833,18 +833,18 @@ main > .section > .section-background img {
 
 main .section.brand {
   margin: 0;
-  padding: 80px 0;
+  padding: var(--spacing-8xl) 0;
   background-color: var(--brand-color);
   color: #fff;
   text-align: center;
 }
 
 main .section.bg-grey :is(h2,h3,h4,h5,h6) {
-  margin: 0 0 8px;
-  font-size: 16px;
-  line-height: 24px;
+  margin: 0 0 var(--spacing-md);
+  font-size: 1rem;
+  line-height: 1.5rem;
   font-weight: 600;
-  letter-spacing: 2.32px;
+  letter-spacing: 0.145rem;
   color: var(--text-color);
 }
 
@@ -856,8 +856,8 @@ main .section.bg-grey {
 }
 
 main .section.bg-grey .default-content-wrapper {
-  max-width: 660px;
-  padding: 0 24px;
+  max-width: 41.25rem;
+  padding: 0 var(--spacing-3xl);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
@@ -888,7 +888,7 @@ main .section.bg-grey p strong{
 }
 
 main .section.brand.has-background {
-  margin: 16px 0 0 ;
+  margin: var(--spacing-xl) 0 0;
 }
 
 :where(.desktop-view) main .section.brand.has-background {
@@ -896,18 +896,18 @@ main .section.brand.has-background {
 }
 
 main .section.brand .default-content-wrapper {
-  max-width: calc(680px + 2 * var(--gb-margin));
+  max-width: calc(42.5rem + 2 * var(--gb-margin));
 }
 
 main .section.bg-grey.bggrey-remove-space {
-  margin: 124px 0 0;
+  margin: 7.75rem 0 0;
 }
 
 main .section.brand p {
   margin: 0;
   font-size: var(--body-font-size-s);
   font-weight: 600;
-  line-height: 20px;
+  line-height: 1.25rem;
 }
 
 :where(.desktop-view) main .section.brand {
@@ -916,7 +916,7 @@ main .section.brand p {
 
 :where(.desktop-view) main .section.brand p {
   font-size: var(--body-font-size-m);
-  line-height: 24px;
+  line-height: 1.5rem;
 }
 
 :where([data-viewport='desktop']) main .section.brand p {
@@ -930,9 +930,9 @@ main > .section.bg-disclaimer.feature-cards-container > .default-content-wrapper
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
-  margin: 32px 24px 0;
-  padding: 24px;
-  border-radius: 24px;
+  margin: var(--spacing-4xl) var(--spacing-3xl) 0;
+  padding: var(--spacing-3xl);
+  border-radius: var(--radius-3xl);
   background-color: var(--surface-color);
   color: var(--muted-color);
 }
@@ -956,16 +956,16 @@ main > .section.bg-disclaimer.feature-cards-container > .default-content-wrapper
 }
 
 :where(.desktop-view) main > .section.bg-disclaimer.feature-cards-container > .default-content-wrapper {
-  margin: 36px 92px 0;
-  padding: 32px;
-  border-radius: 32px;
+  margin: 2.25rem 5.75rem 0;
+  padding: var(--spacing-4xl);
+  border-radius: var(--radius-4xl);
   flex-direction: row;
   gap: var(--spacing-5xl);
 }
 
 /* plain disclaimer under feature cards: right-aligned note */
 main > .section.plain-disclaimer.feature-cards-container > .default-content-wrapper {
-  margin-top: 20px;
+  margin-top: var(--spacing-2xl);
 }
 
 main > .section.plain-disclaimer.feature-cards-container > .default-content-wrapper p {
@@ -979,11 +979,11 @@ main > .section.plain-disclaimer.feature-cards-container > .default-content-wrap
 }
 
 :where(.desktop-view) main > .section.plain-disclaimer.feature-cards-container > .default-content-wrapper {
-  margin-top: 60px;
+  margin-top: 3.75rem;
 }
 
 main > .section.branch-locator-container:last-of-type {
-  margin-bottom: 24px;
+  margin-bottom: var(--spacing-3xl);
 }
 
 /* bg-color grey */
@@ -992,11 +992,11 @@ main > .section.sec-bg-grey {
 }
 
 main > .section.padding-left-right{
-  padding-inline: 24px;
+  padding-inline: var(--spacing-3xl);
 }
 
 :where(.desktop-view) main > .section.padding-left-right{
-  padding-inline: 92px;
+  padding-inline: 5.75rem;
 }
 
 /* read more (section style): grey disclosure text collapsed to 3 lines, see scripts/read-more.js */
@@ -1004,21 +1004,21 @@ main > .section.read-more {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: 40px 24px;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-5xl) var(--spacing-3xl);
   background-color: var(--surface-color);
   text-align: center;
 }
 
 :where(.desktop-view) main > .section.read-more {
-  gap: 16px;
-  padding: 48px 92px;
+  gap: var(--spacing-xl);
+  padding: var(--spacing-6xl) 5.75rem;
 }
 
 main > .section.read-more > .default-content-wrapper {
   box-sizing: border-box;
   width: 100%;
-  max-width: 660px;
+  max-width: 41.25rem;
   margin: 0;
   padding: 0;
   color: var(--muted-color);

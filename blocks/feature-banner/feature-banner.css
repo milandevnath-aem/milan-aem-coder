@@ -1,5 +1,5 @@
 .feature-banner {
-    --feature-banner-height: 600px;
+    --feature-banner-height: 37.5rem;
     --feature-banner-text: var(--text-color);
     --feature-banner-muted: var(--muted-color);
 
@@ -23,7 +23,7 @@
     overflow: hidden;
     background-color: var(--background-color);
     color: var(--feature-banner-text);
-    height: 672px;
+    height: 42rem;
 }
 
 .feature-banner .feature-banner-item.light-text {
@@ -73,17 +73,17 @@
     position: relative;
     box-sizing: border-box;
     width: 100%;
-    padding: 80px 24px 40px;
+    padding: var(--spacing-8xl) var(--spacing-3xl) var(--spacing-5xl);
 }
 
 .feature-banner .feature-banner-content h2,
 .feature-banner .feature-banner-content h3 {
     margin: 0;
     color: inherit;
-    font-size: 28px;
+    font-size: 1.75rem;
     font-weight: 600;
-    line-height: 36px;
-    letter-spacing: -0.56px;
+    line-height: 2.25rem;
+    letter-spacing: -0.035rem;
 }
 
 .feature-banner .feature-banner-content h2 strong,
@@ -96,7 +96,7 @@
     color: var(--feature-banner-muted);
     font-size: var(--body-font-size-m);
     font-weight: 500;
-    line-height: 24px;
+    line-height: 1.5rem;
 }
 
 .feature-banner .feature-banner-content p strong {
@@ -104,17 +104,17 @@
 }
 
 .feature-banner .feature-banner-content .button-wrapper {
-    margin-top: 20px;
+    margin-top: var(--spacing-2xl);
 }
 
 .feature-banner .feature-banner-content a.button {
     border: 0;
-    padding: 12px;
+    padding: var(--spacing-lg);
     background-color: var(--text-color);
     color: #fff;
     font-size: var(--body-font-size-s);
     font-weight: 600;
-    line-height: 20px;
+    line-height: 1.25rem;
     letter-spacing: 0;
 }
 
@@ -173,13 +173,13 @@
 }
 
 :where(.desktop-view) .feature-banner {
-    --feature-banner-height: 672px;
+    --feature-banner-height: 42rem;
 }
 
 :where(.desktop-view) .feature-banner .feature-banner-item {
     flex-direction: row;
     align-items: center;
-    padding: 92px var(--fb-inset);
+    padding: 5.75rem var(--fb-inset);
 }
 
 :where(.desktop-view) .feature-banner .text-right {
@@ -200,37 +200,37 @@
 }
 
 :where(.desktop-view) .feature-banner .feature-banner-content {
-    max-width: 500px;
+    max-width: 31.25rem;
     padding: 0;
 }
 
 :where(.desktop-view) .feature-banner .feature-banner-content h2,
 :where(.desktop-view) .feature-banner .feature-banner-content h3 {
-    font-size: 32px;
+    font-size: 2rem;
     font-weight: 600;
-    line-height: 40px;
-    letter-spacing: -0.8px;
+    line-height: 2.5rem;
+    letter-spacing: -0.05rem;
 }
 
 :where(.desktop-view) .feature-banner .feature-banner-content p {
     margin: var(--spacing-lg) 0 0;
     font-size: var(--heading-font-size-m);
-    line-height: 28px;
+    line-height: 1.75rem;
 }
 
 :where(.desktop-view) .feature-banner .feature-banner-content .button-wrapper {
-    margin-top: 44px;
+    margin-top: 2.75rem;
 }
 
 :where(.desktop-view) .feature-banner .feature-banner-content a.button {
-    padding: 14px 12px;
+    padding: 0.875rem var(--spacing-lg);
     font-size: var(--body-font-size-m);
-    line-height: 24px;
+    line-height: 1.5rem;
 }
 
 main:has(.hero-loan.product) .feature-banner .feature-banner-content a.button {
-    padding: 12px;
-    min-width: 124px;
+    padding: var(--spacing-lg);
+    min-width: 7.75rem;
 }
 
 :where(.desktop-view)
@@ -238,11 +238,11 @@ main:has(.hero-loan.product) .feature-banner .feature-banner-content a.button {
     .feature-banner
     .feature-banner-content
     a.button {
-    padding: 14px 16px;
+    padding: 0.875rem var(--spacing-xl);
 }
 
 :where(.desktop-view) .feature-banner .feature-banner-content h6 {
-    margin: 44px 0 0;
+    margin: 2.75rem 0 0;
 }
 
 /*
@@ -271,5 +271,5 @@ main:has(.hero-loan.product) .feature-banner .feature-banner-content a.button {
     .feature-banner
     .feature-banner-content
     a.button {
-    padding: 14px 26px;
+    padding: 0.875rem 1.625rem;
 }

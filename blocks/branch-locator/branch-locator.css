@@ -1,12 +1,12 @@
 /* the wrapper already insets the card by --fb-margin (Figma: 12px each side, 24px to the footer) */
 main > .section.branch-locator-container {
-  margin: 0 0 24px;
+  margin: 0 0 var(--spacing-3xl);
 }
 
 .branch-locator {
   box-sizing: border-box;
-  padding: 44px var(--fb-inset) 24px;
-  border-radius: 32px;
+  padding: 2.75rem var(--fb-inset) var(--spacing-3xl);
+  border-radius: var(--radius-4xl);
   background:
     radial-gradient(circle at 85% 0%, rgb(238 156 147 / 80%) 0, transparent 45%),
     linear-gradient(180deg, #c33d33 0%, #f6e6cf 100%);
@@ -19,22 +19,22 @@ main > .section.branch-locator-container {
   color: inherit;
   font-size: var(--heading-font-size-xl);
   font-weight: 500;
-  line-height: 40px;
-  letter-spacing: -0.8px;
+  line-height: 2.5rem;
+  letter-spacing: -0.05rem;
 }
 
 .branch-locator .branch-locator-intro p {
-  margin: 8px 0 0;
+  margin: var(--spacing-md) 0 0;
   font-size: var(--body-font-size-s);
   font-weight: 500;
-  line-height: 20px;
+  line-height: 1.25rem;
 }
 
 .branch-locator .branch-locator-main {
   display: flex;
   flex-direction: column;
   gap: var(--grid-gutter);
-  margin-top: 32px;
+  margin-top: var(--spacing-4xl);
   color: var(--text-color);
 }
 
@@ -43,8 +43,8 @@ main > .section.branch-locator-container {
 }
 
 .branch-locator .branch-locator-select {
-  --dropdown-value-size: 20px;
-  --dropdown-value-line: 28px;
+  --dropdown-value-size: 1.25rem;
+  --dropdown-value-line: 1.75rem;
 
   order: 1;
 }
@@ -55,27 +55,27 @@ main > .section.branch-locator-container {
 
 .branch-locator .branch-locator-select .dropdown-label {
   color: var(--muted-color);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
-  line-height: 16px;
-  letter-spacing: 0.24px;
+  line-height: 1rem;
+  letter-spacing: 0.015rem;
 }
 
 .branch-locator .branch-locator-select .dropdown-value {
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 1rem;
+  line-height: 1.5rem;
 }
 
 .branch-locator .branch-locator-status {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--spacing-md);
   order: 1;
   margin: 0;
   color: var(--inverse-color);
   font-size: var(--body-font-size-s);
   font-weight: 500;
-  line-height: 20px;
+  line-height: 1.25rem;
 }
 
 .branch-locator .branch-locator-status:empty {
@@ -86,8 +86,8 @@ main > .section.branch-locator-container {
 .branch-locator .branch-locator-status.is-loading::before {
   content: '';
   flex: none;
-  width: 14px;
-  height: 14px;
+  width: 0.875rem;
+  height: 0.875rem;
   border: 2px solid rgb(255 255 255 / 40%);
   border-top-color: var(--inverse-color);
   border-radius: 50%;
@@ -100,15 +100,15 @@ main > .section.branch-locator-container {
 
 /* keeps the space while the cities load, so the page does not shift */
 .branch-locator .branch-locator-card:empty {
-  min-height: 240px;
+  min-height: 15rem;
 }
 
 .branch-locator .branch-locator-map {
   position: relative;
   order: 3;
-  height: 240px;
+  height: 15rem;
   border: 4px solid rgb(252 252 252 / 60%);
-  border-radius: 16px;
+  border-radius: var(--radius-xl);
   background-color: var(--surface-color);
   overflow: hidden;
 }
@@ -118,8 +118,8 @@ main > .section.branch-locator-container {
   content: '';
   position: absolute;
   inset: 0;
-  width: 28px;
-  height: 28px;
+  width: 1.75rem;
+  height: 1.75rem;
   margin: auto;
   border: 3px solid rgb(0 0 0 / 12%);
   border-top-color: var(--muted-color);
@@ -143,21 +143,21 @@ main > .section.branch-locator-container {
 .branch-locator .branch-locator-card {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--spacing-xl);
   order: 2;
   margin: 0;
-  padding: 24px 20px;
-  border-radius: 20px;
+  padding: var(--spacing-3xl) var(--spacing-2xl);
+  border-radius: var(--radius-2xl);
   background-color: var(--background-color);
   transition: opacity 0.2s;
 }
 
 .branch-locator .branch-locator-row {
   display: grid;
-  grid-template-columns: 40px 1fr;
-  gap: 4px 16px;
+  grid-template-columns: 2.5rem 1fr;
+  gap: var(--spacing-xs) var(--spacing-xl);
   align-items: start;
-  padding: 0 0 16px;
+  padding: 0 0 var(--spacing-xl);
   border-bottom: 1px solid var(--surface-color);
 }
 
@@ -169,11 +169,11 @@ main > .section.branch-locator-container {
 .branch-locator .branch-locator-icon {
   grid-row: span 2;
   box-sizing: border-box;
-  width: 40px;
-  height: 40px;
+  width: 2.5rem;
+  height: 2.5rem;
   border: 1px solid #dedede;
-  border-radius: 8px;
-  background: var(--surface-color) center / 20px no-repeat;
+  border-radius: var(--radius-md);
+  background: var(--surface-color) center / 1.25rem no-repeat;
 }
 
 .branch-locator .icon-location { background-image: url('../../icons/location.svg'); }
@@ -186,7 +186,7 @@ main > .section.branch-locator-container {
   color: #808080;
   font-size: var(--body-font-size-xs);
   font-weight: 600;
-  line-height: 18px;
+  line-height: 1.125rem;
 }
 
 .branch-locator .branch-locator-row dd {
@@ -211,12 +211,12 @@ main > .section.branch-locator-container {
 }
 
 :where(.desktop-view) .branch-locator {
-  padding: 48px var(--fb-inset) 28px;
-  border-radius: 44px;
+  padding: var(--spacing-6xl) var(--fb-inset) 1.75rem;
+  border-radius: 2.75rem;
 }
 
 :where(.desktop-view) .branch-locator .branch-locator-intro {
-  max-width: 540px;
+  max-width: 33.75rem;
 }
 
 /* :where(.desktop-view) .branch-locator .branch-locator-intro h1,
@@ -225,29 +225,29 @@ main > .section.branch-locator-container {
 } */
 
 :where(.desktop-view) .branch-locator .branch-locator-intro p {
-  margin-top: 20px;
+  margin-top: var(--spacing-2xl);
 }
 
 :where(.desktop-view) .branch-locator .branch-locator-card {
   box-sizing: border-box;
   justify-content: space-between;
-  gap: 12px;
-  min-height: 345px; /* Figma: 583 x 345, padding included */
-  padding: 24px;
+  gap: var(--spacing-lg);
+  min-height: 21.5625rem; /* Figma: 583 x 345, padding included */
+  padding: var(--spacing-3xl);
 }
 
 /* Figma: details card is 583px wide, the map takes the rest */
 :where(.desktop-view) .branch-locator .branch-locator-main {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 583px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 36.4375rem);
   align-items: stretch;
-  gap: 12px;
+  gap: var(--spacing-lg);
 }
 
 :where(.desktop-view) .branch-locator .branch-locator-left {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--spacing-md);
 }
 
 :where(.desktop-view) .branch-locator .branch-locator-map {
@@ -259,8 +259,8 @@ main > .section.branch-locator-container {
 }
 
 :where(.desktop-view) .branch-locator .branch-locator-row {
-  gap: 2px 22px;
-  padding-bottom: 12px;
+  gap: var(--spacing-xxs) 1.375rem;
+  padding-bottom: var(--spacing-lg);
 }
 
 :where(.desktop-view) .branch-locator .branch-locator-row:last-child {
@@ -272,30 +272,30 @@ main > .section.branch-locator-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: var(--spacing-3xl);
   text-align: center;
 }
 
 dialog.modal .branch-locator-permission h2 {
   margin: 0;
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: 600;
-  line-height: 32px;
+  line-height: 2rem;
   letter-spacing: 0;
 }
 
 .branch-locator-permission .branch-locator-hint {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--spacing-lg);
   margin: 0;
-  border-radius: 12px;
-  padding: 14px 12px;
+  border-radius: var(--radius-lg);
+  padding: 0.875rem var(--spacing-lg);
   background-color: var(--light-color);
   color: var(--text-color);
   font-size: var(--body-font-size-s);
   font-weight: 500;
-  line-height: 20px;
+  line-height: 1.25rem;
   text-align: left;
 }
 
@@ -306,7 +306,7 @@ dialog.modal .branch-locator-permission h2 {
 .branch-locator-permission .branch-locator-permission-actions {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--spacing-xl);
   width: 100%;
 }
 
@@ -323,8 +323,8 @@ dialog.modal .branch-locator-permission h2 {
   content: '';
   position: absolute;
   inset: 0;
-  width: 20px;
-  height: 20px;
+  width: 1.25rem;
+  height: 1.25rem;
   margin: auto;
   border: 2px solid rgb(255 255 255 / 40%);
   border-top-color: #fff;
@@ -346,12 +346,12 @@ dialog.modal .branch-locator-permission h2 {
 .branch-locator-permission .branch-locator-skip {
   margin: 0;
   border: 0;
-  padding: 4px;
+  padding: var(--spacing-xs);
   background: none;
   color: var(--text-color);
   font-size: var(--body-font-size-s);
   font-weight: 600;
-  line-height: 20px;
+  line-height: 1.25rem;
   cursor: pointer;
 }
 
@@ -386,8 +386,8 @@ dialog.modal .branch-locator-permission h2 {
 
 /* city list follows the larger field; the location prompt steps up one size */
 :where([data-viewport='desktop']) .branch-locator .branch-locator-select {
-  --dropdown-value-size: 24px;
-  --dropdown-value-line: 32px;
+  --dropdown-value-size: 1.5rem;
+  --dropdown-value-line: 2rem;
 }
 
 :where([data-viewport='desktop']) dialog.modal .branch-locator-permission h2 {

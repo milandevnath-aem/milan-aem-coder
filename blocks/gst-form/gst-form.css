@@ -3,7 +3,7 @@
 
 /* small screens: intro, switch, fields, Submit, Contact Us */
 .gst-form.lead-form {
-  gap: 20px;
+  gap: var(--spacing-2xl);
 }
 
 /* beats lead-form's desktop intro rule, which has the same specificity */
@@ -15,7 +15,7 @@
 }
 
 .gst-form .gst-form-form {
-  gap: 16px;
+  gap: var(--spacing-xl);
 }
 
 /* Customer / Vendor: a segmented switch, the picked type a black pill */
@@ -23,9 +23,9 @@
   display: grid;
   grid-auto-columns: minmax(0, 1fr);
   grid-auto-flow: column;
-  gap: 4px;
-  border-radius: 12px;
-  padding: 4px;
+  gap: var(--spacing-xs);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xs);
   background-color: var(--light-color);
 }
 
@@ -35,9 +35,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 40px;
-  border-radius: 8px;
-  padding: 8px 12px;
+  min-height: 2.5rem;
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md) var(--spacing-lg);
   color: var(--muted-color);
   font-size: var(--type-body-b2-font-size);
   letter-spacing: var(--type-body-b2-letter-spacing);
@@ -74,8 +74,8 @@
 .gst-form .gst-form-actions {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 8px;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-md);
 }
 
 .gst-form .gst-form-actions .button {
@@ -83,10 +83,10 @@
 }
 
 .gst-form .gst-form-thanks h2 {
-  margin: 0 0 8px;
-  font-size: 24px;
+  margin: 0 0 var(--spacing-md);
+  font-size: 1.5rem;
   font-weight: 500;
-  line-height: 32px;
+  line-height: 2rem;
 }
 
 .gst-form .gst-form-thanks h2:focus {
@@ -103,20 +103,20 @@
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
   align-items: start;
-  gap: 40px;
+  gap: var(--spacing-5xl);
 }
 
 :where(.desktop-view) .gst-form .gst-form-form {
-  gap: 16px;
+  gap: var(--spacing-xl);
 }
 
 :where(.desktop-view) .gst-form .gst-form-type {
-  min-height: 44px;
+  min-height: 2.75rem;
 }
 
 :where(.desktop-view) .gst-form .gst-form-actions {
   flex-direction: row-reverse;
-  gap: 8px;
+  gap: var(--spacing-md);
 }
 
 :where(.desktop-view) .gst-form .gst-form-actions .button {

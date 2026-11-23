@@ -7,7 +7,7 @@
 
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: var(--spacing-4xl);
 }
 
 /* intro: eyebrow, heading, image (the heading sits on the grid, the card is full bleed) */
@@ -16,7 +16,7 @@
 }
 
 .emi-calculator .emi-calculator-intro > p {
-  margin: 0 0 8px;
+  margin: 0 0 var(--spacing-md);
   color: var(--text-color);
   font-size: var(--type-b2-size);
   font-weight: 500;
@@ -39,24 +39,24 @@
 .emi-calculator .emi-calculator-card {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: var(--spacing-4xl);
   border: 1px solid var(--surface-color);
-  border-radius: 32px;
+  border-radius: var(--radius-4xl);
   background-color: var(--emi-card-bg);
 }
 
 .emi-calculator .emi-calculator-controls {
   display: flex;
   flex-direction: column;
-  gap: 32px;
-  padding: 20px 20px 0;
+  gap: var(--spacing-4xl);
+  padding: var(--spacing-2xl) var(--spacing-2xl) 0;
 }
 
 .emi-calculator .emi-calculator-tabs {
   display: flex;
-  gap: 2px;
-  padding: 4px;
-  border-radius: 14px;
+  gap: var(--spacing-xxs);
+  padding: var(--spacing-xs);
+  border-radius: 0.875rem;
   background-color: var(--light-color);
   overflow-x: auto;
   scrollbar-width: none;
@@ -64,11 +64,11 @@
 
 .emi-calculator .emi-calculator-tabs button {
   flex: 1 0 auto;
-  min-width: 76px;
+  min-width: 4.75rem;
   margin: 0;
-  padding: 12px 20px;
+  padding: var(--spacing-lg) var(--spacing-2xl);
   border: 0;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   background: transparent;
   color: var(--muted-color);
   font-size: var(--type-b2-size);
@@ -85,29 +85,29 @@
 
 :root:not(.desktop-view) .emi-calculator .emi-calculator-tabs.has-overflow[data-selected-position='first'] {
   /* stylelint-disable property-no-vendor-prefix */
-  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent 100%);
-  mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 1.5rem), transparent 100%);
+  mask-image: linear-gradient(to right, #000 calc(100% - 1.5rem), transparent 100%);
   /* stylelint-enable property-no-vendor-prefix */
 }
 
 :root:not(.desktop-view) .emi-calculator .emi-calculator-tabs.has-overflow[data-selected-position='middle'] {
   /* stylelint-disable property-no-vendor-prefix */
-  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
-  mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 1.5rem, #000 calc(100% - 1.5rem), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 1.5rem, #000 calc(100% - 1.5rem), transparent 100%);
   /* stylelint-enable property-no-vendor-prefix */
 }
 
 :root:not(.desktop-view) .emi-calculator .emi-calculator-tabs.has-overflow[data-selected-position='last'] {
   /* stylelint-disable property-no-vendor-prefix */
-  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 100%);
-  mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 1.5rem, #000 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 1.5rem, #000 100%);
   /* stylelint-enable property-no-vendor-prefix */
 }
 
 .emi-calculator .emi-calculator-fields {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--spacing-3xl);
   min-width: 0;
   margin: 0;
   border: 0;
@@ -124,8 +124,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 8px;
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-md);
 }
 
 .emi-calculator .emi-calculator-field-head label {
@@ -144,9 +144,9 @@
   min-width: 0;
   max-width: 60%;
   overflow: hidden;
-  padding: 11px 19px;
+  padding: 0.6875rem 1.1875rem;
   border: 1px solid var(--border-light-color);
-  border-radius: 16px;
+  border-radius: var(--radius-xl);
   color: var(--text-color);
   font-size: var(--type-a1-size);
   font-weight: 700;
@@ -163,9 +163,9 @@
 
 /* small screens: rate and tenure pills use the semibold body size */
 .emi-calculator .emi-calculator-value:has(.emi-calculator-prefix:empty) {
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 600;
-  line-height: 24px;
+  line-height: 1.5rem;
   letter-spacing: 0;
 }
 
@@ -182,9 +182,9 @@
   position: relative;
   display: none;
   flex-shrink: 0;
-  width: 16px;
-  height: 16px;
-  margin: 0 -8px 0 auto;
+  width: 1rem;
+  height: 1rem;
+  margin: 0 -0.5rem 0 auto;
   cursor: pointer;
 }
 
@@ -192,13 +192,13 @@
 .emi-calculator .emi-calculator-error-trigger::before {
   content: '';
   position: absolute;
-  inset: -14px -6px;
+  inset: -0.875rem -0.375rem;
 }
 
 .emi-calculator .emi-calculator-error-icon {
   display: block;
-  width: 16px;
-  height: 16px;
+  width: 1rem;
+  height: 1rem;
 }
 
 .emi-calculator .emi-calculator-field.is-invalid .emi-calculator-error-trigger {
@@ -213,14 +213,14 @@
 /* the arrow keeps pointing at the icon when the bubble is shifted to stay inside the row */
 .emi-calculator .emi-calculator-tooltip {
   position: absolute;
-  bottom: calc(100% + 12px);
+  bottom: calc(100% + 0.75rem);
   left: 50%;
   z-index: 3;
   box-sizing: border-box;
   width: max-content;
   max-width: var(--tip-max, 100%);
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--radius-md);
   background-color: var(--heading-color);
   color: #fff;
   font-size: var(--type-b1-size);
@@ -230,7 +230,7 @@
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
-  transform: translate(calc(-50% + var(--tip-shift, 0px)), 4px);
+  transform: translate(calc(-50% + var(--tip-shift, 0)), 0.25rem);
   transition: opacity 150ms ease, transform 150ms ease, visibility 0s linear 150ms;
 }
 
@@ -238,8 +238,8 @@
   content: '';
   position: absolute;
   top: 100%;
-  left: calc(50% - var(--tip-shift, 0px));
-  margin-left: -6px;
+  left: calc(50% - var(--tip-shift, 0));
+  margin-left: -0.375rem;
   border: 6px solid transparent;
   border-top-color: var(--heading-color);
 }
@@ -249,31 +249,31 @@
 .emi-calculator .emi-calculator-field.is-invalid.is-tip-open:not(.is-tip-hidden) .emi-calculator-tooltip {
   visibility: visible;
   opacity: 1;
-  transform: translate(calc(-50% + var(--tip-shift, 0px)), 0);
+  transform: translate(calc(-50% + var(--tip-shift, 0)), 0);
   transition-delay: 0s;
 }
 
 /* year / month switch inside the tenure pill */
 .emi-calculator .emi-calculator-value:has(.emi-calculator-unit) {
   align-items: center;
-  padding-right: 8px;
+  padding-right: var(--spacing-md);
 }
 
 .emi-calculator .emi-calculator-unit {
   display: inline-flex;
   flex-shrink: 0;
-  margin-left: 8px;
-  padding: 2px;
-  border-radius: 8px;
+  margin-left: var(--spacing-md);
+  padding: var(--spacing-xxs);
+  border-radius: var(--radius-md);
   font-size: var(--type-b1-size);
   letter-spacing: 0;
 }
 
 .emi-calculator .emi-calculator-unit button {
   margin: 0;
-  padding: 4px 10px;
+  padding: var(--spacing-xs) 0.625rem;
   border: 0;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--muted-color);
   font: inherit;
@@ -322,31 +322,31 @@
  */
 .emi-calculator .emi-calculator-slider {
   --pct: 0;
-  --knob: calc(4px + (100% - 8px) * var(--pct));
+  --knob: calc(0.25rem + (100% - 0.5rem) * var(--pct));
   --emi-ease: 160ms cubic-bezier(0.22, 1, 0.36, 1);
 
   position: relative;
-  height: 28px;
-  margin: 8px 0 4px;
+  height: 1.75rem;
+  margin: var(--spacing-md) 0 var(--spacing-xs);
 }
 
 .emi-calculator .emi-calculator-slider-fill,
 .emi-calculator .emi-calculator-slider-track {
   position: absolute;
-  top: 8px;
-  height: 12px;
-  border-radius: 12px;
+  top: 0.5rem;
+  height: 0.75rem;
+  border-radius: var(--radius-lg);
 }
 
 .emi-calculator .emi-calculator-slider-fill {
   left: 0;
-  width: max(0px, calc(var(--knob) - 8px));
+  width: max(0, calc(var(--knob) - 0.5rem));
   background-color: var(--emi-fill);
   transition: width var(--emi-ease);
 }
 
 .emi-calculator .emi-calculator-slider-track {
-  left: min(100%, calc(var(--knob) + 8px));
+  left: min(100%, calc(var(--knob) + 0.5rem));
   right: 0;
   background-color: var(--emi-track);
   transition: left var(--emi-ease);
@@ -355,10 +355,10 @@
 .emi-calculator .emi-calculator-slider-knob {
   position: absolute;
   top: 0;
-  left: calc(var(--knob) - 4px);
-  width: 8px;
-  height: 28px;
-  border-radius: 15px;
+  left: calc(var(--knob) - 0.25rem);
+  width: 0.5rem;
+  height: 1.75rem;
+  border-radius: 0.9375rem;
   background-color: var(--emi-fill);
   transition: left var(--emi-ease);
 }
@@ -377,10 +377,10 @@
  */
 .emi-calculator .emi-calculator-range {
   position: absolute;
-  top: -8px;
+  top: -0.5rem;
   left: 0;
   width: 100%;
-  height: 44px;
+  height: 2.75rem;
   margin: 0;
   padding: 0;
   opacity: 0;
@@ -392,37 +392,37 @@
 
 /* explicit 44px track so WebKit and Firefox keep the whole touch area active (thumb centred in it) */
 .emi-calculator .emi-calculator-range::-webkit-slider-runnable-track {
-  height: 44px;
+  height: 2.75rem;
   border: 0;
   background: transparent;
 }
 
 .emi-calculator .emi-calculator-range::-webkit-slider-thumb {
-  width: 8px;
-  height: 28px;
-  margin-top: 8px;
+  width: 0.5rem;
+  height: 1.75rem;
+  margin-top: var(--spacing-md);
   border: 0;
-  border-radius: 15px;
+  border-radius: 0.9375rem;
   appearance: none;
 }
 
 .emi-calculator .emi-calculator-range::-moz-range-track {
-  height: 44px;
+  height: 2.75rem;
   border: 0;
   background: transparent;
 }
 
 .emi-calculator .emi-calculator-range::-moz-range-thumb {
-  width: 8px;
-  height: 28px;
+  width: 0.5rem;
+  height: 1.75rem;
   border: 0;
-  border-radius: 15px;
+  border-radius: 0.9375rem;
 }
 
 .emi-calculator .emi-calculator-slider:has(.emi-calculator-range:focus-visible) {
   outline: 2px solid var(--emi-fill);
   outline-offset: 4px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -449,10 +449,10 @@
 .emi-calculator .emi-calculator-result {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  margin: 0 8px 8px;
-  padding: 24px;
-  border-radius: 24px;
+  gap: var(--spacing-3xl);
+  margin: 0 var(--spacing-md) var(--spacing-md);
+  padding: var(--spacing-3xl);
+  border-radius: var(--radius-3xl);
   background-color: var(--emi-result-bg);
   color: var(--emi-result-text);
 }
@@ -461,8 +461,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
-  padding-bottom: 24px;
+  gap: var(--spacing-3xl);
+  padding-bottom: var(--spacing-3xl);
   border-bottom: 1px solid #262626;
 }
 
@@ -470,7 +470,7 @@
   display: flex;
   flex: 0 0 auto;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--spacing-md);
 }
 
 .emi-calculator .emi-calculator-summary p {
@@ -507,7 +507,7 @@
 .emi-calculator a.emi-calculator-cta {
   flex: 1 1 auto;
   min-width: 0;
-  padding: 7px 11px;
+  padding: 0.4375rem 0.6875rem;
   border-color: #fff;
   background-color: #fff;
   color: var(--text-color);
@@ -523,7 +523,7 @@
 .emi-calculator .emi-calculator-breakdown {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 12px;
+  gap: var(--spacing-lg);
   margin: 0;
   font-size: var(--type-b1-size);
   font-weight: 500;
@@ -571,7 +571,7 @@
 }
 
 :where(.desktop-view) .emi-calculator .emi-calculator-card {
-  flex: 0 0 583px;
+  flex: 0 0 36.4375rem;
   max-width: 50%;
 }
 
@@ -584,8 +584,8 @@
 }
 
 :where(.desktop-view) .emi-calculator a.emi-calculator-cta {
-  flex: 0 0 192px;
-  padding: 11px;
+  flex: 0 0 12rem;
+  padding: 0.6875rem;
 }
 
 /*
@@ -595,7 +595,7 @@
  */
 :where([data-viewport='desktop']) .emi-calculator .emi-calculator-card {
   box-sizing: border-box;
-  flex: 0 0 780px;
+  flex: 0 0 48.75rem;
   max-width: none;
 }
 
@@ -604,12 +604,12 @@
 }
 
 :where([data-viewport='desktop']) .emi-calculator .emi-calculator-image img {
-  width: 702px;
+  width: 43.875rem;
 }
 
 /* value pills: 50px tall (48px with the year / month switch) with the A1 24px amount */
 :where([data-viewport='desktop']) .emi-calculator .emi-calculator-value {
-  padding-block: 12px;
+  padding-block: var(--spacing-lg);
 }
 
 :where([data-viewport='desktop']) .emi-calculator .emi-calculator-value input {
@@ -617,10 +617,10 @@
 }
 
 :where([data-viewport='desktop']) .emi-calculator .emi-calculator-value:has(.emi-calculator-unit) {
-  padding-block: 5px;
+  padding-block: 0.3125rem;
 }
 
 /* 12px between the slider knob and the bounds row */
 :where([data-viewport='desktop']) .emi-calculator .emi-calculator-slider {
-  margin-bottom: 12px;
+  margin-bottom: var(--spacing-lg);
 }

@@ -1,9 +1,9 @@
 .link-list {
-  --link-list-gap: 80px;
+  --link-list-gap: 5rem;
 }
 
 .link-list-wrapper + .link-list-wrapper {
-  margin-top: 40px;
+  margin-top: var(--spacing-5xl);
 }
 
 :where(.desktop-view) main > .section > div.link-list-wrapper {
@@ -11,13 +11,13 @@
 }
 
 .link-list .link-list-side {
-  margin-bottom: 32px;
+  margin-bottom: var(--spacing-4xl);
 }
 
 .link-list .link-list-side h1,
 .link-list .link-list-side h2,
 .link-list .link-list-side h3 {
-  margin: 0 0 12px;
+  margin: 0 0 var(--spacing-lg);
   font-size: var(--type-display-medium-df-1-font-size);
   line-height: var(--type-display-medium-df-1-line-height);
 }
@@ -32,20 +32,20 @@
 .link-list .link-list-intro h1,
 .link-list .link-list-intro h2,
 .link-list .link-list-intro h3 {
-  margin: 0 0 8px;
+  margin: 0 0 var(--spacing-md);
   font-size:var(--type-headline-h5-font-size);
   line-height:var(--type-headline-h5-line-height);
 }
 
 .link-list .link-list-intro p {
-  margin: 0 0 12px;
+  margin: 0 0 var(--spacing-lg);
   font-size: var(--type-body-b2-font-size);
   line-height: var(--type-body-b2-line-height);
   color: var(--muted-color);
 }
 
 :where(.desktop-view) .link-list .link-list-intro p{
-  margin: 0 0 20px;
+  margin: 0 0 var(--spacing-2xl);
 }
 
 .link-list .link-list-main > ul {
@@ -60,9 +60,9 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--spacing-xl);
   box-sizing: border-box;
-  padding: 20px 0;
+  padding: var(--spacing-2xl) 0;
   color: var(--text-color);
   text-decoration: none;
 }
@@ -76,17 +76,17 @@
 
 .link-list .link-list-icon {
   flex: 0 0 auto;
-  width: 20px;
-  height: 20px;
+  width: 1.25rem;
+  height: 1.25rem;
   object-fit: contain;
 }
 
 .link-list .link-list-media,
 .link-list .link-list-media img {
   display: block;
-  width: 100px;
-  height: 90px;
-  border-radius: 16px;
+  width: 6.25rem;
+  height: 5.625rem;
+  border-radius: var(--radius-xl);
   object-fit: cover;
 }
 
@@ -105,12 +105,12 @@
 }
 
 .link-list .link-list-has-image .link-list-row {
-  padding: 12px 0;
+  padding: var(--spacing-lg) 0;
 }
 
 /* grey background: cards */
 .link-list.bg-grey .link-list-main > ul {
-  gap: 8px;
+  gap: var(--spacing-md);
 }
 
 .link-list.bg-grey .link-list-item + .link-list-item {
@@ -118,17 +118,17 @@
 }
 
 .link-list.bg-grey .link-list-row {
-  padding: 20px 16px;
-  border-radius: 24px;
+  padding: var(--spacing-2xl) var(--spacing-xl);
+  border-radius: var(--radius-3xl);
   background-color: var(--surface-color);
 }
 
 .link-list.bg-grey .link-list-has-image .link-list-row {
-  padding: 8px 16px 8px 8px;
+  padding: var(--spacing-md) var(--spacing-xl) var(--spacing-md) var(--spacing-md);
 }
 
 :where(.desktop-view) .link-list.bg-grey .link-list-has-image .link-list-row {
-  padding: 8px 28px 8px 8px;
+  padding: var(--spacing-md) 1.75rem var(--spacing-md) var(--spacing-md);
 }
 
 /* document list: grey cards with a leading document icon, e.g. relevant information pdfs */
@@ -172,12 +172,12 @@
 .link-list.doc-list .link-list-row::before {
   content: "";
   flex: 0 0 auto;
-  width: 20px;
-  height: 20px;
+  width: 1.25rem;
+  height: 1.25rem;
   padding: var(--spacing-xxs);
   background-color: currentcolor;
   aspect-ratio: 1/1;
-  mask: url("../../icons/document.svg") center / 20px no-repeat;
+  mask: url("../../icons/document.svg") center / 1.25rem no-repeat;
 }
 
 .link-list.doc-list .link-list-title {
@@ -209,9 +209,9 @@
   box-sizing: border-box;
   width: 100%;
   margin-top: var(--spacing-4xl);
-  padding: 14px var(--spacing-lg);
+  padding: 0.875rem var(--spacing-lg);
   border: 1px solid var(--color-button-pills-stroke-default-stroke-base);
-  border-radius: 100px;
+  border-radius: 6.25rem;
   background: none;
   color: var(--text-color);
   font-size: var(--type-button-bt-3-font-size);
@@ -228,9 +228,9 @@
 
 :where(.desktop-view) .link-list .link-list-note {
   display:block;
-  margin-top: 40px;
-  padding: var(--spacing-xl) 18px;
-  border-radius: 12px;
+  margin-top: var(--spacing-5xl);
+  padding: var(--spacing-xl) 1.125rem;
+  border-radius: var(--radius-lg);
   background-color: var(--surface-color);
 }
 
