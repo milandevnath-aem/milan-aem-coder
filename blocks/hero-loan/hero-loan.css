@@ -483,7 +483,7 @@
 
 .hero-loan .hero-loan-more-menu button:hover,
 .hero-loan .hero-loan-more-menu button[aria-pressed='true'] {
-  background-color: var(--light-color);
+  background-color: var(--color-background-2-default-hover);
 }
 
 .hero-loan .hero-loan-more-menu button:focus-visible {
