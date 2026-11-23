@@ -488,7 +488,7 @@
 
 .hero-loan .hero-loan-more-menu button:hover,
 .hero-loan .hero-loan-more-menu button[aria-pressed='true'] {
-  background-color: var(--light-color);
+  background-color: #e6e6e6; /* Figma: Background-2/default-hover */
 }
 
 .hero-loan .hero-loan-more-menu button:focus-visible {
