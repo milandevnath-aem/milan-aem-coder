@@ -108,6 +108,10 @@
   border-top: 1px solid var(--surface-color);
 }
 
+.link-list .link-list-has-image{
+  max-width: 660px;
+}
+
 .link-list .link-list-has-image .link-list-row {
   padding: 12px 0;
 }
