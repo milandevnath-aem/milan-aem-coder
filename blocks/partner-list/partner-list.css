@@ -44,7 +44,7 @@
 .partner-list .partner-list-item {
   display: flex;
   align-items: center;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-xl);
 }
 
 .partner-list .partner-list-icon {
