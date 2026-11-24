@@ -150,6 +150,10 @@
   gap: var(--spacing-md);
 }
 
+.link-list.doc-list .link-list-item{
+  max-width: 660px;
+}
+
 .link-list.doc-list .link-list-item + .link-list-item {
   border-top: 0;
 }
