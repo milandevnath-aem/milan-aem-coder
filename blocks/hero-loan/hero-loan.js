@@ -448,6 +448,10 @@ function buildSlides(rows) {
       slide.setAttribute('aria-hidden', i !== current);
     });
     dots.querySelectorAll('.hero-loan-dot').forEach((dot, i) => dot.setAttribute('aria-current', i === current));
+    // load the next slide's image ahead of time so it never pops in during the fade
+    slides.children[(current + 1) % rows.length]?.querySelectorAll('img').forEach((img) => {
+      img.loading = 'eager';
+    });
   };
   rows.forEach((_, i) => {
     const dot = document.createElement('button');

@@ -1,5 +1,8 @@
+/* page behind an open popup must not scroll (html too: it is the scroller on some browsers) */
+html:has(body.modal-open),
 body.modal-open {
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 dialog.modal {
