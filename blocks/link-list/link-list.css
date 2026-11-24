@@ -37,6 +37,7 @@
   line-height:var(--type-headline-h5-line-height);
   font-weight: var(--type-headline-h5-font-weight);
   letter-spacing: var(--type-headline-h5-letter-spacing);
+  color: var(--color-text-primary-default-base);
 }
 
 .link-list .link-list-intro p {
