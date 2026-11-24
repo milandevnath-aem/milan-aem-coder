@@ -37,6 +37,7 @@
     font-size: var(--type-display-medium-df-1-font-size);
     line-height: var(--type-display-medium-df-1-line-height);
     letter-spacing: -0.8px;
+    font-weight: 500;
     color: #121212;
 }
 
@@ -55,7 +56,7 @@
 
 :where(.desktop-view) .columns.columns-split > div > div:first-child h2,
 :where(.desktop-view) .columns.columns-split > div > div:first-child h3 {
-    letter-spacing: -0.1px;
+    letter-spacing: -1px;
 }
 
 .feature-cards-container .columns.columns-split > div > div:first-child h2 {
