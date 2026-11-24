@@ -98,6 +98,10 @@
     margin-top: 80px;
 }
 
+.columns.columns-split p:has(a:any-link){
+    margin: var(--spacing-4xl) 0 0;
+}
+
 .columns.columns-split a:any-link {
     color: var(--color-brand-gradient-kotak-blue-default-2);
     text-decoration: underline;
