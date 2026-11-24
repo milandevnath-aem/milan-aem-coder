@@ -116,6 +116,7 @@
 .hero-loan .hero-loan-inner {
   grid-area: stack;
   position: relative;
+  z-index: 2; /* above the slides (z-index 1) so the form and dots stay visible */
   pointer-events: none;
 }
 
