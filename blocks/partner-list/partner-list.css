@@ -23,6 +23,8 @@
   margin: 0;
   font-size: var(--type-body-b3-font-size);
   line-height: var(--type-body-b3-line-height);
+  letter-spacing: var(--type-body-b3-letter-spacing);
+  font-weight: var(--type-body-b3-font-weight);
   color: var(--muted-color);
 }
 
@@ -70,11 +72,6 @@
     grid-template-columns: 2fr 3fr;
     gap: var(--spacing-8xl);
     padding: var(--spacing-5xl) 0;
-  }
-
-  .partner-list .partner-list-description p {
-    font-size: var(--body-font-size-s);
-    line-height: 20px;
   }
 }
 
