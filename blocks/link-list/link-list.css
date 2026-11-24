@@ -20,7 +20,6 @@
   margin: 0 0 12px;
   font-size: var(--type-display-medium-df-1-font-size);
   line-height: var(--type-display-medium-df-1-line-height);
-  color: var(--color-text-primary-default-base);
 }
 
 .link-list .link-list-side p {
@@ -36,9 +35,6 @@
   margin: 0 0 8px;
   font-size:var(--type-headline-h5-font-size);
   line-height:var(--type-headline-h5-line-height);
-  font-weight: var(--type-headline-h5-font-weight);
-  letter-spacing: var(--type-headline-h5-letter-spacing);
-  color: var(--color-text-primary-default-base);
 }
 
 .link-list .link-list-intro p {
@@ -108,10 +104,6 @@
   border-top: 1px solid var(--surface-color);
 }
 
-.link-list .link-list-has-image{
-  max-width: 660px;
-}
-
 .link-list .link-list-has-image .link-list-row {
   padding: 12px 0;
 }
@@ -156,10 +148,6 @@
 
 .link-list.doc-list .link-list-main > ul {
   gap: var(--spacing-md);
-}
-
-.link-list.doc-list .link-list-item{
-  max-width: 660px;
 }
 
 .link-list.doc-list .link-list-item + .link-list-item {
@@ -220,7 +208,6 @@
   display: block;
   box-sizing: border-box;
   width: 100%;
-  max-width: 660px;
   margin-top: var(--spacing-4xl);
   padding: 14px var(--spacing-lg);
   border: 1px solid var(--color-button-pills-stroke-default-stroke-base);
@@ -241,7 +228,6 @@
 
 :where(.desktop-view) .link-list .link-list-note {
   display:block;
-  max-width: 660px;
   margin-top: 40px;
   padding: var(--spacing-xl) 18px;
   border-radius: 12px;
