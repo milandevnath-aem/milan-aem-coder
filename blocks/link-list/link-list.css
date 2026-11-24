@@ -20,6 +20,7 @@
   margin: 0 0 12px;
   font-size: var(--type-display-medium-df-1-font-size);
   line-height: var(--type-display-medium-df-1-line-height);
+  color: var(--color-text-primary-default-base);
 }
 
 .link-list .link-list-side p {
