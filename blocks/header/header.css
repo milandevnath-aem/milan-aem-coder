@@ -807,6 +807,7 @@ header nav .nav-tools a[aria-expanded='true'] .nav-icon-close {
 }
 
 :where(.desktop-view) header nav .nav-tools .default-content-wrapper {
+  position: relative;
   justify-content: flex-end;
   gap: 16px;
 }
@@ -826,6 +827,67 @@ header nav .nav-tools a[aria-expanded='true'] .nav-icon-close {
 :where(.desktop-view) header nav .nav-tools a.button {
   min-width: 0;
   padding: 11px 25px;
+}
+
+/* login popup (desktop only, the mobile menu has its own login button) */
+header nav .nav-login-popup {
+  display: none;
+}
+
+:where(.desktop-view) header nav .nav-login-popup {
+  box-sizing: border-box;
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  width: 293px;
+  margin: 0;
+  border: 1px solid #eee;
+  border-radius: 24px;
+  padding: 16px 8px;
+  background-color: var(--background-color);
+  box-shadow: 0 1px 2px 0 rgb(18 18 18 / 8%), 0 12px 32px 0 rgb(18 18 18 / 12%);
+  list-style: none;
+}
+
+:where(.desktop-view) header nav .nav-login-popup[hidden] {
+  display: none;
+}
+
+:where(.desktop-view) header nav .nav-login-popup li {
+  margin: 0;
+  padding: 0;
+}
+
+:where(.desktop-view) header nav .nav-login-popup a:any-link {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  border-radius: 8px;
+  padding: 12px 16px 12px 24px;
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+:where(.desktop-view) header nav .nav-login-popup a:hover,
+:where(.desktop-view) header nav .nav-login-popup a:focus-visible {
+  background-color: var(--light-color);
+}
+
+:where(.desktop-view) header nav .nav-login-popup .nav-login-title {
+  font-size: var(--body-font-size-m);
+  font-weight: 600;
+  line-height: 24px;
+}
+
+:where(.desktop-view) header nav .nav-login-popup .nav-login-desc {
+  color: #666;
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  line-height: 18px;
 }
 
 /* search */
