@@ -78,6 +78,7 @@ header nav[data-expanded='true'] {
   overflow-y: auto;
 }
 
+html:has(body.nav-open, body.nav-search-open),
 body.nav-open,
 body.nav-search-open {
   overflow: hidden;
