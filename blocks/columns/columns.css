@@ -108,10 +108,10 @@
     display: flex;
     gap: var(--spacing-lg);
     align-items: center;
-    font-size: var(--type-button-bt-2-font-size);
-    line-height: var(--type-button-bt-2-line-height);
-    letter-spacing: var(--type-button-bt-2-letter-spacing);
-    font-weight: var(--type-button-bt-2-font-weight);
+    font-size: var(--type-link-button-l2-font-size);
+    line-height: var(--type-link-button-l2-line-height);
+    letter-spacing: var(--type-link-button-l2-letter-spacing);
+    font-weight: var(--type-link-button-l2-font-weight);
 }
 
 .columns.columns-split a:any-link .icon {
