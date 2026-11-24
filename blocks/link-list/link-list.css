@@ -241,6 +241,7 @@
 
 :where(.desktop-view) .link-list .link-list-note {
   display:block;
+  max-width: 660px;
   margin-top: 40px;
   padding: var(--spacing-xl) 18px;
   border-radius: 12px;
