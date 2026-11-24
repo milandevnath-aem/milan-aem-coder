@@ -64,6 +64,8 @@
 .partner-list .partner-list-label {
   font-size: var(--type-body-b3-font-size);
   line-height: var(--type-body-b3-line-height);
+  font-weight: var(--type-body-b3-font-weight);
+  letter-spacing: var(--type-body-b3-letter-spacing);
   color: var(--text-color);
 }
 
