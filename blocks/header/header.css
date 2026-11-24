@@ -79,6 +79,7 @@ header nav[data-expanded='true'] {
 }
 
 body.nav-open,
+body.nav-login-open,
 body.nav-search-open {
   overflow: hidden;
 }
@@ -829,6 +830,121 @@ header nav .nav-tools a[aria-expanded='true'] .nav-icon-close {
   padding: 11px 25px;
 }
 
+/* login bottom sheet (mobile, opened from the login button of the menu) */
+header .nav-login-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  font-family: var(--body-font-family);
+}
+
+header .nav-login-sheet[hidden] {
+  display: none;
+}
+
+header .nav-login-sheet-scrim {
+  position: absolute;
+  inset: 0;
+  background-color: rgb(18 18 18 / 60%);
+}
+
+header .nav-login-sheet-close {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-end;
+  width: 40px;
+  height: 40px;
+  margin: 0 16px 8px;
+  border: 0;
+  border-radius: 8px;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+header .nav-login-sheet-close .nav-icon {
+  filter: invert(1);
+}
+
+header .nav-login-sheet-close:focus-visible,
+header .nav-login-sheet a:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+header .nav-login-sheet-panel {
+  position: relative;
+  box-sizing: border-box;
+  max-height: 80dvh;
+  border-radius: 32px 32px 0 0;
+  padding: 20px 20px 32px;
+  background-color: var(--background-color);
+  overflow-y: auto;
+}
+
+header .nav-login-sheet h2 {
+  margin: 0 0 20px;
+  color: var(--text-color);
+  font-size: var(--heading-font-size-xl);
+  font-weight: 600;
+  line-height: 36px;
+  letter-spacing: -0.56px;
+}
+
+header .nav-login-sheet ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+header .nav-login-sheet li {
+  margin: 0;
+  padding: 0;
+}
+
+header .nav-login-sheet li + li {
+  border-top: 1px solid var(--surface-color);
+}
+
+header .nav-login-sheet a:any-link {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 8px 16px;
+  padding: 20px 0;
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+header .nav-login-sheet .nav-login-title {
+  font-size: var(--body-font-size-s);
+  font-weight: 600;
+  line-height: 20px;
+}
+
+header .nav-login-sheet .nav-icon {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+header .nav-login-sheet .nav-login-desc {
+  grid-column: 1 / -1;
+  color: var(--muted-color);
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  line-height: 20px;
+}
+
+:where(.desktop-view) header .nav-login-sheet {
+  display: none;
+}
+
 /* login popup (desktop only, the mobile menu has its own login button) */
 header nav .nav-login-popup {
   display: none;
@@ -837,7 +953,7 @@ header nav .nav-login-popup {
 :where(.desktop-view) header nav .nav-login-popup {
   box-sizing: border-box;
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 18px);
   right: 0;
   z-index: 5;
   display: flex;
