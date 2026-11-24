@@ -39,6 +39,14 @@
     color: var(--color-text-primary-inverse-base);
 }
 
+.feature-banner .feature-banner-item.light-text h6{
+    color: var(--color-text-primary-inverse-base);
+}
+
+.feature-banner .feature-banner-item.dark-text h6{
+    color: var(--color-text-primary-default-base);
+}
+
 .feature-banner .feature-banner-item.dark-text p {
     color: var(--color-text-primary-default-base);
 }
