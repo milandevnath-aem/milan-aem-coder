@@ -80,7 +80,8 @@ export const PRODUCT_BY_CATEGORY = {
   'Used Car & Re-finance': { product: 'NewCarFinance', Product: 'Used Car' },
   'Top-Up Loan': { product: 'NewCarFinance', Product: 'PL/KPTR' },
   'Two-Wheeler Loan': { product: 'TWL' },
-  'Loan Against Property': { product: 'LAP' },
+  // the LAP API needs MiddleName in the request, as null (the form has no middle name)
+  'Loan Against Property': { product: 'LAP', MiddleName: null },
 };
 
 /**
