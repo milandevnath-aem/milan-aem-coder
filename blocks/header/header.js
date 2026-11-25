@@ -638,10 +638,7 @@ async function loadSearchIndex() {
       });
     });
 
-    const cleanDescription = description
-      .replace(componentPattern, '')
-      .replace(/__/g, ' ')
-      .trim();
+    const cleanDescription = description.split(/#|__/)[0].trim();
 
     entries.push({
       title: name,
@@ -785,25 +782,7 @@ function buildSearch(placeholder) {
       .sort((a, b) => b.score - a.score) : [];
     list.textContent = '';
     matches.slice(0, SEARCH_LIMIT).forEach((match) => {
-      const { entry, componentMatches } = match;
-
-      const li = document.createElement('li');
-
-      // Parent page result
-      const a = document.createElement('a');
-      a.href = entry.href;
-
-      const label = document.createElement('span');
-      label.className = 'nav-search-label';
-
-      const name = entry.title.toLowerCase();
-      const highlightQuery = name.includes(q)
-        ? q
-        : words.find((word) => name.includes(word));
-
-      highlight(label, entry.title, highlightQuery);
-      a.append(label);
-      li.append(a);
+      const { entry, pageScore, componentMatches } = match;
 
       // Matching component results as independent search results
       componentMatches.forEach((component) => {
@@ -824,7 +803,24 @@ function buildSearch(placeholder) {
         list.append(componentLi);
       });
 
-      list.append(li);
+      if (pageScore) {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = entry.href;
+
+        const label = document.createElement('span');
+        label.className = 'nav-search-label';
+
+        const name = entry.title.toLowerCase();
+        const highlightQuery = name.includes(q)
+          ? q
+          : words.find((word) => name.includes(word));
+
+        highlight(label, entry.title, highlightQuery);
+        a.append(label);
+        li.append(a);
+        list.append(li);
+      }
     });
     [...list.children].forEach((item, position) => {
       item.setAttribute('role', 'none');
