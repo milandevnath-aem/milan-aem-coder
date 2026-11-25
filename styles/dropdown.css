@@ -214,13 +214,17 @@
   align-items: center;
   gap: 12px;
   border-radius: 12px;
-  padding: 12px;
+  padding: 10px;
   cursor: pointer;
 }
 
 .dropdown-list [role='option'].is-active,
 .dropdown-list [role='option']:hover {
   background-color: var(--light-color);
+}
+
+:where(.desktop-view) .dropdown-list [role='option'] {
+  padding: var(--spacing-lg);
 }
 
 .dropdown-option-text {

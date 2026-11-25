@@ -4,9 +4,11 @@
 
   The APIs are AEM servlets, POSTed to ENDPOINTS[name] (see api.md):
   captcha-generate -> captcha-verify -> otp-generate -> otp-verify.
-  The paths are absolute, from /content, so the APIs are called on the domain the site is
-  served from, whatever it is. They rely on HttpOnly SameSite=Strict cookies, which only work
-  on that same domain.
+  The paths are root-relative (no host, never localhost), so the APIs are called on the domain
+  the site is served from, whatever it is. They rely on HttpOnly SameSite=Strict cookies, which
+  only work on that same domain. The captcha APIs are on the `en/home` page, the OTP APIs on
+  `en`: the captcha cookies must be set with a Path that covers both (e.g. Path=/) to reach
+  otp-generate.
 
   Everything here ships to the browser: never put API keys, secrets or passwords in this file.
 */
@@ -22,18 +24,19 @@ export const ENDPOINTS = {
   /** { captcha } -> { data: { verified } }, sets the kmp_captcha_ok cookie */
   captchaVerify: '/content/kotakmahindraprime-aem/in/en/home.captcha-verify.json',
   /**
-   * Send: { mobile, name, email } -> { data: { transactionId, token } }, needs kmp_captcha_ok.
+   * Send: { mobile } -> { data: { transactionId, token } }, needs kmp_captcha_ok.
    * Resend is the same endpoint with { mobile, transactionId, token } (the latest pair; the
    * token is what makes it a resend, so no captcha). Its answer's pair replaces the old one:
    * each token works for one resend only.
    */
-  otpGenerate: '/content/kotakmahindraprime-aem/in/en/home.otp-generate.json',
+  otpGenerate: '/content/kotakmahindraprime-aem/in/en.otp-generate.json',
   /**
    * { transactionId, otp, token, category, lead } -> { data: lead API response }
    * One endpoint for every product (LAP, NewCarFinance, TWL): `category` picks the lead API
-   * (see PRODUCT_BY_CATEGORY).
+   * (see PRODUCT_BY_CATEGORY). The server adds the OTP-verified mobile and its own fields
+   * (LeadSource, EnquiryType, TWL defaults...).
    */
-  otpVerify: '/content/kotakmahindraprime-aem/in/en/home.otp-verify.json',
+  otpVerify: '/content/kotakmahindraprime-aem/in/en.otp-verify.json',
 };
 
 /**
@@ -73,7 +76,7 @@ export const OTP_VALID_MS = 5 * 60 * 1000;
  * change is needed.
  */
 export const PRODUCT_BY_CATEGORY = {
-  'New Car Finance': { product: 'NewCarFinance', Product: 'New CAR' },
+  'New Car Finance': { product: 'NewCarFinance', Product: 'New Car Finance' },
   'Used Car & Re-finance': { product: 'NewCarFinance', Product: 'Used Car' },
   'Top-Up Loan': { product: 'NewCarFinance', Product: 'PL/KPTR' },
   'Two-Wheeler Loan': { product: 'TWL' },
@@ -104,9 +107,13 @@ export const LEAD_KEYS_BY_PRODUCT = {
     FirstName: 'FirstName', LastName: 'LastName', Location: 'Location', Pincode: 'Pincode', Email: 'Email',
   },
   // required: firstName, lastName, businessLocation
-  TWL: { FirstName: 'firstName', LastName: 'lastName', Location: 'businessLocation' },
-  // nothing required
-  LAP: { Name: 'Name', Email: 'Email', Location: 'City' },
+  TWL: {
+    FirstName: 'firstName', LastName: 'lastName', Location: 'businessLocation', Email: 'email',
+  },
+  // the server adds Phone (verified mobile), LeadSource and EnquiryType
+  LAP: {
+    FirstName: 'FirstName', LastName: 'LastName', Email: 'Email', Location: 'Location',
+  },
 };
 
 /**

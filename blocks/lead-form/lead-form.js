@@ -5,7 +5,7 @@ import {
   CAPTCHA_LENGTH, createLeadSession, errorMessage as apiErrorMessage, generateCaptcha,
 } from './lead-api.js';
 import { CITY_COLUMN, CITY_LISTS, MESSAGES } from './lead-api-config.js';
-import { buildLead, contactOf, productFor } from './lead-payload.js';
+import { buildLead, productFor } from './lead-payload.js';
 import {
   createOtpStep, createSuccessStep, setLoading, spinner,
 } from './lead-form-otp.js';
@@ -723,8 +723,6 @@ export default function decorate(block) {
     try {
       session = createLeadSession({
         mobile,
-        // sent with the first OTP request only (otp-generate)
-        ...contactOf(form),
         product: productFor(category),
         lead: buildLead(form, category),
         loanCategory: category,

@@ -1155,7 +1155,7 @@ header .nav-search-group a:any-link {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 10px 0;
+  padding: 10px 12px;
   color: var(--text-color);
   font-size: var(--body-font-size-s);
   font-weight: 500;

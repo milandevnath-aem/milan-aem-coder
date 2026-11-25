@@ -7,10 +7,9 @@
     const { image, audio } = await generateCaptcha(signal); // on opening the form, and on
                                                         // refresh; audio is '' when not sent
     const product = productFor('New Car Finance');      // 'NewCarFinance'
-    const lead = buildLead(form, 'New Car Finance');    // the API's fields + Product 'New CAR'
-    const { name, email } = contactOf(form);           // sent with the first OTP only
+    const lead = buildLead(form, 'New Car Finance');    // the API's fields + its Product
     const session = createLeadSession({
-      mobile: '8097475810', name, email, product, lead,
+      mobile: '8097475810', product, lead,
     });
     try {
       await session.submit('aB3dE');                    // verifies the captcha, texts the OTP
@@ -263,10 +262,7 @@ function keepCreatedLead(lead) {
 /**
  * One OTP journey of one form submission. Create a new session for every submit.
  * @param {Object} options
- * @param {string} options.mobile ten-digit mobile number
- * @param {string} [options.name] full name, sent with the first OTP request (not on resend:
- *   the backend reads it from the token)
- * @param {string} [options.email] sent with the first OTP request, like the name
+ * @param {string} options.mobile ten-digit mobile number (the only field of otp-generate)
  * @param {string} options.product backend product (LAP, TWL, NewCarFinance), '' when the
  *   category has no API yet (sent as is: the server refuses the lead)
  * @param {Object<string, string>} options.lead see buildLead in lead-payload.js
@@ -281,7 +277,7 @@ function keepCreatedLead(lead) {
  * }}
  */
 export function createLeadSession({
-  mobile, name = '', email = '', product, lead, loanCategory = '',
+  mobile, product, lead, loanCategory = '',
 }) {
   if (!product) {
     // eslint-disable-next-line no-console
@@ -302,11 +298,11 @@ export function createLeadSession({
       throw new LeadApiError('invalid-input', 'mobile must be 10 digits starting with 6-9');
     }
     const previous = otpCredentials;
-    // first send: mobile, name and email; resend: the latest pair instead (the token tells
-    // the backend it is a resend, and it holds the name and email)
+    // first send: the mobile only; resend: with the latest pair (the token tells the backend
+    // it is a resend)
     const body = previous
       ? { mobile, transactionId: previous.transactionId, token: previous.token }
-      : { mobile, name: text(name), email: text(email) };
+      : { mobile };
     const data = record(await post('otpGenerate', body, controller.signal));
     // cancelled or used meanwhile: nothing is kept
     if (otpCredentials !== previous) return;
