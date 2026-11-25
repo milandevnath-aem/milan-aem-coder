@@ -24,7 +24,8 @@ export const ENDPOINTS = {
   /** { captcha } -> { data: { verified } }, sets the kmp_captcha_ok cookie */
   captchaVerify: '/content/kotakmahindraprime-aem/in/en/home.captcha-verify.json',
   /**
-   * Send: { mobile } -> { data: { transactionId, token } }, needs kmp_captcha_ok.
+   * Send: { data: { name, mobileNo, mobCode, email, mode }, source, productType } (the fixed
+   * values are OTP_GENERATE_FIXED) -> { data: { transactionId, token } }, needs kmp_captcha_ok.
    * Resend is the same endpoint with { mobile, transactionId, token } (the latest pair; the
    * token is what makes it a resend, so no captcha). Its answer's pair replaces the old one:
    * each token works for one resend only.
@@ -37,6 +38,17 @@ export const ENDPOINTS = {
    * (LeadSource, EnquiryType, TWL defaults...).
    */
   otpVerify: '/content/kotakmahindraprime-aem/in/en.otp-verify.json',
+};
+
+/**
+ * The fixed values of the first OTP request (otp-generate); only name, mobileNo and email change.
+ * Not secrets: they ship to the browser.
+ */
+export const OTP_GENERATE_FIXED = {
+  mobCode: '91',
+  mode: 'B',
+  source: 'AEM',
+  productType: 'CR',
 };
 
 /**
@@ -80,8 +92,9 @@ export const PRODUCT_BY_CATEGORY = {
   'Used Car & Re-finance': { product: 'NewCarFinance', Product: 'Used Car' },
   'Top-Up Loan': { product: 'NewCarFinance', Product: 'PL/KPTR' },
   'Two-Wheeler Loan': { product: 'TWL' },
-  // the LAP API needs MiddleName in the request, as null (the form has no middle name)
-  'Loan Against Property': { product: 'LAP', MiddleName: null },
+  // LAP: the form has no middle name, so it is sent empty. LeadSource and EnquiryType are added
+  // by the backend.
+  'Loan Against Property': { product: 'LAP', MiddleName: '' },
 };
 
 /**
@@ -111,9 +124,9 @@ export const LEAD_KEYS_BY_PRODUCT = {
   TWL: {
     FirstName: 'firstName', LastName: 'lastName', Location: 'businessLocation', Email: 'email',
   },
-  // the server adds Phone (verified mobile), LeadSource and EnquiryType
+  // the server adds LeadSource and EnquiryType
   LAP: {
-    FirstName: 'FirstName', LastName: 'LastName', Email: 'Email', Location: 'Location',
+    FirstName: 'FirstName', LastName: 'LastName', Email: 'Email', Location: 'Location', Mobile: 'Phone',
   },
 };
 
