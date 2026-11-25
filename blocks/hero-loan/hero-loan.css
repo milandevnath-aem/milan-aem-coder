@@ -469,6 +469,7 @@
   left: 0;
   z-index: 3;
   min-width: 100%;
+  overflow-y: auto;
   margin: 0;
   padding: 4px;
   border: 1px solid #ededed;
@@ -476,6 +477,11 @@
   background-color: var(--background-color);
   box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
   list-style: none;
+}
+
+/* more than 4 items: show 4 and scroll the rest */
+.hero-loan .hero-loan-more-menu:has(li:nth-child(5)) {
+  max-height: 144px;
 }
 
 .hero-loan .hero-loan-more-menu[hidden] {
