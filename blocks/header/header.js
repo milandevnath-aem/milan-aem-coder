@@ -320,6 +320,146 @@ function buildLanguage(li) {
   return wrapper;
 }
 
+/**
+ * Desktop Login popup: the Login button opens a small card of authored links.
+ * Authored as a list in the nav tools section, after the buttons:
+ * <ul><li><a>Customer Portal</a> Login to your customer portal</li>…</ul>
+ * Without a list the Login button stays a plain link.
+ * @returns {HTMLElement} the Login button wrapper, with a close() helper
+ */
+function buildLoginMenu(loginLink, items) {
+  uid += 1;
+  const holder = loginLink.closest('.button-wrapper') || loginLink.parentElement;
+  holder.classList.add('nav-login-menu');
+  const menu = document.createElement('ul');
+  menu.className = 'nav-login-popup';
+  menu.id = `nav-login-popup-${uid}`;
+  menu.hidden = true;
+  items.forEach((item) => {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = item.href;
+    const title = document.createElement('span');
+    title.className = 'nav-login-title';
+    title.textContent = item.title;
+    a.append(title);
+    if (item.description) {
+      const desc = document.createElement('span');
+      desc.className = 'nav-login-desc';
+      desc.textContent = item.description;
+      a.append(desc);
+    }
+    li.append(a);
+    menu.append(li);
+  });
+
+  loginLink.setAttribute('aria-haspopup', 'true');
+  loginLink.setAttribute('aria-expanded', 'false');
+  loginLink.setAttribute('aria-controls', menu.id);
+  const setOpen = (isOpen) => {
+    loginLink.setAttribute('aria-expanded', isOpen);
+    menu.hidden = !isOpen;
+  };
+  loginLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setOpen(menu.hidden);
+  });
+  document.addEventListener('click', (e) => {
+    if (!menu.hidden && !holder.contains(e.target) && !menu.contains(e.target)) setOpen(false);
+  });
+  holder.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !menu.hidden) {
+      e.stopPropagation();
+      setOpen(false);
+      loginLink.focus();
+    }
+  });
+  menu.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !menu.hidden) {
+      e.stopPropagation();
+      setOpen(false);
+      loginLink.focus();
+    }
+  });
+  holder.after(menu);
+  holder.close = () => setOpen(false);
+  return holder;
+}
+
+/**
+ * Mobile Login bottom sheet, opened by the Login button of the mobile menu.
+ * Uses the same authored items as the desktop popup.
+ * @returns {HTMLElement} the sheet with open()/close() helpers
+ */
+function buildLoginSheet(heading, items) {
+  uid += 1;
+  const sheet = document.createElement('div');
+  sheet.className = 'nav-login-sheet';
+  sheet.hidden = true;
+  sheet.setAttribute('role', 'dialog');
+  sheet.setAttribute('aria-modal', 'true');
+  sheet.setAttribute('aria-labelledby', `nav-login-sheet-${uid}`);
+
+  const scrim = document.createElement('div');
+  scrim.className = 'nav-login-sheet-scrim';
+
+  const close = document.createElement('button');
+  close.type = 'button';
+  close.className = 'nav-login-sheet-close';
+  close.setAttribute('aria-label', 'Close');
+  close.append(icon('close', 24));
+
+  const panel = document.createElement('div');
+  panel.className = 'nav-login-sheet-panel';
+  const title = document.createElement('h2');
+  title.id = `nav-login-sheet-${uid}`;
+  title.textContent = heading;
+  const list = document.createElement('ul');
+  items.forEach((item) => {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = item.href;
+    const name = document.createElement('span');
+    name.className = 'nav-login-title';
+    name.textContent = item.title;
+    a.append(name, icon('chevron-right', 24));
+    if (item.description) {
+      const desc = document.createElement('span');
+      desc.className = 'nav-login-desc';
+      desc.textContent = item.description;
+      a.append(desc);
+    }
+    li.append(a);
+    list.append(li);
+  });
+  panel.append(title, list);
+  sheet.append(scrim, close, panel);
+
+  let opener;
+  sheet.close = () => {
+    if (sheet.hidden) return;
+    sheet.hidden = true;
+    document.body.classList.remove('nav-login-open');
+    opener?.focus();
+  };
+  sheet.open = (trigger) => {
+    opener = trigger;
+    sheet.hidden = false;
+    document.body.classList.add('nav-login-open');
+    close.focus();
+  };
+  scrim.addEventListener('click', sheet.close);
+  close.addEventListener('click', sheet.close);
+  sheet.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      e.stopPropagation();
+      sheet.close();
+    }
+  });
+  return sheet;
+}
+
 /* accessibility settings: text size, letter spacing, line height */
 function readA11y() {
   try {
@@ -912,6 +1052,16 @@ export default async function decorate(block) {
   const navTools = nav.querySelector('.nav-tools');
   const searchLink = navTools?.querySelector('.icon-search')?.closest('a');
   const loginLink = navTools?.querySelector('a.secondary, em a');
+  // authored list of login options (title link + description) for the desktop popup
+  const loginMenuList = navTools?.querySelector('ul');
+  const loginMenuItems = [...(loginMenuList?.children || [])].map(parseLink).filter((i) => i.href !== '#');
+  loginMenuList?.remove();
+  const loginMenu = loginLink && loginMenuItems.length
+    ? buildLoginMenu(loginLink, loginMenuItems)
+    : null;
+  const loginSheet = loginMenu
+    ? buildLoginSheet(loginLink.textContent.trim() || 'Login', loginMenuItems)
+    : null;
 
   const hamburger = document.createElement('div');
   hamburger.className = 'nav-hamburger';
@@ -969,6 +1119,13 @@ export default async function decorate(block) {
     login.className = 'button primary nav-login';
     login.href = loginLink.href;
     login.textContent = loginLink.textContent.trim();
+    if (loginSheet) {
+      login.setAttribute('aria-haspopup', 'dialog');
+      login.addEventListener('click', (e) => {
+        e.preventDefault();
+        loginSheet.open(login);
+      });
+    }
     const p = document.createElement('p');
     p.className = 'nav-login-wrapper';
     p.append(login);
@@ -1008,6 +1165,7 @@ export default async function decorate(block) {
     }
     document.body.classList.toggle('nav-search-open', isOpen && !isDesktop.matches);
     if (isOpen) {
+      loginMenu?.close();
       desktopMenu?.closeAll();
       search.load();
       search.input.focus();
@@ -1062,6 +1220,8 @@ export default async function decorate(block) {
     if (navTopbar.getBoundingClientRect().bottom <= 0) window.scrollTo({ top: 0 });
   });
   isDesktop.addEventListener('change', () => {
+    loginMenu?.close();
+    loginSheet?.close();
     setMenu(false);
     setSearch(false);
   });
@@ -1070,6 +1230,7 @@ export default async function decorate(block) {
   navWrapper.className = 'nav-wrapper';
   if (navTopbar) navWrapper.append(navTopbar);
   navWrapper.append(nav, search, scrim);
+  if (loginSheet) navWrapper.append(loginSheet);
   block.append(navWrapper);
 }
 
