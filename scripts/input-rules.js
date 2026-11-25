@@ -39,7 +39,7 @@ export function fieldMessages(label, kind) {
     .join(' ');
   if (kind === 'tel') {
     return {
-      empty: 'Please enter mobile number to proceed!',
+      empty: /contact/i.test(label) ? 'Please enter contact number to proceed!' : 'Please enter mobile number to proceed!',
       invalid: 'Mobile must start with (6/7/8/9) and be numeric, with a length of 10 digits',
     };
   }
@@ -56,7 +56,9 @@ export function fieldMessages(label, kind) {
     };
   }
   if (kind === 'select' || kind === 'search') {
-    const message = `Please select ${name === 'city' ? 'the city' : name} to proceed!`;
+    // the client's wording: "the city", "the location", "the product"
+    const article = name === 'city' || name === 'location' || /^product/.test(name);
+    const message = `Please select ${article ? 'the ' : ''}${/^product/.test(name) ? 'product' : name} to proceed!`;
     return { empty: message, invalid: message };
   }
   if (kind === 'captcha') {
@@ -75,18 +77,15 @@ export function fieldMessages(label, kind) {
     };
   }
   if (kind === 'number') {
-    return { empty: `Please enter ${name} to proceed!`, invalid: 'Please enter digits only to proceed!' };
+    return {
+      empty: `Please enter ${name} to proceed!`,
+      invalid: /amount/i.test(label) ? 'Please enter valid amount to proceed!' : 'Please enter digits only to proceed!',
+    };
   }
   if (kind === 'alphanumeric') {
     return {
       empty: `Please enter ${name} to proceed!`,
       invalid: 'Please enter letters and numbers only to proceed!',
-    };
-  }
-  if (['text', 'text-half'].includes(kind) && isFullName(label)) {
-    return {
-      empty: `Please enter ${name} to proceed!`,
-      invalid: 'Please enter your first and last name, using letters only, to proceed!',
     };
   }
   return {
@@ -95,10 +94,11 @@ export function fieldMessages(label, kind) {
   };
 }
 
+/**
+ * The message of a wrong value. The client wants one text per field, so it is the field's own
+ * invalid message (a full name still needs a first and a last name: a one-word name is invalid).
+ */
 export function valueErrorMessage(label, kind, value, fallback) {
-  if (['text', 'text-half'].includes(kind) && isFullName(label) && /^[a-zA-Z]+$/.test(value.trim())) {
-    return 'Please enter your first and last name to proceed!';
-  }
   return fallback;
 }
 
