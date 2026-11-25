@@ -125,7 +125,7 @@ export default function decorate(block) {
       const lists = [...answer.querySelectorAll('.faq-group-list')];
       const total = (isTable ? lists.slice(0, 1) : lists)
         .reduce((sum, ul) => sum + ul.children.length, 0);
-      if (total) countEl.textContent = `${total} ${countEl.textContent.trim()}`;
+      if (total) countEl.textContent = `${total} ${countEl.textContent.trim().replace(/^\d+\s*/, '')}`;
     }
     if (isTable) {
       // header row + longest column, so groups share row tracks via subgrid
