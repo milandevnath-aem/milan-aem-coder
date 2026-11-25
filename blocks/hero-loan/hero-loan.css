@@ -465,7 +465,7 @@
 
 .hero-loan .hero-loan-more-menu {
   position: absolute;
-  bottom: calc(100% + 8px);
+  top: calc(100% + 8px);
   left: 0;
   z-index: 3;
   min-width: 100%;
@@ -478,6 +478,12 @@
   background-color: var(--background-color);
   box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
   list-style: none;
+}
+
+/* more than 4 items: open above the button so the hero's overflow doesn't clip it */
+.hero-loan .hero-loan-more-menu:has(li:nth-child(5)) {
+  top: auto;
+  bottom: calc(100% + 8px);
 }
 
 .hero-loan .hero-loan-more-menu[hidden] {
