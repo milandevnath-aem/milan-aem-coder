@@ -94,7 +94,7 @@ function readForm(form) {
  *   except `product`, which is sent next to the lead as its `category` (see lead-api.js)
  * @returns {Object<string, string>} e.g. New Car Finance: { FirstName, LastName, Location,
  *   Pincode, Email, Product: "New Car Finance" }; TWL: { firstName, lastName,
- *   businessLocation, email }; LAP: { FirstName, LastName, Email, Location }
+ *   businessLocation, email }; LAP: { FirstName, LastName, Email, Location, Phone, MiddleName }
  */
 export function buildLead(form, category) {
   const all = readForm(form);

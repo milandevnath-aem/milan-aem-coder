@@ -80,8 +80,9 @@ export const PRODUCT_BY_CATEGORY = {
   'Used Car & Re-finance': { product: 'NewCarFinance', Product: 'Used Car' },
   'Top-Up Loan': { product: 'NewCarFinance', Product: 'PL/KPTR' },
   'Two-Wheeler Loan': { product: 'TWL' },
-  // the LAP API needs MiddleName in the request, as null (the form has no middle name)
-  'Loan Against Property': { product: 'LAP', MiddleName: null },
+  // LAP: the form has no middle name, so it is sent empty. LeadSource and EnquiryType are added
+  // by the backend.
+  'Loan Against Property': { product: 'LAP', MiddleName: '' },
 };
 
 /**
@@ -111,9 +112,9 @@ export const LEAD_KEYS_BY_PRODUCT = {
   TWL: {
     FirstName: 'firstName', LastName: 'lastName', Location: 'businessLocation', Email: 'email',
   },
-  // the server adds Phone (verified mobile), LeadSource and EnquiryType
+  // the server adds LeadSource and EnquiryType
   LAP: {
-    FirstName: 'FirstName', LastName: 'LastName', Email: 'Email', Location: 'Location',
+    FirstName: 'FirstName', LastName: 'LastName', Email: 'Email', Location: 'Location', Mobile: 'Phone',
   },
 };
 
