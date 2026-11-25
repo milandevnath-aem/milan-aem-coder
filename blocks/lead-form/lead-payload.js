@@ -109,3 +109,14 @@ export function buildLead(form, category) {
   });
   return { ...lead, ...extra };
 }
+
+/**
+ * The name and email sent with the first OTP request (otp-generate), whatever the product:
+ * the backend keeps them with the OTP's token, so a resend does not send them again.
+ * @param {HTMLFormElement} form
+ * @returns {{ name: string, email: string }} '' for a field the form does not have
+ */
+export function contactOf(form) {
+  const all = readForm(form);
+  return { name: all.Name || '', email: all.Email || '' };
+}
