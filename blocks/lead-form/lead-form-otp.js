@@ -231,14 +231,10 @@ export function createOtpStep({
     try {
       await sendOtp();
     } catch (e) {
-      // the token is expired, used or not for this mobile: back to the form, which says why
-      if (e?.code === 'CAPTCHA_REQUIRED') {
-        clearInterval(timer);
-        onBack(errorMessage(e, 'resend'));
-        return;
-      }
       const message = errorMessage(e, 'resend');
       busy = false;
+      // CAPTCHA_REQUIRED (token expired, used or not for this mobile): handleCode goes back
+      // to the form for a new captcha and shows why
       if (handleCode(e, message)) return;
       if (message) setError(message);
       // RESEND_TOO_SOON restarted the countdown, which keeps the button off
