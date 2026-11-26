@@ -285,7 +285,7 @@ export function createLeadSession({
 }) {
   if (!product) {
     // eslint-disable-next-line no-console
-    console.warn('lead-api: this category has no product in PRODUCT_BY_CATEGORY (lead-api-config.js)');
+    console.warn('lead-api: this category has no api in PRODUCT_BY_CATEGORY (lead-api-config.js)');
   }
   const controller = new AbortController();
   // the OTP's credentials { transactionId, token }: only in this closure, so no other script,
@@ -302,10 +302,11 @@ export function createLeadSession({
       throw new LeadApiError('invalid-input', 'mobile must be 10 digits starting with 6-9');
     }
     const previous = otpCredentials;
-    // first send: mobile, name and email; resend: the latest pair instead (the token tells
-    // the backend it is a resend, and it holds the name and email)
+    // first send: mobile, name and email; resend: the mobile and the latest pair (the token
+    // tells the backend it is a resend, and it holds the name, email and fixed values).
+    // `data` is required on a resend too: without it the backend answers 400 BAD_REQUEST.
     const body = previous
-      ? { mobile, transactionId: previous.transactionId, token: previous.token }
+      ? { data: { mobileNo: mobile }, transactionId: previous.transactionId, token: previous.token }
       : {
         data: {
           name: text(name),
