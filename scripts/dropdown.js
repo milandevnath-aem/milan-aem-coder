@@ -17,10 +17,28 @@ function icon(name) {
  * Renders a label with the matched part of the query emphasised.
  * @param {Element} el target element
  * @param {string} text label
- * @param {string} query search query
+ * @param {string|string[]} query search query, or individual terms to highlight throughout
  */
 export function highlight(el, text, query) {
   el.textContent = '';
+  if (Array.isArray(query)) {
+    const terms = query.filter(Boolean).sort((a, b) => b.length - a.length)
+      .map((term) => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    let position = 0;
+    if (terms.length) {
+      const pattern = new RegExp(terms.join('|'), 'gi');
+      [...text.matchAll(pattern)].forEach((match) => {
+        const [matched] = match;
+        const strong = document.createElement('strong');
+        strong.textContent = matched;
+        el.append(text.slice(position, match.index), strong);
+        position = match.index + matched.length;
+      });
+    }
+    el.append(text.slice(position));
+    el.classList.toggle('is-match', position > 0);
+    return;
+  }
   const index = query ? text.toLowerCase().indexOf(query.toLowerCase()) : -1;
   if (index < 0) {
     el.textContent = text;

@@ -18,6 +18,7 @@ const A11Y_SETTINGS = [
 const SEARCH_LIMIT = 9;
 const SEARCH_INDEX = '/query-index.json';
 const SEARCH_SKIP = /^\/$|^\/(nav|footer|fragments|modals|drafts)(\/|$)/;
+const SEARCH_STOP_WORDS = new Set(['a', 'an', 'and', 'for', 'in', 'of', 'on', 'the', 'to', 'with']);
 
 let uid = 0;
 
@@ -602,23 +603,22 @@ async function loadSearchIndex() {
 }
 
 /**
- * Every word of the query has to match. Whole words in the title rank first, then
- * the start of a title word ("car" in "careers"), then anywhere in the title, then
- * the description.
+ * More matching query words always rank first. Ties favor whole title words,
+ * then title prefixes, title substrings, and finally description matches.
  * @returns {number} 0 when the entry does not match
  */
 function scoreEntry(entry, words) {
   const titleWords = entry.title.toLowerCase().split(/[^a-z0-9]+/);
   const title = entry.title.toLowerCase();
-  let score = 0;
-  return words.every((word) => {
-    if (titleWords.includes(word)) score += 4;
-    else if (titleWords.some((w) => w.startsWith(word))) score += 3;
-    else if (title.includes(word)) score += 2;
-    else if (entry.text.includes(word)) score += 1;
-    else return false;
-    return true;
-  }) ? score : 0;
+  const matchBonus = words.length * 4 + 1;
+  return words.reduce((score, word) => {
+    let quality = 0;
+    if (titleWords.includes(word)) quality = 4;
+    else if (titleWords.some((w) => w.startsWith(word))) quality = 3;
+    else if (title.includes(word)) quality = 2;
+    else if (entry.text.includes(word)) quality = 1;
+    return quality ? score + matchBonus + quality : score;
+  }, 0);
 }
 
 function buildSearch(placeholder) {
@@ -709,7 +709,8 @@ function buildSearch(placeholder) {
     const query = input.value.trim();
     clear.hidden = !input.value;
     const q = query.toLowerCase();
-    const words = q.split(/\s+/).filter(Boolean);
+    const highlightWords = [...new Set(q.split(/\s+/).filter(Boolean))];
+    const words = highlightWords.filter((word) => !SEARCH_STOP_WORDS.has(word));
     matches = words.length ? index
       .map((entry) => {
         const pageScore = scoreEntry(entry, words);
@@ -731,46 +732,28 @@ function buildSearch(placeholder) {
       .filter(({ score }) => score)
       .sort((a, b) => b.score - a.score) : [];
     list.textContent = '';
-    matches.slice(0, SEARCH_LIMIT).forEach((match) => {
+    const suggestions = matches.slice(0, SEARCH_LIMIT).flatMap((match) => {
       const { entry, pageScore, componentMatches } = match;
-
-      // Matching component results as independent search results
-      componentMatches.forEach((component) => {
-        const componentLi = document.createElement('li');
-        const componentLink = document.createElement('a');
-
-        componentLink.href = component.id === 'emi-calculator'
+      const components = componentMatches.map((component) => ({
+        title: component.title,
+        score: component.score,
+        href: component.id === 'emi-calculator'
           ? `${entry.href}?calculator=${encodeURIComponent(component.title)}#emi-calculator`
-          : `${entry.href}#${component.id}`;
-
-        const componentLabel = document.createElement('span');
-        componentLabel.className = 'nav-search-label';
-
-        highlight(componentLabel, component.title, q);
-
-        componentLink.append(componentLabel);
-        componentLi.append(componentLink);
-        list.append(componentLi);
-      });
-
-      if (pageScore) {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = entry.href;
-
-        const label = document.createElement('span');
-        label.className = 'nav-search-label';
-
-        const name = entry.title.toLowerCase();
-        const highlightQuery = name.includes(q)
-          ? q
-          : words.find((word) => name.includes(word));
-
-        highlight(label, entry.title, highlightQuery);
-        a.append(label);
-        li.append(a);
-        list.append(li);
-      }
+          : `${entry.href}#${component.id}`,
+      }));
+      if (pageScore) components.push({ title: entry.title, href: entry.href, score: pageScore });
+      return components;
+    }).sort((a, b) => b.score - a.score);
+    suggestions.forEach((suggestion) => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = suggestion.href;
+      const label = document.createElement('span');
+      label.className = 'nav-search-label';
+      highlight(label, suggestion.title, highlightWords);
+      a.append(label);
+      li.append(a);
+      list.append(li);
     });
     [...list.children].forEach((item, position) => {
       item.setAttribute('role', 'none');
