@@ -285,7 +285,7 @@ export function createLeadSession({
 }) {
   if (!product) {
     // eslint-disable-next-line no-console
-    console.warn('lead-api: this category has no product in PRODUCT_BY_CATEGORY (lead-api-config.js)');
+    console.warn('lead-api: this category has no api in PRODUCT_BY_CATEGORY (lead-api-config.js)');
   }
   const controller = new AbortController();
   // the OTP's credentials { transactionId, token }: only in this closure, so no other script,
