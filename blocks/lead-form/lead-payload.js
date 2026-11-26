@@ -94,7 +94,7 @@ function readForm(form) {
  *   except `product`, which is sent next to the lead as its `category` (see lead-api.js)
  * @returns {Object<string, string>} e.g. New Car Finance: { FirstName, LastName, Location,
  *   Pincode, Email, Product: "New Car Finance" }; TWL: { firstName, lastName,
- *   businessLocation, email }; LAP: { FirstName, LastName, Email, Location }
+ *   businessLocation, email }; LAP: { FirstName, LastName, Email, Location, Phone, MiddleName }
  */
 export function buildLead(form, category) {
   const all = readForm(form);
@@ -108,4 +108,15 @@ export function buildLead(form, category) {
     if (all[from]) lead[to] = all[from];
   });
   return { ...lead, ...extra };
+}
+
+/**
+ * The name and email sent with the first OTP request (otp-generate), whatever the product:
+ * the backend keeps them with the OTP's token, so a resend does not send them again.
+ * @param {HTMLFormElement} form
+ * @returns {{ name: string, email: string }} '' for a field the form does not have
+ */
+export function contactOf(form) {
+  const all = readForm(form);
+  return { name: all.Name || '', email: all.Email || '' };
 }
