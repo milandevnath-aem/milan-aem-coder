@@ -28,6 +28,11 @@ module.exports = {
       'lead-form': 5,
       // GST form fields: label, type, options, required, shown for
       'gst-form-field': 5,
+      // service request: heading, button label, sheet, login subjects, login text, login link,
+      // success text, error message
+      'service-request': 8,
+      // service request fields: label, type, options, required, half width, empty / invalid message
+      'service-request-field': 7,
       // hero: heading, options, submit link, link text, category forms
       'hero-loan': 5,
       // EMI calculator loan type: title, amount, rate, tenure, image

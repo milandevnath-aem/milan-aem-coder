@@ -105,14 +105,15 @@ export function toDataUri(value, kind) {
 
 /**
  * POSTs JSON to a servlet and returns the `data` of a { status: "success", data } answer.
- * @param {string} endpoint key of ENDPOINTS
+ * @param {string} endpoint key of ENDPOINTS, or a root-relative path ("/content/...json")
+ *   (other forms, e.g. service-request-api.js, pass their own paths)
  * @param {Object} body
  * @param {AbortSignal} signal cancels the request
  * @returns {Promise<Object>}
  * @throws {LeadApiError}
  */
-async function post(endpoint, body, signal = new AbortController().signal) {
-  const path = ENDPOINTS[endpoint];
+export async function post(endpoint, body, signal = new AbortController().signal) {
+  const path = String(endpoint).startsWith('/') ? endpoint : ENDPOINTS[endpoint];
   if (typeof path !== 'string' || !path) {
     throw new LeadApiError('bad-response', `lead-api: no endpoint "${endpoint}" in lead-api-config.js`);
   }
@@ -185,7 +186,7 @@ async function post(endpoint, body, signal = new AbortController().signal) {
  * @param {Function} task async function
  * @returns {Function}
  */
-function singleFlight(task) {
+export function singleFlight(task) {
   let pending = null;
   return (...args) => {
     if (!pending) pending = task(...args).finally(() => { pending = null; });
@@ -219,7 +220,7 @@ export async function generateCaptcha(signal) {
  * @param {AbortSignal} signal
  * @throws {LeadApiError} code INVALID_CAPTCHA when wrong or expired
  */
-async function verifyCaptcha(captcha, signal) {
+export async function verifyCaptcha(captcha, signal) {
   const data = record(await post('captchaVerify', { captcha }, signal));
   // a "success" that says the captcha is wrong is still a wrong captcha
   if (data.verified === false || text(data.verified).toLowerCase() === 'false') {

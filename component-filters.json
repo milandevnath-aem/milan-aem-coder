@@ -33,6 +33,7 @@
       "branch-locator",
       "lead-form",
       "gst-form",
+      "service-request",
       "grievance"
     ]
   },
@@ -151,6 +152,12 @@
     "id": "service-links",
     "components": [
       "service-link"
+    ]
+  },
+  {
+    "id": "service-request",
+    "components": [
+      "service-request-field"
     ]
   },
   {

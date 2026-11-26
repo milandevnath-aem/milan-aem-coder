@@ -162,7 +162,7 @@ export function textField(label, kind, required) {
  * @param {boolean} required
  * @param {number} max character limit
  */
-function textareaField(label, required, max) {
+export function textareaField(label, required, max) {
   errorCount += 1;
   const id = `lead-form-textarea-${errorCount}`;
   // a div, not a label: the count and limit must not join the field's name

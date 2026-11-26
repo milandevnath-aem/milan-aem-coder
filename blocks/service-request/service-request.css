@@ -1,0 +1,147 @@
+/* The fields, dropdowns, captcha, errors, Submit and spinner come from lead-form.css (the
+   block also has the lead-form class); this file adds the loan account Verify button, its
+   verified state and the Login / success popups. */
+
+/* loan account number: the input and its label, then Verify (or the check mark) */
+.service-request .service-request-loan {
+  cursor: text;
+}
+
+.service-request .service-request-loan-label {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  cursor: text;
+}
+
+/* Verify: a small pill, grey until there is a number, black once it can be checked */
+.service-request .service-request-verify {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+  height: 24px;
+  margin: 0;
+  border: 0;
+  border-radius: 100px;
+  padding: 0 16px;
+  background-color: var(--text-color);
+  color: #fff;
+  font-family: inherit;
+  font-size: var(--body-font-size-xs);
+  font-weight: 600;
+  line-height: 16px;
+  cursor: pointer;
+}
+
+.service-request .service-request-verify:disabled {
+  background-color: #b2b2b2;
+  color: var(--muted-color);
+  cursor: default;
+}
+
+.service-request .service-request-verify:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.service-request .service-request-verify[hidden],
+.service-request .service-request-verified[hidden] {
+  display: none;
+}
+
+/* checking: a small spinner in the pill */
+.service-request .service-request-verify.is-loading {
+  pointer-events: none;
+}
+
+.service-request .service-request-verify .lead-form-spinner {
+  width: 12px;
+  height: 12px;
+  border-width: 1.5px;
+}
+
+/* verified: green field, a black check mark in place of the button */
+.service-request .service-request-loan.is-verified {
+  background-color: var(--color-input-field-filled-color-success, #f8fff7);
+  box-shadow: inset 0 0 0 1px var(--color-status-success-secondary-default-icon-base, #00ca78);
+}
+
+.service-request .service-request-verified {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--text-color);
+}
+
+.service-request .service-request-verified img {
+  width: 10px;
+  height: 10px;
+  filter: invert(1);
+}
+
+/* a sub-type is picked after its subject */
+.service-request .dropdown-field:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+/* Submit stays focusable while the form is incomplete (it lists what is missing), grey */
+.service-request button.button.primary.service-request-submit[aria-disabled='true']:not(.is-loading) {
+  border-color: #b2b2b2;
+  background-color: #b2b2b2;
+  color: var(--muted-color);
+}
+
+.service-request .service-request-submit-error {
+  margin-bottom: -16px;
+}
+
+.service-request .service-request-submit-error[hidden] {
+  display: none;
+}
+
+/* Login and success popups: heading, text and a full width button */
+.service-request :is(.service-request-login, .service-request-success) {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.service-request :is(.service-request-login, .service-request-success)[hidden] {
+  display: none;
+}
+
+.service-request .service-request-step-text :is(h1, h2, h3):focus {
+  outline: none;
+}
+
+.service-request .service-request-step-text p {
+  margin: 0;
+}
+
+.service-request :is(.service-request-login-button, .service-request-done) {
+  width: 100%;
+  margin: 0;
+  text-align: center;
+}
+
+.service-request .service-request-success {
+  align-items: center;
+  text-align: center;
+}
+
+.service-request .service-request-success-icon {
+  width: 48px;
+  height: 48px;
+}
+
+/* the Login popup closes with Go back on small screens; the success popup with its button */
+.service-request[data-step='success'] .lead-form-goback {
+  display: none;
+}

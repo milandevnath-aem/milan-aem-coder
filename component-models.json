@@ -2345,6 +2345,180 @@
     ]
   },
   {
+    "id": "service-request",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Heading and text",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "submitLabel",
+        "label": "Button label",
+        "value": ""
+      },
+      {
+        "component": "aem-content",
+        "name": "sheet",
+        "label": "Data sheet",
+        "description": "Sheet with the Product, Subject, Sub-Subject and City columns. Leave empty for /service-request.json."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "loginSubjects",
+        "label": "Subjects that open the Login popup",
+        "description": "Comma separated, as written in the sheet. Submit sends nothing for these subjects and shows the Login popup.",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "loginMessage",
+        "value": "",
+        "label": "Login popup heading and text",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "name": "loginLink",
+        "label": "Login button link"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "loginLinkText",
+        "label": "Login button label",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "successMessage",
+        "value": "",
+        "label": "Success popup heading and text",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "errorMessage",
+        "label": "Message when the request cannot be sent",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "service-request-field",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "label",
+        "label": "Label",
+        "value": ""
+      },
+      {
+        "component": "select",
+        "name": "kind",
+        "label": "Field type",
+        "valueType": "string",
+        "value": "text",
+        "options": [
+          {
+            "name": "Text",
+            "value": "text"
+          },
+          {
+            "name": "Number (digits only)",
+            "value": "number"
+          },
+          {
+            "name": "Letters and numbers",
+            "value": "alphanumeric"
+          },
+          {
+            "name": "Text area (multi-line, with character count)",
+            "value": "textarea"
+          },
+          {
+            "name": "Loan account number (with Verify)",
+            "value": "loan"
+          },
+          {
+            "name": "Product (from the sheet)",
+            "value": "product"
+          },
+          {
+            "name": "Subject (from the sheet)",
+            "value": "subject"
+          },
+          {
+            "name": "Sub-Type (from the sheet, follows the Subject)",
+            "value": "subtype"
+          },
+          {
+            "name": "City (from the sheet, with search)",
+            "value": "city"
+          },
+          {
+            "name": "Dropdown (authored options)",
+            "value": "select"
+          },
+          {
+            "name": "Dropdown with search (authored options)",
+            "value": "search"
+          },
+          {
+            "name": "Captcha",
+            "value": "captcha"
+          }
+        ]
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "options",
+        "label": "Options",
+        "description": "Dropdowns: comma separated (sheet dropdowns use these only when the sheet cannot be read). Number / letters and numbers / text: the maximum length. Text area: the character limit (default 150). Loan account number: the Verify button label (default Verify).",
+        "value": ""
+      },
+      {
+        "component": "boolean",
+        "valueType": "boolean",
+        "name": "required",
+        "label": "Required",
+        "value": true
+      },
+      {
+        "component": "boolean",
+        "valueType": "boolean",
+        "name": "halfWidth",
+        "label": "Half width",
+        "description": "Two half-width fields in a row share one line on desktop.",
+        "value": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "requiredMessage",
+        "label": "Message when empty",
+        "description": "Optional, e.g. \"Please enter Party ID to proceed!\". A default message is shown when empty.",
+        "value": ""
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "invalidMessage",
+        "label": "Message when invalid",
+        "description": "Optional, e.g. \"Loan account number is invalid\" (also shown when Verify fails). A default message is shown when empty.",
+        "value": ""
+      }
+    ]
+  },
+  {
     "id": "team-member",
     "fields": [
       {
