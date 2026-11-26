@@ -32,6 +32,41 @@ function animateClose(dialog) {
 }
 
 /**
+ * iOS Safari ignores overflow: hidden on the page for touch scrolling: swipes outside the
+ * dialog's scrollable areas (header, backdrop, a short form) would move the page behind.
+ * Cancels those touchmoves; returns a function that removes the guard.
+ * @param {HTMLDialogElement} dialog
+ * @returns {Function}
+ */
+function lockTouchScroll(dialog) {
+  let lastY = 0;
+  const onStart = (e) => { lastY = e.touches[0].clientY; };
+  const onMove = (e) => {
+    if (e.touches.length > 1) return;
+    const y = e.touches[0].clientY;
+    const dy = y - lastY;
+    lastY = y;
+    // finger moving down scrolls content up and vice versa
+    for (let el = e.target; el && el !== dialog && el.nodeType === 1; el = el.parentElement) {
+      const canScroll = el.scrollHeight > el.clientHeight
+        && /auto|scroll/.test(getComputedStyle(el).overflowY);
+      if (canScroll) {
+        const atTop = el.scrollTop <= 0;
+        const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
+        if ((dy > 0 && !atTop) || (dy < 0 && !atBottom)) return;
+      }
+    }
+    if (e.cancelable) e.preventDefault();
+  };
+  document.addEventListener('touchstart', onStart, { passive: true });
+  document.addEventListener('touchmove', onMove, { passive: false });
+  return () => {
+    document.removeEventListener('touchstart', onStart);
+    document.removeEventListener('touchmove', onMove);
+  };
+}
+
+/**
  * Creates a modal dialog around the given content.
  * @param {Node[]} contentNodes content to show in the dialog
  * @param {Object} options { className, label }
@@ -103,7 +138,11 @@ export async function createModal(contentNodes, { className = '', label = '' } =
       window.addEventListener('resize', updateTop);
       vv?.addEventListener('resize', updateTop);
       vv?.addEventListener('scroll', updateTop);
+      // -webkit-touch-callout is supported by iOS / iPadOS Safari only
+      const unlockTouch = CSS.supports('-webkit-touch-callout', 'none')
+        ? lockTouchScroll(dialog) : null;
       dialog.addEventListener('close', () => {
+        unlockTouch?.();
         clearTimeout(settle);
         window.removeEventListener('resize', updateTop);
         vv?.removeEventListener('resize', updateTop);
