@@ -27,7 +27,8 @@ import { LOAN_ACCOUNT_MAX, MESSAGES } from './service-request-api-config.js';
 
   Submit:
   - subject done online ("Subjects that open the Login popup"): no API call, the Login popup
-  - any other subject: captcha check, the request, the success popup
+  - any other subject: captcha-verify first; only once the captcha is accepted, the service
+    request API, then the success popup
 */
 
 /** "A, B, C" -> ["A", "B", "C"] */
@@ -41,12 +42,12 @@ const DROPDOWN_KINDS = ['select', 'search', 'product', 'subject', 'subtype', 'ci
 
 /** Value of each sheet / special field type in the request (see submitPayload) */
 const ROLE_KEYS = {
-  product: 'product', subject: 'subject', subtype: 'subType', city: 'city', loan: 'loanAccount',
+  product: 'product', subject: 'subject', subtype: 'subType', city: 'city', loan: 'loanAccount', party: 'partyId',
 };
 
 /** The kind fieldMessages knows for each field type */
 const MESSAGE_KIND = {
-  product: 'select', subject: 'select', subtype: 'select', city: 'search', loan: 'alphanumeric', textarea: 'text',
+  product: 'select', subject: 'select', subtype: 'select', city: 'search', loan: 'alphanumeric', textarea: 'text', party: 'text',
 };
 
 /**
@@ -108,11 +109,21 @@ function buildField(label, kind, optionsText, required) {
     });
     return { field: dropdown, dropdown };
   }
-  if (kind === 'captcha') return { field: captchaField(label) };
+  // the listen button is always shown (disabled while the captcha has no audio)
+  if (kind === 'captcha') return { field: captchaField(label, { alwaysShowAudio: true }) };
   if (kind === 'textarea') {
     return { field: textareaField(label, required, parseInt(optionsText, 10) || 150) };
   }
   if (kind === 'loan') return { field: loanField(label, required, optionsText) };
+  if (kind === 'party') {
+    // filled by the loan account check (Verify), never typed: disabled (greyed, not
+    // focusable), like the Sub-Type before a subject is picked
+    const field = textField(label, 'text', false);
+    field.classList.add('service-request-party');
+    const input = field.querySelector('input');
+    Object.assign(input, { disabled: true, autocomplete: 'off' });
+    return { field };
+  }
   const field = textField(label, 'text', required);
   const input = field.querySelector('input');
   const max = parseInt(optionsText, 10) || 0;
@@ -128,7 +139,7 @@ function buildField(label, kind, optionsText, required) {
 }
 
 /**
- * A step shown in place of the form: the Login popup or the success popup.
+ * The Login popup's content, or the success step shown in place of the form.
  * @param {string} name 'login' or 'success'
  * @param {Element} [cell] authored heading and text (richtext); defaults when empty
  * @param {{ heading: string, text: string }} defaults
@@ -203,20 +214,14 @@ export default async function decorate(block) {
   const checks = [];
   // the first field of each sheet / special type
   const roles = {};
-  fieldRows.forEach((row) => {
-    const [
-      labelCell, kindCell, optionsCell, requiredCell, halfCell, emptyCell, invalidCell,
-    ] = row.children;
-    const label = labelCell?.textContent.trim() || 'Field';
-    const kind = (kindCell?.textContent.trim() || 'text').toLowerCase();
-    const optionsText = optionsCell?.textContent.trim() || '';
-    const required = requiredCell?.textContent.trim() !== 'false';
+  const addField = ({
+    row, label, kind, optionsText = '', required = true, half = false, emptyText = '', invalidText = '',
+  }) => {
     const { field, dropdown } = buildField(label, kind, optionsText, required);
-
     const item = document.createElement('div');
     item.className = 'lead-form-item';
-    if (halfCell?.textContent.trim() === 'true') item.classList.add('is-half');
-    moveInstrumentation(row, field);
+    if (half) item.classList.add('is-half');
+    if (row) moveInstrumentation(row, field);
     item.append(field);
 
     const control = field.querySelector('.dropdown-field')
@@ -224,15 +229,15 @@ export default async function decorate(block) {
     if (control) {
       const defaults = fieldMessages(label, MESSAGE_KIND[kind] || kind);
       const messages = {
-        empty: emptyCell?.textContent.trim() || defaults.empty,
-        invalid: invalidCell?.textContent.trim()
-          || (kind === 'loan' ? MESSAGES.loanInvalid : defaults.invalid),
+        empty: emptyText || defaults.empty,
+        invalid: invalidText || (kind === 'loan' ? MESSAGES.loanInvalid : defaults.invalid),
       };
       const error = fieldError(control, messages.empty);
       const check = {
         item, field, control, dropdown, error, messages, label, kind, required,
       };
       if (kind === 'captcha') check.valid = () => field.isValid();
+      else if (kind === 'party') check.valid = () => true; // filled by Verify
       else if (dropdown) check.valid = () => !required || Boolean(dropdown.value);
       else check.valid = () => control.checkValidity();
       check.isEmpty = dropdown ? () => !dropdown.value : () => !control.value.trim();
@@ -241,7 +246,34 @@ export default async function decorate(block) {
       roles[kind] ||= check;
     }
     fields.append(item);
+  };
+
+  fieldRows.forEach((row) => {
+    const [
+      labelCell, kindCell, optionsCell, requiredCell, halfCell, emptyCell, invalidCell,
+    ] = row.children;
+    const label = labelCell?.textContent.trim() || 'Field';
+    let kind = (kindCell?.textContent.trim() || 'text').toLowerCase();
+    // a field left as text / number is recognised by its label: the loan account number gets
+    // Verify, the Party ID is filled by Verify, a description is multi-line
+    if (['text', 'number', 'alphanumeric'].includes(kind)) {
+      if (/\bloan\s*(account|a\/c|acc)/i.test(label)) kind = 'loan';
+      else if (/\bparty\s*id\b/i.test(label)) kind = 'party';
+      else if (kind === 'text' && /descri/i.test(label)) kind = 'textarea';
+    }
+    addField({
+      row,
+      label,
+      kind,
+      optionsText: optionsCell?.textContent.trim() || '',
+      required: requiredCell?.textContent.trim() !== 'false',
+      half: halfCell?.textContent.trim() === 'true',
+      emptyText: emptyCell?.textContent.trim() || '',
+      invalidText: invalidCell?.textContent.trim() || '',
+    });
   });
+  // the captcha is always part of the form: Submit verifies it before any request
+  if (!roles.captcha) addField({ label: 'Enter the code', kind: 'captcha' });
   form.append(fields);
 
   // submit, and the error of a failed request
@@ -295,11 +327,14 @@ export default async function decorate(block) {
   // the button stays focusable while the form is incomplete; submitting lists what is missing
   const refresh = () => submit.setAttribute('aria-disabled', String(!isValid()));
 
-  const setVerified = (state) => {
+  // Party ID: the account's, from the loan account check
+  const partyInput = roles.party?.control;
+  const setVerified = (state, partyId = '') => {
     verified = state;
     loan.classList.toggle('is-verified', state);
     loan.verify.hidden = state;
     loan.done.hidden = !state;
+    if (partyInput) partyInput.value = state ? partyId : '';
   };
   const resetVerification = () => {
     verifyRequest?.abort();
@@ -307,8 +342,6 @@ export default async function decorate(block) {
     setLoading(loan.verify, false);
     setVerified(false);
   };
-  const partyId = () => checks.find((c) => /\bparty\b/i.test(c.label) && !c.dropdown)
-    ?.control.value.trim() || '';
 
   if (loan) {
     const { input, verify } = loan;
@@ -328,16 +361,15 @@ export default async function decorate(block) {
       setState(loanCheck, false);
       setLoading(verify, true, 'Verifying the loan account number');
       try {
-        const ok = await verifyLoanAccount({
+        const result = await verifyLoanAccount({
           loanAccount: input.value.trim(),
           product: roles.product?.dropdown.value || '',
-          partyId: partyId(),
         }, signal);
         if (signal.aborted) return;
         verifyRequest = null;
         setLoading(verify, false);
-        if (ok) {
-          setVerified(true);
+        if (result.valid) {
+          setVerified(true, result.partyId);
           announce('Loan account number verified');
         } else {
           setState(loanCheck, true, loanCheck.messages.invalid);
@@ -415,7 +447,8 @@ export default async function decorate(block) {
   const captcha = captchaCheck?.field;
   if (captcha) captcha.onError = (message) => setState(captchaCheck, true, message);
 
-  // steps: form -> Login popup or success popup; the dialog is named after the visible step
+  // steps: form -> success; the dialog is named after the visible step. The Login popup is a
+  // popup of its own over the form (bottom sheet on small screens, small card on desktop)
   const main = document.createElement('div');
   main.className = 'lead-form-step service-request-main lead-form-main';
   main.append(intro, form);
@@ -424,6 +457,8 @@ export default async function decorate(block) {
     heading: MESSAGES.loginHeading, text: MESSAGES.loginText,
   });
   if (loginRow) moveInstrumentation(loginRow, login);
+  login.className = 'service-request-login';
+  login.hidden = false;
   const loginLink = loginLinkRow?.querySelector('a');
   if (loginLink?.getAttribute('href')) {
     const button = document.createElement('a');
@@ -458,11 +493,23 @@ export default async function decorate(block) {
   };
   done.addEventListener('click', close);
   const showStep = (step) => {
-    [main, login, success].forEach((view) => { view.hidden = view !== step; });
+    [main, success].forEach((view) => { view.hidden = view !== step; });
     block.dataset.step = step.classList[1].replace('service-request-', '');
     dialog()?.setAttribute('aria-labelledby', step === main ? heading?.id : step.titleId);
     dialog()?.querySelector('.modal-content')?.scrollTo(0, 0);
     if (step !== main) step.querySelector('[tabindex="-1"]')?.focus();
+  };
+
+  /** the Login popup, over the form: closing it goes back to the form */
+  const openLogin = async () => {
+    const { createModal } = await import('../modal/modal.js');
+    const modal = await createModal([login], {
+      className: 'modal-compact service-request-login-modal',
+      label: login.querySelector('h1, h2, h3, h4, h5, h6')?.textContent.trim()
+        || MESSAGES.loginHeading,
+    });
+    modal.showModal();
+    login.querySelector('[tabindex="-1"]')?.focus();
   };
 
   // analytics: never the Party ID, account number or description
@@ -482,8 +529,7 @@ export default async function decorate(block) {
       if (check.kind === 'captcha') return;
       const value = check.dropdown ? check.dropdown.value : check.control.value.trim();
       const role = ROLE_KEYS[check.kind]
-        || (check.kind === 'textarea' && !values.description && 'description')
-        || (/\bparty\b/i.test(check.label) && !check.dropdown && !values.partyId && 'partyId');
+        || (check.kind === 'textarea' && !values.description && 'description');
       if (role && !values[role]) values[role] = value;
       else values.extra[slug(check.label)] = value;
     });
@@ -516,13 +562,13 @@ export default async function decorate(block) {
     // done online: no API call, the visitor logs in to the Customer Portal
     if (online) {
       track();
-      showStep(login);
+      openLogin();
       return;
     }
 
     setLoading(submit, true, 'Submitting your request');
     try {
-      await submitServiceRequest(values, captcha ? captcha.input.value : null);
+      await submitServiceRequest(values, captcha.input.value);
       track();
       showStep(success);
     } catch (error) {
@@ -551,7 +597,7 @@ export default async function decorate(block) {
 
   block.dataset.step = 'main';
   refresh();
-  block.replaceChildren(goBack, main, login, success, status);
+  block.replaceChildren(goBack, main, success, status);
   // the modal decorates the form on every opening, so this is a captcha per opening
   captcha?.load();
   // the sheet lists fill in when loaded: the popup does not wait for them

@@ -8,7 +8,8 @@ import {
   LeadApiError, post, singleFlight, verifyCaptcha,
 } from '../lead-form/lead-api.js';
 import {
-  COLUMNS, ENDPOINTS, MESSAGES, SELF_SERVICE_SUBJECTS, SHEET, submitPayload, verifyPayload,
+  COLUMNS, ENDPOINTS, MESSAGES, PARTY_ID_KEYS, SELF_SERVICE_SUBJECTS, SHEET, submitPayload,
+  verifyPayload,
 } from './service-request-api-config.js';
 
 /** "  Change of  address " -> "change of address" */
@@ -85,38 +86,45 @@ function missing(name) {
 }
 
 /**
- * Checks a loan account number.
- * @param {{ loanAccount: string, product: string, partyId: string }} values
+ * Checks a loan account number; the answer also gives the account's Party ID.
+ * @param {{ loanAccount: string, product: string }} values
  * @param {AbortSignal} [signal]
- * @returns {Promise<boolean>} false when the API says the account is not valid
+ * @returns {Promise<{ valid: boolean, partyId: string }>} valid is false when the API says
+ *   the account is not valid; partyId is '' when the answer has none
  * @throws {LeadApiError} the request failed (network, timeout, server error)
  */
 export async function verifyLoanAccount(values, signal) {
   if (!ENDPOINTS.verifyLoan) {
     missing('verifyLoan');
-    return true;
+    return { valid: true, partyId: '' };
   }
   const data = await post(ENDPOINTS.verifyLoan, { data: verifyPayload(values) }, signal);
   const answer = data && typeof data === 'object' ? data : {};
   const flag = answer.valid ?? answer.verified ?? answer.isValid;
-  return !(flag === false || String(flag).toLowerCase() === 'false');
+  const key = PARTY_ID_KEYS.find((k) => answer[k] !== undefined && answer[k] !== null);
+  return {
+    valid: !(flag === false || String(flag).toLowerCase() === 'false'),
+    partyId: key ? String(answer[key]).trim() : '',
+  };
 }
 
 /**
- * Sends a service request: the captcha is checked first (lead form captcha API).
+ * Sends a service request. The captcha is verified first (the lead form's captcha-verify
+ * API); the service request API is called only once the captcha is accepted.
  * @param {Object} values see submitPayload in the config
- * @param {string|null} captcha what the visitor typed; null when the form has no captcha
+ * @param {string} captcha what the visitor typed
  * @returns {Promise<Object>} the API's data
- * @throws {LeadApiError} `step` is 'captcha' when the captcha was refused
+ * @throws {LeadApiError} `step` is 'captcha' when the captcha is missing or refused
  */
 export const submitServiceRequest = singleFlight(async (values, captcha) => {
-  if (captcha !== null) {
-    try {
-      await verifyCaptcha(captcha);
-    } catch (error) {
-      error.step = 'captcha';
-      throw error;
+  try {
+    if (!String(captcha || '').trim()) {
+      throw new LeadApiError('invalid-input', 'no captcha', { code: 'CAPTCHA_REQUIRED' });
     }
+    await verifyCaptcha(captcha);
+  } catch (error) {
+    error.step = 'captcha';
+    throw error;
   }
   if (!ENDPOINTS.submit) {
     missing('submit');
