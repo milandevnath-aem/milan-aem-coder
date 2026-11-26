@@ -120,6 +120,13 @@ export default function decorate(block) {
     }
     const isTable = block.classList.contains('grouped-table');
     if (isTable || block.classList.contains('grouped-content')) groupAnswerContent(answer);
+    const countEl = summary.querySelector('.faq-item-count');
+    if (countEl) {
+      const lists = [...answer.querySelectorAll('.faq-group-list')];
+      const total = (isTable ? lists.slice(0, 1) : lists)
+        .reduce((sum, ul) => sum + ul.children.length, 0);
+      if (total) countEl.textContent = `${total} ${countEl.textContent.trim().replace(/^\d+\s*/, '')}`;
+    }
     if (isTable) {
       // header row + longest column, so groups share row tracks via subgrid
       const lists = [...answer.querySelectorAll('.faq-group-list')];

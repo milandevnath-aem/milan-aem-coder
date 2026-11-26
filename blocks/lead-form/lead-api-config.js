@@ -75,27 +75,39 @@ export const RESEND_SECONDS = 30;
 export const OTP_VALID_MS = 5 * 60 * 1000;
 
 /**
- * Loan category (as shown in "Select loan category") -> fields for it.
- * - product: the API the backend calls (NewCarFinance, TWL, LAP), sent as the `category`
- *   of the OTP validation
- * - Product: New Car Finance API only (required), which of its products the lead is for;
- *   the server writes it to the Salesforce Product__c field
- * Every other key of an entry is added to `lead` as is, so another category specific value
- * is one more key.
+ * Loan category (as shown in "Select loan category") -> its API and its fixed lead values,
+ * all in one place:
+ * - api: the API the backend calls (NewCarFinance, TWL, LAP), sent as the `category` of the
+ *   OTP validation (not part of `lead`)
+ * - lead: fixed values added to `lead` as they are, after the form fields (so no form field
+ *   can override them). Any key works here, e.g. NewCarFinance's `Product` or TWL's `product`.
  * Matching ignores case, spaces and punctuation ("Two-Wheeler Loans" = "two wheeler loan").
  * A category that is not listed (Car Lease, Dealer Finance until their API is decided) has
- * no product, so the server refuses its lead. To connect one, add a line here; no other
+ * no api, so the server refuses its lead. To connect one, add a line here; no other
  * change is needed.
  */
 export const PRODUCT_BY_CATEGORY = {
-  'New Car Finance': { product: 'NewCarFinance', Product: 'New Car' },
-  'Used Car & Re-finance': { product: 'NewCarFinance', Product: 'Used Car' },
-  'Top-Up Loan': { product: 'NewCarFinance', Product: 'PL/KPTR' },
-  'Two-Wheeler Loan': { product: 'TWL' },
-  // LAP: the form has no middle name, so it is sent empty. LeadSource and EnquiryType are sent
-  // by the frontend (the backend only adds its defaults when they are missing).
+  'New Car Finance': { api: 'NewCarFinance', lead: { Product: 'New Car' } },
+  'Used Car & Re-finance': { api: 'NewCarFinance', lead: { Product: 'Used Car' } },
+  'Top-Up Loan': { api: 'NewCarFinance', lead: { Product: 'PL/KPTR' } },
+  'Two-Wheeler Loan': {
+    api: 'TWL',
+    lead: {
+      product: 'NEW TW',
+      loanType: 'Individual',
+      subSource: 'KMPL_WEB_LEADS',
+      leadSource: 'KMPL_WEB_LEADS',
+      stage: 'New',
+      portfolio: 'TW',
+      middleName: '',
+      salutation: 'MR',
+      status: 'New',
+    },
+  },
+  // LAP: the form has no middle name, so it is sent empty
   'Loan Against Property': {
-    product: 'LAP', MiddleName: '', LeadSource: 'Website', EnquiryType: '000',
+    api: 'LAP',
+    lead: { MiddleName: '', LeadSource: 'Website', EnquiryType: '000' },
   },
 };
 
@@ -122,9 +134,14 @@ export const LEAD_KEYS_BY_PRODUCT = {
   NewCarFinance: {
     FirstName: 'FirstName', LastName: 'LastName', Location: 'Location', Pincode: 'Pincode', Email: 'Email',
   },
-  // required: firstName, lastName, businessLocation
+  // required: firstName, lastName, businessLocation; the fixed values are in PRODUCT_BY_CATEGORY
   TWL: {
-    FirstName: 'firstName', LastName: 'lastName', Location: 'businessLocation', Email: 'email',
+    FirstName: 'firstName',
+    LastName: 'lastName',
+    Location: 'businessLocation',
+    Email: 'email',
+    Mobile: 'mobileNumber',
+    Pincode: 'pinCodeCurrent',
   },
   // LeadSource, EnquiryType and MiddleName come from PRODUCT_BY_CATEGORY
   LAP: {
