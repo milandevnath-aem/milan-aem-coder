@@ -181,15 +181,15 @@
   background-color: var(--color-background-2-default-hover);
 }
 
-.link-list.doc-list .link-list-row::before {
-  content: "";
+.link-list.doc-list .link-list-media,
+.link-list.doc-list .link-list-media img {
   flex: 0 0 auto;
   width: 20px;
   height: 20px;
   padding: var(--spacing-xxs);
-  background-color: currentcolor;
+  border-radius: 0;
+  object-fit: contain;
   aspect-ratio: 1/1;
-  mask: url("../../icons/document.svg") center / 20px no-repeat;
 }
 
 .link-list.doc-list .link-list-title {
@@ -199,7 +199,6 @@
   letter-spacing: var(--type-body-b2-letter-spacing);
 }
 
-.link-list.doc-list .link-list-media,
 .link-list.doc-list .link-list-icon {
   display: none;
 }
