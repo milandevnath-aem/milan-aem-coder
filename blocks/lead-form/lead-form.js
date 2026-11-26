@@ -763,8 +763,8 @@ export default function decorate(block) {
       nameDialog(success.titleId);
       success.focusTitle();
     };
-    // Car Lease and Dealer Finance have no lead API yet (see PRODUCT_BY_CATEGORY): whatever
-    // the server answers, the visitor reaches the success step. Remove once they have one.
+    // a category not in PRODUCT_BY_CATEGORY has no lead API: whatever the server answers,
+    // the visitor reaches the success step (every listed category shows real errors)
     const lenient = !productFor(category);
 
     // verifying the captcha, then sending the OTP: button spinner (desktop), full view

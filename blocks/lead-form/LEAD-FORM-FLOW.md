@@ -105,6 +105,7 @@ sequenceDiagram
    | `LAP` | `/lap-cities.json` | `SUB_CITY_NAME` |
    | `NewCarFinance` | `/ncf-cities.json` | `SUB_CITY_NAME` |
    | `TWL` | `/tw-cities.json` | `SUB_CITY_NAME` |
+   | `CarLease`, `DealerFinance` | `/ncf-cities.json` (for now) | `SUB_CITY_NAME` |
 
    A category without a sheet keeps the authored options. Changing the category reloads the list.
 4. **Captcha** is requested (`generateCaptcha`):
@@ -202,7 +203,8 @@ OTP step is shown.
 | Top-Up Loan | `NewCarFinance` | `Product: "PL/KPTR"` |
 | Two-Wheeler Loan | `TWL` | - |
 | Loan Against Property | `LAP` | - |
-| Car Lease, Dealer Finance | `""` (no API yet) | - |
+| Car Lease | `CarLease` | - |
+| Dealer Finance | `DealerFinance` | - |
 
 Matching ignores case, spaces and punctuation ("Two-Wheeler Loans" = "two wheeler loan").
 
@@ -268,9 +270,9 @@ split at the first space ("Asha Rao Kulkarni" -> `FirstName: "Asha"`, `LastName:
 
 A different mobile in the form than the verified one is refused by the backend (`MOBILE_MISMATCH`).
 
-### 5.5 Categories without an API (Car Lease, Dealer Finance)
+### 5.5 Categories without an API
 
-`category` is sent empty and every form field is sent under its own name. The backend stores the submission in S3. On
+A category not listed in `PRODUCT_BY_CATEGORY` has no API: `category` is sent empty and every form field is sent under its own name. The backend stores the submission in S3. On
 the frontend these categories are **lenient**: whatever the OTP or verify call answers, the visitor reaches the success
 step (a warning is logged in the console). Remove this once they have a lead API: add a line to
 `PRODUCT_BY_CATEGORY` and `LEAD_KEYS_BY_PRODUCT`; no other code change is needed.

@@ -267,8 +267,8 @@ function keepCreatedLead(lead) {
  * @param {string} [options.name] full name, sent with the first OTP request (not on resend:
  *   the backend reads it from the token)
  * @param {string} [options.email] sent with the first OTP request, like the name
- * @param {string} options.product backend product (LAP, TWL, NewCarFinance), '' when the
- *   category has no API yet (sent as is: the server refuses the lead)
+ * @param {string} options.product backend product (LAP, TWL, NewCarFinance, CarLease,
+ *   DealerFinance), '' when the category has no API (sent as is: the server refuses the lead)
  * @param {Object<string, string>} options.lead see buildLead in lead-payload.js
  * @param {string} [options.loanCategory] the loan category picked in the form, e.g.
  *   "Used Car & Re-finance", kept with the created lead for analytics
