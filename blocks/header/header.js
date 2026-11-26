@@ -15,7 +15,7 @@ const A11Y_SETTINGS = [
     key: 'line', label: 'Line height', icon: 'line-height', min: 1.5, max: 2.1, step: 0.1, unit: '',
   },
 ];
-const SEARCH_LIMIT = 6;
+const SEARCH_LIMIT = 9;
 const SEARCH_INDEX = '/query-index.json';
 const SEARCH_SKIP = /^\/$|^\/(nav|footer|fragments|modals|drafts)(\/|$)/;
 
@@ -563,56 +563,6 @@ async function loadSearchIndex() {
   const { data = [] } = await resp.json();
 
   // use the below data hardcoded array to simulate the search index
-  // const data = [
-  //   {
-  //     path: '/home',
-  //     title: 'Kotak Prime Loans | Car, Two-Wheeler & Property Loans',
-  //     description: 'c #emi-calculator - Loan against property',
-  //     robots: 'index, follow',
-  //   },
-  //   {
-  //     path: '/car-loan',
-  //     title: 'Car Loan | Kotak Prime Loans',
-  //     description: 'Apply for a new car loan with Kotak Prime Loans.',
-  //     robots: 'index, follow',
-  //   },
-  //   {
-  //     path: '/used-car-loan',
-  //     title: 'Used Car Loan | Kotak Prime Loans',
-  //     description: 'Get finance for your used car.',
-  //     robots: 'index, follow',
-  //   },
-  //   {
-  //     path: '/two-wheeler-loan',
-  //     title: 'Two Wheeler Loan | Kotak Prime Loans',
-  //     description: 'Apply for a two wheeler loan.',
-  //     robots: 'index, follow',
-  //   },
-  //   {
-  //     path: '/loan-against-property',
-  //     title: 'Loan Against Property | Kotak Prime Loans',
-  //     description: 'Borrow against your home, shop or office.',
-  //     robots: 'index, follow',
-  //   },
-  //   {
-  //     path: '/dealer-finance',
-  //     title: 'Dealer Finance | Kotak Prime Loans',
-  //     description: 's. #feature-cards - Feature Cards',
-  //     robots: 'index, follow',
-  //   },
-  //   {
-  //     path: '/careers',
-  //     title: 'Careers | Kotak Prime Loans',
-  //     description: 'Explore career opportunities at Kotak Prime.',
-  //     robots: 'index, follow',
-  //   },
-  //   {
-  //     path: '/about-us',
-  //     title: 'About Us | Kotak Prime Loans',
-  //     description: 'Learn more about Kotak Mahindra Prime Limited.',
-  //     robots: 'index, follow',
-  //   },
-  // ];
   const entries = [];
   const paths = new Set();
 
