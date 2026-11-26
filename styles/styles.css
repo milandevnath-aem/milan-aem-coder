@@ -873,10 +873,10 @@ main .section.bg-grey.text-align-left {
 
 main .section.bg-grey p {
   margin: 0;
-  font-size: var(--type-body-b1-font-size);
-  line-height: var(--type-body-b1-line-height);
-  letter-spacing: var(--type-body-b1-letter-spacing);
-  font-weight: var(--type-body-b1-font-weight);
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+  letter-spacing: var(--type-body-b2-letter-spacing);
+  font-weight: 500;
 }
 
 main .section.bg-grey p strong{
