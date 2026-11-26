@@ -632,14 +632,22 @@ function buildCalculator(types, link, onSelect) {
     }
   };
 
-  // "car-loan" matches the tab "Car loans"
+  // Match loan types within search labels, regardless of surrounding wording.
   const normalize = (text) => text.toLowerCase()
-    .replace(/\b(?:emi|calculators?)\b/g, '')
-    .replace(/[^a-z0-9]+/g, '')
+    .replace(/\b(?:emi|calculators?|for)\b/g, '')
+    .replace(/\bloans\b/g, 'loan')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
     .replace(/s$/, '');
   const findType = (name) => {
     if (!name) return undefined;
-    const index = types.findIndex((type) => normalize(type.title) === normalize(name));
+    const label = normalize(name);
+    const exactIndex = types.findIndex((type) => normalize(type.title) === label);
+    if (exactIndex >= 0) return exactIndex;
+    const index = types.findIndex((type) => {
+      const title = normalize(type.title);
+      return title && ` ${label} `.includes(` ${title} `);
+    });
     return index < 0 ? undefined : index;
   };
 
