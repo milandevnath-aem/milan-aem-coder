@@ -1,0 +1,234 @@
+/* The fields, dropdowns, captcha, errors, Submit and spinner come from lead-form.css (the
+   block also has the lead-form class); this file adds the Figma spacing of this form, the loan
+   account Verify button, its verified state, the read-only Party ID, the success step and
+   the Login popup.
+   lead-form.css loads after this file, so the rules here use `.service-request-form.lead-form`
+   to win over its rules of the same specificity. */
+
+/* small screens (Figma: padding 24 20 20, 28px between Go back, the intro, the fields and
+   Submit; 16px between fields; heading 32/40, text Body/B2 14/20) */
+.service-request-form.lead-form,
+.service-request-form.lead-form .lead-form-main,
+.service-request-form.lead-form .lead-form-form {
+  gap: 28px;
+}
+
+/* loan account number: the input and its label, then Verify (or the check mark) */
+.service-request-form.lead-form .service-request-loan {
+  cursor: text;
+}
+
+.service-request-form.lead-form .service-request-loan-label {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  cursor: text;
+}
+
+/* Verify (Figma Pills Black Button): 90 x 32, padding 8 12, grey until there is a number */
+.service-request-form.lead-form .service-request-verify {
+  box-sizing: border-box;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 90px;
+  height: 32px;
+  margin: 0;
+  border: 0;
+  border-radius: 100px;
+  padding: 8px 12px;
+  background-color: var(--text-color);
+  color: #fff;
+  font-family: inherit;
+  font-size: var(--body-font-size-xs);
+  font-weight: 600;
+  line-height: 16px;
+  cursor: pointer;
+}
+
+.service-request-form.lead-form .service-request-verify:disabled {
+  background-color: #b2b2b2;
+  color: var(--muted-color);
+  cursor: default;
+}
+
+.service-request-form.lead-form .service-request-verify:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.service-request-form.lead-form :is(.service-request-verify, .service-request-verified)[hidden] {
+  display: none;
+}
+
+/* checking: a small spinner in the pill */
+.service-request-form.lead-form .service-request-verify.is-loading {
+  pointer-events: none;
+}
+
+.service-request-form.lead-form .service-request-verify .lead-form-spinner {
+  width: 14px;
+  height: 14px;
+  border-width: 1.5px;
+}
+
+/* verified: green field, a 20px check mark (black circle) in place of the button */
+.service-request-form.lead-form .service-request-loan.is-verified {
+  background-color: var(--color-input-field-filled-color-success, #f8fff7);
+  box-shadow: inset 0 0 0 1px var(--color-status-success-secondary-default-icon-base, #00ca78);
+}
+
+.service-request-form.lead-form .service-request-verified {
+  box-sizing: border-box;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 1.667px;
+  border-radius: 50%;
+  background-color: var(--text-color);
+  background-clip: content-box;
+}
+
+.service-request-form.lead-form .service-request-verified img {
+  width: 10px;
+  height: 10px;
+  filter: invert(1);
+}
+
+/* Party ID: filled by Verify, never typed; greyed like the Sub-Type before a subject */
+.service-request-form.lead-form .lead-form-input.service-request-party {
+  cursor: default;
+  opacity: 0.6;
+  pointer-events: none;
+  user-select: none;
+}
+
+.service-request-form.lead-form .service-request-party input {
+  cursor: default;
+  -webkit-text-fill-color: var(--text-color);
+}
+
+/* a sub-type is picked after its subject */
+.service-request-form.lead-form .dropdown-field:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+/* Submit (Figma: full width, 56px, Button/BT-3 16/24); grey while the form is incomplete,
+   still focusable (submitting lists what is missing) */
+.service-request-form.lead-form button.button.primary.service-request-submit {
+  padding: 15px 32px;
+  font-size: var(--type-button-bt-3-font-size);
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.service-request-form.lead-form button.button.primary.service-request-submit[aria-disabled='true']:not(.is-loading) {
+  border-color: #b2b2b2;
+  background-color: #b2b2b2;
+  color: var(--muted-color);
+}
+
+.service-request-form.lead-form .service-request-submit-error {
+  margin-bottom: -20px;
+}
+
+.service-request-form.lead-form .service-request-submit-error[hidden] {
+  display: none;
+}
+
+/* success step (shown in place of the form) */
+.service-request-form.lead-form .service-request-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  text-align: center;
+}
+
+.service-request-form.lead-form .service-request-success[hidden] {
+  display: none;
+}
+
+.service-request-form.lead-form .service-request-success-icon {
+  width: 48px;
+  height: 48px;
+}
+
+.service-request-form.lead-form .service-request-step-text :is(h1, h2, h3):focus {
+  outline: none;
+}
+
+.service-request-form.lead-form .service-request-done {
+  width: 100%;
+  margin: 0;
+}
+
+.service-request-form.lead-form[data-step='success'] .lead-form-goback {
+  display: none;
+}
+
+/* Login popup: a popup of its own over the form (modal-compact: bottom sheet on small
+   screens, small card on desktop) - heading, text, full width Login */
+dialog.service-request-login-modal .service-request-login {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+dialog.service-request-login-modal .service-request-step-text :is(h1, h2, h3, h4) {
+  margin: 0 0 12px;
+  color: var(--text-color);
+  font-size: var(--type-headline-h7-font-size);
+  font-weight: 500;
+  line-height: var(--type-headline-h7-line-height);
+  letter-spacing: var(--type-headline-h7-letter-spacing);
+}
+
+dialog.service-request-login-modal .service-request-step-text :is(h1, h2, h3, h4):focus {
+  outline: none;
+}
+
+dialog.service-request-login-modal .service-request-step-text p {
+  margin: 0;
+  color: var(--muted-color);
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  line-height: 20px;
+}
+
+dialog.service-request-login-modal .service-request-login-button {
+  width: 100%;
+  margin: 0;
+  padding: 11px 32px;
+  text-align: center;
+}
+
+/* desktop (Figma: padding 40 20 20, 40px between the intro, the fields and Submit; heading
+   Display Medium 40/48, text Body/B2 16/24) */
+:where(.desktop-view) .service-request-form.lead-form,
+:where(.desktop-view) .service-request-form.lead-form .lead-form-main,
+:where(.desktop-view) .service-request-form.lead-form .lead-form-form {
+  gap: 40px;
+}
+
+:where(.desktop-view) .service-request-form.lead-form .service-request-intro :is(h1, h2) {
+  font-size: 40px;
+  line-height: 48px;
+  letter-spacing: -1px;
+}
+
+:where(.desktop-view) dialog.service-request-login-modal .service-request-step-text p {
+  font-size: var(--body-font-size-m);
+  line-height: 24px;
+}
+
+/* captcha listen button: always shown, faded while the captcha has no audio */
+.service-request-form.lead-form .lead-form-volume:disabled {
+  cursor: default;
+  opacity: 0.4;
+}

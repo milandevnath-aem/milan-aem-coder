@@ -1,7 +1,7 @@
 /*
   Service Request form settings: the only file to edit when its endpoints, sheet, payload keys
   or messages change. The requests are in service-request-api.js; the form is
-  service-request.js. The lead form (LAP, NCF, TWL...) has its own settings in
+  service-request-form.js. The lead form (LAP, NCF, TWL...) has its own settings in
   ../lead-form/lead-api-config.js: nothing here is shared with it except the captcha APIs.
 
   Everything here ships to the browser: never put API keys, secrets or passwords in this file.
@@ -17,7 +17,10 @@
  * Fill in both paths before go-live.
  */
 export const ENDPOINTS = {
-  /** { data: verifyPayload(...) } -> { status: 'success', data: { valid: true|false } } */
+  /**
+   * { data: verifyPayload(...) } -> { status: 'success', data: { valid: true|false, partyId } }
+   * The Party ID of the account fills the form's Party ID field (see PARTY_ID_KEYS).
+   */
   verifyLoan: '', // e.g. '/content/kotakmahindraprime-aem/in/en.service-request-verify.json'
   /** { data: submitPayload(...) } -> { status: 'success', data: { ... } } */
   submit: '', // e.g. '/content/kotakmahindraprime-aem/in/en.service-request-submit.json'
@@ -58,17 +61,22 @@ export const LOAN_ACCOUNT_MAX = 20;
 
 /**
  * Body of the loan account check. TODO: confirm the keys with the API team.
- * @param {{ loanAccount: string, product: string, partyId: string }} values
+ * @param {{ loanAccount: string, product: string }} values
  */
-export const verifyPayload = ({ loanAccount, product, partyId }) => ({
+export const verifyPayload = ({ loanAccount, product }) => ({
   loanAccountNumber: loanAccount,
   product,
-  partyId,
 });
 
 /**
+ * Where the Party ID is in the loan account check's answer (`data`), first match wins.
+ * TODO: confirm the key with the API team.
+ */
+export const PARTY_ID_KEYS = ['partyId', 'PartyId', 'partyID', 'party_id', 'PARTY_ID'];
+
+/**
  * Body of the service request. TODO: confirm the keys with the API team.
- * @param {Object} values the form's values by role (see service-request.js valuesOf)
+ * @param {Object} values the form's values by role (see service-request-form.js valuesOf)
  */
 export const submitPayload = ({
   partyId, product, loanAccount, subject, subType, city, description, extra,

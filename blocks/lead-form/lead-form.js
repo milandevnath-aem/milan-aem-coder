@@ -201,9 +201,12 @@ export function textareaField(label, required, max) {
  * `field.load()` asks for a new image (on opening the form, refresh, and after every
  * attempt, as each captcha is single-use); `field.onError(message)` shows a failed load.
  * @param {string} label field label
+ * @param {Object} [options]
+ * @param {boolean} [options.alwaysShowAudio] keep the listen button on screen (disabled) while
+ *   the captcha has no audio; by default it is hidden then
  * @returns {HTMLDivElement & { load: Function, isValid: Function, input: HTMLInputElement }}
  */
-export function captchaField(label) {
+export function captchaField(label, { alwaysShowAudio = false } = {}) {
   const field = document.createElement('div');
   field.className = 'lead-form-captcha';
   const frame = document.createElement('div');
@@ -220,8 +223,9 @@ export function captchaField(label) {
   tools.className = 'lead-form-captcha-tools';
   const refresh = iconButton('refresh', 'Show a new captcha');
   const listen = iconButton('volume', 'Listen to the captcha');
-  // shown only while the captcha has audio
-  listen.hidden = true;
+  // shown only while the captcha has audio (or always, disabled without audio)
+  listen.hidden = !alwaysShowAudio;
+  listen.disabled = true;
   listen.setAttribute('aria-pressed', 'false');
   tools.append(refresh, listen);
   const control = textField(label || 'Enter the captcha shown', 'text', true);
@@ -276,7 +280,8 @@ export function captchaField(label) {
     } catch (e) {
       // no audio, or not decodable: the image alone is shown
     }
-    listen.hidden = !audioUrl;
+    listen.hidden = !audioUrl && !alwaysShowAudio;
+    listen.disabled = !audioUrl;
   };
   audio.addEventListener('ended', () => setPlaying(false));
   audio.addEventListener('error', () => { if (audioUrl) audioFailed(); });

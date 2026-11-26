@@ -60,7 +60,7 @@
           "component": "aem-content",
           "name": "sheet",
           "label": "Data sheet",
-          "description": "Sheet with the Product, Subject, Sub-Subject and City columns. Leave empty for /service-request.json."
+          "description": "The published sheet with the Product, Subject, Sub-Subject and City columns (pick it like any page). Leave empty to use /service-request.json."
         },
         {
           "component": "text",
@@ -127,6 +127,7 @@
             { "name": "Letters and numbers", "value": "alphanumeric" },
             { "name": "Text area (multi-line, with character count)", "value": "textarea" },
             { "name": "Loan account number (with Verify)", "value": "loan" },
+            { "name": "Party ID (read-only, filled by Verify)", "value": "party" },
             { "name": "Product (from the sheet)", "value": "product" },
             { "name": "Subject (from the sheet)", "value": "subject" },
             { "name": "Sub-Type (from the sheet, follows the Subject)", "value": "subtype" },
