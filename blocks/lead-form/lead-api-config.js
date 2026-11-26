@@ -82,9 +82,8 @@ export const OTP_VALID_MS = 5 * 60 * 1000;
  * - lead: fixed values added to `lead` as they are, after the form fields (so no form field
  *   can override them). Any key works here, e.g. NewCarFinance's `Product` or TWL's `product`.
  * Matching ignores case, spaces and punctuation ("Two-Wheeler Loans" = "two wheeler loan").
- * A category that is not listed (Car Lease, Dealer Finance until their API is decided) has
- * no api, so the server refuses its lead. To connect one, add a line here; no other
- * change is needed.
+ * A category that is not listed has no api, so the server refuses its lead. To connect one,
+ * add a line here (and its keys in LEAD_KEYS_BY_PRODUCT); no other change is needed.
  */
 export const PRODUCT_BY_CATEGORY = {
   'New Car Finance': { api: 'NewCarFinance', lead: { Product: 'New Car' } },
@@ -109,6 +108,9 @@ export const PRODUCT_BY_CATEGORY = {
     api: 'LAP',
     lead: { MiddleName: '', LeadSource: 'Website', EnquiryType: '000' },
   },
+  // no fixed values: the form's "Select loan category" is sent as LoanCategory
+  'Car Lease': { api: 'CarLease' },
+  'Dealer Finance': { api: 'DealerFinance' },
 };
 
 /**
@@ -119,6 +121,9 @@ export const CITY_LISTS = {
   LAP: '/lap-cities.json',
   NewCarFinance: '/ncf-cities.json',
   TWL: '/tw-cities.json',
+  // no city sheet of their own yet: the New Car Finance cities for now
+  CarLease: '/ncf-cities.json',
+  DealerFinance: '/ncf-cities.json',
 };
 export const CITY_COLUMN = 'SUB_CITY_NAME';
 
@@ -146,6 +151,32 @@ export const LEAD_KEYS_BY_PRODUCT = {
   // LeadSource, EnquiryType and MiddleName come from PRODUCT_BY_CATEGORY
   LAP: {
     FirstName: 'FirstName', LastName: 'LastName', Email: 'Email', Location: 'Location', Mobile: 'Phone',
+  },
+  // AccountName is the form's "Account name" (a company)
+  CarLease: {
+    LoanCategory: 'LoanCategory',
+    AccountName: 'AccountName',
+    FirstName: 'FirstName',
+    LastName: 'LastName',
+    Name: 'Name',
+    Email: 'Email',
+    Mobile: 'Mobile',
+    Location: 'Location',
+    Pincode: 'Pincode',
+  },
+  DealerFinance: {
+    LoanCategory: 'LoanCategory',
+    DealershipName: 'DealershipName',
+    Manufacturer: 'Manufacturer',
+    FundingAmountRequired: 'FundingAmountRequired',
+    NatureOfFunding: 'NatureOfFunding',
+    FirstName: 'FirstName',
+    LastName: 'LastName',
+    Name: 'Name',
+    Email: 'Email',
+    Mobile: 'Mobile',
+    Location: 'Location',
+    Pincode: 'Pincode',
   },
 };
 

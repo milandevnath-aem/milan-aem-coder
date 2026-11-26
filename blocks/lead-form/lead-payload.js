@@ -18,8 +18,7 @@ const normalize = (text) => String(text || '').toLowerCase().replace(/[^a-z0-9]/
  * The settings of a loan category (PRODUCT_BY_CATEGORY).
  * @param {string} category e.g. "New Car Finance"
  * @returns {{ api?: string, lead?: Object<string, string> }} e.g. { api: "NewCarFinance",
- *   lead: { Product: "New Car" } }; {} when the category has no API yet (Car Lease,
- *   Dealer Finance)
+ *   lead: { Product: "New Car" } }; {} when the category is not listed
  */
 export function categoryFields(category) {
   const wanted = normalize(category);
@@ -31,7 +30,7 @@ export function categoryFields(category) {
 /**
  * The backend product of a loan category.
  * @param {string} category e.g. "Loan Against Property"
- * @returns {string} e.g. "LAP"; '' when the category has no API yet (Car Lease, Dealer Finance)
+ * @returns {string} e.g. "LAP"; '' when the category is not listed
  */
 export function productFor(category) {
   return categoryFields(category).api || '';
