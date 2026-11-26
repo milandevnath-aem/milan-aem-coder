@@ -17,7 +17,7 @@ const normalize = (text) => String(text || '').toLowerCase().replace(/[^a-z0-9]/
 /**
  * The lead fields of a loan category (PRODUCT_BY_CATEGORY).
  * @param {string} category e.g. "New Car Finance"
- * @returns {Object<string, string>} e.g. { product: "NewCarFinance", Product: "New Car Finance" };
+ * @returns {Object<string, string>} e.g. { product: "NewCarFinance", Product: "New Car" };
  *   {} when the category has no API yet (Car Lease, Dealer Finance)
  */
 export function categoryFields(category) {
@@ -93,7 +93,7 @@ function readForm(form) {
  * @param {string} category the picked loan category, adds its fields (see categoryFields)
  *   except `product`, which is sent next to the lead as its `category` (see lead-api.js)
  * @returns {Object<string, string>} e.g. New Car Finance: { FirstName, LastName, Location,
- *   Pincode, Email, Product: "New Car Finance" }; TWL: { firstName, lastName,
+ *   Pincode, Email, Product: "New Car" }; TWL: { firstName, lastName,
  *   businessLocation, email }; LAP: { FirstName, LastName, Email, Location, Phone, MiddleName }
  */
 export function buildLead(form, category) {

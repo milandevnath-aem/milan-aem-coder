@@ -26,9 +26,9 @@ export const ENDPOINTS = {
   /**
    * Send: { data: { name, mobileNo, mobCode, email, mode }, source, productType } (the fixed
    * values are OTP_GENERATE_FIXED) -> { data: { transactionId, token } }, needs kmp_captcha_ok.
-   * Resend is the same endpoint with { mobile, transactionId, token } (the latest pair; the
-   * token is what makes it a resend, so no captcha). Its answer's pair replaces the old one:
-   * each token works for one resend only.
+   * Resend is the same endpoint with { data: { mobileNo }, transactionId, token } (the latest
+   * pair; the token is what makes it a resend, so no captcha; `data` is required). Its answer's
+   * pair replaces the old one: each token works for one resend only.
    */
   otpGenerate: '/content/kotakmahindraprime-aem/in/en.otp-generate.json',
   /**
@@ -88,13 +88,15 @@ export const OTP_VALID_MS = 5 * 60 * 1000;
  * change is needed.
  */
 export const PRODUCT_BY_CATEGORY = {
-  'New Car Finance': { product: 'NewCarFinance', Product: 'New Car Finance' },
+  'New Car Finance': { product: 'NewCarFinance', Product: 'New Car' },
   'Used Car & Re-finance': { product: 'NewCarFinance', Product: 'Used Car' },
   'Top-Up Loan': { product: 'NewCarFinance', Product: 'PL/KPTR' },
   'Two-Wheeler Loan': { product: 'TWL' },
-  // LAP: the form has no middle name, so it is sent empty. LeadSource and EnquiryType are added
-  // by the backend.
-  'Loan Against Property': { product: 'LAP', MiddleName: '' },
+  // LAP: the form has no middle name, so it is sent empty. LeadSource and EnquiryType are sent
+  // by the frontend (the backend only adds its defaults when they are missing).
+  'Loan Against Property': {
+    product: 'LAP', MiddleName: '', LeadSource: 'Website', EnquiryType: '000',
+  },
 };
 
 /**
@@ -124,7 +126,7 @@ export const LEAD_KEYS_BY_PRODUCT = {
   TWL: {
     FirstName: 'firstName', LastName: 'lastName', Location: 'businessLocation', Email: 'email',
   },
-  // the server adds LeadSource and EnquiryType
+  // LeadSource, EnquiryType and MiddleName come from PRODUCT_BY_CATEGORY
   LAP: {
     FirstName: 'FirstName', LastName: 'LastName', Email: 'Email', Location: 'Location', Mobile: 'Phone',
   },
