@@ -224,7 +224,8 @@ export const MESSAGES = {
   captchaAudioFailed: 'We couldn’t play the audio. Tap refresh for a new captcha.',
   resendNeedsCaptcha: 'Captcha expired. Please enter the captcha again to get a new OTP.',
   wrongOtp: 'The OTP you have entered is incorrect.',
-  sendFailed: 'We couldn’t send the OTP. Please try again.',
+  // Send OTP / Resend failed without a more specific message (the client's wording)
+  sendFailed: 'You have exhausted your limit to resend OTP. If you have not received OTP, please contact the bank OR try again later.',
   submitFailed: 'We couldn’t submit your details. Please try again.',
   formFailed: 'Something went wrong. Please refresh the page and try again.',
   timeout: 'This is taking longer than usual. Please try again.',
