@@ -15,6 +15,19 @@ export const EMAIL_MAX = 35;
 export const isPersonName = (label) => /name|manufacturer/i.test(label)
   && !/\b(account|company|business|organi[sz]ation)\b/i.test(label);
 
+/**
+ * A company account ("Account name", "Company name"): letters and spaces like a dealership
+ * (see nameRules), but not a person's name, so it is sent as a field of its own.
+ */
+export const isCompanyName = (label) => /name/i.test(label)
+  && /\b(account|company|business|organi[sz]ation)\b/i.test(label);
+
+/** longest accepted amount, in digits ("Funding amount required") */
+export const AMOUNT_MAX = 12;
+
+/** An amount field ("Funding amount required", "Loan amount"): digits only. */
+export const isAmount = (label) => /\bamount\b/i.test(label);
+
 /** one part of a name ("First name", "Last name", "Surname"), not the full name */
 export const isNamePart = (label) => /\b(first|given|middle|last|sur|family)\s*name/i.test(label);
 
@@ -166,6 +179,19 @@ export function allowOnly(input, allowed, max, onReject) {
 
 /** digits only, up to `max` */
 export const digitsOnly = (input, max, onReject) => allowOnly(input, /\d/, max, onReject);
+
+/**
+ * An amount: digits only, up to AMOUNT_MAX, more than zero and no leading zero (the pattern
+ * flags "0" or "0500" as invalid).
+ * @param {HTMLInputElement} input a text input
+ * @param {Function} [onReject] see allowOnly
+ */
+export function amountRules(input, onReject) {
+  Object.assign(input, {
+    type: 'text', inputMode: 'numeric', autocomplete: 'off', pattern: `[1-9][0-9]{0,${AMOUNT_MAX - 1}}`,
+  });
+  digitsOnly(input, AMOUNT_MAX, onReject);
+}
 
 /**
  * A name, up to NAME_MAX: letters only for a first or last name; letters and spaces for

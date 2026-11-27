@@ -13,7 +13,8 @@ import {
   CATEGORY_PICKED_EVENT, readForms, rememberForms, rememberedForms, resolveForm, slug,
 } from '../../scripts/category-forms.js';
 import {
-  digitsOnly, emailRules, fieldMessages, isPersonName, mobileRules, nameRules,
+  amountRules, digitsOnly, emailRules, fieldMessages, isAmount, isCompanyName, isPersonName,
+  mobileRules, nameRules,
   rejectedErrorMessage, valueErrorMessage,
 } from '../../scripts/input-rules.js';
 import {
@@ -138,6 +139,9 @@ export function textField(label, kind, required) {
       type: 'text', inputMode: 'numeric', pattern: '[1-9][0-9]{5}', autocomplete: 'postal-code',
     });
     digitsOnly(input, 6, rejected(input));
+  } else if (kind === 'number') {
+    // an amount ("Funding amount required"): digits only
+    amountRules(input, rejected(input));
   } else {
     input.type = 'text';
     // first and last name get their own autofill values, or the full name fills both;
@@ -146,8 +150,9 @@ export function textField(label, kind, required) {
     else if (/\b(last|sur|family)\s*name/i.test(label)) input.autocomplete = 'family-name';
     else if (/\b(account|company|business|organi[sz]ation|dealer(ship)?)\b/i.test(label)) input.autocomplete = 'organization';
     else if (/name/i.test(label)) input.autocomplete = 'name';
-    // names: letters only (and spaces in a full name)
-    if (isPersonName(label)) nameRules(input, label, rejected(input));
+    // names: letters only (and spaces in a full name); a company account ("Account name")
+    // takes letters and spaces, like a dealership
+    if (isPersonName(label) || isCompanyName(label)) nameRules(input, label, rejected(input));
   }
   const control = document.createElement('span');
   control.className = 'lead-form-control';
@@ -464,6 +469,9 @@ export default function decorate(block) {
     item.className = 'lead-form-item';
     // "Text (half width)" fields, or any field with Half width ticked, share a line (desktop)
     if (kind === 'text-half' || halfCell?.textContent.trim() === 'true') item.classList.add('is-half');
+    // a text field for an amount ("Funding amount required") takes digits only, with the
+    // amount messages (fieldMessages "number")
+    if (['text', 'text-half'].includes(kind) && isAmount(label)) kind = 'number';
     let field;
     if (kind === 'select' || kind === 'search') {
       const parsed = parseOptions(optionsText);
