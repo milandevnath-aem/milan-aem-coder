@@ -4,7 +4,7 @@ import { createPicture } from '../../scripts/images.js';
 let blockCount = 0;
 
 function buildCard(row, isDocuments) {
-  const [, imageCell, titleCell, textCell] = row.children;
+  const [, imageCell, titleCell, textCell, hoverCell] = row.children;
   const title = titleCell?.textContent.trim();
   // a row without a title is a short intro shown above that tab's cards
   const card = document.createElement(title ? 'li' : 'div');
@@ -17,11 +17,35 @@ function buildCard(row, isDocuments) {
 
   card.className = 'requirements-card';
   const img = imageCell?.querySelector('img');
+  const hoverImg = hoverCell?.querySelector('img');
+  // a GIF reference can arrive as an <img> or as a plain link
+  const hoverSrc = hoverImg?.src || hoverCell?.querySelector('a[href]')?.href;
   if (img && !isDocuments) {
     const picture = createPicture(img.src, img.alt, false, [{ width: '160' }]);
     moveInstrumentation(img, picture.querySelector('img'));
     picture.className = 'requirements-icon';
-    card.append(picture);
+    let icon = picture;
+    if (hoverSrc) {
+      // the GIF can't live inside <picture>: its <source> elements would override the GIF src
+      icon = document.createElement('span');
+      icon.className = 'requirements-icon';
+      picture.className = '';
+      icon.append(picture);
+      // plain img with the original src: optimized renditions are static and would stop the GIF
+      card.addEventListener('mouseenter', () => {
+        if (icon.querySelector('.requirements-icon-hover')) return;
+        const gif = document.createElement('img');
+        gif.className = 'requirements-icon-hover';
+        gif.src = hoverSrc;
+        gif.alt = '';
+        gif.setAttribute('aria-hidden', 'true');
+        icon.append(gif);
+      });
+      card.addEventListener('mouseleave', () => {
+        icon.querySelector('.requirements-icon-hover')?.remove();
+      });
+    }
+    card.append(icon);
   }
   const label = document.createElement(isDocuments ? 'h3' : 'p');
   label.className = 'requirements-title';

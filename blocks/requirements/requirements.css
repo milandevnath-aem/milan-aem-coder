@@ -175,6 +175,25 @@
   height: 72px;
 }
 
+.requirements .requirements-icon {
+  position: relative;
+  display: block;
+  width: 52px;
+  height: 52px;
+}
+
+/* while hovered the GIF is added on top of the icon, which is hidden */
+.requirements .requirements-icon > img.requirements-icon-hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.requirements .requirements-icon:has(.requirements-icon-hover) > picture {
+  opacity: 0;
+}
+
 .requirements .requirements-title {
   margin: 0;
   color: var(--muted-color);
@@ -346,6 +365,11 @@
 }
 
 :where(.desktop-view) .requirements .requirements-icon img {
+  width: 73px;
+  height: 72px;
+}
+
+:where(.desktop-view) .requirements .requirements-icon {
   width: 73px;
   height: 72px;
 }
