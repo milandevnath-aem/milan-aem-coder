@@ -159,10 +159,6 @@
   min-height: 230px;
 }
 
-.requirements.eligibility .requirements-card .requirements-title{
-  margin-top: auto;
-}
-
 .requirements.eligibility .requirements-icon img {
   display: block;
   width: 52px;
@@ -171,7 +167,7 @@
 }
 
 :where(.desktop-view) .requirements.eligibility .requirements-icon img {
-  width: 72px;
+  width: 73px;
   height: 72px;
 }
 
@@ -372,11 +368,6 @@
   flex-basis: calc((100% - 3 * var(--grid-gutter)) / 3.5);
 }
 
-:where(.desktop-view) .requirements .requirements-icon img {
-  width: 73px;
-  height: 72px;
-}
-
 :where(.desktop-view) .requirements .requirements-icon {
   width: 73px;
   height: 72px;
@@ -515,4 +506,9 @@
 
 :where([data-viewport='desktop']) .requirements.documents .requirements-text li::before {
   top: 4px;
+}
+
+/* last so it keeps winning over the lower-specificity title rules above */
+.requirements.eligibility .requirements-card .requirements-title {
+  margin-top: auto;
 }
