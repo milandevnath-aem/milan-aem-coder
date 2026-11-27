@@ -38,6 +38,8 @@ module.exports = {
       offer: 5,
       // feature banner item: image, mobile image, text, style, tablet image
       'feature-banner-item': 5,
+      // requirement: tab, icon, title, text, hover icon
+      requirement: 5,
       // link list: classes, side, intro, note, read all label, read less label
       'link-list': 6,
     }],
