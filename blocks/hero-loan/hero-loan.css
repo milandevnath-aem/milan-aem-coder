@@ -479,9 +479,8 @@
   list-style: none;
 }
 
-/* more than 4 items: show 4 and scroll the rest */
-.hero-loan .hero-loan-more-menu:has(li:nth-child(5)) {
-  max-height: 144px;
+.hero-loan .hero-loan-more-menu:has(li:nth-child(4)) {
+  max-height: 110px;
 }
 
 .hero-loan .hero-loan-more-menu[hidden] {
