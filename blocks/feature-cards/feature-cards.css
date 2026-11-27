@@ -173,9 +173,19 @@
 
 .feature-cards.numbered .feature-cards-card{
     min-height: 230px;
+    max-width: 386px;
+}
+
+.feature-cards.numbered.expand-card-width .feature-cards-card{
+    max-width: 100%;
 }
 
 /* numbered */
+:where(.desktop-view) .feature-cards.numbered .feature-cards-card{
+    height: 272px;
+    max-width: 470px;
+}
+
 :where(.desktop-view) .feature-cards.numbered .feature-cards-number {
     font-size: var(--heading-font-size-m);
     line-height: 28px;
@@ -190,7 +200,6 @@
 
 .feature-cards.numbered .feature-cards-body h3 {
     margin-top: auto;
-    padding-top: 40px;
     font-size: 16px;
     line-height: 24px;
     letter-spacing: 0;
@@ -213,9 +222,12 @@
     line-height: 24px;
 }
 
-.feature-cards.info .feature-cards-card {
+.feature-cards.info .feature-cards-card.is-icon {
+    display: flex;
+    flex-direction: column;
     justify-content: flex-start;
     min-height: 0;
+    gap: var(--spacing-5xl);
 }
 
 .feature-cards.info .feature-cards-body p {
@@ -234,6 +246,15 @@
     line-height: var(--type-headline-h4-line-height);
     font-weight: var(--type-headline-h4-font-weight);
     letter-spacing: -0.4px;
+}
+
+/* keep iOS auto-detected / tel: links looking like the value text */
+.feature-cards .feature-cards-value a[x-apple-data-detectors],
+.feature-cards .feature-cards-value a[href^="tel"] {
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    text-decoration: none;
 }
 
 .feature-cards.info .feature-cards-body p.feature-cards-value:not(:last-child) {
@@ -481,6 +502,7 @@
 :where(.desktop-view) .feature-cards.split {
     flex-direction: row;
     gap: 80px;
+    justify-content: space-between;
 }
 
 :where(.desktop-view) .feature-cards.split .feature-cards-aside{
@@ -574,13 +596,15 @@
     pointer-events: none;
 }
 
-.feature-cards.split-culture .is-media .feature-cards-body h3,
-.feature-cards.split-culture .is-media .feature-cards-body h4,
 .feature-cards.split-culture .is-media .feature-cards-body p,
 .feature-cards.split-insurance .is-media .feature-cards-body h3,
 .feature-cards.split-insurance .is-media .feature-cards-body h4,
 .feature-cards.split-insurance .is-media .feature-cards-body p {
     color: #fff;
+}
+
+.feature-cards.split-culture .is-media .feature-cards-body :is(h2, h3, h4, h5, h6) {
+    color: var(--color-text-primary-inverse-base);
 }
 
 .feature-cards.split-culture .feature-cards-main .feature-cards-card.is-icon {
@@ -780,6 +804,7 @@
 
 :where(.desktop-view) .feature-cards.split-culture .feature-cards-main .feature-cards-card.is-icon {
     min-height: 200px;
+    min-width: 272px;
 }
 
 :where(.desktop-view) .feature-cards.split-culture .feature-cards-main .feature-cards-card:first-child:nth-last-child(odd) {
@@ -792,6 +817,12 @@
 :where(.desktop-view) .feature-cards.split-insurance .feature-cards-main .feature-cards-body h4 {
     font-size: var(--body-font-size-m);
     line-height: 24px;
+}
+
+:where(.desktop-view) .feature-cards.split-culture .feature-cards-body :is(h2, h3, h4, h5, h6) {
+    margin-bottom: 0;
+    font-size: var(--type-headline-h4-font-size);
+    line-height: var(--type-headline-h4-line-height);  
 }
 
 :where(.desktop-view) .feature-cards.split-culture .feature-cards-body p,
@@ -867,10 +898,99 @@
     background: #eee;
 }
 
+/* long text must not shrink the icon in the row layout */
+.feature-cards.icon-border .feature-cards-icon {
+    flex: none;
+}
+
 .feature-cards.split.icon-border .feature-cards-icon img,
 :where(.desktop-view) .feature-cards.icon-border .feature-cards-icon img {
     width: 40px;
     height: 40px;
     padding: 8px;
     border-width: 1px;
+}
+
+.feature-cards-container .default-content-wrapper > h2 + p{
+    max-width: 660px;
+}
+
+/*
+ * desktop (1680px and up, also the 1920 / 2560 designs): every text style steps up one size to
+ * the DLS desktop values, as in the Figma 1680 / 1920 frames (40/48 to 44/52, 28/36 to 32/40,
+ * 20/28 to 24/32, 16/24 to 20/28, 14/18 to 16/24, 12/16 to 14/20); the layout is unchanged
+ */
+:where([data-viewport='desktop']) .feature-cards .feature-cards-body h3,
+:where([data-viewport='desktop']) .feature-cards .feature-cards-body h4,
+:where([data-viewport='desktop']) .feature-cards.numbered .feature-cards-body h3,
+:where([data-viewport='desktop']) .feature-cards.numbered .feature-cards-number {
+    font-size: var(--type-headline-h4-font-size);
+    line-height: var(--type-headline-h4-line-height);
+    letter-spacing: var(--type-headline-h4-letter-spacing);
+}
+
+:where([data-viewport='desktop']) .feature-cards .feature-cards-body p,
+:where([data-viewport='desktop']) .feature-cards.numbered .feature-cards-body p {
+    font-size: var(--type-body-b2-font-size);
+    line-height: var(--type-body-b2-line-height);
+}
+
+:where([data-viewport='desktop']) .feature-cards.about-us .feature-cards-body p {
+    font-size: var(--type-body-b1-font-size);
+    line-height: var(--type-body-b1-line-height);
+}
+
+:where([data-viewport='desktop']) .feature-cards.about-us .feature-cards-body p.feature-cards-value {
+    font-size: var(--type-body-b3-font-size);
+    line-height: var(--type-body-b3-line-height);
+}
+
+/* split variants */
+:where([data-viewport='desktop']) .feature-cards.split .feature-cards-aside h2,
+:where([data-viewport='desktop']) .feature-cards.split .feature-cards-aside h3,
+:where([data-viewport='desktop']) .feature-cards.split-culture .feature-cards-aside > h2,
+:where([data-viewport='desktop']) .feature-cards.split-culture .feature-cards-aside > h3,
+:where([data-viewport='desktop']) .feature-cards.split-insurance .feature-cards-header h2,
+:where([data-viewport='desktop']) .feature-cards.split-insurance .feature-cards-header h3 {
+    font-size: var(--type-display-size);
+    line-height: var(--type-display-line);
+    letter-spacing: var(--type-display-ls);
+}
+
+:where([data-viewport='desktop']) .feature-cards.split .feature-cards-body h3,
+:where([data-viewport='desktop']) .feature-cards.split .feature-cards-body h4,
+:where([data-viewport='desktop']) .feature-cards.split-culture .feature-cards-body h3,
+:where([data-viewport='desktop']) .feature-cards.split-culture .feature-cards-body h4,
+:where([data-viewport='desktop']) .feature-cards.split-insurance .feature-cards-main .feature-cards-body h3,
+:where([data-viewport='desktop']) .feature-cards.split-insurance .feature-cards-main .feature-cards-body h4,
+:where([data-viewport='desktop']) .feature-cards.split-culture .feature-cards-aside > p,
+:where([data-viewport='desktop']) .feature-cards.split-insurance .feature-cards-header p {
+    font-size: var(--type-body-b2-font-size);
+    line-height: var(--type-body-b2-line-height);
+}
+
+:where([data-viewport='desktop']) .feature-cards.split .feature-cards-body p,
+:where([data-viewport='desktop']) .feature-cards.split .feature-cards-footer p:not(.button-wrapper),
+:where([data-viewport='desktop']) .feature-cards.split-culture .feature-cards-body p,
+:where([data-viewport='desktop']) .feature-cards.split-insurance .feature-cards-body p,
+:where([data-viewport='desktop']) .feature-cards.split-insurance .feature-cards-body li,
+:where([data-viewport='desktop']) .feature-cards.split-insurance .feature-cards-note p {
+    font-size: var(--type-body-b1-font-size);
+    line-height: var(--type-body-b1-line-height);
+}
+
+:where([data-viewport='desktop']) .feature-cards.split-culture .is-media .feature-cards-body p {
+    font-size: var(--type-body-b3-font-size);
+    line-height: var(--type-body-b3-line-height);
+}
+
+:where([data-viewport='desktop']) .feature-cards.split-insurance .is-media .feature-cards-body h3,
+:where([data-viewport='desktop']) .feature-cards.split-insurance .is-media .feature-cards-body h4 {
+    font-size: var(--type-headline-h6-font-size);
+    line-height: var(--type-headline-h6-line-height);
+}
+
+:where([data-viewport='desktop']) .feature-cards.split-insurance .feature-cards-main .feature-cards-number {
+    font-size: var(--type-headline-h1-font-size);
+    line-height: var(--type-headline-h1-line-height);
 }

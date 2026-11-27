@@ -49,6 +49,19 @@
           "value": "",
           "label": "Description",
           "valueType": "string"
+        },
+        {
+          "component": "select",
+          "name": "classes",
+          "value": "",
+          "label": "CSS Style",
+          "valueType": "string",
+          "options": [
+            {
+              "name": "Investors Debt - Relevant Information",
+              "value": "investorsDebt"
+            }
+          ]
         }
       ]
     },
@@ -61,6 +74,11 @@
           "name": "image",
           "label": "Icon / logo",
           "multi": false
+        },
+        {
+          "name": "imageMimeType",
+          "component": "hidden",
+          "valueType": "image/png"
         },
         {
           "component": "text",
@@ -82,9 +100,7 @@
   "filters": [
     {
       "id": "partner-list",
-      "components": [
-        "partner-item"
-      ]
+      "components": ["partner-item"]
     }
   ]
 }

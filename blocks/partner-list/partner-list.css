@@ -8,9 +8,10 @@
 
 .partner-list .partner-list-title {
   margin: 0 0 var(--spacing-md);
-  font-size: var(--heading-font-size-l);
-  line-height: 1.25;
-  font-weight: 500;
+  font-size: var(--type-display-medium-df-1-font-size);
+  line-height: var(--type-display-medium-df-1-line-height);
+  font-weight: var(--type-display-medium-df-1-font-weight);
+  letter-spacing: var(--type-display-medium-df-1-letter-spacing);
   color: var(--text-color);
 }
 
@@ -22,6 +23,8 @@
   margin: 0;
   font-size: var(--type-body-b3-font-size);
   line-height: var(--type-body-b3-line-height);
+  letter-spacing: var(--type-body-b3-letter-spacing);
+  font-weight: var(--type-body-b3-font-weight);
   color: var(--muted-color);
 }
 
@@ -41,7 +44,7 @@
 .partner-list .partner-list-item {
   display: flex;
   align-items: center;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-xl);
 }
 
 .partner-list .partner-list-icon {
@@ -61,6 +64,8 @@
 .partner-list .partner-list-label {
   font-size: var(--type-body-b3-font-size);
   line-height: var(--type-body-b3-line-height);
+  font-weight: var(--type-body-b3-font-weight);
+  letter-spacing: var(--type-body-b3-letter-spacing);
   color: var(--text-color);
 }
 
@@ -70,13 +75,17 @@
     gap: var(--spacing-8xl);
     padding: var(--spacing-5xl) 0;
   }
+}
 
-  .partner-list .partner-list-title {
-    font-size: var(--heading-font-size-xxl);
-  }
+/*
+ * desktop (1680px and up, also the 1920 / 2560 designs): the type steps up one size to the DLS
+ * desktop values, as in the Figma 1680 / 1920 reference frames; the layout is unchanged
+ */
+:where([data-viewport='desktop']) .partner-list .partner-list-title {
+  font-size: var(--type-display-size);
+}
 
-  .partner-list .partner-list-description p {
-    font-size: var(--body-font-size-s);
-    line-height: 20px;
-  }
+:where([data-viewport='desktop']) .partner-list .partner-list-description p {
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
 }

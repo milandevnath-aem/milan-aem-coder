@@ -197,9 +197,11 @@
 .requirements .requirements-title {
   margin: 0;
   color: var(--muted-color);
+  font-family: inherit;
   font-size: var(--body-font-size-m);
   font-weight: 500;
   line-height: 24px;
+  letter-spacing: normal;
 }
 
 .requirements .requirements-text p {
@@ -262,6 +264,12 @@
   font-size: var(--body-font-size-s);
   font-weight: 500;
   line-height: 20px;
+}
+
+/* carousel region wrapper adds no box */
+.requirements .requirements-carousel {
+  display: contents;
+
 }
 
 .requirements.eligibility.elgb-small-text .requirements-text p {
@@ -434,4 +442,77 @@
 
 :where(.desktop-view) .requirements.documents .requirements-text li::before {
   top: 3px;
+}
+
+/* Left Title and Right Document Requirement Cards */
+:where(.desktop-view) .requirements.left-title-right-documents .requirements-cards {
+  display:flex;
+}
+
+/* grandparent of the left-title-right-documents block */
+:where(.desktop-view) *:has(> * > .requirements.left-title-right-documents) {
+  display:flex;
+  max-width: 1182px;
+  justify-content: space-around;
+  margin: auto;
+  padding: 0 var(--gb-margin);
+}
+
+/* default content wrapper of the grandparent of the left-title-right-documents block ----CHILD 1 */
+:where(.desktop-view) *:has(> * > .requirements.left-title-right-documents) > .default-content-wrapper {
+  width: 37.39%;
+  max-width:442px;
+  margin:0;
+  padding: 0;
+}
+
+/* parent of the left-title-right-documents block ----CHILD 2 */
+:where(.desktop-view) *:has(> .requirements.left-title-right-documents) {
+  width: 55.84%;
+  max-width: 660px;
+  padding:0;
+  margin:0;
+}
+
+/*
+ * desktop (1680px and up, also the 1920 / 2560 designs): the type steps up to the DLS desktop
+ * values (Figma 1680 / 1920 frames)
+ */
+:where([data-viewport='desktop']) .requirements .requirements-tabs button,
+:where([data-viewport='desktop']) .requirements.eligibility .requirements-tabs button {
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+}
+
+/* eligibility cards: 280px tall with the larger value text, still 386px wide */
+:where([data-viewport='desktop']) .requirements.eligibility .requirements-card {
+  min-height: 280px;
+  max-height: 280px;
+}
+
+:where([data-viewport='desktop']) .requirements .requirements-title {
+  font-size: var(--type-body-b3-font-size);
+  line-height: var(--type-body-b3-line-height);
+}
+
+:where([data-viewport='desktop']) .requirements .requirements-text p {
+  font-size: var(--type-headline-h7-font-size);
+  line-height: var(--type-headline-h7-line-height);
+  letter-spacing: var(--type-headline-h7-letter-spacing);
+}
+
+/* documents: Headline/H4 card title, Body/B2 list */
+:where([data-viewport='desktop']) .requirements.documents .requirements-title {
+  font-size: var(--type-headline-h4-font-size);
+  line-height: var(--type-headline-h4-line-height);
+  letter-spacing: var(--type-headline-h4-letter-spacing);
+}
+
+:where([data-viewport='desktop']) .requirements.documents .requirements-text li {
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+}
+
+:where([data-viewport='desktop']) .requirements.documents .requirements-text li::before {
+  top: 4px;
 }

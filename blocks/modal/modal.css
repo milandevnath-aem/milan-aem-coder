@@ -1,5 +1,8 @@
+/* page behind an open popup must not scroll (html too: it is the scroller on some browsers) */
+html:has(body.modal-open),
 body.modal-open {
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 dialog.modal {
@@ -323,6 +326,23 @@ dialog.modal .default-content-wrapper p.button-wrapper:last-child .button {
   background-color: transparent;
 }
 
+/* iOS Safari: with the keyboard open, the visual viewport scrolls past the bottom of the
+   layout viewport, where this fixed dialog ends, and the page (e.g. the sticky CTA) would
+   show in the gap above the keyboard. The sheet continues below its bottom edge to cover it.
+   iOS only (-webkit-touch-callout is supported by iOS Safari/WebKit alone): Android untouched. */
+@supports (-webkit-touch-callout: none) {
+  :where(html:not(.desktop-view)) dialog.modal.modal-form::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    background-color: var(--background-color);
+    pointer-events: none;
+  }
+}
+
 :where(html:not(.desktop-view)) dialog.modal.modal-form .modal-close {
   display: none;
 }
@@ -385,11 +405,12 @@ dialog.modal.modal-details .default-content-wrapper p.button-wrapper:last-child 
   margin: auto calc(-1 * var(--modal-padding)) 0;
 }
 
-/* desktop: 580px card, 32px from the top, 48px free below */
+/* desktop: 580px card, 32px from the top, 48px free below. Figma: 540x574 content inside
+   20px padding = 614px card, plus the 40px close-button strip above it */
 :where(.desktop-view) dialog.modal.modal-details {
   inset: 32px 0 auto;
   width: 580px;
-  height: min(calc(100dvh - 80px), 720px);
+  height: min(calc(100dvh - 80px), 654px);
   max-height: none;
   margin: 0 auto;
   padding-top: 40px;
@@ -416,4 +437,20 @@ dialog.modal.modal-details .default-content-wrapper p.button-wrapper:last-child 
   font-size: 32px;
   line-height: 44px;
   letter-spacing: -0.8px;
+}
+
+/* desktop (1680px and up): modal copy steps up one size (Headline/H7, Body/B2, Button/BT-3) */
+:where([data-viewport='desktop']) dialog.modal .default-content-wrapper h2 {
+  font-size: var(--type-headline-h7-font-size);
+  line-height: var(--type-headline-h7-line-height);
+}
+
+:where([data-viewport='desktop']) dialog.modal .default-content-wrapper p {
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+}
+
+:where([data-viewport='desktop']) dialog.modal .default-content-wrapper p.button-wrapper:last-child .button {
+  font-size: var(--type-button-bt-3-font-size);
+  line-height: var(--type-button-bt-3-line-height);
 }

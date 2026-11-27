@@ -106,11 +106,21 @@
   display: none;
 }
 
+/* not enough room below the field (e.g. the last field of a modal): opens above it */
+.dropdown-panel.is-above {
+  top: auto;
+  bottom: calc(100% + 8px);
+}
+
+/* fixed height: the panel is a flex column, so only the list may shrink or grow */
 .dropdown-search {
+  box-sizing: border-box;
   display: flex;
+  flex: 0 0 44px;
   align-items: center;
   gap: 8px;
   height: 44px;
+  min-height: 44px;
   margin-bottom: 8px;
   border-radius: 12px;
   padding: 0 8px 0 14px;
@@ -125,6 +135,8 @@
 .dropdown-search input {
   flex: 1 1 auto;
   min-width: 0;
+  height: 24px;
+  margin: 0;
   border: 0;
   padding: 0;
   background: transparent;
@@ -180,10 +192,8 @@
   scrollbar-color: #bababa transparent;
 }
 
-/* the scrollbar gets its own gutter instead of covering the options, and the last option
-   scrolls clear of the fade below */
+/* the scrollbar gets its own gutter instead of covering the options */
 .dropdown-panel.is-scrollable .dropdown-list {
-  padding-bottom: 32px;
   scrollbar-gutter: stable;
 }
 
@@ -204,13 +214,17 @@
   align-items: center;
   gap: 12px;
   border-radius: 12px;
-  padding: 12px;
+  padding: 10px;
   cursor: pointer;
 }
 
 .dropdown-list [role='option'].is-active,
 .dropdown-list [role='option']:hover {
   background-color: var(--light-color);
+}
+
+:where(.desktop-view) .dropdown-list [role='option'] {
+  padding: var(--spacing-lg);
 }
 
 .dropdown-option-text {
@@ -223,6 +237,13 @@
   font-size: var(--dropdown-value-size);
   font-weight: 500;
   line-height: var(--dropdown-value-line);
+}
+
+/* an option that opens a page: looks like any other option */
+.dropdown-option-link,
+.dropdown-option-link:hover {
+  color: inherit;
+  text-decoration: none;
 }
 
 .dropdown-option-label.is-match {
@@ -250,4 +271,23 @@
 .dropdown-empty {
   padding: 12px;
   color: var(--muted-color);
+}
+
+/*
+ * desktop (1680px and up): the open list steps up with the field (Body/B2 options, Body/B1
+ * descriptions); blocks that size their own dropdown set the variables themselves
+ */
+:where([data-viewport='desktop']) .dropdown {
+  --dropdown-value-size: 20px;
+  --dropdown-value-line: 28px;
+}
+
+:where([data-viewport='desktop']) .dropdown-option-desc {
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
+}
+
+:where([data-viewport='desktop']) .dropdown-search input {
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
 }

@@ -38,10 +38,10 @@
 .lead-form .lead-form-intro h2 {
   margin: 0 0 8px;
   color: var(--text-color);
-  font-size: 32px;
-  font-weight: 500;
-  line-height: 40px;
-  letter-spacing: -0.8px;
+  font-size: var(--type-display-medium-df-1-font-size);
+  font-weight: var(--type-display-medium-df-1-font-weight);
+  line-height: var(--type-display-medium-df-1-line-height);
+  letter-spacing: var(--type-display-medium-df-1-letter-spacing);
 }
 
 /* Figma Body/B2 on small screens */
@@ -102,6 +102,17 @@
 .lead-form .lead-form-input.is-invalid {
   background-color: #fff6f6;
   box-shadow: inset 0 0 0 1px #ff3938;
+}
+
+/* an invalid field stays red while focused (no blue / dark focus ring) */
+.lead-form .lead-form-input.is-invalid:focus-within {
+  outline: 0 solid #ff3938;
+  outline-offset: 1px;
+}
+
+.lead-form .dropdown.is-invalid .dropdown-field:focus-visible {
+  outline: 0 solid #ff3938;
+  outline-offset: 1px;
 }
 
 /* raised label 4px above the value */
@@ -209,7 +220,7 @@
 .lead-form .lead-form-textarea textarea {
   flex: 1 1 auto;
   min-height: 72px;
-  max-height: calc(var(--lead-form-line) * 6);
+  max-height: calc(var(--type-headline-h4-line-height) * 6);
   margin: 0;
   font-family: inherit;
   resize: vertical;
@@ -236,7 +247,7 @@
 /* field errors: text under the field, not colour alone (Figma error text: Body/B2) */
 .lead-form .lead-form-error {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 4px;
   margin: 0;
   color: #ff3938;
@@ -254,6 +265,7 @@
   flex-shrink: 0;
   width: 16px;
   height: 16px;
+  margin-top: 2px;
   background: url('../../icons/alert.svg') center / contain no-repeat;
 }
 
@@ -261,9 +273,10 @@
   border-right: 1px solid #dedede;
   padding-right: 8px;
   color: var(--text-color);
-  font-size: var(--lead-form-text);
-  font-weight: 500;
-  line-height: var(--lead-form-line);
+  font-size: var(--type-body-b3-font-size);
+  font-weight: var(--type-body-b3-font-weight);
+  line-height: var(--type-body-b3-line-height);
+  letter-spacing: var(--type-body-b3-letter-spacing);
 }
 
 /* captcha: small screens image and tools on one row, the code field below */
@@ -289,7 +302,6 @@
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
 }
 
 .lead-form .lead-form-captcha-frame .lead-form-spinner {
@@ -298,6 +310,7 @@
   border-top-color: var(--text-color);
 }
 
+.lead-form .lead-form-captcha-image[hidden],
 .lead-form .lead-form-captcha.is-loading .lead-form-captcha-image {
   display: none;
 }
@@ -355,6 +368,17 @@
 .lead-form .lead-form-icon-button img {
   width: 23.33px;
   height: 23.33px;
+}
+
+.lead-form .lead-form-icon-button[hidden] {
+  display: none;
+}
+
+/* the captcha audio is playing (pressed again, it stops) */
+.lead-form .lead-form-volume.is-playing {
+  background: var(--light-color);
+  outline: 2px solid currentcolor;
+  outline-offset: -2px;
 }
 
 /* disclaimer and submit */
@@ -432,16 +456,18 @@
   width: 100%;
 }
 
-.lead-form button.button.primary:is(.lead-form-submit, .lead-form-validate)[aria-disabled='true'] {
+.lead-form button.button.primary:is(.lead-form-submit:disabled, .lead-form-validate[aria-disabled='true']) {
   border-color: #b2b2b2;
   background-color: #b2b2b2;
   color: var(--muted-color);
 }
 
-/* loading: spinner in place of the label */
-.lead-form button.button.primary.is-loading {
+/* loading: spinner in place of the label, stays black (beats the grey aria-disabled state) */
+.lead-form button.button.primary.is-loading,
+.lead-form button.button.primary.is-loading[aria-disabled='true'] {
   border-color: var(--text-color);
   background-color: var(--text-color);
+  color: #fff;
   pointer-events: none;
 }
 
@@ -557,22 +583,29 @@
 .lead-form .lead-form-otp-title h2 {
   margin: 0 0 8px;
   color: var(--text-color);
-  font-size: 32px;
-  font-weight: 500;
-  line-height: 40px;
-  letter-spacing: -0.8px;
+  font-size: var(--type-headline-h7-font-size);
+  font-weight: var(--type-headline-h7-font-weight);
+  line-height: var(--type-headline-h7-line-height);
+  letter-spacing: var(--type-headline-h7-letter-spacing);
 }
 
 .lead-form .lead-form-otp-title h2:focus {
   outline: none;
 }
 
+/* Figma Body/B2 (mobile): 14px / 20px, 500, #666 */
 .lead-form .lead-form-otp-title p {
   margin: 0;
   color: var(--muted-color);
-  font-size: var(--body-font-size-m);
+  font-size: 14px;
   font-weight: 500;
-  line-height: 24px;
+  line-height: 20px;
+  letter-spacing: 0;
+}
+
+/* no resend left (MESSAGES.resendExhausted): the error red of the OTP boxes */
+.lead-form .lead-form-otp-title p.is-error {
+  color: #ff3938;
 }
 
 .lead-form .lead-form-otp-number {
@@ -621,6 +654,15 @@
   border-color: #ff3938;
 }
 
+/* switched off (no resend left, or too many wrong OTPs): greyed, nothing can be typed */
+.lead-form .lead-form-otp-boxes.is-disabled .lead-form-otp-digit {
+  border-color: #dedede;
+  background-color: #f2f2f2;
+  color: var(--muted-color);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 .lead-form .lead-form-otp-error {
   display: flex;
   align-items: center;
@@ -658,6 +700,21 @@
   font-size: var(--body-font-size-m);
   font-weight: 600;
   line-height: 24px;
+}
+
+/* Figma loading state: #121212 pill, padding 15px 12px, spinner centred (same 52px height) */
+.lead-form .lead-form-validate.is-loading {
+  flex-direction: column;
+  gap: 4px;
+  border-radius: 56px;
+  padding: 15px 12px;
+}
+
+.lead-form .lead-form-validate.is-loading .lead-form-spinner {
+  width: 22px;
+  height: 22px;
+  border-color: rgb(255 255 255 / 70%);
+  border-top-color: transparent;
 }
 
 .lead-form .lead-form-resend {
@@ -705,8 +762,9 @@
 }
 
 .lead-form .lead-form-success-status img {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
+  padding: 4px;
 }
 
 .lead-form .lead-form-success-status h2 {
@@ -724,9 +782,10 @@
 .lead-form .lead-form-success-status p {
   margin: 0;
   color: var(--muted-color);
-  font-size: var(--body-font-size-m);
-  font-weight: 500;
-  line-height: 24px;
+  font-size: var(--type-headline-h3-font-size);
+  font-weight: var(--type-headline-h3-font-weight);
+  line-height: var(--type-headline-h3-line-height);
+  letter-spacing: var(--type-headline-h3-letter-spacing);
 }
 
 .lead-form .lead-form-success-actions {
@@ -778,13 +837,6 @@
 /* desktop: half width fields (e.g. First name, Last name) share a line */
 :where(.desktop-view) .lead-form .lead-form-item.is-half {
   grid-column: auto;
-}
-
-:where(.desktop-view) .lead-form .lead-form-intro h1,
-:where(.desktop-view) .lead-form .lead-form-intro h2 {
-  font-size: 40px;
-  line-height: 48px;
-  letter-spacing: -1px;
 }
 
 :where(.desktop-view) .lead-form .lead-form-main {
@@ -845,6 +897,12 @@
   text-align: center;
 }
 
+/* Figma Body/B3 (desktop): 16px / 24px */
+:where(.desktop-view) .lead-form .lead-form-otp-title p {
+  font-size: 16px;
+  line-height: 24px;
+}
+
 :where(.desktop-view) .lead-form .lead-form-otp-boxes {
   gap: 12px;
 }
@@ -885,4 +943,60 @@
 
 :where(.desktop-view) .lead-form .lead-form-note {
   margin-top: 20px;
+}
+
+/*
+ * desktop (1680px and up, also the 1920 / 2560 designs): the type steps up one size to the DLS
+ * desktop values, as in the Figma 1680 / 1920 reference frames; the layout is unchanged
+ */
+:where([data-viewport='desktop']) .lead-form {
+  --lead-form-text: 20px;
+  --lead-form-line: 28px;
+}
+
+:where([data-viewport='desktop']) .lead-form .lead-form-error {
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
+}
+
+/* intro, disclaimer and note copy step up one size as well */
+:where([data-viewport='desktop']) .lead-form .lead-form-intro p,
+:where([data-viewport='desktop']) .lead-form .lead-form-otp-title p,
+:where([data-viewport='desktop']) .lead-form .lead-form-success-status p {
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+}
+
+:where([data-viewport='desktop']) .lead-form .lead-form-disclaimer,
+:where([data-viewport='desktop']) .lead-form .lead-form-more,
+:where([data-viewport='desktop']) .lead-form .lead-form-note,
+:where([data-viewport='desktop']) .lead-form .lead-form-goback {
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
+}
+
+:where([data-viewport='desktop']) .lead-form .lead-form-disclaimer {
+  --lead-form-disclaimer-line: 24px;
+}
+
+/* OTP and success steps */
+:where([data-viewport='desktop']) .lead-form .lead-form-otp-title h2 {
+  font-size: var(--type-headline-h7-font-size);
+  line-height: var(--type-headline-h7-line-height);
+  letter-spacing: var(--type-headline-h7-letter-spacing);
+}
+
+:where([data-viewport='desktop']) .lead-form .lead-form-success-status h2 {
+  font-size: var(--type-headline-h6-font-size);
+  line-height: var(--type-headline-h6-line-height);
+}
+
+:where([data-viewport='desktop']) .lead-form .lead-form-success-actions .button {
+  font-size: var(--type-button-bt-3-font-size);
+  line-height: var(--type-button-bt-3-line-height);
+}
+
+:where([data-viewport='desktop']) .lead-form .lead-form-count {
+  font-size: var(--type-headline-h1-font-size);
+  line-height: var(--type-headline-h1-line-height);
 }

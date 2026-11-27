@@ -21,6 +21,15 @@
       "fields": [
         {
           "component": "text",
+          "valueType": "string",
+          "name": "id",
+          "label": "Column ID",
+          "required": false,
+          "placeholder": "e.g., my-column",
+          "description": "The column will be linkable via ID entered."
+        },
+        {
+          "component": "text",
           "name": "name",
           "label": "Section Name",
           "description": "The label shown for this section in the Content Tree"
@@ -39,7 +48,7 @@
               "value": "brand"
             },
             {
-              "name": "Brand (grey, centered text)",
+              "name": "Brand (grey, centered text, fixed width)",
               "value": "bg-grey"
             },
             {
@@ -87,12 +96,24 @@
               "value": "no-margin-bottom-desktop"
             },
             {
-              "name": "Background grey",
+              "name": "Grey background, left-aligned text",
               "value": "sec-bg-grey"
             },
             {
               "name": "Section Padding left and right",
               "value": "padding-left-right"
+            },
+            {
+              "name": "Read more (grey disclosure text, collapsed to 3 lines)",
+              "value": "read-more"
+            },
+            { 
+              "name": "Background Grey disclaimer for feature card", 
+              "value": "bg-disclaimer" 
+            },
+            { 
+              "name": "Plain disclaimer for feature card", 
+              "value": "plain-disclaimer" 
             }
           ]
         },
@@ -112,12 +133,22 @@
           "multi": false
         },
         {
+          "name": "backgroundMimeType",
+          "component": "hidden",
+          "valueType": "image/png"
+        },
+        {
           "component": "reference",
           "valueType": "string",
           "name": "backgroundMobile",
           "label": "Background image (mobile)",
           "description": "Optional. Used on small screens instead of the desktop image.",
           "multi": false
+        },
+        {
+          "name": "backgroundMobileMimeType",
+          "component": "hidden",
+          "valueType": "image/png"
         }
       ]
     }
@@ -149,7 +180,9 @@
         "faq",
         "team",
         "branch-locator",
-        "lead-form"
+        "lead-form",
+        "gst-form",
+        "grievance"
       ]
     }
   ]

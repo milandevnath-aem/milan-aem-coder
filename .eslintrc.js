@@ -21,13 +21,25 @@ module.exports = {
     'xwalk/max-cells': ['error', {
       '*': 4,
       // section properties render as key/value section metadata, not block cells
-      section: 5,
+      section: 6,
       // lead form fields: label, type, options, required, half width
       'lead-form-field': 5,
       // lead form: heading, disclaimer, note, button label, category forms
       'lead-form': 5,
+      // GST form fields: label, type, options, required, shown for
+      'gst-form-field': 5,
       // hero: heading, options, submit link, link text, category forms
       'hero-loan': 5,
+      // EMI calculator loan type: title, amount, rate, tenure, image
+      'emi-loan-type': 5,
+      // feature card: image, text, card type, number, mobile image
+      'feature-card': 5,
+      // offer: image, text, disclaimer, style, mobile image
+      offer: 5,
+      // feature banner item: image, mobile image, text, style, tablet image
+      'feature-banner-item': 5,
+      // link list: classes, side, intro, note, read all label, read less label
+      'link-list': 6,
     }],
   },
 };

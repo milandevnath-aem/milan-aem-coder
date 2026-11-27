@@ -83,10 +83,35 @@
   color: var(--inverse-color);
 }
 
+:root:not(.desktop-view) .emi-calculator .emi-calculator-tabs.has-overflow[data-selected-position='first'] {
+  /* stylelint-disable property-no-vendor-prefix */
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent 100%);
+  mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent 100%);
+  /* stylelint-enable property-no-vendor-prefix */
+}
+
+:root:not(.desktop-view) .emi-calculator .emi-calculator-tabs.has-overflow[data-selected-position='middle'] {
+  /* stylelint-disable property-no-vendor-prefix */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+  /* stylelint-enable property-no-vendor-prefix */
+}
+
+:root:not(.desktop-view) .emi-calculator .emi-calculator-tabs.has-overflow[data-selected-position='last'] {
+  /* stylelint-disable property-no-vendor-prefix */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 100%);
+  /* stylelint-enable property-no-vendor-prefix */
+}
+
 .emi-calculator .emi-calculator-fields {
   display: flex;
   flex-direction: column;
   gap: 24px;
+  min-width: 0;
+  margin: 0;
+  border: 0;
+  padding: 0;
 }
 
 .emi-calculator .emi-calculator-field {
@@ -121,7 +146,7 @@
   overflow: hidden;
   padding: 11px 19px;
   border: 1px solid var(--border-light-color);
-  border-radius: 12px;
+  border-radius: 16px;
   color: var(--text-color);
   font-size: var(--type-a1-size);
   font-weight: 700;
@@ -148,7 +173,7 @@
   border-color: var(--text-color);
 }
 
-.emi-calculator .emi-calculator-value:has(input:focus-visible) {
+.emi-calculator .emi-calculator-field:not(.is-invalid) .emi-calculator-value:has(input:focus-visible) {
   outline: 2px solid var(--text-color);
 }
 
@@ -443,7 +468,8 @@
 
 .emi-calculator .emi-calculator-summary > div {
   display: flex;
-  flex: 0 0 auto;
+  flex: 1 1 0;
+  min-width: 0;
   flex-direction: column;
   gap: 8px;
 }
@@ -480,9 +506,9 @@
 
 /* small screens: the button takes the space next to the amount */
 .emi-calculator a.emi-calculator-cta {
-  flex: 1 1 auto;
-  min-width: 0;
+  flex: 0 0 auto;
   padding: 7px 11px;
+  white-space: nowrap;
   border-color: #fff;
   background-color: #fff;
   color: var(--text-color);
@@ -496,15 +522,10 @@
 }
 
 .emi-calculator .emi-calculator-breakdown {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr auto;
   gap: 12px;
   margin: 0;
-}
-
-.emi-calculator .emi-calculator-breakdown div {
-  display: flex;
-  justify-content: space-between;
   font-size: var(--type-b1-size);
   font-weight: 500;
   line-height: var(--type-b1-line);
@@ -521,25 +542,33 @@
   gap: 0;
 }
 
+/* not positioned: the image below is placed on the section */
 :where(.desktop-view) .emi-calculator .emi-calculator-intro {
-  position: relative;
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
   padding: 0;
 }
 
+/* the selected loan type's image is the full-bleed background of the section, behind the
+   heading and the card (the section is the containing block, see styles.css) */
 :where(.desktop-view) .emi-calculator .emi-calculator-image {
   display: block;
-  margin: auto 0 -96px calc(-1 * var(--gb-offset));
-  max-width: calc(100% + var(--gb-offset));
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+/* the images of the other loan types */
+:where(.desktop-view) .emi-calculator .emi-calculator-image[hidden] {
+  display: none;
 }
 
 :where(.desktop-view) .emi-calculator .emi-calculator-image img {
   display: block;
-  width: 650px;
-  max-width: 100%;
-  height: auto;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 :where(.desktop-view) .emi-calculator .emi-calculator-card {
@@ -558,4 +587,41 @@
 :where(.desktop-view) .emi-calculator a.emi-calculator-cta {
   flex: 0 0 192px;
   padding: 11px;
+}
+
+/*
+ * desktop (1680px and up, also the 1920 / 2560 designs): the type follows the global tokens
+ * (B2 labels, A1 / A5 amounts, B1 bounds), the card is 780px wide with three equal loan tabs
+ * and the car grows 8% (Figma 1680 / 1920 frames)
+ */
+:where([data-viewport='desktop']) .emi-calculator .emi-calculator-card {
+  box-sizing: border-box;
+  flex: 0 0 780px;
+  max-width: none;
+}
+
+:where([data-viewport='desktop']) .emi-calculator .emi-calculator-tabs button {
+  flex: 1 1 0;
+}
+
+:where([data-viewport='desktop']) .emi-calculator .emi-calculator-image img {
+  width: 702px;
+}
+
+/* value pills: 50px tall (48px with the year / month switch) with the A1 24px amount */
+:where([data-viewport='desktop']) .emi-calculator .emi-calculator-value {
+  padding-block: 12px;
+}
+
+:where([data-viewport='desktop']) .emi-calculator .emi-calculator-value input {
+  height: var(--type-a1-line);
+}
+
+:where([data-viewport='desktop']) .emi-calculator .emi-calculator-value:has(.emi-calculator-unit) {
+  padding-block: 5px;
+}
+
+/* 12px between the slider knob and the bounds row */
+:where([data-viewport='desktop']) .emi-calculator .emi-calculator-slider {
+  margin-bottom: 12px;
 }

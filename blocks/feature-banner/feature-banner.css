@@ -39,6 +39,14 @@
     color: var(--color-text-primary-inverse-base);
 }
 
+.feature-banner .feature-banner-item.light-text h6{
+    color: var(--color-text-primary-inverse-base);
+}
+
+.feature-banner .feature-banner-item.dark-text h6{
+    color: var(--color-text-primary-default-base);
+}
+
 .feature-banner .feature-banner-item.dark-text p {
     color: var(--color-text-primary-default-base);
 }
@@ -64,29 +72,9 @@
     object-position: 25% bottom;
 }
 
-/* small screens with a mobile crop (subject in its lower half): a long text grows the
-   banner, so the text ends in the upper half and stays clear of the subject */
-   
-/* :where(html:not(.desktop-view))
-    .feature-banner
-    .feature-banner-item.has-mobile-image:not(.side-image) {
-    min-height: max(
-        var(--feature-banner-height),
-        2 * var(--feature-banner-text-end, 0px)
-    );
-} */
-
-/* small screens without a mobile crop: the desktop picture would sit under the text, so
-   it follows the text instead and fills the rest of the banner edge to edge, cropped
-   around the subject (like the mobile crops: text on top, image below) */
-:where(html:not(.desktop-view))
-    .feature-banner
-    .feature-banner-item:not(.has-mobile-image, .side-image)
-    .feature-banner-image {
-    position: relative;
-    order: 2;
-    flex: 1 0 300px;
-    height: auto;
+/* tablet portrait: the mobile crop is too narrow to cover the wide banner, show it whole */
+:where([data-viewport='tablet-portrait']) .feature-banner .feature-banner-image img {
+    object-position: center bottom;
 }
 
 .feature-banner .feature-banner-content {
@@ -144,24 +132,13 @@
     color: var(--text-color);
 }
 
-/* side image: the picture sits in its own half instead of filling the band */
-.feature-banner .side-image {
-    background-color: var(--background-color);
-}
-
-.feature-banner .side-image .feature-banner-image {
-    position: relative;
-    order: 2;
-    width: 130%;
-    height: auto;
-
-    /* the covered car is wider than the screen and runs off the left edge */
-    margin: auto 0 0 -30%;
-}
-
-.feature-banner .feature-banner-item.side-image .feature-banner-image img {
-    position: static;
-    height: auto;
+.feature-banner .feature-banner-content h6{
+    font-size: var(--type-headline-h2-font-size);
+    font-weight: var(--type-headline-h2-font-weight);
+    line-height: var(--type-headline-h2-line-height);
+    letter-spacing: var(--type-headline-h2-letter-spacing);
+    color: var(--color-text-secondary-default-base);
+    margin: var(--spacing-2xl) 0 0;
 }
 
 /* scroll-linked text reveal (section style "animate-text"): each word blends from the
@@ -254,56 +231,10 @@
 }
 
 :where(.desktop-view) .feature-banner .feature-banner-content a.button {
-    padding: 14px 12px;
+    padding: 14px 26px;
     font-size: var(--body-font-size-m);
     line-height: 24px;
 }
-
-/* product pages, small screens: side image banner 672px high, the car drawn large with
-   its rear 15px from the right edge and the front running off the left (Figma) */
-:where(html:not(.desktop-view))
-    main:has(.hero-loan.product)
-    .feature-banner
-    .side-image {
-    min-height: 672px;
-}
-
-:where(html:not(.desktop-view))
-    main:has(.hero-loan.product)
-    .feature-banner
-    .side-image
-    .feature-banner-content {
-    z-index: 1;
-}
-
-:where(html:not(.desktop-view))
-    main:has(.hero-loan.product)
-    .feature-banner
-    .side-image
-    .feature-banner-image {
-    position: absolute;
-    inset: auto -8px 21px auto;
-    width: auto;
-    height: 321px;
-    margin: 0;
-}
-
-:where(html:not(.desktop-view))
-    main:has(.hero-loan.product)
-    .feature-banner
-    .feature-banner-item.side-image
-    .feature-banner-image
-    img {
-    width: auto;
-    max-width: none;
-    height: 100%;
-}
-
-/* product pages: 12px between heading and text, Figma pill buttons (12px + 14px inner) */
-
-/* :where(.desktop-view) main:has(.hero-loan.product) .feature-banner .feature-banner-content p {
-  margin-top: 12px;
-} */
 
 main:has(.hero-loan.product) .feature-banner .feature-banner-content a.button {
     padding: 12px;
@@ -315,30 +246,38 @@ main:has(.hero-loan.product) .feature-banner .feature-banner-content a.button {
     .feature-banner
     .feature-banner-content
     a.button {
-    padding: 14px 16px;
+    padding: 14px 26px;
 }
 
-:where(.desktop-view) .feature-banner .side-image .feature-banner-image {
-    position: absolute;
-    inset: 0 auto 0 0;
-    margin: 0;
-    order: 0;
-    display: flex;
-    align-items: center;
-    width: 51.3%;
+:where(.desktop-view) .feature-banner .feature-banner-content h6 {
+    margin: 44px 0 0;
 }
 
-:where(.desktop-view)
+/*
+ * desktop (1680px and up, also the 1920 / 2560 designs): Headline/H7 heading, Body/B3 text and
+ * a Button/BT-3 pill (Figma 1680 / 1920 frames); the layout is unchanged
+ */
+:where([data-viewport='desktop']) .feature-banner .feature-banner-content h2,
+:where([data-viewport='desktop']) .feature-banner .feature-banner-content h3 {
+    font-size: var(--type-headline-h7-font-size);
+    line-height: var(--type-headline-h7-line-height);
+    letter-spacing: var(--type-headline-h7-letter-spacing);
+}
+
+:where([data-viewport='desktop']) .feature-banner .feature-banner-content p {
+    font-size: var(--type-body-b3-font-size);
+    line-height: var(--type-body-b3-line-height);
+}
+
+:where([data-viewport='desktop']) .feature-banner .feature-banner-content a.button {
+    font-size: var(--type-button-bt-3-font-size);
+    line-height: var(--type-button-bt-3-line-height);
+}
+
+:where([data-viewport='desktop'])
+    main:has(.hero-loan.product)
     .feature-banner
-    .side-image.text-left
-    .feature-banner-image {
-    inset: 0 0 0 auto;
-}
-
-:where(.desktop-view)
-    .feature-banner
-    .feature-banner-item.side-image
-    .feature-banner-image
-    img {
-    width: 100%;
+    .feature-banner-content
+    a.button {
+    padding: 14px 26px;
 }

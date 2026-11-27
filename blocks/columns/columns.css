@@ -37,6 +37,7 @@
     font-size: var(--type-display-medium-df-1-font-size);
     line-height: var(--type-display-medium-df-1-line-height);
     letter-spacing: -0.8px;
+    font-weight: 500;
     color: #121212;
 }
 
@@ -46,9 +47,16 @@
     letter-spacing: -0.8px;
 }
 
+.columns.columns-split > div > div:first-child h2 strong,
+.columns.columns-split > div > div:first-child h3 strong {
+    color: var(--color-text-secondary-default-base);
+    font-weight: 500;
+    display: block;
+}
+
 :where(.desktop-view) .columns.columns-split > div > div:first-child h2,
 :where(.desktop-view) .columns.columns-split > div > div:first-child h3 {
-    letter-spacing: -0.1px;
+    letter-spacing: -1px;
 }
 
 .feature-cards-container .columns.columns-split > div > div:first-child h2 {
@@ -91,22 +99,40 @@
     margin-top: 80px;
 }
 
+.columns.columns-split p:has(a:any-link){
+    margin: var(--spacing-4xl) 0 0;
+}
+
 .columns.columns-split a:any-link {
     color: var(--color-brand-gradient-kotak-blue-default-2);
     text-decoration: underline;
     display: flex;
     gap: var(--spacing-lg);
     align-items: center;
-    font-size: var(--type-button-bt-2-font-size);
-    line-height: var(--type-button-bt-2-line-height);
-    letter-spacing: var(--type-button-bt-2-letter-spacing);
-    font-weight: var(--type-button-bt-2-font-weight);
+    font-size: var(--type-link-button-l2-font-size);
+    line-height: var(--type-link-button-l2-line-height);
+    letter-spacing: var(--type-link-button-l2-letter-spacing);
+    font-weight: var(--type-link-button-l2-font-weight);
 }
 
 .columns.columns-split a:any-link .icon {
+    box-sizing: border-box;
+    display: flex;
+    flex: 0 0 40px;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
     padding: 12px;
     border-radius: var(--spacing-md);
-    border: 1px solid var(--color-stroke-2-default);
+    background: var(--color-background-2-default-base);
+    box-shadow: inset 0 0 0 1px var(--color-stroke-2-default);
+}
+
+.columns.columns-split a:any-link .icon img {
+    display: block;
+    width: 16px;
+    height: 16px;
 }
 
 /* about-us website link: 40px icon box (16px globe) + underlined URL, 32px below the text */
@@ -192,4 +218,133 @@
 :where(.desktop-view) .columns.columns-split li {
     font-size: var(--heading-font-size-m);
     line-height: 28px;
+}
+
+.columns.dropdown-cta > div {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 32px;
+}
+
+.section.columns-container:has(.columns.dropdown-cta) .default-content-wrapper {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.section.columns-container:has(.columns.dropdown-cta) .default-content-wrapper :is(h1, h2, h3, h4, h5, h6) {
+    color: var(--color-button-secondary-default-text-base);
+    font-family: var(--body-font-family);
+    font-size: var(--type-amount-a5-font-size);
+    font-weight: 500;
+    line-height: var(--type-body-b6-line-height);
+    letter-spacing: -0.8px;
+}
+
+.section.columns-container:has(.columns.dropdown-cta) .default-content-wrapper p {
+    color: var(--color-button-secondary-default-text-base);
+    font-family: var(--body-font-family);
+    font-size: var(--type-body-b1-font-size);
+    font-style: normal;
+    font-weight: 500;
+    line-height: var(--type-headline-h3-line-height);
+    margin-bottom: 0;
+}
+
+/* dropdown-cta: the authored list is replaced by a dropdown (scripts/text-dropdown.js) */
+.columns.dropdown-cta > div > div > ul {
+    display: none;
+}
+
+.columns.dropdown-cta .columns-dropdown {
+    position: relative;
+    z-index: 2;
+    margin: 0 0 20px;
+}
+
+.columns.dropdown-cta .columns-dropdown .dropdown-label {
+    font-size: 12px;
+    line-height: 16px;
+}
+
+/* beats ".columns img" so the chevron and tick keep their size */
+.columns.dropdown-cta .dropdown img {
+    width: 20px;
+    height: 20px;
+}
+
+.columns.dropdown-cta p.button-wrapper {
+    margin: 0;
+}
+
+.columns.dropdown-cta p.button-wrapper a.button {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 14px 12px;
+}
+
+:where(.desktop-view) .section.columns-container:has(.columns.dropdown-cta) .default-content-wrapper {
+    text-align: left;
+}
+
+:where(.desktop-view) .columns.dropdown-cta > div {
+    flex-direction: row;
+}
+
+:where(.desktop-view) .section.columns-container:has(.columns.dropdown-cta) .default-content-wrapper :is(h1, h2, h3, h4, h5, h6) {
+    font-size: 40px;
+    line-height: 48px;
+    margin-bottom: 20px;
+}
+
+:where(.desktop-view) .section.columns-container:has(.columns.dropdown-cta) .default-content-wrapper p {
+    font-size: 16px;
+    line-height: 24px;
+}
+
+:where(.desktop-view) .columns.dropdown-cta .columns-dropdown,
+:where(.desktop-view) .columns.dropdown-cta p.button-wrapper {
+    max-width: 320px;
+}
+
+:where(.desktop-view) .columns.dropdown-cta p.button-wrapper:hover {
+    border-color: inherit;
+}
+
+/*
+ * desktop (1680px and up, also the 1920 / 2560 designs): the type steps up one size to the DLS
+ * desktop values, as in the Figma 1680 / 1920 reference frames; the layout is unchanged
+ */
+:where([data-viewport='desktop']) .columns.columns-split > div > div:first-child h2,
+:where([data-viewport='desktop']) .columns.columns-split > div > div:first-child h3 {
+    letter-spacing: var(--type-display-medium-df-1-letter-spacing);
+}
+
+:where([data-viewport='desktop']) .columns.about-us.columns.columns-split > div > div:first-child h2,
+:where([data-viewport='desktop']) .columns.about-us.columns.columns-split > div > div:first-child h3 {
+    line-height: 44px;
+    letter-spacing: var(--type-display-medium-df-1-letter-spacing);
+}
+
+:where([data-viewport='desktop']) .columns.columns-split p,
+:where([data-viewport='desktop']) .columns.columns-split li {
+    font-size: var(--type-body-b3-font-size);
+    line-height: var(--type-body-b3-line-height);
+}
+
+:where([data-viewport='desktop']) .section.columns-container:has(.columns.dropdown-cta) .default-content-wrapper :is(h1, h2, h3, h4, h5, h6) {
+    font-size: var(--type-display-size);
+    line-height: var(--type-display-line);
+    letter-spacing: var(--type-display-ls);
+}
+
+:where([data-viewport='desktop']) .section.columns-container:has(.columns.dropdown-cta) .default-content-wrapper p {
+    font-size: var(--type-body-b2-font-size);
+    line-height: var(--type-body-b2-line-height);
+}
+
+:where([data-viewport='desktop']) .columns.dropdown-cta .columns-dropdown .dropdown-label {
+    font-size: var(--type-headline-h1-font-size);
+    line-height: var(--type-headline-h1-line-height);
 }

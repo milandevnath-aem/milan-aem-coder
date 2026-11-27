@@ -152,6 +152,35 @@
   --gb-max-width: var(--grid-max-width);
   --grid-limit: var(--grid-max-width);
   --gb-offset: calc((100vw - var(--grid-max-width)) / 2);
+
+  /*
+   * type styles step up to the DLS desktop mode (Figma 1680 / 1920 / 2560 frames); the same
+   * values as styles/variables/typography.css at >= 1680px. Section Title (eyebrow) and
+   * Symbol S1 / S3 keep their laptop values.
+   */
+  --type-display-size: 44px; /* Display/Medium/DF-1 */
+  --type-display-line: 52px;
+  --type-display-ls: -0.44px;
+  --type-b1-size: 16px; /* Body/B1 */
+  --type-b1-line: 24px;
+  --type-b2-size: 20px; /* Body/B2 */
+  --type-b2-line: 28px;
+  --type-b3-size: 24px; /* Body/B3 */
+  --type-b3-line: 32px;
+  --type-h2-size: 16px; /* Headline/H2 */
+  --type-h2-line: 24px;
+  --type-a1-size: 24px; /* Amount/A1 */
+  --type-a1-line: 24px;
+  --type-a1-ls: -0.96px;
+  --type-a5-size: 40px; /* Amount/A5 */
+  --type-a5-line: 40px;
+  --type-a5-ls: -2px;
+  --type-bt1-size: 16px; /* Button/BT-2 in Figma */
+  --type-bt1-line: 24px;
+  --type-bt2-size: 20px; /* Button/BT-3 in Figma (pill CTAs) */
+  --type-bt2-line: 28px;
+  --type-h4-size: 24px; /* Headline/H4 */
+  --type-h4-line: 32px;
 }
 
 /* fallback fonts */
@@ -212,6 +241,10 @@
   /* nav height: announcement bar + nav bar */
   --topbar-height: 44px;
   --nav-height: 112px;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -342,6 +375,13 @@ button.button {
   white-space: nowrap;
 }
 
+/* desktop (1680px and up): pill CTAs use Button/BT-3 (20/28), 56px tall */
+:where([data-viewport='desktop']) a.button:any-link,
+:where([data-viewport='desktop']) button.button {
+  font-size: var(--type-bt2-size);
+  line-height: var(--type-bt2-line);
+}
+
 a.button[aria-disabled="true"],
 button.button:disabled {
   cursor: not-allowed;
@@ -470,7 +510,7 @@ main > .section:first-of-type {
 
 /* keyboard focus: dark ring with a light halo, visible on light and dark backgrounds
    (blocks may refine it; zero specificity) */
-:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+:where(a, button, input, select, textarea, summary, iframe, [tabindex]):focus-visible {
   outline: 2px solid var(--text-color);
   outline-offset: 2px;
   box-shadow: 0 0 0 2px var(--background-color);
@@ -579,6 +619,12 @@ main > .section > .emi-calculator-wrapper {
   padding: 0 var(--gb-margin);
 }
 
+/* the calculator's image is the full-bleed background of its section (desktop view) */
+:where(.desktop-view) main > .section:has(> .emi-calculator-wrapper .emi-calculator-image) {
+  position: relative;
+  isolation: isolate;
+}
+
 /* regulatory updates: adaptive bound on small screens, grid bound in the desktop view */
 main > .section > .article-cards-wrapper {
   padding: 0 var(--ab-margin);
@@ -685,6 +731,27 @@ main .default-content-wrapper > h2 + p {
   line-height: 28px;
 }
 
+/* desktop (1680px and up): Display/Medium/DF-1 heading, Body/B3 subheading */
+:where([data-viewport='desktop']) main .section .default-content-wrapper > h2:has(+ p) {
+  font-size: var(--type-display-size);
+  line-height: var(--type-display-line);
+  letter-spacing: var(--type-display-ls);
+}
+
+:where([data-viewport='desktop']) main .default-content-wrapper > h2 + p {
+  font-size: var(--type-b3-size);
+  line-height: var(--type-b3-line);
+}
+
+/*
+ * desktop (1680px and up): body copy in sections steps up to Body/B2 20/28 (set on the wrapper
+ * so sections that style their own copy keep it)
+ */
+:where([data-viewport='desktop']) main .default-content-wrapper {
+  font-size: var(--type-b2-size);
+  line-height: 1.4; /* 28px at 20px, relative so children with their own size keep their rhythm */
+}
+
 /* section metadata */
 main .section.light,
 main .section.highlight {
@@ -788,12 +855,36 @@ main .section.bg-grey {
   text-align: center;
 }
 
+main .section.bg-grey .default-content-wrapper {
+  max-width: 660px;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+:where(.desktop-view) main .section.bg-grey .default-content-wrapper {
+  padding: 0;
+}
+
 main .section.bg-grey.text-align-left {
   text-align: left;
 }
 
 main .section.bg-grey p {
   margin: 0;
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+  letter-spacing: var(--type-body-b2-letter-spacing);
+  font-weight: 500;
+}
+
+main .section.bg-grey p strong{
+  font-size: var(--type-section-title-s-font-size);
+  line-height: var(--type-section-title-s-line-height);
+  letter-spacing: var(--type-section-title-s-letter-spacing);
+  font-weight: var(--type-section-title-s-font-weight);
+  text-transform: uppercase;
 }
 
 main .section.brand.has-background {
@@ -828,6 +919,69 @@ main .section.brand p {
   line-height: 24px;
 }
 
+:where([data-viewport='desktop']) main .section.brand p {
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+}
+
+/* disclaimer band under feature cards: only the default content gets the grey box */
+main > .section.bg-disclaimer.feature-cards-container > .default-content-wrapper {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  margin: 32px 24px 0;
+  padding: 24px;
+  border-radius: 24px;
+  background-color: var(--surface-color);
+  color: var(--muted-color);
+}
+
+main > .section.bg-disclaimer.feature-cards-container > .default-content-wrapper p {
+  margin: 0;
+  color: var(--color-text-secondary-default-base);
+  font-size: var(--type-body-b2-font-size);
+  font-weight: var(--type-body-b2-font-weight);
+  line-height: var(--type-body-b2-line-height);
+  letter-spacing: var(--type-body-b2-letter-spacing);
+}
+
+main > .section.bg-disclaimer.feature-cards-container > .default-content-wrapper h3 {
+  margin: 0;
+  color: var(--color-text-primary-default-base);
+  font-size: var(--type-headline-h3-font-size);
+  line-height: var(--type-headline-h3-line-height);
+  letter-spacing: var(--type-headline-h3-letter-spacing);
+  font-weight: var(--type-headline-h3-font-weight);
+}
+
+:where(.desktop-view) main > .section.bg-disclaimer.feature-cards-container > .default-content-wrapper {
+  margin: 36px 92px 0;
+  padding: 32px;
+  border-radius: 32px;
+  flex-direction: row;
+  gap: var(--spacing-5xl);
+}
+
+/* plain disclaimer under feature cards: right-aligned note */
+main > .section.plain-disclaimer.feature-cards-container > .default-content-wrapper {
+  margin-top: 20px;
+}
+
+main > .section.plain-disclaimer.feature-cards-container > .default-content-wrapper p {
+  margin: 0;
+  color: var(--color-text-tertiary-default-base);
+  font-size: var(--type-body-b1-font-size);
+  font-weight: var(--type-body-b1-font-weight);
+  line-height: var(--type-body-b1-line-height);
+  letter-spacing: var(--type-body-b1-letter-spacing);
+  text-align: center;
+}
+
+:where(.desktop-view) main > .section.plain-disclaimer.feature-cards-container > .default-content-wrapper {
+  margin-top: 60px;
+}
+
 main > .section.branch-locator-container:last-of-type {
   margin-bottom: 24px;
 }
@@ -843,4 +997,75 @@ main > .section.padding-left-right{
 
 :where(.desktop-view) main > .section.padding-left-right{
   padding-inline: 92px;
+}
+
+/* read more (section style): grey disclosure text collapsed to 3 lines, see scripts/read-more.js */
+main > .section.read-more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px 24px;
+  background-color: var(--surface-color);
+  text-align: center;
+}
+
+:where(.desktop-view) main > .section.read-more {
+  gap: 16px;
+  padding: 48px 92px;
+}
+
+main > .section.read-more > .default-content-wrapper {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 660px;
+  margin: 0;
+  padding: 0;
+  color: var(--muted-color);
+  font-size: var(--type-b1-size);
+  font-weight: 500;
+  line-height: var(--type-b1-line);
+  letter-spacing: var(--type-b1-ls);
+}
+
+main > .section.read-more .read-more-content p {
+  margin: 0;
+}
+
+main > .section.read-more .read-more-content p + p {
+  margin-top: var(--type-b1-line);
+}
+
+main > .section.read-more .read-more-content a:any-link {
+  color: var(--accent-color);
+}
+
+main > .section.read-more .read-more-content.is-collapsed {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+
+main > .section.read-more .read-more-toggle {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-color);
+  font: inherit;
+  font-size: var(--type-b1-size);
+  font-weight: 600;
+  line-height: var(--type-b1-line);
+  cursor: pointer;
+}
+
+main > .section.read-more .read-more-toggle[hidden] {
+  display: none;
+}
+
+main > .section.read-more .read-more-toggle:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
 }

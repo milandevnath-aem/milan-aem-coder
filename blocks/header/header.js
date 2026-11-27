@@ -15,7 +15,10 @@ const A11Y_SETTINGS = [
     key: 'line', label: 'Line height', icon: 'line-height', min: 1.5, max: 2.1, step: 0.1, unit: '',
   },
 ];
-const SEARCH_LIMIT = 6;
+const SEARCH_LIMIT = 9;
+const SEARCH_INDEX = '/query-index.json';
+const SEARCH_SKIP = /^\/$|^\/(nav|footer|fragments|modals|drafts)(\/|$)/;
+const SEARCH_STOP_WORDS = new Set(['a', 'an', 'and', 'for', 'in', 'of', 'on', 'the', 'to', 'with']);
 
 let uid = 0;
 
@@ -151,6 +154,7 @@ function buildDesktopMenu(menus) {
     toggle.type = 'button';
     toggle.className = 'nav-menu-toggle';
     toggle.textContent = menu.label;
+    if (/^more$/i.test(menu.label)) toggle.setAttribute('aria-label', 'More navigation links');
     toggle.setAttribute('aria-expanded', 'false');
     toggle.setAttribute('aria-controls', `nav-panel-${uid}`);
 
@@ -216,7 +220,7 @@ function buildAccordion(menus) {
     toggle.className = 'nav-accordion-toggle';
     toggle.setAttribute('aria-expanded', 'false');
     toggle.setAttribute('aria-controls', `nav-accordion-${uid}`);
-    toggle.append(row.label, icon('chevron-down', 20));
+    toggle.append(row.label, icon('megamenu-chevron-down', 17));
     const panel = linkList(row.items);
     panel.id = `nav-accordion-${uid}`;
     panel.hidden = true;
@@ -317,6 +321,146 @@ function buildLanguage(li) {
   return wrapper;
 }
 
+/**
+ * Desktop Login popup: the Login button opens a small card of authored links.
+ * Authored as a list in the nav tools section, after the buttons:
+ * <ul><li><a>Customer Portal</a> Login to your customer portal</li>…</ul>
+ * Without a list the Login button stays a plain link.
+ * @returns {HTMLElement} the Login button wrapper, with a close() helper
+ */
+function buildLoginMenu(loginLink, items) {
+  uid += 1;
+  const holder = loginLink.closest('.button-wrapper') || loginLink.parentElement;
+  holder.classList.add('nav-login-menu');
+  const menu = document.createElement('ul');
+  menu.className = 'nav-login-popup';
+  menu.id = `nav-login-popup-${uid}`;
+  menu.hidden = true;
+  items.forEach((item) => {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = item.href;
+    const title = document.createElement('span');
+    title.className = 'nav-login-title';
+    title.textContent = item.title;
+    a.append(title);
+    if (item.description) {
+      const desc = document.createElement('span');
+      desc.className = 'nav-login-desc';
+      desc.textContent = item.description;
+      a.append(desc);
+    }
+    li.append(a);
+    menu.append(li);
+  });
+
+  loginLink.setAttribute('aria-haspopup', 'true');
+  loginLink.setAttribute('aria-expanded', 'false');
+  loginLink.setAttribute('aria-controls', menu.id);
+  const setOpen = (isOpen) => {
+    loginLink.setAttribute('aria-expanded', isOpen);
+    menu.hidden = !isOpen;
+  };
+  loginLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setOpen(menu.hidden);
+  });
+  document.addEventListener('click', (e) => {
+    if (!menu.hidden && !holder.contains(e.target) && !menu.contains(e.target)) setOpen(false);
+  });
+  holder.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !menu.hidden) {
+      e.stopPropagation();
+      setOpen(false);
+      loginLink.focus();
+    }
+  });
+  menu.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !menu.hidden) {
+      e.stopPropagation();
+      setOpen(false);
+      loginLink.focus();
+    }
+  });
+  holder.after(menu);
+  holder.close = () => setOpen(false);
+  return holder;
+}
+
+/**
+ * Mobile Login bottom sheet, opened by the Login button of the mobile menu.
+ * Uses the same authored items as the desktop popup.
+ * @returns {HTMLElement} the sheet with open()/close() helpers
+ */
+function buildLoginSheet(heading, items) {
+  uid += 1;
+  const sheet = document.createElement('div');
+  sheet.className = 'nav-login-sheet';
+  sheet.hidden = true;
+  sheet.setAttribute('role', 'dialog');
+  sheet.setAttribute('aria-modal', 'true');
+  sheet.setAttribute('aria-labelledby', `nav-login-sheet-${uid}`);
+
+  const scrim = document.createElement('div');
+  scrim.className = 'nav-login-sheet-scrim';
+
+  const close = document.createElement('button');
+  close.type = 'button';
+  close.className = 'nav-login-sheet-close';
+  close.setAttribute('aria-label', 'Close');
+  close.append(icon('close', 24));
+
+  const panel = document.createElement('div');
+  panel.className = 'nav-login-sheet-panel';
+  const title = document.createElement('h2');
+  title.id = `nav-login-sheet-${uid}`;
+  title.textContent = heading;
+  const list = document.createElement('ul');
+  items.forEach((item) => {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = item.href;
+    const name = document.createElement('span');
+    name.className = 'nav-login-title';
+    name.textContent = item.title;
+    a.append(name, icon('chevron-right', 24));
+    if (item.description) {
+      const desc = document.createElement('span');
+      desc.className = 'nav-login-desc';
+      desc.textContent = item.description;
+      a.append(desc);
+    }
+    li.append(a);
+    list.append(li);
+  });
+  panel.append(title, list);
+  sheet.append(scrim, close, panel);
+
+  let opener;
+  sheet.close = () => {
+    if (sheet.hidden) return;
+    sheet.hidden = true;
+    document.body.classList.remove('nav-login-open');
+    opener?.focus();
+  };
+  sheet.open = (trigger) => {
+    opener = trigger;
+    sheet.hidden = false;
+    document.body.classList.add('nav-login-open');
+    close.focus();
+  };
+  scrim.addEventListener('click', sheet.close);
+  close.addEventListener('click', sheet.close);
+  sheet.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      e.stopPropagation();
+      sheet.close();
+    }
+  });
+  return sheet;
+}
+
 /* accessibility settings: text size, letter spacing, line height */
 function readA11y() {
   try {
@@ -348,7 +492,7 @@ async function openAccessibility() {
       <p>This is a preview of how text will look in this website. Adjust it based on your requirement.</p>
     </div>
     <div class="nav-a11y-controls">
-      <div class="nav-a11y-options" role="radiogroup" aria-label="Setting"></div>
+      <div class="nav-a11y-options" role="radiogroup" aria-label="Accessibility setting"></div>
       <div class="nav-a11y-slider">
         <p><label for="nav-a11y-range">Slide to adjust</label><span class="nav-a11y-preview" aria-hidden="true">Aa</span></p>
         <input id="nav-a11y-range" type="range">
@@ -369,7 +513,11 @@ async function openAccessibility() {
   };
   const select = (setting) => {
     current = setting;
-    [...options.children].forEach((b) => b.setAttribute('aria-checked', b.dataset.key === setting.key));
+    [...options.children].forEach((b) => {
+      const checked = b.dataset.key === setting.key;
+      b.setAttribute('aria-checked', checked);
+      b.tabIndex = checked ? 0 : -1;
+    });
     Object.assign(range, { min: setting.min, max: setting.max, step: setting.step });
     range.value = settings[setting.key] ?? setting.min;
     paint();
@@ -381,6 +529,18 @@ async function openAccessibility() {
     button.dataset.key = setting.key;
     button.append(icon(setting.icon), setting.label);
     button.addEventListener('click', () => select(setting));
+    button.addEventListener('keydown', (e) => {
+      const steps = {
+        ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1,
+      };
+      const step = steps[e.key];
+      if (!step) return;
+      e.preventDefault();
+      const list = [...options.children];
+      const next = list[(list.indexOf(button) + step + list.length) % list.length];
+      next.focus();
+      next.click();
+    });
     options.append(button);
   });
   range.addEventListener('input', () => {
@@ -397,47 +557,90 @@ async function openAccessibility() {
   showModal();
 }
 
-/* search: suggestions from the authored search list and the menu links */
-function buildSearchIndex(menus, searchSection) {
+async function loadSearchIndex() {
+  const resp = await fetch(SEARCH_INDEX);
+  if (!resp.ok) throw new Error('Unable to load search results');
+
+  const { data = [] } = await resp.json();
+
+  // use the below data hardcoded array to simulate the search index
   const entries = [];
-  const seen = new Set();
-  const add = (title, href, tag) => {
-    const key = title.toLowerCase();
-    if (!title || seen.has(key)) return;
-    seen.add(key);
-    entries.push({ title, href, tag });
-  };
-  searchSection?.querySelectorAll('li').forEach((li) => {
-    const { title, href, description } = parseLink(li);
-    add(title, href, description || 'Help');
-  });
-  menus.forEach((menu) => {
-    menu.items.forEach((item) => add(item.title, item.href, 'Product'));
-    menu.groups.forEach((group) => {
-      const tag = /help|support/i.test(group.label) ? 'Help' : 'Explore';
-      group.items.forEach((item) => add(item.title, item.href, tag));
+  const paths = new Set();
+
+  data.forEach(({
+    path, title = '', description = '', robots = '',
+  }) => {
+    if (typeof path !== 'string' || !path.startsWith('/') || path.startsWith('//')
+      || SEARCH_SKIP.test(path) || /noindex/i.test(robots) || paths.has(path)) return;
+
+    const name = typeof title === 'string' ? title.trim() : '';
+    if (!name) return;
+
+    paths.add(path);
+
+    const components = [];
+    const componentPattern = /#([a-z0-9_-]+)\s*-\s*([^_]+?)(?=\s*__|$)/gi;
+
+    [...description.matchAll(componentPattern)].forEach((component) => {
+      components.push({
+        id: component[1],
+        title: component[2].trim(),
+        href: `${path}#${component[2].trim().toLowerCase().replace(/\s+/g, '')}`,
+      });
+    });
+
+    const cleanDescription = description.split(/#|__/)[0].trim();
+
+    entries.push({
+      title: name,
+      href: path,
+      text: cleanDescription.toLowerCase(),
+      components,
     });
   });
+
   return entries;
 }
 
-function buildSearch(index, placeholder) {
+/**
+ * More matching query words always rank first. Ties favor whole title words,
+ * then title prefixes, title substrings, and finally description matches.
+ * @returns {number} 0 when the entry does not match
+ */
+function scoreEntry(entry, words) {
+  const titleWords = entry.title.toLowerCase().split(/[^a-z0-9]+/);
+  const title = entry.title.toLowerCase();
+  const matchBonus = words.length * 4 + 1;
+  return words.reduce((score, word) => {
+    let quality = 0;
+    if (titleWords.includes(word)) quality = 4;
+    else if (titleWords.some((w) => w.startsWith(word))) quality = 3;
+    else if (title.includes(word)) quality = 2;
+    else if (entry.text.includes(word)) quality = 1;
+    return quality ? score + matchBonus + quality : score;
+  }, 0);
+}
+
+function buildSearch(placeholder) {
+  let index = [];
+  let pending = false;
+  let failed = false;
   const search = document.createElement('div');
   search.className = 'nav-search';
   search.hidden = true;
   search.innerHTML = `
     <form class="nav-search-bar" role="search">
-      <input type="search" name="q" autocomplete="off" aria-label="Search" aria-controls="nav-search-results">
+      <input type="search" name="q" autocomplete="off" role="combobox" aria-label="Search" aria-autocomplete="list" aria-haspopup="listbox" aria-expanded="false" aria-controls="nav-search-options">
       <button type="button" class="nav-search-clear" hidden>Clear</button>
     </form>
     <div class="nav-search-results" id="nav-search-results" hidden>
       <p class="nav-search-title">Suggested results</p>
       <div class="nav-search-columns">
-        <div class="nav-search-group"><p class="nav-search-heading">Loans</p><ul></ul></div>
-        <div class="nav-search-group"><p class="nav-search-heading">Tools &amp; Help</p><ul></ul></div>
+        <div class="nav-search-group"><ul id="nav-search-options" role="listbox" aria-label="Search suggestions"></ul></div>
       </div>
-      <p class="nav-search-empty" hidden>No results found</p>
-    </div>`;
+      <p class="nav-search-empty" hidden>No results found. Try different keywords.</p>
+    </div>
+    <p class="nav-search-status visually-hidden" role="status" aria-live="polite" aria-atomic="true"></p>`;
   const form = search.querySelector('form');
   const input = form.querySelector('input');
   input.placeholder = placeholder;
@@ -445,11 +648,34 @@ function buildSearch(index, placeholder) {
   const clear = form.querySelector('.nav-search-clear');
   clear.append(icon('close'));
   const results = search.querySelector('.nav-search-results');
-  const [loans, tools] = search.querySelectorAll('.nav-search-group');
+  const list = search.querySelector('.nav-search-group ul');
   const title = search.querySelector('.nav-search-title');
   const columns = search.querySelector('.nav-search-columns');
   const empty = search.querySelector('.nav-search-empty');
+  const status = search.querySelector('.nav-search-status');
   let matches = [];
+
+  let activeIndex = -1;
+
+  const setActiveResult = (nextIndex) => {
+    const items = [...list.querySelectorAll(':scope > li')];
+
+    if (!items.length) {
+      activeIndex = -1;
+      input.removeAttribute('aria-activedescendant');
+      return;
+    }
+
+    activeIndex = Math.max(0, Math.min(nextIndex, items.length - 1));
+
+    items.forEach((item, i) => {
+      item.classList.toggle('is-active', i === activeIndex);
+      item.querySelector('a').setAttribute('aria-selected', i === activeIndex);
+    });
+
+    input.setAttribute('aria-activedescendant', items[activeIndex].querySelector('a').id);
+    items[activeIndex].scrollIntoView({ block: 'nearest' });
+  };
 
   /**
    * A calculator or #anchor link to the page already open is handled in place
@@ -461,7 +687,11 @@ function buildSearch(index, placeholder) {
     if (url.origin !== window.location.origin
       || url.pathname !== window.location.pathname) return false;
     const calculator = url.searchParams.get('calculator');
-    const target = !calculator && url.hash ? document.getElementById(url.hash.slice(1)) : null;
+    // const target = !calculator && url.hash ? document.getElementById(url.hash.slice(1)) : null;
+    const target = !calculator && url.hash
+      ? document.getElementById(url.hash.slice(1))
+        || document.querySelector(`[data-block-name="${CSS.escape(url.hash.slice(1))}"]`)
+      : null;
     if (!calculator && !target) return false;
     window.history.pushState(null, '', url);
     if (calculator) {
@@ -479,40 +709,125 @@ function buildSearch(index, placeholder) {
     const query = input.value.trim();
     clear.hidden = !input.value;
     const q = query.toLowerCase();
-    matches = q ? index.filter((e) => e.title.toLowerCase().includes(q)) : [];
-    const groups = [
-      [loans, matches.filter((e) => e.tag === 'Product')],
-      [tools, matches.filter((e) => e.tag !== 'Product')],
-    ];
-    groups.forEach(([group, items]) => {
-      const ul = group.querySelector('ul');
-      ul.textContent = '';
-      items.slice(0, SEARCH_LIMIT).forEach((entry) => {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = entry.href;
-        const label = document.createElement('span');
-        label.className = 'nav-search-label';
-        highlight(label, entry.title, query);
-        const tag = document.createElement('span');
-        tag.className = 'nav-search-tag';
-        tag.textContent = entry.tag;
-        a.append(label, tag);
-        li.append(a);
-        ul.append(li);
-      });
-      group.hidden = !items.length;
+    const highlightWords = [...new Set(q.split(/\s+/).filter(Boolean))];
+    const words = highlightWords.filter((word) => !SEARCH_STOP_WORDS.has(word));
+    matches = words.length ? index
+      .map((entry) => {
+        const pageScore = scoreEntry(entry, words);
+
+        const componentMatches = entry.components
+          .map((component) => ({
+            ...component,
+            score: scoreEntry({ title: component.title, text: '' }, words),
+          }))
+          .filter((component) => component.score);
+
+        return {
+          entry,
+          score: Math.max(pageScore, ...componentMatches.map((c) => c.score)),
+          pageScore,
+          componentMatches,
+        };
+      })
+      .filter(({ score }) => score)
+      .sort((a, b) => b.score - a.score) : [];
+    list.textContent = '';
+    const suggestions = matches.slice(0, SEARCH_LIMIT).flatMap((match) => {
+      const { entry, pageScore, componentMatches } = match;
+      const components = componentMatches.map((component) => ({
+        title: component.title,
+        score: component.score,
+        href: component.id === 'emi-calculator'
+          ? `${entry.href}?calculator=${encodeURIComponent(component.title)}#emi-calculator`
+          : `${entry.href}#${component.id}`,
+      }));
+      if (pageScore) components.push({ title: entry.title, href: entry.href, score: pageScore });
+      return components;
+    }).sort((a, b) => b.score - a.score);
+    suggestions.forEach((suggestion) => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = suggestion.href;
+      const label = document.createElement('span');
+      label.className = 'nav-search-label';
+      highlight(label, suggestion.title, highlightWords);
+      a.append(label);
+      li.append(a);
+      list.append(li);
     });
+    [...list.children].forEach((item, position) => {
+      item.setAttribute('role', 'none');
+      const link = item.querySelector('a');
+      link.id = `nav-search-option-${position}`;
+      link.setAttribute('role', 'option');
+    });
+    setActiveResult(0);
     results.hidden = !q;
+    input.setAttribute('aria-expanded', !!q && !!list.children.length);
+    list.setAttribute('aria-busy', pending);
     const noMatch = !!q && !matches.length;
     title.hidden = noMatch;
     columns.hidden = noMatch;
     empty.hidden = !noMatch;
+    if (pending) {
+      empty.textContent = 'Loading results...';
+    } else if (failed) {
+      empty.textContent = 'Search is unavailable. Please try again.';
+    } else {
+      empty.textContent = 'No results found. Try different keywords.';
+    }
+    const announcement = pending || failed || noMatch
+      ? empty.textContent
+      : `${list.children.length} search suggestions available.`;
+    status.textContent = q ? announcement : '';
   };
   input.addEventListener('input', render);
+  search.addEventListener('pointerdown', () => search.classList.remove('is-keyboard-search'));
+  search.addEventListener('keydown', (e) => {
+    if (!e.isComposing && ['Tab', 'ArrowDown', 'ArrowUp'].includes(e.key)) {
+      search.classList.add('is-keyboard-search');
+    }
+  });
+  input.addEventListener('keydown', (e) => {
+    if (e.isComposing) return;
+    const items = list.querySelectorAll(':scope > li');
+
+    if (!items.length) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActiveResult(activeIndex + 1);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActiveResult(activeIndex - 1);
+    }
+  });
+  list.addEventListener('focusin', (e) => {
+    const items = [...list.children];
+    const position = items.indexOf(e.target.closest('li'));
+    if (position >= 0) setActiveResult(position);
+  });
+  list.addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+    e.preventDefault();
+    setActiveResult(activeIndex + (e.key === 'ArrowDown' ? 1 : -1));
+    list.children[activeIndex]?.querySelector('a').focus();
+  });
+  list.addEventListener('mousemove', (e) => {
+    const item = e.target.closest('li');
+    if (!item || !list.contains(item)) return;
+
+    const items = [...list.querySelectorAll(':scope > li')];
+    const itemIndex = items.indexOf(item);
+
+    if (itemIndex !== -1) {
+      setActiveResult(itemIndex);
+    }
+  });
   results.addEventListener('click', (e) => {
     const a = e.target.closest('a[href]');
-    if (a && !e.metaKey && !e.ctrlKey && !e.shiftKey && openOnPage(a.href)) e.preventDefault();
+    if (a && e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey
+      && !e.altKey && openOnPage(a.href)) e.preventDefault();
   });
   clear.addEventListener('click', () => {
     input.value = '';
@@ -521,12 +836,38 @@ function buildSearch(index, placeholder) {
   });
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const first = matches[0];
-    if (first && !openOnPage(first.href)) window.location.href = first.href;
+    if (results.hidden) return;
+
+    const selected = results.querySelector('li.is-active a[href]')
+      || results.querySelector('a[href]');
+
+    if (selected && !openOnPage(selected.href)) {
+      window.location.href = selected.href;
+    }
   });
   search.reset = () => {
     input.value = '';
     render();
+  };
+  // the query index is only fetched once search is first opened
+  let loading;
+  search.load = () => {
+    if (!loading) {
+      pending = true;
+      failed = false;
+      render();
+      loading = loadSearchIndex()
+        .then((entries) => { index = entries; })
+        .catch(() => {
+          failed = true;
+          loading = null;
+        })
+        .finally(() => {
+          pending = false;
+          render();
+        });
+    }
+    return loading;
   };
   search.input = input;
   return search;
@@ -640,6 +981,16 @@ export default async function decorate(block) {
   const navTools = nav.querySelector('.nav-tools');
   const searchLink = navTools?.querySelector('.icon-search')?.closest('a');
   const loginLink = navTools?.querySelector('a.secondary, em a');
+  // authored list of login options (title link + description) for the desktop popup
+  const loginMenuList = navTools?.querySelector('ul');
+  const loginMenuItems = [...(loginMenuList?.children || [])].map(parseLink).filter((i) => i.href !== '#');
+  loginMenuList?.remove();
+  const loginMenu = loginLink && loginMenuItems.length
+    ? buildLoginMenu(loginLink, loginMenuItems)
+    : null;
+  const loginSheet = loginMenu
+    ? buildLoginSheet(loginLink.textContent.trim() || 'Login', loginMenuItems)
+    : null;
 
   const hamburger = document.createElement('div');
   hamburger.className = 'nav-hamburger';
@@ -674,12 +1025,21 @@ export default async function decorate(block) {
   const menuFooter = document.createElement('div');
   menuFooter.className = 'nav-menu-footer';
   if (contact) {
-    const row = document.createElement('a');
+    // a link cannot hold another link: the contact link covers the row, the number dials
+    const row = document.createElement('div');
     row.className = 'nav-contact';
-    row.href = contact.href;
-    row.innerHTML = '<span><strong></strong><small></small></span><span class="nav-contact-icon"></span>';
+    row.innerHTML = '<span><a class="nav-contact-link"><strong></strong></a></span><span class="nav-contact-icon"></span>';
+    const link = row.querySelector('.nav-contact-link');
+    link.href = contact.href;
     row.querySelector('strong').textContent = contact.textContent.trim().replace(/^contact us$/i, 'Contact Us');
-    row.querySelector('small').textContent = phone ? `${phone.textContent.trim()} · Toll-free` : '';
+    if (phone) {
+      const dial = document.createElement('a');
+      dial.className = 'nav-contact-phone';
+      dial.href = phone.href;
+      dial.innerHTML = '<small></small>';
+      dial.querySelector('small').textContent = `${phone.textContent.trim()} · Toll-free`;
+      link.after(dial);
+    }
     row.querySelector('.nav-contact-icon').append(icon('arrow-up-right', 16));
     menuFooter.append(row);
   }
@@ -688,6 +1048,13 @@ export default async function decorate(block) {
     login.className = 'button primary nav-login';
     login.href = loginLink.href;
     login.textContent = loginLink.textContent.trim();
+    if (loginSheet) {
+      login.setAttribute('aria-haspopup', 'dialog');
+      login.addEventListener('click', (e) => {
+        e.preventDefault();
+        loginSheet.open(login);
+      });
+    }
     const p = document.createElement('p');
     p.className = 'nav-login-wrapper';
     p.append(login);
@@ -695,11 +1062,12 @@ export default async function decorate(block) {
   }
 
   const setMenu = (expanded) => {
-    nav.setAttribute('aria-expanded', expanded);
+    nav.dataset.expanded = expanded;
+    hamburgerButton.setAttribute('aria-expanded', expanded);
     hamburgerButton.setAttribute('aria-label', expanded ? 'Close navigation' : 'Open navigation');
     document.body.classList.toggle('nav-open', expanded && !isDesktop.matches);
   };
-  hamburgerButton.addEventListener('click', () => setMenu(nav.getAttribute('aria-expanded') !== 'true'));
+  hamburgerButton.addEventListener('click', () => setMenu(nav.dataset.expanded !== 'true'));
 
   nav.prepend(hamburger);
   navSections?.prepend(settingsBar);
@@ -708,7 +1076,6 @@ export default async function decorate(block) {
 
   /* search */
   const search = buildSearch(
-    buildSearchIndex(menus, searchSection),
     searchLink?.getAttribute('title') && !/^search$/i.test(searchLink.getAttribute('title'))
       ? searchLink.getAttribute('title')
       : 'Search loans, branches,calculators',
@@ -717,6 +1084,7 @@ export default async function decorate(block) {
   scrim.className = 'nav-scrim';
   scrim.hidden = true;
   const setSearch = (isOpen) => {
+    search.classList.remove('is-keyboard-search');
     search.hidden = !isOpen;
     scrim.hidden = !isOpen;
     block.classList.toggle('is-searching', isOpen);
@@ -726,7 +1094,9 @@ export default async function decorate(block) {
     }
     document.body.classList.toggle('nav-search-open', isOpen && !isDesktop.matches);
     if (isOpen) {
+      loginMenu?.close();
       desktopMenu?.closeAll();
+      search.load();
       search.input.focus();
     } else {
       search.reset();
@@ -740,14 +1110,21 @@ export default async function decorate(block) {
     searchLink.addEventListener('click', (e) => {
       e.preventDefault();
       setSearch(search.hidden);
+      if (!search.hidden && e.detail === 0) search.classList.add('is-keyboard-search');
     });
   }
   search.id = 'nav-search';
   search.addEventListener('search:close', () => setSearch(false));
   scrim.addEventListener('click', () => setSearch(false));
 
-  /* closing behaviour */
+  /* keyboard shortcuts and closing behaviour */
   window.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.shiftKey && !e.altKey && !e.metaKey && e.key.toLowerCase() === 'f') {
+      e.preventDefault();
+      setSearch(search.hidden);
+      if (!search.hidden) search.classList.add('is-keyboard-search');
+      return;
+    }
     if (e.key !== 'Escape') return;
     const expanded = desktopMenu?.querySelector('[aria-expanded="true"]');
     if (expanded) {
@@ -756,7 +1133,7 @@ export default async function decorate(block) {
     } else if (!search.hidden) {
       setSearch(false);
       searchLink?.focus();
-    } else if (nav.getAttribute('aria-expanded') === 'true' && !isDesktop.matches) {
+    } else if (nav.dataset.expanded === 'true' && !isDesktop.matches) {
       setMenu(false);
       hamburgerButton.focus();
     }
@@ -767,7 +1144,13 @@ export default async function decorate(block) {
   nav.addEventListener('focusout', (e) => {
     if (desktopMenu && !desktopMenu.contains(e.relatedTarget)) desktopMenu.closeAll();
   });
+  // the top bar scrolls away: bring it back when a keyboard user lands in it
+  navTopbar?.addEventListener('focusin', () => {
+    if (navTopbar.getBoundingClientRect().bottom <= 0) window.scrollTo({ top: 0 });
+  });
   isDesktop.addEventListener('change', () => {
+    loginMenu?.close();
+    loginSheet?.close();
     setMenu(false);
     setSearch(false);
   });
@@ -776,5 +1159,84 @@ export default async function decorate(block) {
   navWrapper.className = 'nav-wrapper';
   if (navTopbar) navWrapper.append(navTopbar);
   navWrapper.append(nav, search, scrim);
+  if (loginSheet) navWrapper.append(loginSheet);
   block.append(navWrapper);
 }
+
+function handlePageHash() {
+  const hash = decodeURIComponent(window.location.hash.slice(1));
+  if (!hash) return;
+
+  const findTarget = () => document.getElementById(hash)
+    || document.querySelector(
+      `[data-block-name="${CSS.escape(hash)}"]`,
+    );
+
+  const scrollToTarget = () => {
+    const main = document.querySelector('main');
+    if (!main || [...main.children].some((section) => section.dataset.sectionStatus !== 'loaded')) {
+      return false;
+    }
+    const target = findTarget();
+    if (!target) return false;
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const root = document.documentElement;
+        const rootStyles = getComputedStyle(root);
+        const duration = parseFloat(rootStyles
+          .getPropertyValue('--header-anchor-scroll-duration')) || 1000;
+        const offset = parseFloat(rootStyles.scrollPaddingTop) || 0;
+        const destination = Math.max(0, Math.min(
+          target.getBoundingClientRect().top + window.scrollY - offset,
+          root.scrollHeight - window.innerHeight,
+        ));
+        root.classList.add('header-anchor-animating');
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        let started;
+        let frame;
+        const stop = () => {
+          cancelAnimationFrame(frame);
+          root.classList.remove('header-anchor-animating');
+          window.removeEventListener('wheel', stop);
+          window.removeEventListener('touchstart', stop);
+          window.removeEventListener('keydown', stop);
+        };
+        const animate = (timestamp) => {
+          if (started === undefined) started = timestamp;
+          const progress = Math.min((timestamp - started) / duration, 1);
+          const eased = progress * progress * (3 - 2 * progress);
+          window.scrollTo({ top: destination * eased, behavior: 'instant' });
+          if (progress < 1) frame = requestAnimationFrame(animate);
+          else stop();
+        };
+        window.addEventListener('wheel', stop, { passive: true });
+        window.addEventListener('touchstart', stop, { passive: true });
+        window.addEventListener('keydown', stop);
+        frame = requestAnimationFrame(animate);
+      });
+    });
+
+    return true;
+  };
+
+  if (scrollToTarget()) return;
+
+  const observer = new MutationObserver(() => {
+    if (scrollToTarget()) observer.disconnect();
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['data-section-status'],
+  });
+
+  window.addEventListener('pagehide', () => observer.disconnect(), {
+    once: true,
+  });
+}
+
+document.documentElement.classList.add('header-anchor-scroll');
+handlePageHash();

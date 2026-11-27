@@ -46,7 +46,8 @@
           "options": [
             { "name": "Eligibility (icon, label, value)", "value": "eligibility" },
             { "name": "Documents (title and checklist)", "value": "documents" },
-            { "name": "Eligibility Smaller font sizes due to larger content", "value": "elgb-small-text" }
+            { "name": "Eligibility Smaller font sizes due to larger content", "value": "elgb-small-text" },
+            { "name": "Left Title and Right Document Requirement Cards", "value": "left-title-right-documents" }
           ]
         },
         {
@@ -65,6 +66,11 @@
           "label": "Decorative image",
           "description": "Optional artwork shown behind the top-right corner.",
           "multi": false
+        },
+        {
+          "name": "imageMimeType",
+          "component": "hidden",
+          "valueType": "image/png"
         }
       ]
     },
@@ -86,6 +92,11 @@
           "label": "Icon",
           "description": "Eligibility cards only.",
           "multi": false
+        },
+        {
+          "name": "imageMimeType",
+          "component": "hidden",
+          "valueType": "image/png"
         },
         {
           "component": "text",

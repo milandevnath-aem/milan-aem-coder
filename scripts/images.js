@@ -97,6 +97,27 @@ export function createPicture(
   return picture;
 }
 
+/**
+ * Adds an art-directed source for small screens to a picture: the mobile image is used below
+ * the desktop view, the picture's own sources and image stay in place for desktop.
+ * @param {HTMLPictureElement} picture picture built from the desktop image
+ * @param {HTMLImageElement} mobileImg authored mobile image
+ * @param {string} [width] rendition width of the mobile image
+ * @returns {HTMLSourceElement|null} the added source (to move editor instrumentation to)
+ */
+export function addMobileSource(picture, mobileImg, width = '900') {
+  if (!picture || !mobileImg?.src) return null;
+  const webp = createPicture(mobileImg.src, '', false, [{ width }])
+    .querySelector('source[type="image/webp"]');
+  if (!webp) return null;
+  const source = document.createElement('source');
+  source.media = MEDIA.mobile;
+  source.type = 'image/webp';
+  source.srcset = webp.srcset;
+  picture.prepend(source);
+  return source;
+}
+
 function copyEditorAttributes(from, to) {
   [...from.attributes]
     .filter(({ name }) => name.startsWith('data-aue-') || name.startsWith('data-richtext-'))

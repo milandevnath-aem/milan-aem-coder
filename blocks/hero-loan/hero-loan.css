@@ -29,13 +29,25 @@
 .hero-loan .hero-loan-slide {
   grid-area: slide;
   position: relative;
+  z-index: 1;
   display: flex;
   transition: opacity 0.6s ease;
 }
 
+/* crossfade: the leaving slide stays fully visible underneath until the incoming one
+   has faded in on top, then drops out (no dip to the empty background) */
 .hero-loan .hero-loan-slide[aria-hidden='true'] {
+  z-index: 0;
   opacity: 0;
   visibility: hidden;
+  transition: opacity 0s 0.6s, visibility 0s 0.6s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-loan .hero-loan-slide,
+  .hero-loan .hero-loan-slide[aria-hidden='true'] {
+    transition: none;
+  }
 }
 
 .hero-loan .hero-loan-image,
@@ -104,6 +116,7 @@
 .hero-loan .hero-loan-inner {
   grid-area: stack;
   position: relative;
+  z-index: 2; /* above the slides (z-index 1) so the form and dots stay visible */
   pointer-events: none;
 }
 
@@ -259,9 +272,16 @@
   gap: 12px;
 }
 
-.hero-loan .hero-loan-input {
+.hero-loan .hero-loan-field {
   display: flex;
   flex: 1 1 0;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.hero-loan .hero-loan-input {
+  display: flex;
   align-items: center;
   gap: 8px;
   min-width: 0;
@@ -277,6 +297,40 @@
   outline: 2px solid var(--text-color);
 }
 
+.hero-loan .hero-loan-input.is-invalid {
+  background-color: #fff6f6;
+  box-shadow: inset 0 0 0 1px #ff3938;
+}
+
+/* an invalid field stays red and 1px while focused: the red border is the indicator */
+.hero-loan .hero-loan-input.is-invalid:focus-within {
+  outline: 0;
+}
+
+.hero-loan .hero-loan-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  margin: 0;
+  color: #ff3938;
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.hero-loan .hero-loan-error[hidden] {
+  display: none;
+}
+
+.hero-loan .hero-loan-error::before {
+  content: '';
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  background: url('../../icons/alert.svg') center / contain no-repeat;
+}
+
 .hero-loan .hero-loan-input input {
   width: 100%;
   min-width: 0;
@@ -287,7 +341,7 @@
   font-size: inherit;
   font-weight: inherit;
   line-height: inherit;
-  outline: none;
+  outline: 2px solid transparent;
   box-shadow: none;
 }
 
@@ -307,15 +361,6 @@
   padding-right: 8px;
   border-right: 1px solid #dedede;
   color: var(--text-color);
-}
-
-.hero-loan .hero-loan-sr {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
 }
 
 .hero-loan .hero-loan-categories {
@@ -361,8 +406,12 @@
 
 .hero-loan .hero-loan-chip input {
   position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
   opacity: 0;
-  pointer-events: none;
+  cursor: pointer;
 }
 
 .hero-loan .hero-loan-chip:has(input:checked) {
@@ -386,6 +435,11 @@
   width: 18px;
   height: 18px;
   background: url('../../icons/chevron-down.svg') center / contain no-repeat;
+  transition: transform 0.2s;
+}
+
+.hero-loan .hero-loan-more[aria-expanded='true']::after {
+  transform: rotate(180deg);
 }
 
 /* "More": a menu of the remaining categories; the chip shows the one picked there */
@@ -415,6 +469,7 @@
   left: 0;
   z-index: 3;
   min-width: 100%;
+  overflow-y: auto;
   margin: 0;
   padding: 4px;
   border: 1px solid #ededed;
@@ -422,6 +477,10 @@
   background-color: var(--background-color);
   box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
   list-style: none;
+}
+
+.hero-loan .hero-loan-more-menu:has(li:nth-child(4)) {
+  max-height: 110px;
 }
 
 .hero-loan .hero-loan-more-menu[hidden] {
@@ -447,7 +506,7 @@
 
 .hero-loan .hero-loan-more-menu button:hover,
 .hero-loan .hero-loan-more-menu button[aria-pressed='true'] {
-  background-color: var(--light-color);
+  background-color: var(--color-background-2-default-hover);
 }
 
 .hero-loan .hero-loan-more-menu button:focus-visible {
@@ -671,4 +730,98 @@
 
 :where(.desktop-view) .hero-loan .hero-loan-sticky {
   display: none;
+}
+
+/*
+ * desktop (1680px and up, also the 1920 / 2560 designs): the type steps up to the DLS desktop
+ * values, the form card is 604px wide and the hero grows with it (574px on the home page)
+ */
+:where([data-viewport='desktop']) .hero-loan {
+  --hero-loan-min-height: 574px;
+}
+
+:where([data-viewport='desktop']) .hero-loan .hero-loan-content h1,
+:where([data-viewport='desktop']) .hero-loan .hero-loan-content h2 {
+  font-size: var(--type-display-size);
+  line-height: var(--type-display-line);
+  letter-spacing: var(--type-display-ls);
+}
+
+:where([data-viewport='desktop']) .hero-loan .hero-loan-content p,
+:where([data-viewport='desktop']) .hero-loan.product .hero-loan-content p:not(.button-wrapper) {
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+}
+
+:where([data-viewport='desktop']) .hero-loan .hero-loan-form,
+:where([data-viewport='desktop']) .hero-loan.product .hero-loan-form {
+  width: 604px;
+}
+
+/* form: Headline/H5 title, Body/B2 intro, Body/B3 fields, Body/B1 labels, Body/B2 chips */
+:where([data-viewport='desktop']) .hero-loan .hero-loan-form-intro h2 {
+  font-size: var(--type-headline-h5-font-size);
+  line-height: var(--type-headline-h5-line-height);
+  letter-spacing: var(--type-headline-h5-letter-spacing);
+}
+
+:where([data-viewport='desktop']) .hero-loan .hero-loan-form-intro p {
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+}
+
+/* fields stay 68px tall with the larger text */
+:where([data-viewport='desktop']) .hero-loan .hero-loan-input {
+  padding-block: 18px;
+  font-size: var(--type-body-b3-font-size);
+  line-height: var(--type-body-b3-line-height);
+}
+
+:where([data-viewport='desktop']) .hero-loan .hero-loan-categories legend,
+:where([data-viewport='desktop']) .hero-loan .hero-loan-select.is-filled .dropdown-label {
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
+}
+
+:where([data-viewport='desktop']) .hero-loan .hero-loan-chip {
+  padding-block: 7px;
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+}
+
+/* product form: 24px between the fields, 32px above the button */
+:where([data-viewport='desktop']) .hero-loan.product .hero-loan-form form,
+:where([data-viewport='desktop']) .hero-loan.product .hero-loan-fields {
+  gap: 24px;
+}
+
+:where([data-viewport='desktop']) .hero-loan.product .hero-loan-form form button[type='submit'] {
+  margin-top: 8px;
+}
+
+/* stat badges (About us) step up one size as well */
+:where([data-viewport='desktop']) .hero-loan .hero-loan-stats small {
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
+}
+
+:where([data-viewport='desktop']) .hero-loan .hero-loan-stats strong {
+  font-size: var(--type-body-b3-font-size);
+  line-height: var(--type-body-b3-line-height);
+}
+
+:where([data-viewport='desktop']) .hero-loan.plain .hero-loan-stats strong {
+  font-size: var(--type-body-b2-font-size);
+  line-height: var(--type-body-b2-line-height);
+}
+
+/* open lists follow the larger fields: category dropdown and the "More" chip menu */
+:where([data-viewport='desktop']) .hero-loan .hero-loan-select {
+  --dropdown-value-size: 24px;
+  --dropdown-value-line: 32px;
+}
+
+:where([data-viewport='desktop']) .hero-loan .hero-loan-more-menu button {
+  font-size: var(--type-body-b1-font-size);
+  line-height: var(--type-body-b1-line-height);
 }

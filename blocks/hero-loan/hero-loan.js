@@ -3,11 +3,19 @@ import { createPicture } from '../../scripts/images.js';
 import { createDropdown } from '../../scripts/dropdown.js';
 import { MEDIA } from '../../scripts/viewport.js';
 import {
-  authoredForm, readForms, rememberForms, resolveForm,
+  authoredForm, CATEGORY_PICKED_EVENT, matchCategory, readForms, rememberForms, resolveForm,
 } from '../../scripts/category-forms.js';
+import {
+  emailRules, fieldMessages, isPersonName, mobileRules, nameRules, rejectedErrorMessage,
+  valueErrorMessage,
+} from '../../scripts/input-rules.js';
+import { analyticsName, trackFormStart, uniqueId } from '../../scripts/analytics.js';
 
 // chips shown in the row; the rest are listed under "More"
 const VISIBLE_CATEGORIES = 4;
+
+// time each slide stays on screen before the carousel advances (ms)
+const AUTOPLAY_DELAY = 5000;
 
 function cellText(row) {
   return row?.textContent.trim() || '';
@@ -20,7 +28,8 @@ function buildChip(label, index) {
   input.type = 'radio';
   input.name = 'category';
   input.value = label;
-  input.checked = index === 0;
+  // the default checked state is what form.reset() goes back to
+  input.defaultChecked = index === 0;
   const span = document.createElement('span');
   span.textContent = label;
   chip.append(input, span);
@@ -66,7 +75,7 @@ function buildMore(chips, overflow) {
     more.textContent = selected ? selected.value : 'More';
     more.classList.toggle('is-selected', Boolean(selected));
     if (selected) more.setAttribute('aria-label', `${selected.value}, more loan categories`);
-    else more.removeAttribute('aria-label');
+    else more.setAttribute('aria-label', 'More loan categories');
     items.forEach((item, i) => item.setAttribute('aria-pressed', inputs[i].checked));
   };
   const close = (focusMore = false) => {
@@ -140,8 +149,13 @@ function confirmOnSubmit(form, modalHref, forms = [], categories = []) {
   form.addEventListener('change', update);
 
   form.addEventListener('submit', async (e) => {
-    if (form.getAttribute('action')) return;
+    // never a native submit: it would put the name and mobile number in the URL
     e.preventDefault();
+    const action = form.getAttribute('action');
+    if (action) {
+      window.location.href = action;
+      return;
+    }
     const target = await update();
     if (target) {
       // continue in the full application form, carrying over what was entered
@@ -161,9 +175,14 @@ function confirmOnSubmit(form, modalHref, forms = [], categories = []) {
   });
 }
 
-function buildField(label, index) {
+let fieldErrorCount = 0;
+
+function buildField(label, index, form) {
   const isPhone = /mobile|phone/i.test(label);
-  const field = document.createElement('label');
+  let edited = false;
+  const item = document.createElement('div');
+  item.className = 'hero-loan-field';
+  const field = document.createElement('div');
   field.className = `hero-loan-input${isPhone ? ' hero-loan-mobile' : ''}`;
   if (isPhone) {
     const prefix = document.createElement('span');
@@ -172,23 +191,64 @@ function buildField(label, index) {
     prefix.textContent = '+91';
     field.append(prefix);
   }
-  const sr = document.createElement('span');
-  sr.className = 'hero-loan-sr';
-  sr.textContent = label;
   const input = document.createElement('input');
   input.placeholder = label;
+  input.setAttribute('aria-label', `${label} (required)`);
   input.required = true;
   input.name = label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || `field-${index}`;
+  const isEmail = /e-?mail/i.test(label);
+  const kind = (isPhone && 'tel') || (isEmail && 'email') || 'text';
+  const messages = fieldMessages(label, kind);
+  const error = document.createElement('p');
+  error.className = 'hero-loan-error';
+  fieldErrorCount += 1;
+  error.id = uniqueId(`hero-loan-error-${fieldErrorCount}`);
+  error.hidden = true;
+  input.setAttribute('aria-describedby', error.id);
+  const showError = (message) => {
+    error.textContent = message;
+    error.hidden = !message;
+    field.classList.toggle('is-invalid', Boolean(message));
+    if (message) input.setAttribute('aria-invalid', 'true');
+    else input.removeAttribute('aria-invalid');
+  };
+  const validate = () => {
+    if (input.checkValidity()) showError('');
+  };
+  const reject = (characters) => {
+    edited = true;
+    if (document.activeElement !== input) {
+      validate();
+      return;
+    }
+    showError(rejectedErrorMessage(label, kind, characters));
+  };
   if (isPhone) {
-    Object.assign(input, {
-      type: 'tel', inputMode: 'numeric', pattern: '[6-9][0-9]{9}', maxLength: 10, autocomplete: 'tel-national',
-    });
+    mobileRules(input, reject);
+  } else if (isEmail) {
+    emailRules(input);
   } else {
     input.type = 'text';
     if (/^(your )?name$/i.test(label)) input.autocomplete = 'name';
+    // names: letters only (and spaces in a full name)
+    if (isPersonName(label)) nameRules(input, label, reject);
   }
-  field.append(sr, input);
-  return field;
+  input.addEventListener('invalid', () => {
+    const value = input.value.trim();
+    showError(value ? valueErrorMessage(label, kind, value, messages.invalid) : messages.empty);
+  });
+  input.addEventListener('input', () => {
+    edited = true;
+    showError('');
+  });
+  input.addEventListener('blur', () => {
+    if (edited || input.value || !error.hidden) validate();
+  });
+  form.addEventListener('reset', () => { edited = false; });
+  field.append(input);
+  field.addEventListener('click', () => input.focus());
+  item.append(field, error);
+  return item;
 }
 
 function buildForm(config, isProduct) {
@@ -217,7 +277,8 @@ function buildForm(config, isProduct) {
   const action = actionLink?.getAttribute('href');
   const modalHref = action && isModalLink(action) ? action : '';
   if (action && action !== '#' && !modalHref) form.action = action;
-  form.method = 'get';
+  form.method = 'post';
+  form.noValidate = true;
   form.innerHTML = `
     <div class="hero-loan-fields"></div>
     <fieldset class="hero-loan-categories">
@@ -225,20 +286,55 @@ function buildForm(config, isProduct) {
       <div class="hero-loan-chips"></div>
     </fieldset>
     <button type="submit" class="button primary"></button>`;
-  form.querySelector('button[type="submit"]').textContent = cellText(actionRow) || 'Apply now';
+  const submit = form.querySelector('button[type="submit"]');
+  submit.textContent = cellText(actionRow) || 'Apply now';
+  submit.id = uniqueId('hero-loan-submit');
+  // form_name: the form's heading
+  const formName = () => analyticsName(intro.querySelector('h1, h2, h3')?.textContent) || 'hero_loan';
+  trackFormStart(form, formName, () => String(new FormData(form).get('category') || ''));
 
   const labels = (fieldsText || 'Your name, Mobile number')
     .split(',').map((f) => f.trim()).filter(Boolean);
   const fields = form.querySelector('.hero-loan-fields');
-  labels.forEach((label, i) => fields.append(buildField(label, i)));
+  form.addEventListener('reset', () => {
+    fields.querySelectorAll('input').forEach((input) => input.dispatchEvent(new Event('input')));
+  });
+  labels.forEach((label, i) => fields.append(buildField(label, i, form)));
+  form.addEventListener('submit', (event) => {
+    const inputs = [...fields.querySelectorAll('input')];
+    const invalid = inputs.filter((input) => !input.checkValidity());
+    if (invalid.length) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      invalid[0].focus();
+    }
+  });
+  // a lead created in the lead form ("kmp:lead-created", see LEAD_CREATED_EVENT in
+  // lead-form/lead-api-config.js) clears what was entered here, so it is not carried over
+  // into the next application. The category dropdown of product pages keeps its product.
+  document.addEventListener('kmp:lead-created', () => {
+    form.reset();
+    // the More chip and the Apply now target follow the category back to the first one
+    form.querySelector('input[name="category"]:checked')
+      ?.dispatchEvent(new Event('change', { bubbles: true }));
+  });
 
   const categories = categoriesText.split(',').map((c) => c.trim()).filter(Boolean);
   if (isProduct && categories.length) {
-    // product pages: compact dropdown, first category preselected
+    // product pages: compact dropdown, first category preselected.
+    // "Category forms": a /modals/ page is the form Apply now opens for that category; any
+    // other page makes the category a link to that page (picked = the visitor goes there).
+    // Apply now never opens such a page, it keeps its own form for those categories.
+    const here = window.location.pathname.replace(/\.html$/, '');
+    const pageOf = (i) => {
+      const path = forms[i];
+      return path && !isModalLink(path) && path.replace(/\.html$/, '') !== here ? path : '';
+    };
+    const modalForms = forms.map((path) => (isModalLink(path) ? path : ''));
     const select = createDropdown({
       label: 'Select loan category',
       name: 'category',
-      options: categories.map((c) => ({ value: c, label: c })),
+      options: categories.map((c, i) => ({ value: c, label: c, href: pageOf(i) || undefined })),
       value: categories[0],
       boundary: '.hero-loan',
     });
@@ -246,7 +342,12 @@ function buildForm(config, isProduct) {
     moveInstrumentation(optionsRow, select);
     form.querySelector('.hero-loan-categories').remove();
     form.prepend(select);
-    confirmOnSubmit(form, modalHref, forms, categories);
+    // a category picked in the lead form (modal) is shown here too
+    document.addEventListener(CATEGORY_PICKED_EVENT, (e) => {
+      const match = matchCategory(e.detail?.category, categories);
+      if (match && match !== select.value) select.setValue(match);
+    });
+    confirmOnSubmit(form, modalHref, modalForms, categories);
     if (actionRow) moveInstrumentation(actionRow, form.querySelector('button[type="submit"]'));
     card.append(form);
     return card;
@@ -260,6 +361,14 @@ function buildForm(config, isProduct) {
   chips.append(...chipList);
   if (overflow.length) chips.append(buildMore(chips, overflow));
   if (!categories.length) form.querySelector('.hero-loan-categories').remove();
+  // a category picked in the lead form (modal) is shown here too, in the More chip if hidden
+  document.addEventListener(CATEGORY_PICKED_EVENT, (e) => {
+    const match = matchCategory(e.detail?.category, categories);
+    const input = match && chipList[categories.indexOf(match)].querySelector('input');
+    if (!input || input.checked) return;
+    input.checked = true;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  });
 
   moveInstrumentation(optionsRow, form.querySelector('.hero-loan-categories'));
   if (actionRow) moveInstrumentation(actionRow, form.querySelector('button[type="submit"]'));
@@ -339,17 +448,54 @@ function buildSlides(rows) {
       slide.setAttribute('aria-hidden', i !== current);
     });
     dots.querySelectorAll('.hero-loan-dot').forEach((dot, i) => dot.setAttribute('aria-current', i === current));
+    // load the next slide's image ahead of time so it never pops in during the fade
+    slides.children[(current + 1) % rows.length]?.querySelectorAll('img').forEach((img) => {
+      img.loading = 'eager';
+    });
   };
   rows.forEach((_, i) => {
     const dot = document.createElement('button');
     dot.type = 'button';
     dot.className = 'hero-loan-dot';
     dot.setAttribute('aria-label', `Show slide ${i + 1}`);
-    dot.addEventListener('click', () => show(i));
+    dot.addEventListener('click', () => {
+      show(i);
+      restart(); // eslint-disable-line no-use-before-define
+    });
     dots.append(dot);
   });
-  // no autoplay: slides change only when the visitor selects a dot
   show(0);
+
+  // autoplay: advances on its own, paused while hovered/focused, off-screen/hidden tab,
+  // and not at all for visitors who prefer reduced motion
+  let timer;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const stop = () => {
+    clearInterval(timer);
+    timer = null;
+  };
+  const start = () => {
+    if (reduceMotion || timer || document.hidden) return;
+    timer = setInterval(() => show(current + 1), AUTOPLAY_DELAY);
+  };
+  function restart() {
+    stop();
+    start();
+  }
+  let inView = true;
+  const sync = () => (inView && !document.hidden ? start() : stop());
+  const container = [slides, dots];
+  container.forEach((el) => {
+    el.addEventListener('mouseenter', stop);
+    el.addEventListener('mouseleave', sync);
+    el.addEventListener('focusin', stop);
+    el.addEventListener('focusout', sync);
+  });
+  document.addEventListener('visibilitychange', sync);
+  new IntersectionObserver(([entry]) => {
+    inView = entry.isIntersecting;
+    sync();
+  }).observe(slides);
 
   slides.dots = dots;
   return slides;

@@ -4,10 +4,14 @@
 
   Usage (see lead-form.js):
 
-    const { image } = await generateCaptcha(signal);    // on opening the form, and on refresh
+    const { image, audio } = await generateCaptcha(signal); // on opening the form, and on
+                                                        // refresh; audio is '' when not sent
     const product = productFor('New Car Finance');      // 'NewCarFinance'
-    const lead = buildLead(form, 'New Car Finance');    // the API's fields + Product 'New CAR'
-    const session = createLeadSession({ mobile: '8097475810', product, lead });
+    const lead = buildLead(form, 'New Car Finance');    // the API's fields + its Product
+    const { name, email } = contactOf(form);           // sent with the first OTP only
+    const session = createLeadSession({
+      mobile: '8097475810', name, email, product, lead,
+    });
     try {
       await session.submit('aB3dE');                    // verifies the captcha, texts the OTP
       await session.verifyOtp('214589');                // checks it, creates the lead
@@ -15,23 +19,22 @@
       showError(errorMessage(error, 'verify'));         // LeadApiError -> visitor text
     }
 
-  Between submit and verifyOtp, the journey's data (transactionId, token, mobile, category,
-  lead) is kept in window[LEAD_STORE_KEY], and verifyOtp sends it from there.
-
-  Demo mode (DEMO_MODE): the captcha is drawn in the browser and 123456 is the right OTP.
-  A category without a product (Car Lease, Dealer Finance) skips the APIs the same way.
+  The OTP's transactionId and token are secrets of the journey: they are kept only in the
+  session's closure (never on window, in Web Storage, cookies, the DOM, the URL or the
+  console), sent only to otp-generate (on resend) and otp-verify, and wiped on cancel and
+  once a lead is created. Each session has its own pair, so another form's journey is never
+  sent, and an OTP that created a lead is not sent twice.
 */
 import {
-  CAPTCHA_LENGTH, DEMO_MODE, ENDPOINTS, LEAD_CREATED_EVENT, LEAD_RESULT_KEY,
-  LEAD_STORE_KEY, MESSAGES, OTP_LENGTH, REQUEST_HEADERS, REQUEST_TIMEOUT_MS,
+  ENDPOINTS, LEAD_CREATED_EVENT, LEAD_RESULT_KEY, MESSAGES, OTP_GENERATE_FIXED, OTP_LENGTH,
+  REQUEST_HEADERS, REQUEST_TIMEOUT_MS, SERVER_MESSAGE_CODES,
 } from './lead-api-config.js';
 
-export { CAPTCHA_LENGTH, OTP_LENGTH, RESEND_SECONDS } from './lead-api-config.js';
+export {
+  CAPTCHA_LENGTH, OTP_LENGTH, OTP_VALID_MS, RESEND_SECONDS,
+} from './lead-api-config.js';
 
-const DEMO_OTP = '123456';
-const DEMO_HOSTS = /^(localhost|127\.0\.0\.1)$|\.aem\.(page|live)$/;
 const MOBILE_PATTERN = /^[6-9]\d{9}$/;
-const wait = (ms) => new Promise((resolve) => { setTimeout(resolve, ms); });
 
 /**
  * A failed lead request. `kind` says what went wrong:
@@ -61,10 +64,44 @@ export class LeadApiError extends Error {
   }
 }
 
-/** True when the journey runs without the APIs (see DEMO_MODE in lead-api-config.js). */
-export const isDemo = () => (typeof DEMO_MODE === 'boolean'
-  ? DEMO_MODE
-  : DEMO_HOSTS.test(window.location.hostname));
+/** A value from a response as text: '' for anything that is not a string or a number */
+const text = (value) => (typeof value === 'string' || typeof value === 'number' ? String(value).trim() : '');
+
+/** A response field as an object: {} for anything else (null, a string, a list...) */
+const record = (value) => (value && typeof value === 'object' && !Array.isArray(value) ? value : {});
+
+// the start of bare Base64 data says what it is (the first bytes of each file format)
+const SIGNATURES = {
+  image: [
+    ['iVBORw0KGgo', 'image/png'], ['/9j/', 'image/jpeg'], ['R0lGOD', 'image/gif'],
+    ['UklGR', 'image/webp'], ['PHN2Zy', 'image/svg+xml'], ['PD94bWwg', 'image/svg+xml'],
+  ],
+  audio: [
+    ['SUQz', 'audio/mpeg'], ['//', 'audio/mpeg'], ['UklGR', 'audio/wav'], ['T2dnUw', 'audio/ogg'],
+    ['GkXfo', 'audio/webm'], ['ZkxhQw', 'audio/flac'], ['AAAA', 'audio/mp4'],
+  ],
+};
+
+/**
+ * Base64 media from the API as a data URI: a data URI of the right kind as it is, bare
+ * Base64 with the type read from its first bytes.
+ * @param {*} value e.g. "data:image/png;base64,iVBOR..." or "iVBOR..."
+ * @param {'image'|'audio'} kind
+ * @returns {string} data URI, '' when the value is missing or not Base64 of that kind
+ */
+export function toDataUri(value, kind) {
+  const raw = typeof value === 'string' ? value.trim() : '';
+  if (!raw) return '';
+  if (raw.startsWith('data:')) {
+    return new RegExp(`^data:${kind}/[\\w.+-]+(;[\\w=.+-]+)*;base64,[A-Za-z0-9+/]+=*$`).test(raw.replace(/\s/g, '')) ? raw.replace(/\s/g, '') : '';
+  }
+  // bare Base64 (URL-safe characters allowed); line breaks are ignored
+  const data = raw.replace(/\s/g, '').replace(/-/g, '+').replace(/_/g, '/');
+  if (!/^[A-Za-z0-9+/]+=*$/.test(data) || data.length < 16) return '';
+  const [, type] = SIGNATURES[kind].find(([start]) => data.startsWith(start))
+    || [null, kind === 'image' ? 'image/png' : 'audio/mpeg'];
+  return `data:${type};base64,${data}`;
+}
 
 /**
  * POSTs JSON to a servlet and returns the `data` of a { status: "success", data } answer.
@@ -74,8 +111,11 @@ export const isDemo = () => (typeof DEMO_MODE === 'boolean'
  * @returns {Promise<Object>}
  * @throws {LeadApiError}
  */
-async function post(endpoint, body, signal) {
+async function post(endpoint, body, signal = new AbortController().signal) {
   const path = ENDPOINTS[endpoint];
+  if (typeof path !== 'string' || !path) {
+    throw new LeadApiError('bad-response', `lead-api: no endpoint "${endpoint}" in lead-api-config.js`);
+  }
   // e.g. "home.captcha-generate.json", for the console
   const name = path.split('/').pop();
   if (signal.aborted) throw new LeadApiError('cancelled', `${name}: cancelled`);
@@ -108,20 +148,25 @@ async function post(endpoint, body, signal) {
     // the body was cut off by the timeout or a cancel
     if (timedOut) throw new LeadApiError('timeout', `${name}: no answer in ${REQUEST_TIMEOUT_MS}ms`);
     if (signal.aborted) throw new LeadApiError('cancelled', `${name}: cancelled`);
+    const answer = record(json);
+    // code and message are shown or looked up: only text is kept
+    const code = text(answer.code).toUpperCase();
+    const serverMessage = text(answer.message);
     if (!response.ok) {
-      throw new LeadApiError('http', `${name}: HTTP ${response.status} ${json?.code || ''}`, {
-        status: response.status, code: json?.code, serverMessage: json?.message,
+      throw new LeadApiError('http', `${name}: HTTP ${response.status} ${code}`, {
+        status: response.status, code, serverMessage,
       });
     }
-    if (!json || typeof json !== 'object') {
-      throw new LeadApiError('bad-response', `${name}: the answer is not JSON`);
+    if (json !== answer) {
+      throw new LeadApiError('bad-response', `${name}: the answer is not a JSON object`);
     }
-    if (json.status !== 'success') {
-      throw new LeadApiError('rejected', `${name}: ${json.code || json.status}`, {
-        code: json.code, serverMessage: json.message,
+    if (text(answer.status).toLowerCase() !== 'success') {
+      throw new LeadApiError('rejected', `${name}: ${code || text(answer.status) || 'no status'}`, {
+        code, serverMessage,
       });
     }
-    return json.data || {};
+    // the lead API's answer (otp-verify) is passed on as it is; anything else must be an object
+    return answer.data ?? {};
   } catch (error) {
     // anything unexpected still reaches the caller as a LeadApiError
     if (!(error instanceof LeadApiError)) {
@@ -148,65 +193,24 @@ function singleFlight(task) {
   };
 }
 
-/* demo captcha: drawn in the browser, one attempt like the real one */
-const DEMO_CHARS = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-let demoCaptcha = '';
-
-function drawDemoCaptcha(code) {
-  const canvas = document.createElement('canvas');
-  canvas.width = 168;
-  canvas.height = 68;
-  const ctx = canvas.getContext('2d');
-  const { width, height } = canvas;
-  ctx.fillStyle = '#002c62';
-  ctx.fillRect(0, 0, width, height);
-  ctx.strokeStyle = 'rgb(255 255 255 / 25%)';
-  for (let i = 0; i < 4; i += 1) {
-    ctx.beginPath();
-    ctx.moveTo(Math.random() * width, Math.random() * height);
-    ctx.bezierCurveTo(
-      Math.random() * width,
-      Math.random() * height,
-      Math.random() * width,
-      Math.random() * height,
-      Math.random() * width,
-      Math.random() * height,
-    );
-    ctx.stroke();
-  }
-  ctx.fillStyle = '#fff';
-  ctx.textBaseline = 'middle';
-  [...code].forEach((char, i) => {
-    ctx.save();
-    ctx.translate(22 + i * 30, height / 2 + (Math.random() * 16 - 8));
-    ctx.rotate((Math.random() - 0.5) * 0.7);
-    ctx.font = `700 ${26 + Math.round(Math.random() * 10)}px Manrope, Arial, sans-serif`;
-    ctx.fillText(char, -8, 0);
-    ctx.restore();
-  });
-  return canvas.toDataURL('image/png');
-}
-
 /**
- * A new captcha image; replaces the previous one (only the newest can be verified).
+ * A new captcha, as an image and (when the API sends it) audio; replaces the previous one
+ * (only the newest can be verified).
  * @param {AbortSignal} signal cancels the request
- * @returns {Promise<{ image: string, code: string }>} image: data URI for <img src>;
- *   code: the text, in demo mode only (for the listen button)
- * @throws {LeadApiError}
+ * @returns {Promise<{ image: string, audio: string }>} data URIs for <img src> and audio;
+ *   audio is '' when the answer has none or it is not valid Base64 audio
+ * @throws {LeadApiError} bad-response when the image is missing or not a Base64 image
  */
 export async function generateCaptcha(signal) {
-  if (isDemo()) {
-    await wait(300);
-    if (signal.aborted) throw new LeadApiError('cancelled', 'captcha: cancelled');
-    demoCaptcha = [...Array(CAPTCHA_LENGTH)]
-      .map(() => DEMO_CHARS[Math.floor(Math.random() * DEMO_CHARS.length)]).join('');
-    return { image: drawDemoCaptcha(demoCaptcha), code: demoCaptcha };
+  const data = record(await post('captchaGenerate', {}, signal));
+  const image = toDataUri(data.image, 'image');
+  if (!image) throw new LeadApiError('bad-response', 'captcha-generate: image missing or not Base64');
+  const audio = toDataUri(data.audio, 'audio');
+  if (data.audio && !audio) {
+    // eslint-disable-next-line no-console
+    console.warn('lead-api: captcha-generate: audio is not Base64 audio, the listen button is hidden');
   }
-  const data = await post('captchaGenerate', {}, signal);
-  if (typeof data.image !== 'string' || !data.image.startsWith('data:image/')) {
-    throw new LeadApiError('bad-response', 'captcha-generate: image missing');
-  }
-  return { image: data.image, code: '' };
+  return { image, audio };
 }
 
 /**
@@ -216,14 +220,11 @@ export async function generateCaptcha(signal) {
  * @throws {LeadApiError} code INVALID_CAPTCHA when wrong or expired
  */
 async function verifyCaptcha(captcha, signal) {
-  if (isDemo()) {
-    await wait(600);
-    const right = Boolean(demoCaptcha) && captcha === demoCaptcha;
-    demoCaptcha = '';
-    if (!right) throw new LeadApiError('rejected', 'demo mode: wrong captcha', { code: 'INVALID_CAPTCHA' });
-    return;
+  const data = record(await post('captchaVerify', { captcha }, signal));
+  // a "success" that says the captcha is wrong is still a wrong captcha
+  if (data.verified === false || text(data.verified).toLowerCase() === 'false') {
+    throw new LeadApiError('rejected', 'captcha-verify: not verified', { code: 'INVALID_CAPTCHA' });
   }
-  await post('captchaVerify', { captcha }, signal);
 }
 
 /**
@@ -233,9 +234,11 @@ async function verifyCaptcha(captcha, signal) {
  * @returns {string} '' when the answer has none
  */
 function leadIdOf(data) {
-  if (!data || typeof data !== 'object') return '';
-  const lead = data.compositeResponse?.find((part) => part.referenceId === 'referLead');
-  return String(data.LeadId || data.LeadNumber || lead?.body?.id || '');
+  const answer = record(data);
+  // the lead is created by now: a reply in another shape only means no id, never an error
+  const parts = Array.isArray(answer.compositeResponse) ? answer.compositeResponse : [];
+  const lead = parts.find((part) => record(part).referenceId === 'referLead');
+  return text(answer.LeadId) || text(answer.LeadNumber) || text(record(record(lead).body).id);
 }
 
 /**
@@ -246,73 +249,90 @@ function leadIdOf(data) {
  */
 function keepCreatedLead(lead) {
   const created = { ...lead, createdAt: new Date().toISOString() };
-  window[LEAD_RESULT_KEY] = created;
-  document.dispatchEvent(new CustomEvent(LEAD_CREATED_EVENT, { detail: created }));
+  // analytics only: a failure here must not turn a created lead into an error
+  try {
+    window[LEAD_RESULT_KEY] = created;
+    document.dispatchEvent(new CustomEvent(LEAD_CREATED_EVENT, { detail: created }));
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.warn('lead-api: the created lead could not be kept for analytics', error);
+  }
   return created;
-}
-
-/** Removes the journey's data from window (when it is still `journey`, if given). */
-export function clearJourney(journey) {
-  if (!journey || window[LEAD_STORE_KEY] === journey) delete window[LEAD_STORE_KEY];
 }
 
 /**
  * One OTP journey of one form submission. Create a new session for every submit.
  * @param {Object} options
  * @param {string} options.mobile ten-digit mobile number
- * @param {string} options.product backend product (LAP, TWL, NewCarFinance), '' when the
- *   category has no API yet
+ * @param {string} [options.name] full name, sent with the first OTP request (not on resend:
+ *   the backend reads it from the token)
+ * @param {string} [options.email] sent with the first OTP request, like the name
+ * @param {string} options.product backend product (LAP, TWL, NewCarFinance, CarLease,
+ *   DealerFinance), '' when the category has no API (sent as is: the server refuses the lead)
  * @param {Object<string, string>} options.lead see buildLead in lead-payload.js
  * @param {string} [options.loanCategory] the loan category picked in the form, e.g.
  *   "Used Car & Re-finance", kept with the created lead for analytics
  * @returns {{
- *   live: boolean,
  *   submit: (captcha: string|null) => Promise<void>,
- *   sendOtp: () => Promise<void>,
+ *   sendOtp: () => Promise<void>, // the first OTP, then a resend with its transactionId/token
  *   verifyOtp: (otp: string) => Promise<{ leadId: string, category: string,
  *     loanCategory: string, createdAt: string, stage: string, data: Object }>,
  *   cancel: () => void,
  * }}
  */
 export function createLeadSession({
-  mobile, product, lead, loanCategory = '',
+  mobile, name = '', email = '', product, lead, loanCategory = '',
 }) {
-  const demo = isDemo();
-  const live = Boolean(product) && !demo;
-  if (!product && !demo) {
+  if (!product) {
     // eslint-disable-next-line no-console
-    console.warn('lead-api: this category has no API yet (lead-api-config.js), using demo mode');
+    console.warn('lead-api: this category has no api in PRODUCT_BY_CATEGORY (lead-api-config.js)');
   }
   const controller = new AbortController();
-  let journey = null; // what this session put in window[LEAD_STORE_KEY]
+  // the OTP's credentials { transactionId, token }: only in this closure, so no other script,
+  // extension-readable storage or later page can read them
+  let otpCredentials = null;
 
-  const keep = (otpRequest) => {
-    journey = {
-      ...otpRequest, mobile, category: product, lead,
-    };
-    window[LEAD_STORE_KEY] = journey;
-  };
+  /** The transactionId and token of an otp-generate/resend answer ('' when missing). */
+  const credentialsOf = (data) => ({
+    transactionId: text(data.transactionId), token: text(data.token),
+  });
 
   const sendOtp = singleFlight(async () => {
     if (!MOBILE_PATTERN.test(mobile)) {
       throw new LeadApiError('invalid-input', 'mobile must be 10 digits starting with 6-9');
     }
-    if (!live) {
-      await wait(1200);
-      keep({ transactionId: 'demo', token: 'demo' });
-      return;
-    }
-    const data = await post('otpGenerate', { mobile }, controller.signal);
-    if (typeof data.transactionId !== 'string' || typeof data.token !== 'string') {
+    const previous = otpCredentials;
+    // first send: mobile, name and email; resend: the mobile and the latest pair (the token
+    // tells the backend it is a resend, and it holds the name, email and fixed values).
+    // `data` is required on a resend too: without it the backend answers 400 BAD_REQUEST.
+    const body = previous
+      ? { data: { mobileNo: mobile }, transactionId: previous.transactionId, token: previous.token }
+      : {
+        data: {
+          name: text(name),
+          mobileNo: mobile,
+          mobCode: OTP_GENERATE_FIXED.mobCode,
+          email: text(email),
+          mode: OTP_GENERATE_FIXED.mode,
+        },
+        source: OTP_GENERATE_FIXED.source,
+        productType: OTP_GENERATE_FIXED.productType,
+      };
+    const data = record(await post('otpGenerate', body, controller.signal));
+    // cancelled or used meanwhile: nothing is kept
+    if (otpCredentials !== previous) return;
+    // both are needed for otp-verify and the next resend; the old token is used up by a resend
+    const fresh = credentialsOf(data);
+    if (!fresh.transactionId || !fresh.token) {
       throw new LeadApiError('bad-response', 'otp-generate: transactionId or token missing');
     }
-    keep({ transactionId: data.transactionId, token: data.token });
+    otpCredentials = Object.freeze(fresh);
   });
 
   // the form's submit: captcha first, the OTP only once it is accepted
   const submit = singleFlight(async (captcha) => {
-    // a category without an API (live is false outside demo mode) does not use the captcha
-    if (captcha !== null && (live || demo)) {
+    // no captcha field (null): the OTP API answers CAPTCHA_REQUIRED
+    if (captcha !== null) {
       try {
         await verifyCaptcha(captcha, controller.signal);
       } catch (error) {
@@ -332,43 +352,36 @@ export function createLeadSession({
     if (!new RegExp(`^\\d{${OTP_LENGTH}}$`).test(otp)) {
       throw new LeadApiError('invalid-input', `the OTP must be ${OTP_LENGTH} digits`);
     }
-    if (!live) {
-      await wait(1200);
-      if (otp !== DEMO_OTP) throw new LeadApiError('rejected', 'demo mode: wrong OTP', { code: 'INVALID_OTP' });
-      clearJourney(journey);
-      // no lead is created in demo mode, so nothing is kept for analytics
-      return {
-        leadId: '', category: product, loanCategory, createdAt: '', stage: 'demo', data: {},
-      };
+    // none before an OTP was generated, after a cancel or once it created a lead
+    const credentials = otpCredentials;
+    if (!credentials) {
+      throw new LeadApiError('invalid-input', 'no OTP was generated');
     }
-    // the data kept when the OTP was generated
-    const stored = window[LEAD_STORE_KEY];
-    if (!stored?.transactionId) throw new LeadApiError('invalid-input', 'no OTP was generated');
     const data = await post('otpVerify', {
-      transactionId: stored.transactionId,
-      token: stored.token,
+      transactionId: credentials.transactionId,
+      token: credentials.token,
       otp,
-      category: stored.category,
-      lead: stored.lead || {},
+      category: product,
+      lead: lead || {},
     }, controller.signal);
     // the server answers success only when the lead API created the lead (Result "Success",
     // a Salesforce composite without errors, or a 2xx answer); otherwise 502 LEAD_FAILED.
     // `data` is the lead API's answer as it is.
-    clearJourney(stored);
+    // this OTP is used up: its credentials are wiped, a second validate is refused here
+    if (otpCredentials === credentials) otpCredentials = null;
     const created = keepCreatedLead({
-      leadId: leadIdOf(data), category: stored.category, loanCategory,
+      leadId: leadIdOf(data), category: product, loanCategory,
     });
-    return { ...created, stage: data.Stage || '', data };
+    return { ...created, stage: text(record(data).Stage), data };
   });
 
   return {
-    live,
     submit,
     sendOtp,
     verifyOtp,
     cancel: () => {
       controller.abort();
-      clearJourney(journey);
+      otpCredentials = null;
     },
   };
 }
@@ -381,20 +394,34 @@ export function createLeadSession({
  */
 export function errorMessage(error, action) {
   if (error?.kind === 'cancelled') return '';
-  const {
-    kind, code, status, serverMessage,
-  } = error || {};
+  const { kind, status } = error || {};
+  // only text can be looked up or shown (any Error may get here, not just a LeadApiError)
+  const code = typeof error?.code === 'string' ? error.code : '';
+  const serverMessage = typeof error?.serverMessage === 'string' ? error.serverMessage.trim() : '';
   if (kind !== 'invalid-input') {
     // eslint-disable-next-line no-console
     console.error('lead-api:', kind, error?.message);
   }
   if (action === 'captcha-load') return MESSAGES.captchaLoadFailed;
   if (action === 'resend' && code === 'CAPTCHA_REQUIRED') return MESSAGES.resendNeedsCaptcha;
-  if (code && MESSAGES[code]) return MESSAGES[code];
-  if (kind === 'timeout') return MESSAGES.timeout;
-  if (kind === 'network') return MESSAGES.network;
+  // a refused OTP whose message mentions expiry ("Invalid or expired OTP.") is shown as
+  // expired, before the server's own text; the OTP step does not count it as a wrong OTP
+  if (action === 'verify' && /expire/i.test(serverMessage)) return MESSAGES.OTP_EXPIRED;
+  // the backend's messages for these are written for visitors ("Incorrect OTP. 2 attempts
+  // left."): the backend counts the attempts, so its text is shown as it is
+  if (serverMessage && SERVER_MESSAGE_CODES.includes(code)) return serverMessage;
   // the visitor's input was refused (4xx or status "error"), not a server failure
   const refused = kind === 'rejected' || (kind === 'http' && status < 500);
+  // a refused OTP shows the API's own message (expiry messages are handled above)
+  if (action === 'verify' && refused && serverMessage) return serverMessage;
+  // an expired OTP: said so by the code, or refused after OTP_VALID_MS (error.expired, set
+  // by the OTP step) when the server does not tell expired from wrong
+  const expired = /EXPIRED/i.test(code) || (refused && error.expired === true);
+  if (action === 'verify' && expired) return MESSAGES.OTP_EXPIRED;
+  // API codes are upper case keys of MESSAGES; the others are this file's own texts
+  if (/^[A-Z_]+$/.test(code) && Object.prototype.hasOwnProperty.call(MESSAGES, code)) return MESSAGES[code];
+  if (kind === 'timeout') return MESSAGES.timeout;
+  if (kind === 'network') return MESSAGES.network;
   if (refused && action === 'captcha') return MESSAGES.INVALID_CAPTCHA;
   if (refused && action === 'verify' && !serverMessage) return MESSAGES.wrongOtp;
   if (refused && serverMessage) return serverMessage;

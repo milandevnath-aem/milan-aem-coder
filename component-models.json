@@ -151,9 +151,9 @@
       {
         "component": "textarea",
         "valueType": "string",
-        "name": "schema-script",
+        "name": "json-ld",
         "label": "Schema script (JSON-LD)",
-        "description": "JSON-LD markup, with or without the surrounding <script> tag."
+        "description": "Plain JSON only (object or @graph): no <script> tag, no surrounding quotes. Rendered in the page head as a script tag."
       }
     ]
   },
@@ -165,6 +165,11 @@
         "name": "image",
         "label": "Image",
         "multi": false
+      },
+      {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       },
       {
         "component": "text",
@@ -258,6 +263,15 @@
     "fields": [
       {
         "component": "text",
+        "valueType": "string",
+        "name": "id",
+        "label": "Column ID",
+        "required": false,
+        "placeholder": "e.g., my-column",
+        "description": "The column will be linkable via ID entered."
+      },
+      {
+        "component": "text",
         "name": "name",
         "label": "Section Name",
         "description": "The label shown for this section in the Content Tree"
@@ -276,7 +290,7 @@
             "value": "brand"
           },
           {
-            "name": "Brand (grey, centered text)",
+            "name": "Brand (grey, centered text, fixed width)",
             "value": "bg-grey"
           },
           {
@@ -324,12 +338,24 @@
             "value": "no-margin-bottom-desktop"
           },
           {
-            "name": "Background grey",
+            "name": "Grey background, left-aligned text",
             "value": "sec-bg-grey"
           },
           {
             "name": "Section Padding left and right",
             "value": "padding-left-right"
+          },
+          {
+            "name": "Read more (grey disclosure text, collapsed to 3 lines)",
+            "value": "read-more"
+          },
+          {
+            "name": "Background Grey disclaimer for feature card",
+            "value": "bg-disclaimer"
+          },
+          {
+            "name": "Plain disclaimer for feature card",
+            "value": "plain-disclaimer"
           }
         ]
       },
@@ -349,12 +375,44 @@
         "multi": false
       },
       {
+        "name": "backgroundMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
+      },
+      {
         "component": "reference",
         "valueType": "string",
         "name": "backgroundMobile",
         "label": "Background image (mobile)",
         "description": "Optional. Used on small screens instead of the desktop image.",
         "multi": false
+      },
+      {
+        "name": "backgroundMobileMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
+      }
+    ]
+  },
+  {
+    "id": "article-cards",
+    "fields": [
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Variant",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Media releases cards",
+            "value": "mediaReleasesCards"
+          }
+        ]
       }
     ]
   },
@@ -367,6 +425,11 @@
         "name": "image",
         "label": "Image",
         "multi": false
+      },
+      {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       },
       {
         "component": "text",
@@ -400,6 +463,13 @@
         "name": "readTime",
         "label": "Reading time",
         "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "link_button",
+        "value": "",
+        "label": "Button",
+        "valueType": "string"
       }
     ]
   },
@@ -484,6 +554,11 @@
         "multi": false
       },
       {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
+      },
+      {
         "component": "richtext",
         "name": "text",
         "value": "",
@@ -523,6 +598,10 @@
           {
             "name": "About Us (sticky heading, website link with icon)",
             "value": "about-us"
+          },
+          {
+            "name": "Dropdown + CTA (list of links becomes a dropdown, button opens the selected link)",
+            "value": "dropdown-cta"
           }
         ]
       }
@@ -543,9 +622,14 @@
         "component": "reference",
         "valueType": "string",
         "name": "image",
-        "label": "Image",
-        "description": "Decorative image shown beside the calculator on desktop.",
+        "label": "Fallback image",
+        "description": "Shown beside the calculator on desktop for a loan type that has no image of its own. Set each loan type's image on the loan type itself.",
         "multi": false
+      },
+      {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       },
       {
         "component": "text",
@@ -916,6 +1000,22 @@
             }
           ]
         }
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Image",
+        "description": "Shown beside the calculator on desktop while this loan type is selected. Leave empty to use the calculator's fallback image.",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Alt text",
+        "description": "Describe the image. Leave empty if it is decorative.",
+        "value": ""
       }
     ]
   },
@@ -1008,6 +1108,11 @@
         "multi": false
       },
       {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
+      },
+      {
         "component": "text",
         "valueType": "string",
         "name": "imageAlt",
@@ -1019,8 +1124,13 @@
         "valueType": "string",
         "name": "mobileImage",
         "label": "Mobile image",
-        "description": "Optional portrait crop used below 900px.",
+        "description": "Optional portrait crop used below 1024px. A selected tablet image takes priority from 600px to 1024px.",
         "multi": false
+      },
+      {
+        "name": "mobileImageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       },
       {
         "component": "richtext",
@@ -1080,6 +1190,19 @@
             "value": "side"
           }
         ]
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "tabletImage",
+        "label": "Tablet image",
+        "description": "Optional crop used from 600px to 1024px. Leave empty to keep the existing mobile/desktop image behaviour.",
+        "multi": false
+      },
+      {
+        "name": "tabletImageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       }
     ]
   },
@@ -1164,6 +1287,11 @@
         "multi": false
       },
       {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
+      },
+      {
         "component": "text",
         "valueType": "string",
         "name": "imageAlt",
@@ -1202,6 +1330,19 @@
         "label": "Number",
         "value": "",
         "description": "Optional. Shown on numbered and split-with-numbered-cards variants, e.g. 01."
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "mobileImage",
+        "label": "Mobile image",
+        "description": "Optional, large image cards only: image used below 1024px. Leave empty to use the card image.",
+        "multi": false
+      },
+      {
+        "name": "mobileImageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       }
     ]
   },
@@ -1212,6 +1353,219 @@
         "component": "aem-content",
         "name": "reference",
         "label": "Reference"
+      }
+    ]
+  },
+  {
+    "id": "grievance",
+    "fields": [
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Variant",
+        "valueType": "string",
+        "value": "steps",
+        "options": [
+          {
+            "name": "Steps (timeline)",
+            "value": "steps"
+          },
+          {
+            "name": "Directory",
+            "value": "directory"
+          }
+        ]
+      },
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Intro",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "readMoreLabel",
+        "value": "",
+        "label": "Read more button label",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "showLessLabel",
+        "value": "",
+        "label": "Show less button label",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "grievance-item",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "title",
+        "label": "Title",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "description",
+        "value": "",
+        "label": "Description",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "details",
+        "value": "",
+        "label": "Details (group label paragraph + list; bold text in each list item is the label. Approach RBI: intro paragraph, H4 = section title (start with bold text like 01. for a step number), bold link = button)",
+        "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Variant",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Steps (RBI Approach)",
+            "value": "rbi-approach"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gst-form",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Heading and text",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "types",
+        "label": "Form types",
+        "value": "",
+        "description": "Comma separated, e.g. \"Customer, Vendor\": shown as a switch above the fields. Leave blank or enter one type for no switch."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "submitLabel",
+        "label": "Button label",
+        "value": ""
+      },
+      {
+        "component": "aem-content",
+        "name": "link",
+        "label": "Contact Us link"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "linkText",
+        "label": "Contact Us link text",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "gst-form-field",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "label",
+        "label": "Label",
+        "value": ""
+      },
+      {
+        "component": "select",
+        "name": "kind",
+        "label": "Field type",
+        "valueType": "string",
+        "value": "text",
+        "options": [
+          {
+            "name": "Text",
+            "value": "text"
+          },
+          {
+            "name": "Number (digits only)",
+            "value": "number"
+          },
+          {
+            "name": "Letters and numbers",
+            "value": "alphanumeric"
+          },
+          {
+            "name": "PAN",
+            "value": "pan"
+          },
+          {
+            "name": "GSTIN / GST provisional ID",
+            "value": "gstin"
+          },
+          {
+            "name": "Mobile number (+91)",
+            "value": "tel"
+          },
+          {
+            "name": "Email",
+            "value": "email"
+          },
+          {
+            "name": "Postal code",
+            "value": "zip"
+          },
+          {
+            "name": "Dropdown",
+            "value": "select"
+          },
+          {
+            "name": "Dropdown with search",
+            "value": "search"
+          },
+          {
+            "name": "Captcha",
+            "value": "captcha"
+          }
+        ]
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "options",
+        "label": "Options",
+        "description": "Dropdown: comma separated options, a leading * marks the default. Number or Letters and numbers: the exact length (e.g. 2 for a state code), blank for up to 20 characters. A field labelled City lists the cities of the city master.",
+        "value": ""
+      },
+      {
+        "component": "boolean",
+        "valueType": "boolean",
+        "name": "required",
+        "label": "Required",
+        "value": true
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "types",
+        "label": "Shown for",
+        "description": "Form types this field is shown for, comma separated (e.g. \"Customer\"). Leave blank to show it for every type.",
+        "value": ""
       }
     ]
   },
@@ -1297,6 +1651,11 @@
         "multi": false
       },
       {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
+      },
+      {
         "component": "text",
         "valueType": "string",
         "name": "imageAlt",
@@ -1310,6 +1669,11 @@
         "label": "Mobile image",
         "description": "Optional portrait crop used below 900px.",
         "multi": false
+      },
+      {
+        "name": "mobileImageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       },
       {
         "component": "richtext",
@@ -1332,6 +1696,11 @@
         "multi": false
       },
       {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
+      },
+      {
         "component": "text",
         "valueType": "string",
         "name": "imageAlt",
@@ -1344,6 +1713,19 @@
         "value": "",
         "label": "Text",
         "valueType": "string"
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "mobileImage",
+        "label": "Mobile image",
+        "description": "Optional image used below 1024px. Leave empty to use the desktop image.",
+        "multi": false
+      },
+      {
+        "name": "mobileImageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       }
     ]
   },
@@ -1477,7 +1859,7 @@
     "id": "link-list",
     "fields": [
       {
-        "component": "select",
+        "component": "multiselect",
         "name": "classes",
         "label": "Background",
         "valueType": "string",
@@ -1488,8 +1870,16 @@
             "value": "bg-grey"
           },
           {
+            "name": "Document list (grey cards with document icon)",
+            "value": "doc-list"
+          },
+          {
             "name": "No background (divider list)",
             "value": ""
+          },
+          {
+            "name": "Buttons (Read all / Read less toggle)",
+            "value": "buttons"
           }
         ]
       },
@@ -1516,6 +1906,22 @@
         "label": "Note",
         "description": "Grey note box shown below the list.",
         "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "readAll",
+        "value": "",
+        "label": "Read all button text",
+        "description": "Used with the Buttons class. Defaults to 'Read all'.",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "readLess",
+        "value": "",
+        "label": "Read less button text",
+        "description": "Used with the Buttons class. Defaults to 'Read less'.",
+        "valueType": "string"
       }
     ]
   },
@@ -1529,6 +1935,11 @@
         "label": "Image",
         "description": "Optional thumbnail. Shown only when authored.",
         "multi": false
+      },
+      {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       },
       {
         "component": "text",
@@ -1557,6 +1968,11 @@
         "label": "Arrow icon",
         "description": "Right-hand icon (SVG recommended). Shown only when authored.",
         "multi": false
+      },
+      {
+        "name": "iconMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       }
     ]
   },
@@ -1586,6 +2002,11 @@
         "name": "image",
         "label": "Background image",
         "multi": false
+      },
+      {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       },
       {
         "component": "text",
@@ -1639,7 +2060,12 @@
         "name": "style",
         "label": "Style",
         "valueType": "string",
+        "value": "",
         "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
           {
             "name": "Hover banner to show cta",
             "value": "fixed-height"
@@ -1668,12 +2094,30 @@
         "name": "style_bg",
         "label": "Section Background",
         "valueType": "string",
+        "value": "",
         "options": [
+          {
+            "name": "Default Background Color",
+            "value": ""
+          },
           {
             "name": "No Background Color",
             "value": "no-bg-color"
           }
         ]
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "mobileImage",
+        "label": "Mobile image",
+        "description": "Optional image used below 1024px. Leave empty to use the background image.",
+        "multi": false
+      },
+      {
+        "name": "mobileImageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       }
     ]
   },
@@ -1693,6 +2137,19 @@
         "value": "",
         "label": "Description",
         "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "classes",
+        "value": "",
+        "label": "CSS Style",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Investors Debt - Relevant Information",
+            "value": "investorsDebt"
+          }
+        ]
       }
     ]
   },
@@ -1705,6 +2162,11 @@
         "name": "image",
         "label": "Icon / logo",
         "multi": false
+      },
+      {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       },
       {
         "component": "text",
@@ -1740,6 +2202,11 @@
         "multi": false
       },
       {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
+      },
+      {
         "component": "text",
         "valueType": "string",
         "name": "imageAlt",
@@ -1753,6 +2220,19 @@
         "label": "Products",
         "description": "Bulleted list. Each item: product name as a link, followed by a short description.",
         "valueType": "string"
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "mobileImage",
+        "label": "Mobile image",
+        "description": "Optional image used below 1024px. Leave empty to use the tab image.",
+        "multi": false
+      },
+      {
+        "name": "mobileImageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       }
     ]
   },
@@ -1777,6 +2257,10 @@
           {
             "name": "Eligibility Smaller font sizes due to larger content",
             "value": "elgb-small-text"
+          },
+          {
+            "name": "Left Title and Right Document Requirement Cards",
+            "value": "left-title-right-documents"
           }
         ]
       },
@@ -1799,6 +2283,11 @@
         "label": "Decorative image",
         "description": "Optional artwork shown behind the top-right corner.",
         "multi": false
+      },
+      {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       }
     ]
   },
@@ -1820,6 +2309,11 @@
         "label": "Icon",
         "description": "Eligibility cards only.",
         "multi": false
+      },
+      {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       },
       {
         "component": "text",
@@ -1871,6 +2365,11 @@
         "multi": false
       },
       {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
+      },
+      {
         "component": "text",
         "valueType": "string",
         "name": "imageAlt",
@@ -1916,6 +2415,11 @@
         "multi": false
       },
       {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
+      },
+      {
         "component": "text",
         "valueType": "string",
         "name": "imageAlt",
@@ -1948,6 +2452,11 @@
         "name": "image",
         "label": "Avatar",
         "multi": false
+      },
+      {
+        "name": "imageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       },
       {
         "component": "text",

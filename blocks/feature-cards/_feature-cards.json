@@ -85,6 +85,11 @@
           "multi": false
         },
         {
+          "name": "imageMimeType",
+          "component": "hidden",
+          "valueType": "image/png"
+        },
+        {
           "component": "text",
           "valueType": "string",
           "name": "imageAlt",
@@ -117,6 +122,19 @@
           "label": "Number",
           "value": "",
           "description": "Optional. Shown on numbered and split-with-numbered-cards variants, e.g. 01."
+        },
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "mobileImage",
+          "label": "Mobile image",
+          "description": "Optional, large image cards only: image used below 1024px. Leave empty to use the card image.",
+          "multi": false
+        },
+        {
+          "name": "mobileImageMimeType",
+          "component": "hidden",
+          "valueType": "image/png"
         }
       ]
     }

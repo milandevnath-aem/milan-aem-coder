@@ -17,10 +17,28 @@ function icon(name) {
  * Renders a label with the matched part of the query emphasised.
  * @param {Element} el target element
  * @param {string} text label
- * @param {string} query search query
+ * @param {string|string[]} query search query, or individual terms to highlight throughout
  */
 export function highlight(el, text, query) {
   el.textContent = '';
+  if (Array.isArray(query)) {
+    const terms = query.filter(Boolean).sort((a, b) => b.length - a.length)
+      .map((term) => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    let position = 0;
+    if (terms.length) {
+      const pattern = new RegExp(terms.join('|'), 'gi');
+      [...text.matchAll(pattern)].forEach((match) => {
+        const [matched] = match;
+        const strong = document.createElement('strong');
+        strong.textContent = matched;
+        el.append(text.slice(position, match.index), strong);
+        position = match.index + matched.length;
+      });
+    }
+    el.append(text.slice(position));
+    el.classList.toggle('is-match', position > 0);
+    return;
+  }
   const index = query ? text.toLowerCase().indexOf(query.toLowerCase()) : -1;
   if (index < 0) {
     el.textContent = text;
@@ -37,24 +55,29 @@ export function highlight(el, text, query) {
  * @param {Object} config
  * @param {string} config.label field label, also the placeholder
  * @param {string} config.name form field name
- * @param {{ value: string, label: string, description?: string }[]} config.options
+ * @param {{ value: string, label: string, description?: string, href?: string }[]}
+ *   config.options an option with href is a link: picking it opens that page
  * @param {string} [config.value] preselected value
  * @param {boolean} [config.search] show a search box
  * @param {string} [config.searchPlaceholder]
  * @param {boolean} [config.pinSelected] list the selected option first when reopened
+ * @param {boolean} [config.scrollToSelected] on open, scroll the list so the selected option
+ *   is the first one visible, right under the search box (the full list stays available)
  * @param {boolean} [config.required]
  * @param {string} [config.boundary] selector of an ancestor (e.g. a banner) the open
  *   panel must stay inside: the list is shortened and scrolls instead of overflowing it
  * @returns {HTMLDivElement} the dropdown; dispatches "change" (detail.byUser: picked by the
- *   visitor), exposes value/setValue()/hasOption()
+ *   visitor), exposes value/setValue()/hasOption()/setOptions()
  */
 export function createDropdown({
   label, name, options, value = '', search = false, searchPlaceholder = 'Search',
-  pinSelected = false, required = false, boundary = '',
+  pinSelected = false, scrollToSelected = false, required = false, boundary = '',
 }) {
   if (!cssLoaded) cssLoaded = loadCSS(`${window.hlx.codeBasePath}/styles/dropdown.css`);
   idCounter += 1;
   const id = `dropdown-${idCounter}`;
+  // the options listed now; setOptions() replaces them (e.g. once loaded from a sheet)
+  let current = options;
 
   const root = document.createElement('div');
   root.className = 'dropdown';
@@ -65,7 +88,6 @@ export function createDropdown({
   field.className = 'dropdown-field';
   field.setAttribute('aria-haspopup', 'listbox');
   field.setAttribute('aria-expanded', 'false');
-  field.setAttribute('aria-controls', `${id}-list`);
   field.innerHTML = '<span class="dropdown-text"><span class="dropdown-label"></span><span class="dropdown-value"></span></span>';
   field.querySelector('.dropdown-label').textContent = label;
   field.append(icon('chevron-down'));
@@ -110,6 +132,7 @@ export function createDropdown({
   list.id = `${id}-list`;
   list.setAttribute('role', 'listbox');
   list.setAttribute('aria-label', label);
+  list.tabIndex = -1;
   panel.append(list);
   root.append(field, input, panel);
 
@@ -130,9 +153,9 @@ export function createDropdown({
   const render = (query = '') => {
     list.textContent = '';
     const q = query.trim().toLowerCase();
-    let matches = options.filter((o) => !q || o.label.toLowerCase().includes(q));
+    let matches = current.filter((o) => !q || o.label.toLowerCase().includes(q));
     if (pinSelected && !q && input.value) {
-      const selected = options.find((o) => o.value === input.value);
+      const selected = current.find((o) => o.value === input.value);
       if (selected) matches = [selected, ...matches.filter((o) => o !== selected)];
     }
     matches.forEach((option, i) => {
@@ -147,7 +170,17 @@ export function createDropdown({
       const optionLabel = document.createElement('span');
       optionLabel.className = 'dropdown-option-label';
       highlight(optionLabel, option.label, q);
-      text.append(optionLabel);
+      if (option.href) {
+        // an option that leads to a page is a real link (picking it opens that page)
+        const link = document.createElement('a');
+        link.className = 'dropdown-option-link';
+        link.href = option.href;
+        link.tabIndex = -1;
+        link.append(optionLabel);
+        text.append(link);
+      } else {
+        text.append(optionLabel);
+      }
       if (option.description) {
         const desc = document.createElement('span');
         desc.className = 'dropdown-option-desc';
@@ -167,22 +200,78 @@ export function createDropdown({
     active = -1;
   };
 
-  // shortens the list to keep the panel inside the boundary, flags it when it scrolls
+  // height the open panel may take (the room on its side of the field), set by placePanel
+  let room = Infinity;
+
+  // shortens the list to keep the panel inside its room and the boundary, flags it when it scrolls
   const fitPanel = () => {
     list.style.maxHeight = '';
+    let overflow = panel.offsetHeight - room;
     const area = boundary && root.closest(boundary);
     if (area) {
       const limit = area.getBoundingClientRect().bottom - 24;
-      const overflow = panel.getBoundingClientRect().bottom - limit;
-      if (overflow > 0) list.style.maxHeight = `${Math.max(list.offsetHeight - overflow, 120)}px`;
+      overflow = Math.max(overflow, panel.getBoundingClientRect().bottom - limit);
     }
+    if (overflow > 0) list.style.maxHeight = `${Math.max(list.offsetHeight - overflow, 120)}px`;
     panel.classList.toggle('is-scrollable', list.scrollHeight > list.clientHeight);
+  };
+
+  // what can show the panel: the nearest scrolling ancestor (e.g. a modal's content, which
+  // clips it) within the window
+  const visibleArea = () => {
+    let el = root.parentElement;
+    while (el && el !== document.body && !/(auto|scroll)/.test(getComputedStyle(el).overflowY)) {
+      el = el.parentElement;
+    }
+    const scroller = el && el !== document.body;
+    const rect = scroller ? el.getBoundingClientRect() : { top: 0, bottom: Infinity };
+    return {
+      top: Math.max(rect.top, 0),
+      bottom: Math.min(rect.bottom, window.innerHeight),
+      scrolls: Boolean(scroller),
+    };
+  };
+
+  // opens the panel below the field, scrolling the page up under the header when there is not
+  // enough room (smooth, instant for visitors who prefer reduced motion). Opens above it only
+  // when the page cannot scroll far enough or a modal clips the panel (e.g. the last field of
+  // a modal).
+  // The height is kept while the list is filtered, so the search box stays where it is as
+  // the visitor types
+  const placePanel = () => {
+    panel.classList.remove('is-above');
+    panel.style.minHeight = '';
+    room = Infinity;
+    // a banner (boundary) shortens the list instead
+    if (!boundary) {
+      const area = visibleArea();
+      const rect = field.getBoundingClientRect();
+      let shift = 0;
+      if (panel.offsetHeight > area.bottom - rect.bottom - 16 && !area.scrolls) {
+        // html's scroll-padding-top keeps the field clear of the fixed header; the distance is
+        // worked out here because a smooth scroll has not moved the field yet
+        const html = document.documentElement;
+        const clearance = parseFloat(getComputedStyle(html).scrollPaddingTop) || 0;
+        const scrollLeft = html.scrollHeight - window.innerHeight - window.scrollY;
+        shift = Math.max(0, Math.min(rect.top - clearance, scrollLeft));
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (shift) window.scrollBy({ top: shift, behavior: reduced ? 'auto' : 'smooth' });
+      }
+      const below = area.bottom - (rect.bottom - shift) - 16;
+      const above = rect.top - shift - area.top - 16;
+      const openAbove = panel.offsetHeight > below && above > below;
+      panel.classList.toggle('is-above', openAbove);
+      room = openAbove ? above : below;
+    }
+    fitPanel();
+    panel.style.minHeight = `${panel.offsetHeight}px`;
   };
 
   const close = (focusField = false) => {
     if (panel.hidden) return;
     panel.hidden = true;
     field.setAttribute('aria-expanded', 'false');
+    field.removeAttribute('aria-controls');
     root.classList.remove('is-open');
     if (focusField) field.focus();
   };
@@ -192,16 +281,22 @@ export function createDropdown({
     render();
     panel.hidden = false;
     field.setAttribute('aria-expanded', 'true');
+    field.setAttribute('aria-controls', list.id);
     root.classList.add('is-open');
-    fitPanel();
+    placePanel();
     const selectedIndex = visibleOptions().findIndex((li) => li.dataset.value === input.value);
     if (selectedIndex >= 0) setActive(selectedIndex);
+    if (scrollToSelected && selectedIndex >= 0) {
+      // the list is the scroller: the selected option goes to its top edge, whole (the option
+      // is measured from the panel, the list's own offset is taken off)
+      const selectedItem = visibleOptions()[selectedIndex];
+      list.scrollTop = selectedItem.offsetTop - list.offsetTop;
+    }
     if (searchInput) {
       searchInput.parentElement.querySelector('.dropdown-clear').hidden = true;
-      searchInput.focus();
+      searchInput.focus({ preventScroll: true });
     } else {
-      list.tabIndex = -1;
-      list.focus();
+      list.focus({ preventScroll: true });
       if (selectedIndex < 0) setActive(0);
     }
   };
@@ -211,8 +306,8 @@ export function createDropdown({
   const normalize = (text) => String(text || '').toLowerCase().replace(/[^a-z0-9]/g, '');
   const findOption = (wantedValue) => {
     const wanted = normalize(wantedValue);
-    return options.find((o) => o.value === wantedValue || o.label === wantedValue)
-      || (wanted && options.find((o) => {
+    return current.find((o) => o.value === wantedValue || o.label === wantedValue)
+      || (wanted && current.find((o) => {
         const l = normalize(o.label);
         return l && (l.startsWith(wanted) || wanted.startsWith(l));
       }));
@@ -228,8 +323,17 @@ export function createDropdown({
     if (notify) root.dispatchEvent(new CustomEvent('change', { bubbles: true, detail: { byUser } }));
   };
 
-  const choose = (li) => {
+  // navigate: false when the click already follows the option's link
+  const choose = (li, navigate = true) => {
     if (!li?.dataset.value) return;
+    const href = li.querySelector('.dropdown-option-link')?.href;
+    if (href) {
+      // the option opens its page: show it as picked while the page loads
+      setValue(li.dataset.value, false);
+      close(true);
+      if (navigate) window.location.href = href;
+      return;
+    }
     setValue(li.dataset.value, true, true);
     close(true);
   };
@@ -241,7 +345,12 @@ export function createDropdown({
   panel.addEventListener('mousedown', (e) => {
     if (e.target !== searchInput) e.preventDefault();
   });
-  list.addEventListener('click', (e) => choose(e.target.closest('[role="option"]')));
+  list.addEventListener('click', (e) => {
+    const link = e.target.closest('.dropdown-option-link');
+    // ctrl/cmd/shift-click opens the page elsewhere: this one stays as it is
+    if (link && (e.ctrlKey || e.metaKey || e.shiftKey)) return;
+    choose(e.target.closest('[role="option"]'), !link);
+  });
   list.addEventListener('mousemove', (e) => {
     const li = e.target.closest('[role="option"]');
     if (li) setActive(visibleOptions().indexOf(li));
@@ -277,6 +386,14 @@ export function createDropdown({
 
   root.setValue = (v) => setValue(v);
   root.hasOption = (v) => Boolean(findOption(v));
+  // new options; the selected value is kept when it is still one of them
+  root.setOptions = (next) => {
+    current = next;
+    const selected = input.value;
+    setValue(selected, false);
+    if (input.value !== selected) root.dispatchEvent(new CustomEvent('change', { bubbles: true, detail: { byUser: false } }));
+    if (!panel.hidden) render(searchInput?.value);
+  };
   root.focus = () => field.focus();
   setValue(value, false);
   return root;

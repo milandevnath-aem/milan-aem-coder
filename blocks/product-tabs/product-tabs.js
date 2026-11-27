@@ -1,5 +1,5 @@
 import { moveInstrumentation } from '../../scripts/scripts.js';
-import { createPicture } from '../../scripts/images.js';
+import { addMobileSource, createPicture } from '../../scripts/images.js';
 import { MEDIA } from '../../scripts/viewport.js';
 
 let idCounter = 0;
@@ -45,7 +45,8 @@ function selectTab(tablist, tab, focus = false) {
 }
 
 /**
- * Product tabs: one row per tab with label, image and a list of product links.
+ * Product tabs: one row per tab with label, image, a list of product links and an
+ * optional mobile image.
  * @param {Element} block The block element
  */
 export default function decorate(block) {
@@ -57,7 +58,7 @@ export default function decorate(block) {
   panels.className = 'product-tabs-panels';
 
   [...block.children].forEach((row, i) => {
-    const [labelCell, imageCell, productsCell] = row.children;
+    const [labelCell, imageCell, productsCell, mobileCell] = row.children;
     const id = `product-tabs-${idCounter}-${i}`;
 
     const tab = document.createElement('button');
@@ -82,6 +83,9 @@ export default function decorate(block) {
         { media: MEDIA.desktop, width: '2000' },
         { width: '750' },
       ]);
+      const mobileImg = mobileCell?.querySelector('img');
+      const mobileSource = mobileImg && addMobileSource(picture, mobileImg, '750');
+      if (mobileSource) moveInstrumentation(mobileImg, mobileSource);
       moveInstrumentation(img, picture.querySelector('img'));
       picture.classList.add('product-tabs-image');
       panel.append(picture);
