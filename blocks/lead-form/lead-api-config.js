@@ -75,6 +75,18 @@ export const RESEND_SECONDS = 30;
 export const OTP_VALID_MS = 5 * 60 * 1000;
 
 /**
+ * Resends allowed on one OTP screen. The click after the last one sends nothing: it shows
+ * MESSAGES.resendExhausted (the backend does not limit resends itself).
+ */
+export const MAX_RESENDS = 3;
+/**
+ * Wrong OTPs allowed on one OTP screen. The last one switches the boxes and Validate off;
+ * Resend stays but sends nothing, it shows MESSAGES.resendExhausted instead. Going back to
+ * the form (new captcha) starts a new OTP screen with fresh counts.
+ */
+export const MAX_WRONG_OTPS = 3;
+
+/**
  * Loan category (as shown in "Select loan category") -> its API and its fixed lead values,
  * all in one place:
  * - api: the API the backend calls (NewCarFinance, TWL, LAP), sent as the `category` of the
@@ -219,6 +231,18 @@ export const MESSAGES = {
   network: 'Check your internet connection and try again.',
   // the OTP step's own codes (fallbacks: the backend's message is shown when it sends one)
   OTP_ATTEMPTS_EXCEEDED: 'Too many incorrect attempts. Please tap Resend OTP to get a new OTP.',
+  // OTP screen, top message; {mobile} is the masked number (******9244)
+  otpSent: 'Please enter the OTP that was sent to your mobile number {mobile}',
+  otpResent: 'Please enter the OTP which was re-sent to your mobile number {mobile}.',
+  // after the last allowed resend (MAX_RESENDS)
+  otpResentLast: 'Please enter the OTP that was re-sent to your mobile number {mobile}. Please note this is your last attempt to resend the OTP.',
+  // no resend left: in red at the top after MAX_RESENDS or RESEND_LIMIT from the API; under
+  // the boxes (replacing otpLocked) when Resend is tapped after MAX_WRONG_OTPS
+  resendExhausted: 'You have exhausted your limit to resend OTP. If you have not received OTP, please contact the bank OR try again later.',
+  // OTP screen, under the boxes: a wrong OTP before the last one; {attempts} is how many are left
+  wrongOtpAttemptsLeft: 'The OTP you have entered is incorrect. You have {attempts} attempts remaining to enter the new OTP post which your access to generate a new one will be locked.',
+  // the last wrong OTP (MAX_WRONG_OTPS)
+  otpLocked: 'You have exceeded maximum number of attempts to generate OTP. Please try again after 30 Minutes.',
 };
 
 /**
