@@ -125,13 +125,12 @@ export function calculateEmi(principal, annualRate, tenureYears) {
 }
 
 function parseLoanType(row) {
-  const [title, amount, rate, tenure, image, mobileImage] = row.children;
+  const [title, amount, rate, tenure, image] = row.children;
   return {
     row,
     title: title?.textContent.trim() || 'Loan',
-    // the loan type's own images (after the tenure); null when not authored
+    // the loan type's own image (last cell); null when not authored
     img: image?.querySelector('img') || null,
-    mobileImg: mobileImage?.querySelector('img') || null,
     amount: readRange(amount, DEFAULTS.amount),
     rate: readRange(rate, DEFAULTS.rate),
     tenure: readRange(tenure, DEFAULTS.tenure),
@@ -698,7 +697,7 @@ export default function decorate(block) {
   const rows = [...block.children];
   const config = rows.filter((row) => row.children.length <= 1);
   const typeRows = rows.filter((row) => row.children.length > 1);
-  const [textRow, imageRow, linkRow, mobileImageRow] = config;
+  const [textRow, imageRow, linkRow] = config;
 
   const intro = document.createElement('div');
   intro.className = 'emi-calculator-intro';
@@ -717,30 +716,21 @@ export default function decorate(block) {
 
   // one image per loan type, shown while its tab is selected; a loan type without one
   // shows the block's fallback image. Hidden pictures are lazy, so only the shown one loads.
-  const toPicture = (img, className = 'emi-calculator-image', width = '2000') => {
-    // desktop: full-bleed section background (hidden on small screens)
-    // mobile: optional image below the heading (hidden on desktop)
-    const picture = createPicture(img.src, img.alt, false, [{ width }]);
+  const toPicture = (img) => {
+    // full-bleed section background on desktop (hidden on small screens)
+    const picture = createPicture(img.src, img.alt, false, [{ width: '2000' }]);
     moveInstrumentation(img, picture.querySelector('img'));
-    picture.classList.add(className);
+    picture.classList.add('emi-calculator-image');
     picture.hidden = true;
     intro.append(picture);
     return picture;
   };
-  const toMobilePicture = (img) => toPicture(img, 'emi-calculator-mobile-image', '900');
   const fallbackImg = imageRow?.querySelector('img');
   const fallbackPicture = fallbackImg ? toPicture(fallbackImg) : null;
   const pictures = types.map((type) => (type.img ? toPicture(type.img) : fallbackPicture));
-  const fallbackMobileImg = mobileImageRow?.querySelector('img');
-  const fallbackMobilePicture = fallbackMobileImg ? toMobilePicture(fallbackMobileImg) : null;
-  const mobilePictures = types.map((type) => (
-    type.mobileImg ? toMobilePicture(type.mobileImg) : fallbackMobilePicture));
   const showImage = (index) => {
     intro.querySelectorAll('.emi-calculator-image').forEach((picture) => {
       picture.hidden = picture !== pictures[index];
-    });
-    intro.querySelectorAll('.emi-calculator-mobile-image').forEach((picture) => {
-      picture.hidden = picture !== mobilePictures[index];
     });
   };
 

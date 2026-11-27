@@ -35,22 +35,6 @@
   display: none;
 }
 
-/* optional image for small screens, below the heading; the desktop view uses the background */
-.emi-calculator .emi-calculator-mobile-image {
-  display: block;
-  margin-top: 24px;
-}
-
-.emi-calculator .emi-calculator-mobile-image[hidden] {
-  display: none;
-}
-
-.emi-calculator .emi-calculator-mobile-image img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
 /* card */
 .emi-calculator .emi-calculator-card {
   display: flex;
@@ -572,10 +556,6 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-}
-
-:where(.desktop-view) .emi-calculator .emi-calculator-mobile-image {
-  display: none;
 }
 
 /* the images of the other loan types */
