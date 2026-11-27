@@ -102,6 +102,14 @@
           "label": "Value / checklist",
           "description": "Eligibility: the value (e.g. 21 years). Documents: a bulleted checklist.",
           "valueType": "string"
+        },
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "hoverImage",
+          "label": "Icon (hover GIF)",
+          "description": "Eligibility cards only. Replaces the icon while the card is hovered.",
+          "multi": false
         }
       ]
     }
