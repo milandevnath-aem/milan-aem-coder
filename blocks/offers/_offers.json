@@ -63,13 +63,6 @@
           "multi": false
         },
         {
-          "component": "reference",
-          "valueType": "string",
-          "name": "mbl_image",
-          "label": "Mobile Background image",
-          "multi": false
-        },
-        {
           "name": "imageMimeType",
           "component": "hidden",
           "valueType": "image/png"
@@ -80,6 +73,18 @@
           "name": "imageAlt",
           "label": "Alt text",
           "value": ""
+        },
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "mobileImage",
+          "label": "Mobile Background image",
+          "multi": false
+        },
+        {
+          "name": "mobileImageMimeType",
+          "component": "hidden",
+          "valueType": "image/png"
         },
         {
           "component": "richtext",
