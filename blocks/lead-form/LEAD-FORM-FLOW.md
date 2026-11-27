@@ -176,6 +176,8 @@ counts); wrong OTPs keep counting across resends. Nothing is stored in the brows
 | Wrong OTP 2 | unchanged | `wrongOtpAttemptsLeft`: "... You have 1 attempts remaining ..." |
 | Wrong OTP 3 | unchanged; boxes greyed and disabled, Validate off, Resend still shown | `otpLocked`: "You have exceeded maximum number of attempts to generate OTP. Please try again after 30 Minutes." |
 | Resend after wrong OTP 3 (no request sent) | unchanged; Resend link stays and looks the same, but further taps do nothing | `resendExhausted` replaces `otpLocked` |
+| Validate answered with a message mentioning expiry ("Invalid or expired OTP.") | unchanged | `OTP_EXPIRED`: "OTP expired. Please regenerate." (not counted as a wrong OTP) |
+| Send OTP (form) or Resend fails without a more specific message | - | `sendFailed`: same text as `resendExhausted` (above the Apply button on the form, under the boxes on the OTP screen) |
 
 A wrong OTP is `INVALID_OTP`, `OTP_ATTEMPTS_EXCEEDED` or a refusal without a code; an expired OTP, a server or network
 error does not count.
