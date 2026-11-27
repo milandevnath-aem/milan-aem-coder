@@ -52,7 +52,7 @@
         {
           "component": "reference",
           "valueType": "string",
-          "name": "image",
+          "name": "mbl_image",
           "label": "Mobile Image",
           "multi": false
         },

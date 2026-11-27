@@ -629,7 +629,7 @@
       {
         "component": "reference",
         "valueType": "string",
-        "name": "image",
+        "name": "mbl_image",
         "label": "Mobile Image",
         "multi": false
       },
@@ -1987,7 +1987,7 @@
       {
         "component": "reference",
         "valueType": "string",
-        "name": "image",
+        "name": "mbl_image",
         "label": "Mobile Background image",
         "multi": false
       },
@@ -2179,7 +2179,7 @@
       {
         "component": "reference",
         "valueType": "string",
-        "name": "image",
+        "name": "mbl_image",
         "label": "Mobile Image",
         "multi": false
       },
