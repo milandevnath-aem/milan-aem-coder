@@ -468,7 +468,8 @@
 
 .emi-calculator .emi-calculator-summary > div {
   display: flex;
-  flex: 0 0 auto;
+  flex: 1 1 0;
+  min-width: 0;
   flex-direction: column;
   gap: 8px;
 }
@@ -505,9 +506,9 @@
 
 /* small screens: the button takes the space next to the amount */
 .emi-calculator a.emi-calculator-cta {
-  flex: 1 1 auto;
-  min-width: 0;
+  flex: 0 0 auto;
   padding: 7px 11px;
+  white-space: nowrap;
   border-color: #fff;
   background-color: #fff;
   color: var(--text-color);
