@@ -149,7 +149,7 @@ OTP step is shown.
 
 `createOtpStep` in `lead-form-otp.js`:
 
-- Six digit boxes, masked number (`+91 ******1234`), Validate button.
+- Six digit boxes, Validate button, a message under the title with the masked number (`******1234`).
 - **Resend** is available after a 30 s countdown (`RESEND_SECONDS`). It calls `session.sendOtp()` again, which now
   sends the latest pair:
   ```json
@@ -159,6 +159,26 @@ OTP step is shown.
   token proves it.
 - **Back** returns to the form with values kept; a new captcha is loaded, because a new OTP needs a new captcha.
 - Closing the modal stops the countdown and cancels any request still running.
+
+#### Messages, resend limit and wrong-OTP lock
+
+The backend does not limit resends or block after wrong OTPs, so the frontend does (`MAX_RESENDS`, `MAX_WRONG_OTPS`
+in `lead-api-config.js`; the texts are in `MESSAGES`). Counts are per OTP screen (Back starts a new one with fresh
+counts); wrong OTPs keep counting across resends. Nothing is stored in the browser.
+
+| When | Top message (under the title) | Under the boxes |
+|---|---|---|
+| OTP screen opens | `otpSent`: "Please enter the OTP that was sent to your mobile number ******9244" | - |
+| Resend 1 and 2 | `otpResent`: "Please enter the OTP which was re-sent to your mobile number ******9244." | - |
+| Resend 3 | `otpResentLast`: "... re-sent to your mobile number ******9244. Please note this is your last attempt to resend the OTP." | - |
+| Resend click 4 (no request sent), or `RESEND_LIMIT` from the API | `resendExhausted` **in red**; Resend link hidden; boxes greyed and disabled | nothing (the API's message is not shown) |
+| Wrong OTP 1 | unchanged | `wrongOtpAttemptsLeft`: "... You have 2 attempts remaining ..." |
+| Wrong OTP 2 | unchanged | `wrongOtpAttemptsLeft`: "... You have 1 attempts remaining ..." |
+| Wrong OTP 3 | unchanged; boxes greyed and disabled, Validate off, Resend still shown | `otpLocked`: "You have exceeded maximum number of attempts to generate OTP. Please try again after 30 Minutes." |
+| Resend after wrong OTP 3 (no request sent) | unchanged; Resend link stays and looks the same, but further taps do nothing | `resendExhausted` replaces `otpLocked` |
+
+A wrong OTP is `INVALID_OTP`, `OTP_ATTEMPTS_EXCEEDED` or a refusal without a code; an expired OTP, a server or network
+error does not count.
 
 ### 4.4 Validate OTP and create the lead
 
@@ -321,10 +341,10 @@ What the OTP step does with specific codes:
 | Code | Behaviour |
 |---|---|
 | `CAPTCHA_REQUIRED` | Session or token expired: back to the form, new captcha, message at the captcha |
-| `INVALID_OTP` | Digits cleared, server message shown ("Incorrect OTP. 2 attempts left.") |
-| `OTP_ATTEMPTS_EXCEEDED` | Digits cleared, Validate blocked until a resend |
+| `INVALID_OTP` | Digits cleared, counted as a wrong OTP (see 4.3 for the messages) |
+| `OTP_ATTEMPTS_EXCEEDED` | Digits cleared, counted as a wrong OTP, Validate blocked until a resend |
 | `RESEND_TOO_SOON` | Countdown restarted |
-| `RESEND_LIMIT` | Resend link hidden |
+| `RESEND_LIMIT` | Resend link hidden, `resendExhausted` in red at the top (the API's message is not shown) |
 
 Backend limits (from `OtpServiceImpl`): OTP valid 300 s, 3 resends per captcha, 30 s between resends, 3 verify
 attempts per OTP.
@@ -340,6 +360,7 @@ attempts per OTP.
 | API field name changed | `LEAD_KEYS_BY_PRODUCT` |
 | New form field | Author it in the block; it is read automatically. Add it to the product's `LEAD_KEYS_BY_PRODUCT` entry to send it |
 | Visitor message | `MESSAGES` |
+| Resend limit, wrong-OTP limit | `MAX_RESENDS`, `MAX_WRONG_OTPS` |
 | OTP length, resend wait, timeout | `OTP_LENGTH`, `RESEND_SECONDS`, `REQUEST_TIMEOUT_MS` (keep in line with the backend) |
 
 ## 9. Testing checklist

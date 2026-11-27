@@ -603,6 +603,11 @@
   letter-spacing: 0;
 }
 
+/* no resend left (MESSAGES.resendExhausted): the error red of the OTP boxes */
+.lead-form .lead-form-otp-title p.is-error {
+  color: #ff3938;
+}
+
 .lead-form .lead-form-otp-number {
   white-space: nowrap;
 }
@@ -647,6 +652,15 @@
 
 .lead-form .lead-form-otp-boxes.is-invalid .lead-form-otp-digit {
   border-color: #ff3938;
+}
+
+/* switched off (no resend left, or too many wrong OTPs): greyed, nothing can be typed */
+.lead-form .lead-form-otp-boxes.is-disabled .lead-form-otp-digit {
+  border-color: #dedede;
+  background-color: #f2f2f2;
+  color: var(--muted-color);
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .lead-form .lead-form-otp-error {

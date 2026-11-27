@@ -164,6 +164,19 @@
               "value": "no-bg-color"
             }
           ]
+        },
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "mobileImage",
+          "label": "Mobile image",
+          "description": "Optional image used below 1024px. Leave empty to use the background image.",
+          "multi": false
+        },
+        {
+          "name": "mobileImageMimeType",
+          "component": "hidden",
+          "valueType": "image/png"
         }
       ]
     }

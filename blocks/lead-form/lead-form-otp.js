@@ -1,14 +1,30 @@
 import {
   OTP_LENGTH, OTP_VALID_MS, RESEND_SECONDS, errorMessage,
 } from './lead-api.js';
+import { MAX_RESENDS, MAX_WRONG_OTPS, MESSAGES } from './lead-api-config.js';
 import { uniqueId } from '../../scripts/analytics.js';
 
 let uid = 0;
 
 const iconImg = (name, size = 24, ext = 'svg') => `<img src="${window.hlx.codeBasePath}/icons/${name}.${ext}" alt="" width="${size}" height="${size}">`;
 
-/** "+91 ******0679" */
-export const maskMobile = (mobile) => `+91 ******${String(mobile).slice(-4)}`;
+/** "******0679" */
+export const maskMobile = (mobile) => `******${String(mobile).slice(-4)}`;
+
+/**
+ * Whether a refused OTP was a wrong one (counts towards MAX_WRONG_OTPS): INVALID_OTP or
+ * OTP_ATTEMPTS_EXCEEDED, or a refusal without a code. An expired OTP, a server or network
+ * error, or another refusal (BAD_REQUEST...) does not count.
+ * @param {Error & { kind?: string, status?: number, code?: string }} failure
+ * @param {string} message what errorMessage shows for it
+ * @returns {boolean}
+ */
+function isWrongOtp(failure, message) {
+  if (message === MESSAGES.OTP_EXPIRED) return false;
+  const code = typeof failure?.code === 'string' ? failure.code : '';
+  if (code) return code === 'INVALID_OTP' || code === 'OTP_ATTEMPTS_EXCEEDED';
+  return failure?.kind === 'rejected' || (failure?.kind === 'http' && failure.status < 500);
+}
 
 /**
  * Loading spinner (decorative; the state is announced separately).
@@ -69,7 +85,7 @@ export function createOtpStep({
       <div class="lead-form-otp-top">
         <div class="lead-form-otp-title">
           <h2 id="${id}-title" tabindex="-1">Enter OTP</h2>
-          <p id="${id}-desc"><span class="lead-form-otp-intro">Enter the ${OTP_LENGTH}-digit code we texted to</span> <span class="lead-form-otp-number"></span></p>
+          <p id="${id}-desc"></p>
         </div>
         <div class="lead-form-otp-group">
           <div class="lead-form-otp-boxes" role="group" aria-labelledby="${id}-title" aria-describedby="${id}-desc"></div>
@@ -82,7 +98,26 @@ export function createOtpStep({
       </div>
     </div>`;
   view.titleId = `${id}-title`;
-  view.querySelector('.lead-form-otp-number').textContent = maskMobile(mobile);
+  const desc = view.querySelector(`#${id}-desc`);
+  /**
+   * The message under the title (MESSAGES.otpSent...), with the masked number in place of
+   * {mobile}; in red for an error.
+   * @param {string} template
+   * @param {boolean} [isError]
+   */
+  const showIntro = (template, isError = false) => {
+    const [before, after] = template.split('{mobile}');
+    if (after === undefined) {
+      desc.replaceChildren(before);
+    } else {
+      const number = document.createElement('span');
+      number.className = 'lead-form-otp-number';
+      number.textContent = maskMobile(mobile);
+      desc.replaceChildren(before, number, after);
+    }
+    desc.classList.toggle('is-error', isError);
+  };
+  showIntro(MESSAGES.otpSent);
 
   const boxes = view.querySelector('.lead-form-otp-boxes');
   const error = view.querySelector('.lead-form-otp-error');
@@ -106,6 +141,13 @@ export function createOtpStep({
   let blocked = false;
   // when the current OTP was sent, to tell an expired OTP from a wrong one
   let sentAt = Date.now();
+  // successful resends and wrong OTPs on this screen (MAX_RESENDS, MAX_WRONG_OTPS)
+  let resends = 0;
+  let wrongOtps = 0;
+  // no resend left: the Resend link is gone for good
+  let exhausted = false;
+  // MAX_WRONG_OTPS wrong OTPs: no Validate, and Resend sends nothing
+  let locked = false;
 
   const setError = (message) => {
     error.hidden = !message;
@@ -198,9 +240,43 @@ export function createOtpStep({
     inputs.forEach((input) => { input.value = ''; });
     refresh();
   };
+  /** The boxes are emptied and switched off for good (greyed, no typing, no cursor). */
+  const disableBoxes = () => {
+    blocked = true;
+    clearDigits();
+    inputs.forEach((input) => { input.disabled = true; });
+    boxes.classList.add('is-disabled');
+  };
+  /** Resend leaves the screen; focus goes to the title so it is not lost with the link. */
+  const removeResend = () => {
+    clearInterval(timer);
+    resend.closest('.lead-form-resend').hidden = true;
+    view.querySelector('h2').focus();
+  };
+  /**
+   * No resend left (the click after MAX_RESENDS, or RESEND_LIMIT from the API): the top
+   * message says so in red, the boxes are switched off, the Resend link goes.
+   */
+  const exhaustResends = () => {
+    exhausted = true;
+    disableBoxes();
+    showIntro(MESSAGES.resendExhausted, true);
+    removeResend();
+    announce(MESSAGES.resendExhausted);
+  };
+  /**
+   * The last wrong OTP (MAX_WRONG_OTPS): the boxes are switched off; Resend stays, but sends
+   * nothing (see its click).
+   */
+  const lockOut = () => {
+    locked = true;
+    disableBoxes();
+    setError(MESSAGES.otpLocked);
+  };
   /**
    * What the OTP step does about a failed request beyond showing its message.
-   * @returns {boolean} true when the step is left (back to the captcha)
+   * @returns {boolean} true when the message must not be shown under the boxes: the step is
+   *   left (back to the captcha) or the top message says it (no resend left)
    */
   const handleCode = (failure, message) => {
     const failureCode = typeof failure?.code === 'string' ? failure.code : '';
@@ -212,8 +288,9 @@ export function createOtpStep({
     }
     if (failureCode === 'RESEND_TOO_SOON') startTimer();
     if (failureCode === 'RESEND_LIMIT') {
-      clearInterval(timer);
-      resend.closest('.lead-form-resend').hidden = true;
+      // the API's own limit: the same red top message as ours, not the API's text
+      exhaustResends();
+      return true;
     }
     if (failureCode === 'OTP_ATTEMPTS_EXCEEDED') {
       blocked = true;
@@ -224,7 +301,20 @@ export function createOtpStep({
   };
 
   resend.addEventListener('click', async () => {
-    if (seconds > 0 || busy) return;
+    if (seconds > 0 || busy || exhausted) return;
+    // locked by wrong OTPs: nothing is sent, the message under the boxes says why. The link
+    // stays and looks the same (no aria-disabled, which greys it), but later clicks do nothing.
+    if (locked) {
+      exhausted = true;
+      setError(MESSAGES.resendExhausted);
+      announce(MESSAGES.resendExhausted);
+      return;
+    }
+    // the click after the last allowed resend: nothing is sent
+    if (resends >= MAX_RESENDS) {
+      exhaustResends();
+      return;
+    }
     busy = true;
     resend.setAttribute('aria-disabled', 'true');
     announce('Sending a new OTP');
@@ -234,7 +324,7 @@ export function createOtpStep({
       const message = errorMessage(e, 'resend');
       busy = false;
       // CAPTCHA_REQUIRED (token expired, used or not for this mobile): handleCode goes back
-      // to the form for a new captcha and shows why
+      // to the form for a new captcha and shows why; RESEND_LIMIT: the red top message
       if (handleCode(e, message)) return;
       if (message) setError(message);
       // RESEND_TOO_SOON restarted the countdown, which keeps the button off
@@ -245,7 +335,8 @@ export function createOtpStep({
     }
     blocked = false;
     sentAt = Date.now();
-    view.querySelector('.lead-form-otp-intro').textContent = `Enter the ${OTP_LENGTH}-digit code we re-sent to`;
+    resends += 1;
+    showIntro(resends >= MAX_RESENDS ? MESSAGES.otpResentLast : MESSAGES.otpResent);
     inputs.forEach((input) => { input.value = ''; });
     setError('');
     refresh();
@@ -284,7 +375,17 @@ export function createOtpStep({
       validate.setAttribute('aria-disabled', 'true');
       busy = true;
       onVerified(result);
-    } else if (failure && !handleCode(failure, message) && message) {
+    } else if (failure && !handleCode(failure, message)) {
+      if (isWrongOtp(failure, message)) {
+        wrongOtps += 1;
+        clearDigits();
+        if (wrongOtps >= MAX_WRONG_OTPS) {
+          lockOut();
+          return;
+        }
+        message = MESSAGES.wrongOtpAttemptsLeft.replace('{attempts}', MAX_WRONG_OTPS - wrongOtps);
+      }
+      if (!message) return;
       setError(message);
       // blocked: the way on is Resend OTP (focused once its countdown allows it)
       if (blocked && seconds <= 0) resend.focus();

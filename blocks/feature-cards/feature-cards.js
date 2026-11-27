@@ -1,4 +1,5 @@
 import { moveInstrumentation } from '../../scripts/scripts.js';
+import { addMobileSource } from '../../scripts/images.js';
 
 // split-culture / split-insurance are listed first: they also get the split class at runtime
 const VARIANTS = ['split-culture', 'split-insurance', 'numbered', 'split', 'info', 'about-us'];
@@ -24,7 +25,7 @@ function linkPhone(value) {
 }
 
 function buildCard(row) {
-  const [imageCell, textCell, layoutCell, numberCell] = row.children;
+  const [imageCell, textCell, layoutCell, numberCell, mobileCell] = row.children;
   const card = document.createElement('li');
   card.className = 'feature-cards-card';
   moveInstrumentation(row, card);
@@ -38,6 +39,12 @@ function buildCard(row) {
     // keep the authored picture so the image stays editable in the Universal Editor
     const picture = img.closest('picture') || img;
     picture.classList.add(isMedia ? 'feature-cards-image' : 'feature-cards-icon');
+    // large image cards can use a different crop on small screens
+    const mobileImg = mobileCell?.querySelector('img');
+    if (isMedia && mobileImg && picture.tagName === 'PICTURE') {
+      const mobileSource = addMobileSource(picture, mobileImg);
+      if (mobileSource) moveInstrumentation(mobileImg, mobileSource);
+    }
     card.append(picture);
   }
 

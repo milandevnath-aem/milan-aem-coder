@@ -1,15 +1,16 @@
 import { moveInstrumentation } from '../../scripts/scripts.js';
-import { createPicture } from '../../scripts/images.js';
+import { addMobileSource, createPicture } from '../../scripts/images.js';
 import { MEDIA } from '../../scripts/viewport.js';
 
 /**
- * Promotional offer banners. Each row: image, text, disclaimer, style (width + text colour).
+ * Promotional offer banners. Each row: image, text, disclaimer, style (width + text colour),
+ * optional mobile image.
  * @param {Element} block The block element
  */
 export default function decorate(block) {
   const list = document.createElement('ul');
   [...block.children].forEach((row) => {
-    const [imageCell, textCell, disclaimerCell, styleCell] = row.children;
+    const [imageCell, textCell, disclaimerCell, styleCell, mobileCell] = row.children;
     const item = document.createElement('li');
     item.className = 'offers-item';
     moveInstrumentation(row, item);
@@ -30,6 +31,9 @@ export default function decorate(block) {
         { media: MEDIA.desktop, width: layout === 'half' ? '1400' : '2000' },
         { width: '750' },
       ]);
+      const mobileImg = mobileCell?.querySelector('img');
+      const mobileSource = mobileImg && addMobileSource(picture, mobileImg, '750');
+      if (mobileSource) moveInstrumentation(mobileImg, mobileSource);
       moveInstrumentation(img, picture.querySelector('img'));
       picture.classList.add('offers-image');
       item.prepend(picture);
