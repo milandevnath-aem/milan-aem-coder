@@ -45,6 +45,19 @@
           "value": "",
           "label": "Text",
           "valueType": "string"
+        },
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "mobileImage",
+          "label": "Mobile image",
+          "description": "Optional image used below 1024px. Leave empty to use the desktop image.",
+          "multi": false
+        },
+        {
+          "name": "mobileImageMimeType",
+          "component": "hidden",
+          "valueType": "image/png"
         }
       ]
     }

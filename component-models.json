@@ -649,6 +649,26 @@
         "name": "linkText",
         "label": "Apply link text",
         "value": ""
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "mobileImage",
+        "label": "Fallback mobile image",
+        "description": "Optional. Shown below the heading on small screens for a loan type that has no mobile image of its own. Without a mobile image nothing is shown on small screens.",
+        "multi": false
+      },
+      {
+        "name": "mobileImageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "mobileImageAlt",
+        "label": "Mobile image alt text",
+        "value": ""
       }
     ]
   },
@@ -1016,6 +1036,22 @@
         "label": "Alt text",
         "description": "Describe the image. Leave empty if it is decorative.",
         "value": ""
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "mobileImage",
+        "label": "Mobile image",
+        "description": "Optional. Shown below the heading on small screens while this loan type is selected. Leave empty to use the calculator's fallback mobile image.",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "mobileImageAlt",
+        "label": "Mobile image alt text",
+        "description": "Describe the image. Leave empty if it is decorative.",
+        "value": ""
       }
     ]
   },
@@ -1330,6 +1366,19 @@
         "label": "Number",
         "value": "",
         "description": "Optional. Shown on numbered and split-with-numbered-cards variants, e.g. 01."
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "mobileImage",
+        "label": "Mobile image",
+        "description": "Optional, large image cards only: image used below 1024px. Leave empty to use the card image.",
+        "multi": false
+      },
+      {
+        "name": "mobileImageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       }
     ]
   },
@@ -1700,6 +1749,19 @@
         "value": "",
         "label": "Text",
         "valueType": "string"
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "mobileImage",
+        "label": "Mobile image",
+        "description": "Optional image used below 1024px. Leave empty to use the desktop image.",
+        "multi": false
+      },
+      {
+        "name": "mobileImageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       }
     ]
   },
@@ -2079,6 +2141,19 @@
             "value": "no-bg-color"
           }
         ]
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "mobileImage",
+        "label": "Mobile image",
+        "description": "Optional image used below 1024px. Leave empty to use the background image.",
+        "multi": false
+      },
+      {
+        "name": "mobileImageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       }
     ]
   },
@@ -2181,6 +2256,19 @@
         "label": "Products",
         "description": "Bulleted list. Each item: product name as a link, followed by a short description.",
         "valueType": "string"
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "mobileImage",
+        "label": "Mobile image",
+        "description": "Optional image used below 1024px. Leave empty to use the tab image.",
+        "multi": false
+      },
+      {
+        "name": "mobileImageMimeType",
+        "component": "hidden",
+        "valueType": "image/png"
       }
     ]
   },
